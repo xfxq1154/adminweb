@@ -1,0 +1,28 @@
+<?php $paggerObj instanceof Trait_Pagger; ?>
+<?php if ($paggerObj->getPageCount() > 1): ?>
+    <ul class="pagination pagination-small">
+        <?php if (!$paggerObj->isFisrt()): ?>
+            <li><a href="<?= $paggerObj->getPageUrl($paggerObj->getFirst()) ?>">首页</a></li>
+            <li><a href="<?= $paggerObj->getPageUrl($paggerObj->getPrevous()) ?>">上一页</a></li>
+        <?php endif; ?>
+        <?php if ($paggerObj->getPageStart() > 1): ?>
+            <span>...</span>
+        <?php endif; ?>
+        <?php for ($i = $paggerObj->getPageStart(); $i <= $paggerObj->getPageEnd(); $i++): ?>
+            <?php if ($i == $paggerObj->getCurrentPage()): ?>
+                <li class="active"><a><?= $i ?></a>
+            <?php else: ?>
+                <li><a href="<?= $paggerObj->getPageUrl($i) ?>"><?= $i ?></a></li>
+            <?php endif; ?>
+        <?php endfor; ?>
+        <?php if ($paggerObj->getPageCount() > $paggerObj->getPageEnd()): ?>
+            <span>...</span>
+        <?php endif; ?>
+        <?php if (!$paggerObj->isLast()): ?>
+            <li><a href="<?= $paggerObj->getPageUrl($paggerObj->getNext()) ?>">下一页</a></li>
+            <li><a href="<?= $paggerObj->getPageUrl($paggerObj->getLast()) ?>">末页</a></li>
+        <?php endif; ?>
+            <li><a>共<?= $paggerObj->getPageCount() ?>页</a></li>
+        <!--li><a>去第<input type="text" class="page_go" value="<?=$paggerObj->getPageCount()?>">页</a></li-->
+    </ul>
+<?php endif; ?>

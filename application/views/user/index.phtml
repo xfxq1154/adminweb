@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>罗辑思维CMS管理系统</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width"/>
+<?php echo Asset::getResource('pintuer.css', 'admincenter/common');?>
+<?php echo Asset::getResource('login.css', 'admincenter/lib');?>
+<?php echo Asset::getResource('jquery.js', 'admincenter');?>
+<?php echo Asset::getResource('form/Validform.min.js', 'admincenter');?>
+<!--[if lt IE 8]>
+<script type="text/javascript">
+    alert('请您升级到IE8或以上版本!');
+    window.open("http://www.baidu.com/search/theie6countdown.html","_self");
+</script>
+<![endif]-->
+</head>
+<body>
+<div class="dux-login">
+    <div class="media media-y">
+        <a href="#" target="_blank"><img src="<?php echo Asset::getResource('login.jpg', 'admincenter/lib');?>" alt="管理系统" /></a>
+    </div>
+    <br /><br />
+    <form action="#" class="loginform" method="post">
+           <div class="input-block">
+            <input type="text" class="input" id="username" name="username" placeholder="用户名" datatype="*4-15" errormsg="长度在4~15位之间！" autocomplete="off" />
+            <input type="password" class="input" id="password" name="password" placeholder="密码" datatype="*5-15" errormsg="密码范围在6~15位之间！" autocomplete="off" />
+            <!--input type="text" class="input" id="checkcode" name="checkcode" placeholder="验证码" datatype="*6-6" errormsg="请输入六位验证码！"  autocomplete="off" />
+            <label><img src="/validatecode" onclick="javascript:this.src='/validatecode?tm='+Math.random();" /></label-->
+          </div>
+          <br>
+          <div class="form-group">
+                <button class="button button-block bg-main text-big">登录</button>
+            </div>
+
+    </form>
+</div>
+    <script>
+    $(".loginform").Validform({
+                tiptype:4,
+                postonce:true,
+                ajaxPost:true,
+                callback:function(data){
+                    if(data.status == 'error'){
+                        alert(data.code);
+                    }
+                    if(data.status == 'ok'){
+                        window.location.href = '/';
+                    }
+                }
+});    
+    </script>
+</body>
+</html>

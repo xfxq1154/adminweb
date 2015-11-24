@@ -1,0 +1,1180 @@
+<script language="JavaScript" type="text/javascript" src="<?=ASSET_URL?>/admincenter/js/calendar/WdatePicker.js"></script>
+<script>
+
+    $(function () {
+        // 分类联动
+        $("#parent").on('change', function () {
+            var oOpt = $("<option value='0'>请选择分类</option>");
+            var oOpt2 = $("<option value='0'>暂无分类</option>");
+
+            if (parseInt($(this).val()) === 0) {
+                $("#children").html(oOpt);
+            } else {
+
+                var request = $.ajax({
+                    url: '/book/ajaxclass',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {pid: parseInt($(this).val())},
+                });
+
+                request.done(function (data) {
+
+                    if (parseInt(data.length) === 0) {
+                        $("#children").html(oOpt2);
+                    } else {
+                        var sOpt = "<option value='0'>请选择分类</option>" + "\n";
+                        for(var i in data) {
+                            sOpt += "<option value=\"" + data[i]['id'] + "\">" + data[i]['name'] + "</option>" +
+                                "\n";
+                        }
+
+                        $("#children").html(sOpt);
+                    }
+                });
+
+                request.fail( function (jqXHR, textStatus) {
+                    console.log("request failed: " + textStatus);
+                });
+            }
+
+        });
+
+        // clone电子书选项卡
+        $(":input[name='type']").on('click', function () {
+
+            var oElement = $("#ebook" + $(this).val()).clone();
+            $("#tab-3").html($(oElement).html());
+        });
+
+        // 自动触发click事件
+        $(":input[name='type']:checked").trigger('click');
+
+        // 预览关联电子书
+        $("#show_ebook").on('click', function () {
+
+            var str = $("#other_related_book").val();
+
+            var request = $.ajax({
+                url: '/book/ajaxgetbooks',
+                type: 'POST',
+                dataType: 'json',
+                data: {ids: str},
+            });
+
+            request.done(function (data) {
+
+                if (parseInt(data["books"].length) === 0) {
+                    // 没有查询到电子书
+                    $(".wran").css({
+                        "display": "block"
+                    }).html("请填写关联电子");
+                    $("#other_related_book").val('');
+
+                    // 查询到无效电子书
+                    if (data["invalid"] !== "") {
+                        $(".wran").html("无效的电子书ID为：" + data["invalid"]);
+                        $("#show_ebook_box").removeClass("panel").html("");
+                    }
+                } else {
+
+                    var sContent = '<ul>';
+                    var aId = [];
+
+                    // 查询到有效电子书
+                    for(var i in data['books']) {
+
+                        // 判断日期是否有效
+                        var bAdd = true;
+                        if (/^0+/.test(data['books'][i]["date"])) {
+                            bAdd = false;
+                        }
+
+                        sContent += '<li>' + '<div class="p-l"><img src="' + data['books'][i]["cover"] +
+                            '" alt="" width="80" /></div>' +
+                            '<div class="p-l width">' +
+                            '<span><b>' + data['books'][i]['operating_title'] + '</b></span>' + "\n" +
+                            '<span><b>￥' + data['books'][i]['price'] + '</b></span>' + "\n" +
+                            '<span>' + data['books'][i]['author'] + '</span>' + "\n" +
+                            (bAdd ? '<span>' + data['books'][i]["date"] + '</span>' : '') +
+                            '<span>' + data['books'][i]['count'] + '字</span></div></li>' + "\n";
+                    }
+                    sContent += "</ul>";
+
+                    // 显示
+                    $("#show_ebook_box").addClass('panel').html(sContent);
+
+                    // 重置other_related_book的ID值为有效的电子书ID
+                    $("#other_related_book").val(data['valid']);
+
+                    // 查询到无效的电子书
+                    if (data["invalid"] !== "") {
+                        $(".wran").css({
+                            "display": "block"
+                        }).html("无效的电子书ID为：" + data["invalid"]);
+                    } else {
+
+                        // 清空原来值
+                        $(".wran").css({
+                            "display": "none"
+                        }).html("");
+                    }
+                }
+            });
+
+            request.fail(function (jqXHR, textStatus) {
+                console.log('fail: ' + textStatus);
+            });
+        });
+
+    });
+</script>
+<div class="dux-tools">
+    <div class="bread-head">电子书<span class="small">添加电子书</span>
+
+        <div class="float-right">
+            <a class="button button-small bg-main icon-list" href="/book/list">电子书列表</a>
+        </div>
+
+    </div>
+</div>
+<div class="admin-main">
+    <form method="post" class="form-x dux-form form-auto" id="form" action="/book/edit">
+        <div class="tab dux-tab">
+            <div class="panel dux-box  active">
+                <!-- tab head start-->
+                <div class="panel-head">
+                    <div class="tab-head">
+                        <strong>电子书配置</strong>
+                        <ul class="tab-nav">
+                            <li class="active"><a href="#tab-1">基本</a></li>
+                            <li><a href="#tab-2">源书信息</a></li>
+                            <li><a href="#tab-3">电子书信息</a></li>
+                            <li><a href="#tab-5">关联金句</a></li>
+                            <li><a href="#tab-4" onclick="upload()">其它</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- tab head end -->
+
+                <!-- table body start-->
+                <div class="tab-body">
+
+                    <!-- tab 1 start -->
+                    <div class="tab-panel active" id="tab-1">
+
+                        <!-- 分类 -->
+                        <div class="form-group">
+                            <div class="label">
+                                <label>电子书分类 * </label>
+                            </div>
+                            <div class="field">
+                                <select class="input js-assign" target="#tpl" name="class" datatype="*" id="parent">
+                                    <option value="0">请选择分类</option>
+                                    <?php if ($classes) : ?>
+                                        <?php foreach ($classes as $value) : ?>
+                                            <option value="<?php echo $value['id']; ?>" <?php if ($value['id'] == $book['class']) : ?> selected <?php endif; ?>>
+                                                <?php echo $value['name']; ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                </select>
+                                <select class="input js-assign" target="#tpl" name="sub_class" id="children">
+
+                                    <?php if ($subClasses) : ?>
+                                        <option value="0">请选择分类</option>
+
+                                        <?php foreach ($subClasses as $value) : ?>
+                                            <option value="<?php echo $value['id']; ?>" <?php if ($book['sub_class'] == $value['id']) : ?> selected <?php endif; ?>>
+                                                <?php echo $value['name']; ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    <?php else : ?>
+                                        <option value="0">暂无分类</option>
+                                    <?php endif; ?>
+
+                                </select>
+                                <div class="input-note">电子书分类</div>
+                            </div>
+
+
+                        </div>
+
+                        <!-- 上架/库存 -->
+                        <div class="form-group">
+                            <div class="label">
+                                <label>电子书类型 * </label>
+                            </div>
+                            <div class="field">
+                                <div class="button-group radio">
+                                    <label class="button <?php if ($book['status'] == 1) : ?> active <?php endif; ?>">
+                                        <input name="status" value="1" type="radio" datatype="*" <?php if ($book['status'] == 1) : ?> checked <?php endif; ?> />
+                                        <span class="icon icon-check text-green"></span> 上架
+                                    </label>
+
+                                    <label class="button <?php if ($book['status'] == 2) : ?> active <?php endif; ?>">
+                                        <input name="status" value="2" type="radio" datatype="*" <?php if ($book['status'] == 2) : ?> checked <?php endif; ?> />
+                                        <span class="icon icon-check text-green"></span> 库存
+                                    </label>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 电子书类型 -->
+                        <div class="form-group">
+                            <div class="label">
+                                <label>电子书类型 * </label>
+                            </div>
+                            <div class="field">
+                                <div class="button-group radio">
+                                    <label class="button <?php if ($book['type'] == 1) : ?> active <?php endif; ?>">
+                                        <input name="type" value="1" type="radio" datatype="*" <?php if ($book['type'] == 1) : ?> checked <?php endif; ?> />
+                                        <span class="icon icon-check text-green"></span> 全文
+                                    </label>
+
+                                    <label class="button <?php if ($book['type'] == 2) : ?> active <?php endif; ?>">
+                                        <input name="type" value="2" type="radio" datatype="*" <?php if ($book['type'] == 2) : ?> checked <?php endif; ?> />
+                                        <span class="icon icon-check text-green"></span> 干货版
+                                    </label>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 角标 -->
+                        <div class="form-group">
+                            <div class="label">
+                                <label>角标 * </label>
+                            </div>
+                            <div class="field">
+                                <div class="button-group radio">
+                                    <label class="button <?php if ($book['style'] == 1) : ?> active <?php endif; ?>">
+                                        <input name="style" value="1" type="radio" datatype="*" <?php if ($book['style'] == 1) : ?> checked <?php endif; ?> />
+                                        <span class="icon icon-check text-green"></span> 无
+                                    </label>
+
+                                    <label class="button <?php if ($book['style'] == 2) : ?> active <?php endif; ?>">
+                                        <input name="style" value="2" type="radio" datatype="*" <?php if ($book['style'] == 2) : ?> checked <?php endif; ?> />
+                                        <span class="icon icon-check text-green"></span> 新上
+                                    </label>
+
+                                    <label class="button <?php if ($book['style'] == 3) : ?> active <?php endif; ?>">
+                                        <input name="style" value="3" type="radio" datatype="*" <?php if ($book['style'] == 3) : ?> checked <?php endif; ?> />
+                                        <span class="icon icon-check text-green"></span> 独家
+                                    </label>
+
+                                    <label class="button <?php if ($book['style'] == 4) : ?> active <?php endif; ?>">
+                                        <input name="style" value="4" type="radio" datatype="*" <?php if ($book['style'] == 4) : ?> checked <?php endif; ?> />
+                                        <span class="icon icon-check text-green"></span> 首发
+                                    </label>
+
+                                    <label class="button <?php if ($book['style'] == 5) : ?> active <?php endif; ?>">
+                                        <input name="style" value="5" type="radio" datatype="*" <?php if ($book['style'] == 5) : ?> checked <?php endif; ?> />
+                                        <span class="icon icon-check text-green"></span> 热销
+                                    </label>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 电子书运营标题 -->
+                        <div class="form-group">
+                            <div class="label">
+                                <label>电子书运营标题 * </label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="operating_title" name="operating_title" size="60" datatype="*1-16" errormsg="最多16个字符" placeholder="电子书运营标题" value="<?php echo $book['operating_title']; ?>" />
+                                <div class="input-note">请填写电子书运营标题, 最多16个字符</div>
+                            </div>
+                        </div>
+
+                        <!-- 常规定价 -->
+                        <div class="form-group">
+                            <div class="label">
+                                <label>常规定价 * </label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="price" name="price" size="60" datatype="/^[0-9]+(.[0-9]+)?$/" placeholder="常规定价" value="<?php echo $book['price']; ?>" />
+                                <div class="input-note">请填写常规定价</div>
+                            </div>
+                        </div>
+
+                        <!-- 购买新奖励学分 -->
+                        <div class="form-group">
+                            <div class="label">
+                                <label>购买新奖励学分 * </label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="integral" name="integral" size="60" datatype="n" placeholder="购买新奖励学分" value="<?php echo $book['integral']; ?>" />
+                                <div class="input-note">请填写购买新奖励学分</div>
+                            </div>
+                        </div>
+
+                        <!-- 封面图片 -->
+                        <div class="form-group">
+                            <div class="label">
+                                <label>书封面 * </label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input show_uo_imgs" id="images1" datatype="*" placeholder="请上传书封面" readonly value="<?php echo IMG_HOST . '/' . $book['cover']; ?>" />
+                                <input type="hidden" name="cover" value="<?php echo $book['cover']; ?>">
+                                <a class="button bg-blue button-small " data="images1" id="image_upload1" preview="image_preview1" href="javascript:;" ><span class="icon-upload"> 上传</span></a>
+                                <a class="button bg-blue button-small icon-picture-o" id="image_preview1" href="javascript:;" > 预览</a>
+                                <div class="input-note">请上传书封面，尺寸为252×336</div>
+                            </div>
+                        </div>
+
+                        <!-- 封面图片 -->
+                        <div class="form-group">
+                            <div class="label">
+                                <label>头图 * </label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input show_uo_imgs" id="images2" datatype="*" placeholder="请上传头图" readonly value="<?php echo IMG_HOST . '/' . $book['banner']; ?>" />
+                                <input type="hidden" name="banner" value="<?php echo $book['banner']; ?>">
+                                <a class="button bg-blue button-small " data="images2" id="image_upload2" preview="image_preview2" href="javascript:;" ><span class="icon-upload"> 上传</span></a>
+                                <a class="button bg-blue button-small icon-picture-o" id="image_preview2" href="javascript:;" > 预览</a>
+                                <div class="input-note">请上传头图，尺寸为960x540</div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- tab 1 end -->
+
+
+                    <!-- start tab2 -->
+                    <div class="tab-panel" id="tab-2">
+                        <!-- 书源信息 -->
+                        <div class="form-group">
+                            <div class="label">
+                                <label>书名</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="source_name" name="source_name" size="60" placeholder="书名" value="<?php echo $bookInfo['source_name']; ?>" />
+                                <div class="input-note">请填书名</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="label">
+                                <label>版本</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="source_version" name="source_version" size="60" placeholder="版本" value="<?php echo $bookInfo['source_version']; ?>" />
+                                <div class="input-note">请填版本</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="label">
+                                <label>册/卷/部/季</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="source_volume" name="source_volume" size="60" placeholder="册/卷/部/季" value="<?php echo $bookInfo['source_volume']; ?>" />
+                                <div class="input-note">请填册/卷/部/季</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="label">
+                                <label>原作者</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="source_author" name="source_author" size="60" placeholder="原作者" value="<?php echo $bookInfo['source_author']; ?>" />
+                                <div class="input-note">原作者</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="label">
+                                <label>编/译/批评</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="source_compilation" name="source_compilation" size="60" placeholder="编/译/批评" value="<?php echo $bookInfo['source_compilation']; ?>" />
+                                <div class="input-note">请填编/译/批评</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="label">
+                                <label>出版社</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="source_press" name="source_press" size="60" placeholder="出版社" value="<?php echo $bookInfo['source_press']; ?>" />
+                                <div class="input-note">请填出版社</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="label">
+                                <label>出版日期</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input datebtn" style="width:220px;" id="source_publication_date" name="source_publication_date"   onfocus="WdatePicker()" style="cursor:pointer;" size="60" placeholder="出版日期" autocomplete="off" value="<?php echo $bookInfo['source_publication_date']; ?>" />
+                                <div class="input-note">请填出版日期</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="label">
+                                <label>ISBN</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="source_ISBN" name="source_ISBN" size="60" placeholder="ISBN" value="<?php echo $bookInfo['source_ISBN']; ?>" />
+                                <div class="input-note">ISBN</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="label">
+                                <label>开本</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="source_folio" name="source_folio" size="60" placeholder="开本" value="<?php echo $bookInfo['source_folio']; ?>" />
+                                <div class="input-note">开本</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end tab2 -->
+
+                    <!-- start tab3 -->
+                    <div class="tab-panel" id="tab-3">
+                        请选择电子书类型
+                        <!-- 电子书信息 -->
+                    </div>
+                    <!-- end tab3 -->
+
+                    <!-- start tab4 -->
+                    <div class="tab-panel" id="tab-4">
+                        <!-- 分享标题 -->
+                        <div class="form-group">
+                            <div class="label">
+                                <label>分享标题 * </label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="other_share_title" name="other_share_title" size="60" datatype="*1-25" errormsg="最多25个字符" placeholder="分享标题" value="<?php echo $bookInfo['other_share_title']; ?>" />
+                                <div class="input-note">请填写分享标题, 最多25个字符</div>
+                            </div>
+                        </div>
+
+                        <!-- 列表页|分享摘要 -->
+                        <div class="form-group">
+                            <div class="label">
+                                <label>列表页|分享摘要 * </label>
+                            </div>
+                            <div class="field">
+                               <!-- <input type="text" class="input" style="width:220px;" id="other_share_summary" name="other_share_summary" size="60" datatype="*1-30" errormsg="最多30个字符" placeholder="列表页|分享摘要" value="<?php echo $book['other_share_summary']; ?>" /> -->
+                               <textarea type="text" class="input " style="width: 500px; height: 80px;" id="other_share_summary" name="other_share_summary" size="60" datatype="*" placeholder="列表页|分享摘要" autocomplete="off"><?php echo $book['other_share_summary']; ?></textarea>
+                                <div class="input-note">请填写列表页|分享摘要</div>
+                            </div>
+                        </div>
+
+                        <!-- 内容介绍 -->
+                        <div class="form-group">
+                            <div class="label">
+                                <label>内容介绍 * </label>
+                            </div>
+                            <div class="field">
+                                <textarea datatype="*" class="input" id="other_content" name="other_content"  rows="3" cols="62" ><?php echo $book['other_content']; ?></textarea>
+                                <div class="input-note">请填写内容介绍</div>
+                            </div>
+                        </div>
+
+                        <!-- 数据 -->
+                        <div class="form-group">
+                            <div class="label">
+                                <label>数据</label>
+                            </div>
+                            <div class="field">
+                                <!--<input type="text" class="input" style="width:220px;" id="other_sign" name="other_sign" size="60" placeholder="签名" value="<?php echo $bookInfo['other_sign']; ?>" />-->
+                                原书<input type="text" class="input" size='5' name="other_data[words]" value="<?php echo $book['other_data']['words'];?>">万字，得到为你提炼出<input type="text" class="input" size='5' name="other_data[process]" value="<?php echo $book['other_data']['process'];?>">万字干货<br />
+                                <input type="text" class="input" size='5' name="other_data[times]" value="<?php echo $book['other_data']['times'];?>">分钟读透《<input type="text" class="input" size='10' name="other_data[b_name]" value="<?php echo $book['other_data']['b_name'];?>">》 <br />
+                                帮你节省<input type="text" class="input" size='5' name="other_data[savetimes]" value="<?php echo $book['other_data']['savetimes'];?>">小时阅读时间。
+                                <div class="input-note">请填写数据信息</div>
+                            </div>
+                        </div>
+
+                        <!-- 金句推荐 -->
+                        <div class="form-group">
+                            <div class="label">
+                                <label>金句推荐 * </label>
+                            </div>
+                            <div class="field">
+                                <textarea datatype="*" class="input" id="other_recommend" name="other_recommend"  rows="3" cols="62" ><?php echo $bookInfo['other_recommend']; ?></textarea>
+                                <div class="input-note">请填写金句推荐</div>
+                            </div>
+                        </div>
+
+                        <!-- 电子书上传 -->
+                        <div class="form-group">
+                            <div class="label">
+                                <label>电子书上传 * </label>
+                                <input type="hidden" name="ebook_size" value="<?php echo $book['ebook_size']; ?>">
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input show_uo_imgs" id="images3" name="ebook" datatype="*" placeholder="电子书上传" readonly value="<?php echo $book['ebook']; ?>" />
+
+                                <a class="button bg-blue button-small " data="images3" id="image_upload3" preview="image_preview3" href="javascript:;" ><span class="icon-upload"> 上传</span></a>
+                                <!-- <a class="button bg-blue button-small icon-picture-o" id="image_preview3" href="javascript:;" > 预览</a> -->
+                                <div class="input-note">请上传电子书zip格式</div>
+                            </div>
+                        </div>
+
+                         <!-- zip 包的文件名 -->
+                        <div class="form-group">
+                            <div class="label">
+                                <label>上传包的名称</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="book_filename" name="book_filename" size="60" placeholder="上传包的名称" readonly datatype="*" value="<?php echo $book['book_filename']; ?>">
+                                <div class="input-note">上传包的名称</div>
+                            </div>
+                        </div>
+
+                        <!-- 关联电子书 -->
+                        <div class="form-group">
+                            <div class="label">
+                                <label>关联电子书</label>
+                            </div>
+                            <div class="field">
+                                <textarea class="input" id="other_related_book" name="other_related_book" rows="3" cols="62"><?php echo $bookInfo['other_related_book']; ?></textarea>
+                                <a class="button bg-blue button-big" id="show_ebook" href="javascript:;" style="vertical-align:top;">更新预览</a>
+                                <div class="input-note">请填写关联电子书</div>
+                                <div class="wran" style="display:none;"></div>
+                                <div id="show_ebook_box" class="<?php if ($books) : ?> panel <?php endif; ?>">
+                                    <?php if ($books) : ?>
+                                        <ul>
+                                            <?php foreach ($books as $value) : ?>
+                                                <li>
+                                                    <div class="p-l" style="width:100px;">
+                                                        <img width="80" src="<?php echo $value['cover']; ?>" alt="">
+                                                    </div>
+                                                    <div class="p-l width">
+                                                        <span><b><?php echo $value['operating_title']; ?></b></span>
+                                                        <span><b><?php echo $value['price']; ?></b></span>
+                                                        <span><?php echo $value['author']; ?></span>
+                                                        <?php if (!preg_match("/^0+?/", $value['date'])) : ?>
+                                                            <span><?php echo $value['date']; ?></span>
+                                                        <?php endif; ?>
+                                                        <span><?php echo $value['count']; ?></span>
+                                                    </div>
+                                                </li>
+                                            <?php endforeach; ?>
+                                        </ul>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <!-- start tab4 -->
+
+                    <div class="tab-panel" id="tab-5">
+                        <div class="form-group">
+                            <div class="label">
+                                <label>关联金句</label>
+                            </div>
+                            <div class="field">
+                                <button class="button bg-main" type="button" id="relation_book">关联金句</button>
+                                <?php if ($vids) : ?>
+                                    <input type="hidden" name="verse_id" value="<?php echo implode(',', $vids); ?>">
+                                <?php endif; ?>
+                                <div class="prev_title">
+                                    <?php if ($versies) : ?>
+                                        <?php foreach($versies as $value) : ?>
+                                            <a href="" class="button bg-main btn_<?php echo $value['id']; ?>"><?php echo $value['source']; ?></a>
+
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- table body end-->
+
+                <div class="panel-foot">
+                    <div class="form-button">
+                        <input type="hidden" name="id" value="<?php echo $book['id']; ?>">
+                        <div id="tips"></div>
+                        <button class="button bg-main" type="submit">保存</button>
+                        <button class="button bg" type="reset">重置</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div id="hidden_element" style="display:none;">
+
+<!-- start ebook -->
+<div class="tab-panel" id="ebook2">
+
+
+    <!-- 电子书信息 -->
+    <div class="form-group">
+        <div class="label">
+            <label>作者标题</label>
+        </div>
+        <div class="field">
+            <input type="text" class="input" style="width:220px;" id="ebook_author_title" name="ebook_author_title" size="60" placeholder="作者标题" value="<?php echo $bookInfo['ebook_author_title']; ?>">
+            <div class="input-note">作者标题</div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="label">
+            <label>作者</label>
+        </div>
+        <div class="field">
+            <input type="text" class="input" style="width:220px;" id="author" name="author" size="60" placeholder="作者" value="<?php echo $book['author']; ?>" >
+            <div class="input-note">作者</div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="label">
+            <label> 类别</label>
+        </div>
+        <div class="field">
+            <input type="text" class="input" style="width:220px;" id="ebook_type" name="ebook_type" size="60" placeholder=" 类别" value="<?php echo $bookInfo['ebook_type']; ?>">
+            <div class="input-note"> 类别</div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="label">
+            <label>版本</label>
+        </div>
+        <div class="field">
+            <input type="text" class="input" style="width:220px;" id="version" name="version" size="60" placeholder="版本" value="<?php echo $bookInfo['version']; ?>">
+            <div class="input-note">版本</div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="label">
+            <label> 编撰日期</label>
+        </div>
+        <div class="field">
+            <input type="text" class="input datebtn" style="width:220px;" id="ebook_compilation_date" name="ebook_compilation_date"   onfocus="WdatePicker()" style="cursor:pointer;" size="60" placeholder="编撰日期" autocomplete="off" value="<?php echo $bookInfo['ebook_compilation_date']; ?>">
+            <div class="input-note">编撰日期</div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="label">
+            <label>字数</label>
+        </div>
+        <div class="field">
+            <input type="text" class="input" style="width:220px;" id="count" name="count" size="60" placeholder="字数" value="<?php echo $book['count']; ?>">
+            <div class="input-note">字数</div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="label">
+            <label>备注</label>
+        </div>
+        <div class="field">
+            <textarea class="input" id="ebook_remarks" name="remarks" rows="3" cols="62"><?php echo $bookInfo['remarks']; ?></textarea>
+            <div class="input-note">备注</div>
+        </div>
+    </div>
+</div>
+<!-- end ebook -->
+
+<!-- start full_ebook -->
+<div class="tab-panel" id="ebook1">
+
+    <!-- 全本电子书信息 -->
+    <div class="form-group">
+        <div class="label">
+            <label>书名</label>
+        </div>
+        <div class="field">
+            <input type="text" class="input" style="width:220px;" id="wholebook_name" name="wholebook_name" size="60" placeholder="书名" value="<?php echo $bookInfo['wholebook_name']; ?>">
+            <div class="input-note">书名</div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="label">
+            <label>版本</label>
+        </div>
+        <div class="field">
+            <input type="text" class="input" style="width:220px;" id="version" name="version" size="60" placeholder="版本" value="<?php echo $bookInfo['version']; ?>">
+            <div class="input-note">版本</div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="label">
+            <label>册/卷/部/季</label>
+        </div>
+        <div class="field">
+            <input type="text" class="input" style="width:220px;" id="wholebook_volume" name="wholebook_volume" size="60" placeholder="册/卷/部/季" value="<?php echo $bookInfo['wholebook_volume']; ?>">
+            <div class="input-note">册/卷/部/季</div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="label">
+            <label>原作者</label>
+        </div>
+        <div class="field">
+            <input type="text" class="input" style="width:220px;" id="author" name="author" size="60" placeholder="原作者" value="<?php echo $book['author']; ?>">
+            <div class="input-note">原作者</div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="label">
+            <label>编/译/批评</label>
+        </div>
+        <div class="field">
+            <input type="text" class="input" style="width:220px;" id="wholebook_compilation" name="wholebook_compilation" size="60" placeholder="编/译/批评" value="<?php echo $bookInfo['wholebook_compilation']; ?>">
+            <div class="input-note">编/译/批评</div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="label">
+            <label>字数</label>
+        </div>
+        <div class="field">
+            <input type="text" class="input" style="width:220px;" id="count" name="count" size="60" placeholder="字数" value="<?php echo $book['count']; ?>">
+            <div class="input-note">字数</div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="label">
+            <label>IP授权方</label>
+        </div>
+        <div class="field">
+            <select class="input js-assign" target="#tpl" id="wholebook_authorization" name="wholebook_authorization">
+                <option value="0">请选择IP授权方</option>
+                <?php if ($ips) : ?>
+                    <?php foreach ($ips as $val) : ?>
+                        <option value="<?php echo $val['id']; ?>" <?php if ($val['id'] ==
+                            $bookInfo['wholebook_authorization']) : ?> selected <?php endif; ?>>
+                            <?php echo $val['mechanism']; ?>
+                        </option>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </select>
+            <div class="input-note">请选择IP授权方</div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="label">
+            <label>授权截止</label>
+        </div>
+        <div class="field">
+            <input type="text" class="input datebtn" style="width:220px;" id="wholebook_authorization_deadline" name="wholebook_authorization_deadline"   onfocus="WdatePicker()" style="cursor:pointer;" size="60" placeholder="授权截止" autocomplete="off" value="<?php echo $bookInfo['wholebook_authorization_deadline']; ?>">
+            <div class="input-note">授权截止</div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="label">
+            <label>备注</label>
+        </div>
+        <div class="field">
+            <textarea class="input" id="remarks" name="remarks"  rows="3" cols="62" ><?php echo $bookInfo['remarks']; ?></textarea>
+            <div class="input-note">备注</div>
+        </div>
+    </div>
+</div>
+<!-- end full_ebook -->
+</div>
+<script  type="text/javascript">
+
+
+
+    Do.ready('base', function () {
+        //表单综合处理
+        duxConfig.upDir = '';
+        $('#form').duxFormPage();
+        $('#image_upload1').duxFileUpload({
+            uploadUrl: '/audiotopic/upload',
+            type: 'jpg,png,gif',
+            complete: function (data) {
+                $('.show_uo_imgs').eq(0).val(data.host + '/' + data.path);
+                $(':input[name="cover"]').val(data.path);
+            }
+        });
+
+        $('#image_upload2').duxFileUpload({
+            uploadUrl: '/audiotopic/upload',
+            type: 'jpg,png,gif',
+            complete: function (data) {
+                $('.show_uo_imgs').eq(1).val(data.host + '/' + data.path);
+                $(':input[name="banner"]').val(data.path);
+            }
+        });
+    });
+
+    // 用来控制是否已经触发了上传控件
+    var bClicked = false;
+    function upload() {
+        if (bClicked) return;
+
+        bClicked = true;
+        $('#image_upload3').duxFileUpload({
+            uploadUrl: '/book/uploadToQN',
+            type: 'zip',
+            complete: function (data) {
+                $('.show_uo_imgs').eq(2).val(data.savepath);
+                $(":input[name='ebook_size']").val(data.fsize);
+                $("#book_filename").val(data.filename);
+            }
+        });
+    }
+</script>
+</script>
+
+<script>
+
+!function ($) {
+
+    $.fn.loadView = function(options) {
+
+//            默认配置
+        var defaultOpt = {
+            'ev': 'click',
+            'bgStyle': {
+                'position': 'absolute',
+                'width': '100%',
+                'height': '100%',
+                'left': 0,
+                'top': 0,
+                'backgroundColor': '#000',
+                'opacity': '0.5'
+            },
+            'mode': 'center',
+            'anime': 'fast',
+            'box': {
+                'position': 'absolute',
+                'background': '#fff',
+                'width': '500px',
+                'height': '300px'
+            },
+            'ajaxOpt': {
+                'url': '/book/ajaxbooklist',
+                'type': 'GET',
+                'dataType': 'json'
+            },
+            'pageer': '.pagination a',
+            'addBtn': '.icon-plus',
+            'disableBtn': 'bg-gray',
+            'activeBtn': 'bg-green',
+            'isMultiSelect': true,
+
+        };
+
+        var vObj = {
+
+            'aVal': [],
+            'oBg': $('<div id="view_bg"></div>'),
+            'oBox': $('<div id="view_box"></div>'),
+            'searchVal': {},
+            'url': '',
+            'aImg': {},
+            'oImg': $('<div id="view_img"></div>'),
+
+        };
+
+//            继承配置
+        options = $.extend(true, defaultOpt, options);
+
+//            获取当前对象
+        var _this = this;
+
+//            设置模式
+        switch (options.mode) {
+            case 'center':
+                var iLeft = ($(document).width() -  parseInt(options.box.width)) / 2;
+                var iTop = ($(document).height() -  parseInt(options.box.height)) / 2;
+
+                options.box.left = Math.ceil(iLeft) + 'px';
+                options.box.top = Math.ceil(iTop) + 'px';
+                break;
+//                TODO 增加全屏属性
+            case 'full':
+                break;
+        }
+
+//            ajax setting
+        var ajaxGetView = function () {
+//                设置参数
+
+            if (typeof(vObj.url) == "undefined") {
+                return false;
+            }
+
+            var p = 1;
+            if (vObj.url != '') {
+                var aParseUrl = vObj.url.split('/');
+                p = aParseUrl[4];
+            }
+
+            options.ajaxOpt.data = $.extend({'p': p}, vObj.searchVal);
+
+//                ajax
+            $.ajax(
+                options.ajaxOpt
+            ).done(function (data) {
+                    vObj.oBox.html(data.template);
+
+                    // 设置img预览
+                    prevImg();
+//                        设置状态
+                    setAddBtnState();
+                }).fail(function () {
+                    console.log('fail');
+                });
+        };
+
+//            绑定事件
+        $(_this).on(defaultOpt.ev, function () {
+
+//                判断是否已经创建了oBg和oBox对象
+            if ($('body').find(vObj.oBg).length > 0) {
+                vObj.oBg.fadeIn(options.anime);
+                vObj.oBox.fadeIn(options.anime);
+            } else {
+                vObj.oBg.css(options.bgStyle).fadeIn(options.anime);
+                vObj.oBox.css(options.box).fadeIn(options.anime);
+
+                $('body').append(vObj.oBg);
+                $('body').append(vObj.oBox);
+
+                ajaxGetView();
+                getPage();
+            }
+        });
+
+//            设置添加的值
+        $(document).on('click', options.addBtn, function () {
+            setArrValue($(this).attr('value'));
+//                设置状态
+            setAddBtnState();
+
+            if (typeof(options.setPrevTitle) == 'function') {
+                options.setPrevTitle($(this).attr('value'), vObj);
+            }
+        });
+
+//            获取分页的值
+        var getPage = function() {
+            $(document).on('click', options.pageer, function (event) {
+                vObj.url = $(this).attr('href');
+
+                ajaxGetView();
+                // 阻止herf默认事件
+                event.preventDefault();
+            });
+        };
+
+//            设置添加按钮的状态
+        var setAddBtnState = function () {
+            $(options.addBtn).each( function (i, ele) {
+
+                var oImg = $(ele).parent().parent().find('img');
+                var ind = $.inArray($(ele).attr('value'), vObj.aVal);
+
+                if ( ind >= 0) {
+                    $(ele).removeClass(options.activeBtn);
+                    $(ele).addClass(options.disableBtn);
+
+                    if (oImg.length > 0) {
+                        vObj.aImg[$(ele).attr('value')] = {
+                            'url': oImg.attr('src'),
+                            'title': oImg.attr('title')
+                        };
+                    }
+
+
+                } else {
+                    $(ele).removeClass(options.disableBtn);
+                    $(ele).addClass(options.activeBtn);
+
+                    if (oImg.length) {
+                        delete vObj.aImg[$(ele).attr('value')];
+                    }
+                }
+            });
+        };
+
+//            选择完成添加img
+        var addPrevImg = function () {
+
+            if (typeof(options.prevImgBtn) != 'undefined') {
+                vObj.oImg.html('');
+
+                var oIsExists = $('#' + vObj.oImg.attr('id'));
+
+                if (oIsExists.length > 0) {
+                    oIsExists.remove();
+                }
+
+                if (!$.isEmptyObject(vObj.aImg)) {
+
+                    for (var i in vObj.aImg) {
+                        var oImg = $('<div><img width="100" src="' + vObj.aImg[i].url + '" title="' + vObj.aImg[i].title  + '" ><span>' + vObj.aImg[i].title + '</span></div>');
+                        vObj.oImg.prepend(oImg);
+                    }
+                }
+                $(_this).parent().append(vObj.oImg);
+            }
+
+        };
+
+//            设置input隐藏域
+        var setInput = function () {
+            if (!$('input[name="' + options.inputName + '"]').length > 0) {
+                var oInput = $('<input />');
+                oInput.attr('name', options.inputName);
+                oInput.attr('type', 'hidden');
+                $(_this).parent().append(oInput);
+                return oInput;
+            } else {
+                return $('input[name="' + options.inputName + '"]');
+            }
+        };
+
+//            设置input值
+        var setInputValue = function () {
+            var oInput = setInput();
+            oInput.val(vObj.aVal.join(','));
+        };
+
+//            设置数组的值
+        var setArrValue = function (iValue) {
+
+            var ind = $.inArray(iValue, vObj.aVal);
+
+//                是否多选
+            if (!options.isMultiSelect) {
+                if (vObj.aVal.length == 1 && ind) {
+                    alert('不能多选');
+                    return false;
+                }
+            }
+
+            if ( ind >= 0) {
+                vObj.aVal.splice(ind, 1);
+            } else {
+                vObj.aVal.push(iValue);
+            }
+        };
+
+        var callAll = function () {
+
+            setInputValue();
+            vObj.oBg.fadeOut(options.anime);
+            vObj.oBox.fadeOut(options.anime);
+            addPrevImg();
+        }
+//            背景绑定事件
+        $(vObj.oBg).on('click', function () {
+            callAll();
+        });
+
+//        ok
+        $(document).on('click', '.selectVerseBtn', function () {
+
+            callAll();
+        });
+
+//            搜索
+        if (typeof(options.searchBtn) != 'undefined' && typeof(options.searchInput) != 'undefined') {
+
+            $(document).on('click', options.searchBtn, function () {
+
+                var param = options.searchInput;
+                vObj.searchVal[param] = $('input[name="' + options.searchInput + '"]').val();
+                vObj.url = '';
+                ajaxGetView();
+            });
+        }
+
+//            预览
+        var prevImg = function () {
+
+            if (typeof(options.prevImgBtn) != 'undefined') {
+                $(options.prevImgBtn).each( function (i, ele) {
+
+                    $(ele).parent('td').css({
+                        'position': 'relative'
+                    });
+
+                    $(ele).next('img').css({
+                        'position': 'absolute',
+                        'left': '0px',
+                        'top': '30px',
+                        'width': '100px',
+                        'zIndex': 999
+                    });
+
+                    $(ele).on('mouseover', function () {
+                        $(this).next('img').fadeIn(options.anime);
+                    });
+
+                    $(ele).on('mouseout', function () {
+
+                        $(this).next('img').fadeOut(options.anime);
+                    });
+                });
+            }
+        };
+
+        if ($('input[name="' + options.inputName + '"]').length > 0) {
+            vObj.aVal = $('input[name="' + options.inputName + '"]').val().split(',');
+        }
+    };
+}(jQuery);
+
+$("#relation_book").loadView({
+    'ev': 'click',
+    'mode': 'center',
+    'box': {
+        'width': '800px',
+        'height': '660px',
+    },
+    'inputName': 'verse_id',
+    'ajaxOpt': {
+        'url': '/verse/ajaxverselist',
+        'type': 'GET',
+        'dataType': 'json'
+    },
+    'searchBtn': '.search',
+    'searchInput': 'search_title',
+    'pageer': '.pagination a',
+    'addBtn': '.icon-plus',
+    'disableBtn': 'bg-gray',
+    'activeBtn': 'bg-green',
+    'setPrevTitle': function (id, vObj) {
+
+        var oBtn = $('<a class="button bg-main"></a>');
+        var classPrefix = 'verse_title_';
+        var btnPrefix = 'btn_';
+
+        oBtn.addClass(btnPrefix + id);
+
+        console.log(vObj.aVal);
+        if ($.inArray(id, vObj.aVal) >= 0) {
+            $('.prev_title').append(oBtn.html($('.' + classPrefix + id).html()));
+        } else {
+            $('.' + btnPrefix + id).remove();
+        }
+    }
+});
+</script>

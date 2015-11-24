@@ -1,0 +1,169 @@
+<div class="dux-tools">
+    <div class="bread-head">用户管理<span class="small">编辑用户</span>
+
+        <div class="float-right">
+            <a class="button button-small bg-main icon-list" href="/user/list">
+            用户列表</a>
+        </div>
+
+    </div>
+
+    <!-- <div class="tools-function clearfix">
+        <div class="float-left">
+            <a class="button button-small bg-main icon-list" href="javascript:;">
+            内容列表</a>
+        </div>
+        <div class="button-group float-right">
+            <a class="button button-small bg-dot icon-plus dropdown-toggle"> 添加 <span class="downward"></span></a>
+            <ul class="drop-menu pull-right">
+                <li><a href="/admin.php?r=duxcms/AdminFormData/add&fieldset_id=1">添加内容</a></li>
+            </ul>
+        </div>
+    </div> -->
+</div>
+<div class="admin-main">
+    <form method="post" class="form-x dux-form form-auto" id="form" action="/user/edit">
+        <div class="tab dux-tab">
+            <div class="panel dux-box  active">
+                <!-- tab head start-->
+                <div class="panel-head">
+                    <div class="tab-head">
+                        <strong>用户管理</strong>
+                        <ul class="tab-nav">
+                            <li class="active"><a href="#tab-1">编辑用户</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- tab head end -->
+
+                <!-- table body start-->
+                 <div class="tab-body">
+
+                    <!-- tab 1 start -->
+                    <div class="tab-panel active" id="tab-1">
+                        <div class="form-group">
+                            <div class="label">
+                                <label>登录帐号</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="code" name="code" size="60" datatype="*" placeholder="登录帐号" value="<?php echo $user['code']; ?>" readonly>
+                                <div class="input-note">请填写登录帐号</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="label">
+                                <label>名字</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="name" name="name" size="60" datatype="*" value="<?php echo $user['name']; ?>" placeholder="名字">
+                                <div class="input-note">请填写名字</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="label">
+                                <label>电话</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="tel" name="tel" size="60" datatype="*" placeholder="电话" value="<?php echo $user['tel']; ?>">
+                                <div class="input-note">请填写电话</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="label">
+                                <label>微信号</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="wechat_name" name="wechat_name" size="60" datatype="*" value="<?php echo $user['wechat']; ?>" placeholder="微信号">
+                                <div class="input-note">请填写微信号</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="label">
+                                <label>微信昵称</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="wechat_nickname" name="wechat_nickname" size="60" datatype="*" value="<?php echo $user['wechat_nickname']; ?>" placeholder="微信昵称">
+                                <div class="input-note">请填写微信昵称</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="label">
+                                <label>用户组</label>
+                            </div>
+                            <div class="field">
+                                <select class="input js-assign" target="#tpl" name="group">
+                                    <option value="0">请选择</option>
+                                    <?php if ($groupList) : ?>
+                                        <?php foreach ($groupList as $val) : ?>
+                                            <option value="<?php echo $val['id']; ?>" <?php if ($val['id'] == $user['gid']) : ?> selected <?php endif;?>>
+                                            <?php echo $val['name']; ?></option>
+                                        <?php endforeach;?>
+                                    <?php endif;?>
+                                </select>
+                                <div class="input-note">请选择用户组</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="label">
+                                <label>登录密码</label>
+                            </div>
+                            <div class="field">
+                                <input type="password" class="input" style="width:220px;" id="password" name="password" size="60" placeholder="登录密码" datatype="/[\d|\w]{6}/" errormsg="密码长度6位以上" ignore="ignore">
+                                <div class="input-note">请填写登录密码</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="label">
+                                <label>确定登录密码</label>
+                            </div>
+                            <div class="field">
+                                <input type="password" class="input" style="width:220px;" id="confirm_password" name="confirm_password" size="60" datatype="*" placeholder="确定登录密码" errormsg="两次密码不一致" recheck="password" ignore="ignore">
+                                <div class="input-note">请填写确定登录密码</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="label">
+                                <label>登录状态</label>
+                            </div>
+                            <div class="field">
+                                <div class="button-group radio">
+                                    <label class="button <?php if (1 == $user['status']) : ?> active <?php endif;?>">
+                                        <input name="status" value="1" type="radio" <?php if ($user['status'] == 1) : ?> checked <?php endif;?>>
+                                        <span class="icon icon-check text-green"></span> 正常
+                                    </label>
+
+                                    <label class="button <?php if (0 == $user['status']) : ?> active <?php endif;?>">
+                                        <input name="status" value="0" type="radio" <?php if ($user['status'] == 0) : ?> checked <?php endif;?>>
+                                        <span class="icon icon-check text-green"></span> 禁用
+                                    </label>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- tab 1 end  -->
+                </div>
+                <!-- table body end -->
+
+                <div class="panel-foot">
+                    <div class="form-button">
+                        <div id="tips"></div>
+                        <input type="hidden" name="id" value="<?php echo $user['id']; ?>">
+                        <button class="button bg-main" type="submit">保存</button>
+                        <button class="button bg" type="reset">重置</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script  type="text/javascript">
+    Do.ready('base', function () {
+        //表单综合处理
+        $('#form').duxFormPage();
+    });
+</script>

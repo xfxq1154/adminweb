@@ -1,0 +1,701 @@
+<script language="JavaScript" type="text/javascript" src="<?=ASSET_URL?>/admincenter/js/calendar/WdatePicker.js"></script>
+<div class="dux-tools">
+    <div class="bread-head">音频排期                <span class="small">添加音频排期</span>
+    </div>
+    <br>
+    <div class="tools-function clearfix">
+        <div class="button-group float-right">
+            <a class="button button-small bg-main icon-list" href="/audiotopic/ListDailyPackage">
+                日常包排期列表</a>
+        </div>
+    </div>
+</div>
+<div class="admin-main">
+    <form method="post" class="form-x dux-form form-auto" id="form" action="/audiotopic/addDailyPackage">
+        <div class="tab dux-tab">
+            <div class="panel dux-box  active">
+                <div class="panel-head">
+                    <div class="tab-head">
+                        <strong>菜单管理</strong>
+                        <ul class="tab-nav">
+                            <li class="active"><a href="#tab-1" id="tabtn1" num="1" class="tablists ">免费音频</a></li>
+                            <li><a href="#tab-3" id="tabtn3" num="3" class="tablists lastab">金句</a></li>
+                            <li><a href="#tab-4" id="tabtn4" num="4" class="tablists lastab">电子书</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="tab-body">
+
+
+
+                    <div class="tab-panel active" id="tab-1">
+
+                        <div class="form-group">
+                            <div class="label">
+                                <label>排期名称</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="title" name="title" size="60" datatype="*" errormsg="" placeholder="排期名称" autocomplete="off">
+                                <input type="hidden" class="input" style="width:220px;" id="statusBtn" name="status" value="1" size="60" datatype="*1-12" errormsg="" placeholder="" autocomplete="off">
+
+                                <div class="input-note">请填排期名称</div>
+                            </div>
+                        </div>
+
+
+                         <div class="form-group">
+                            <div class="label">
+                                <label>上线日期</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input datebtn" style="width:220px;" id="datetime" name="datetime"   onfocus="WdatePicker({minDate:'%y-%M-{%d+1}'})" style="cursor:pointer;" size="60" datatype="*" placeholder="音频上线日期" autocomplete="off"><a style="cursor: pointer;" class="checkDailyRecord">检测</a>
+                                <div class="input-note">请选择音频上线日期</div><div id="paychecknote" style="display: none;color: red;">当天的排期已存在，不能重复</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <input name="type" type="hidden" value="1" />
+                        </div>
+
+
+
+
+                        <div class="form-group">
+                            <div class="label">
+                                <label>排期封面</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input show_uo_imgs" id="images" datatype="*" placeholder="请上传排期封面" readonly>
+                                <input type="hidden" name="icon">
+                                <a class="button bg-blue button-small " data="images" id="image_upload" preview="image_preview" href="javascript:;" ><span class="icon-upload"> 上传</span></a>
+                                <a class="button bg-blue button-small icon-picture-o" id="image_preview" href="javascript:;" > 预览</a>
+                                <div class="input-note">请上传排期封面，尺寸为600x600</div>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <div class="label">
+                                <label>客户端推送标题</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="audio_title" name="audio_title" size="60" datatype="*" placeholder="客户端推送标题" autocomplete="off">
+                                <div class="input-note">请填写客户端推送标题</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="label">
+                                <label>客户端推送内容</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="audio_brife" name="audio_brife" size="60" datatype="*" placeholder="客户端推送内容" autocomplete="off">
+                                <div class="input-note">请填写客户端推送内容</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="label">
+                                <label>免费音频</label>
+                            </div>
+                            <div class="field">
+                                <textarea type="text" class="input audiolist" style="width: 500px; height: 80px;" id="audiolist" name="audiolist" size="60" datatype="*" placeholder="音频列表" autocomplete="off"></textarea>
+                                <button class="button viewfile" style="vertical-align: top; width: 100px; height: 80px;" >文件预览</button>
+                                <div class="clearfix selectlist checkbox"></div>
+                                <div class="clearfix selectnote checkbox"></div>
+                                <div class="input-note">请输入音频列表 id,id,id,id</div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+
+                    <div class="tab-panel" id="tab-3">
+
+                         <div class="form-group">
+                            <div class="label">
+                                <label>关联金句</label>
+                            </div>
+                            <div class="field">
+                                <button class="button bg-main" type="button" id="relation_book">关联金句</button>
+                                <div class="previewVerseList" style="margin:10px 0 0 0;"></div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+
+
+                    <div class="tab-panel" id="tab-4">
+
+                        <div class="form-group">
+                            <div class="label">
+                                <label>电子书</label>
+                            </div>
+                            <div class="field">
+                                <textarea type="text" class="input ebook" style="width: 500px; height: 80px;" id="ebook" name="ebook" size="60"  placeholder="音频列表" autocomplete="off"></textarea>
+                                <button class="button ebookview" style="vertical-align: top; width: 100px; height: 80px;" >文件预览</button>(点击文件预览，设置电子书冰点价格)
+                                <div class="ebooklist" id="show_ebook_box" style="float:none;" ></div>
+                                <div class="clearfix ebooknote checkbox"></div>
+                                <div class="input-note">请输入电子书列表 id,id,id,id</div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+
+                    <div class="panel-foot pfcont">
+
+                        <div class="form-button footablist" id="footab-1" >
+                            <a class="button bg-main nextab" n="3" style="cursor:pointer;">下一步</a>
+
+                        </div>
+                        
+                        <div class="form-button footablist" id="footab-3" style="display: none;">
+                            <a class="button bg-main nextab" n="1"  style="cursor:pointer;">上一步</a>
+                            <a class="button bg-main nextab" n="4" style="cursor:pointer;">下一步</a>
+
+                        </div>
+
+
+                       <div class="form-button footablist" id="footab-4" style="display:none;">
+                            <div class="newtipslist" id="tips"></div>
+                            <a class="button bg-main nextab" n="3"  style="cursor:pointer;">上一步</a>
+                            <button class="button bg-main submitBtn saveBtn" type="submit">保存</button>
+                            <!--<button class="button bg-main submitBtn otherSubmit" n="4"  style="cursor:pointer;"  type="submit">保存并上架</button>-->
+                            <button class="button bg submitBtn" type="reset" >重置</button>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+    </form>
+</div>
+
+
+
+
+<script  type="text/javascript">
+    Do.ready('base', function () {
+
+        $('#form').duxFormPage();
+        duxConfig.upDir = '';
+
+        $('#image_upload').duxFileUpload({
+            uploadUrl: '/audiotopic/upload',
+            type: 'jpeg,jpg,png',
+            complete: function (data) {
+                $('.show_uo_imgs').eq(0).val(data.host + '/' + data.path);
+                $(':input[name="icon"]').val(data.path);
+            }
+        });
+
+
+
+ });
+
+        //免费音频预览
+        $('.viewfile').click(function(){
+            audiolist = $('.audiolist').val();
+            if(audiolist){
+                $('.selectlist').children('label').remove();
+                $.ajax({
+                    url: '/audiotopic/audiolist/',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {audiolist: audiolist},
+                    success: function(data){
+                        if(data.status == 'error'){
+                            alert(data.code);
+                            $('.audiolist').val('');
+                            return false;
+                        }
+                        loadlist(data.data, 'selectlist','.selectnote','audiolist');
+                    }
+                });
+            }
+            return false;
+        });
+
+
+        //收费音频预览
+        $('.viewfile_payment').click(function(){
+            audiolist = $('.payaudiolist').val();
+            if(audiolist){
+                $('.paylist').children('label').remove();
+                $.ajax({
+                    url: '/audiotopic/audiolist/',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {audiolist: audiolist},
+                    success: function(data){
+                        if(data.status == 'error'){
+                            alert(data.code);
+                            $('.payaudiolist').val('');
+                            return false;
+                        }
+                        loadlist(data.data, 'paylist','.paynote','payaudiolist');
+                    }
+                });
+            }
+            return false;
+        });
+
+
+
+        //电子书列表预览
+        $('.ebookview').click(function(){
+            var ebooklist = $('.ebook').val();
+            if ("" != ebooklist){
+                if (contains(ebooklist, "，", true)){
+                    alert("不能含有中文逗号，请使用英文逗号");return false;
+                }
+            }
+            if(ebooklist){
+                $('.ebooklist').html('');//children('label').remove();
+                $.ajax({
+                    url: '/audiotopic/getEbookList',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {ebooklist: ebooklist},
+                    success: function(data){
+                        if(data.status == 'error'){
+                            alert(data.code);
+                            return false;
+                        }
+
+                        var bookids = '';
+                        var str = "<ul>";
+                        $.each(data.data, function (i, item) {
+                            var btype = (item.type=='1'?'全文':'干货');
+                            bookids+=item.id+',';
+
+                            str += '<li>' + '<div class="p-l"><img src="' + item.cover +
+                            '" alt="" width="80" /></div>' +
+                            '<div class="p-l width">' +
+                            '<span><b>' + item.title + '</b></span>' + "\n" +
+                            '<span><b>' + btype + '</b></span>' + "\n" +
+
+                            '<span>' + item.author + '</span>' + "\n" +
+                            '<span>￥<input name="bookprice[]" value="'+item.price+'" /></span></div></li>' + "\n";
+
+                        });
+                        str+="</ul>";
+                        var bids = bookids.substr(0,bookids.length-1);
+                        $('.ebooklist').append(str);
+                        $('.ebook').val(bids);
+                        //ebooklist(data.data, 'ebooklist','.ebooknote');
+                    }
+                });
+            }
+            return false;
+        });
+
+
+
+
+
+
+
+
+    function loadlist(data, dom,note,audio_input_class){
+        var str = "";
+        var atime = 0;
+        var ids = '';
+        $.each(data, function (i, item) {
+            ids += item.id+',';
+            str += appendAudio(item);
+            atime += parseInt(item.duration);
+        });
+        ids =ids.substring(0,ids.length-1);
+        $('.'+audio_input_class).val(ids);
+        $('.' + dom).append(str);
+         $(note).html( '共'+data.length+'个音频文件，累计时长：'+formatSeconds(atime) );
+    }
+    function appendAudio(item){
+        var str = "";
+        str +=  "  <label class=\"button active\" style=\"margin: 0 5px 5px 0;  float: left;  position: relative;  font-weight: normal;\">";
+        str +=  "  <input name=\"aid[]\" value=\""+item.id+"\" type=\"checkbox\" checked=\"checked\">";
+        str +=  "  "+item.title+" ";
+        str +=  "   </label>";
+        return str;
+    }
+
+     function formatSeconds(value) {
+        var theTime = parseInt(value);// 秒
+        var theTime1 = 0;// 分
+        var theTime2 = 0;// 小时
+        if(theTime > 60) {
+           theTime1 = parseInt(theTime/60);
+           theTime = parseInt(theTime%60);
+           if(theTime1 > 60) {
+              theTime2 = parseInt(theTime1/60);
+              theTime1 = parseInt(theTime1%60);
+            }
+        }
+        var result = ""+parseInt(theTime)+"秒";
+        if(theTime1 > 0) {
+            result = ""+parseInt(theTime1)+"分"+result;
+        }
+        if(theTime2 > 0) {
+            result = ""+parseInt(theTime2)+"小时"+result;
+        }
+        return result;
+   }
+
+
+  $('.checkDailyRecord').on('click',function(){
+      var topicDate = $('#datetime').val();
+          if(topicDate == '' || topicDate == null){
+            alert('请填写排期日期');return false;
+          }
+          checkPayRecord(topicDate);
+      return;
+
+  });
+
+  function checkPayRecord(topicDate){
+      $.ajax({
+              type: 'POST',
+              url: '/audiotopic/checkPayTypeRecord',
+              data:{dtime:topicDate,topictype:1},
+              dataType: 'json',
+              timeout: 0,
+              context:$('body'),
+              success: function(data){
+                  if(data.status == 'ok'){
+                      $('#paychecknote').hide();
+                      alert('没有当天的日常排期记录,可以添加排期');
+                  }else{
+                      alert('当天的日常排期已存在，不能重复！');
+                      $('#paychecknote').show();
+                  }
+
+
+
+              },
+              error:function(xhr,type){
+                  alert('请求失败！');
+              }
+           });
+  }
+
+
+   function contains(str, subStr, isIgnoreCase) {
+
+    if (isIgnoreCase) {
+        // 忽略大小写
+        str = str.toLowerCase();
+        subStr = subStr.toLowerCase();
+    }
+
+    var startChar = subStr.substring(0,1);
+    var strLen = subStr.length;
+
+    for (var j=0; j<str.length-strLen+1; j++) {
+        if (str.charAt(j) == startChar) {
+            /* 如果匹配起始字符,开始查找 */
+            if (str.substring(j, j+strLen) == subStr) {
+                /*如果从j开始的字符与 str 匹配 */
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+$('body').delegate('.nextab','click',function(){
+    var n =  $(this).attr('n');
+    $('#tabtn'+n).trigger("click");
+});
+
+
+$('body').delegate('.otherSubmit','click',function(){
+    $('#statusBtn').val(2);
+    //$('form').submit();
+});
+
+$('body').delegate('.saveBtn','click',function(){
+    $('#statusBtn').val(1);
+    //$('form').submit();
+});
+
+
+
+    // 用来控制是否已经触发了上传控件
+    var bClicked = false;
+    function upload() {
+
+        if (bClicked) return;
+
+        bClicked = true;
+
+         $('#image_upload1').duxFileUpload({
+            uploadUrl: '/audiotopic/upload',
+            type: 'jpg,png,gif',
+            complete: function (data) {
+                $('.show_uo_imgs').eq(1).val(data.savepath);
+            }
+        });
+
+        $('#image_upload2').duxFileUpload({
+            uploadUrl: '/audiotopic/upload',
+            type: 'jpg,png,gif',
+            complete: function (data) {
+                $('.show_uo_imgs').eq(2).val(data.savepath);
+            }
+        });
+    }
+
+
+
+
+</script>
+
+
+
+
+<script>
+
+    !function ($) {
+
+        $.fn.loadView = function(options) {
+
+//            默认配置
+            var defaultOpt = {
+                'ev': 'click',
+                'bgStyle': {
+                    'position': 'absolute',
+                    'width': '100%',
+                    'height': '100%',
+                    'left': 0,
+                    'top': 0,
+                    'backgroundColor': '#000',
+                    'opacity': '0.5'
+                },
+                'mode': 'center',
+                'anime': 'fast',
+                'box': {
+                    'position': 'absolute',
+                    'background': '#fff',
+                    'width': '500px',
+                    'height': '300px'
+                },
+                'ajaxOpt': {
+                    'url': '/book/ajaxbooklist',
+                    'type': 'GET',
+                    'dataType': 'json'
+                },
+                'pageer': '.pagination a',
+                'addBtn': '.icon-plus',
+                'disableBtn': 'bg-gray',
+                'activeBtn': 'bg-green'
+            };
+
+            var vObj = {
+
+                'aVal': [],
+                'oBg': $('<div id="view_bg"></div>'),
+                'oBox': $('<div id="view_box"></div>'),
+                'searchVal': {},
+                'url': ''
+
+            };
+
+//            继承配置
+            options = $.extend(true, defaultOpt, options);
+
+//            获取当前对象
+            var _this = this;
+
+//            设置模式
+            switch (options.mode) {
+                case 'center':
+                    var iLeft = ($(document).width() -  parseInt(options.box.width)) / 2;
+                    var iTop = ($(document).height() -  parseInt(options.box.height)) / 2;
+
+                    options.box.left = Math.ceil(iLeft) + 'px';
+                    options.box.top = Math.ceil(iTop) + 'px';
+                    break;
+//                TODO 增加全屏属性
+                case 'full':
+                    break;
+            }
+
+//            ajax setting
+            var ajaxGetView = function () {
+//                设置参数
+
+                if (typeof(vObj.url) == "undefined") {
+                    return false;
+                }
+
+                var p = 1;
+                if (vObj.url != '') {
+                    var aParseUrl = vObj.url.split('/');
+                    p = aParseUrl[4];
+                }
+
+                options.ajaxOpt.data = $.extend({'p': p}, vObj.searchVal);
+
+//                ajax
+                $.ajax(
+                    options.ajaxOpt
+                ).done(function (data) {
+                        vObj.oBox.html(data.template);
+//                        设置状态
+                        setAddBtnState();
+                    }).fail(function () {
+                        console.log('fail');
+                    });
+            };
+
+//            绑定事件
+            $(_this).on(defaultOpt.ev, function () {
+
+//                判断是否已经创建了oBg和oBox对象
+                if ($('body').find(vObj.oBg).length > 0) {
+                    vObj.oBg.fadeIn(options.anime);
+                    vObj.oBox.fadeIn(options.anime);
+                } else {
+                    vObj.oBg.css(options.bgStyle).fadeIn(options.anime);
+                    vObj.oBox.css(options.box).fadeIn(options.anime);
+
+                    $('body').append(vObj.oBg);
+                    $('body').append(vObj.oBox);
+
+                    ajaxGetView();
+                    getPage();
+                }
+            });
+
+//            设置添加的值
+            $(document).on('click', options.addBtn, function () {
+                setArrValue($(this).attr('value'));
+//                设置状态
+                setAddBtnState();
+                setPreviewBox($(this).attr('value'));
+            });
+            
+            var setPreviewBox = function(v){
+                var verseTitle = $('.verse_title_'+v).html();
+                if ($.inArray(v, vObj.aVal) >= 0) {
+                    $('.previewVerseList').html(verseTitle);
+                }else{
+                    if (!vObj.aVal.length) {
+                        $('.previewVerseList').html('');
+                    }
+                    
+                }
+                
+            };
+
+//            获取分页的值
+            var getPage = function() {
+                $(document).on('click', options.pageer, function (event) {
+                    vObj.url = $(this).attr('href');
+
+                    ajaxGetView();
+                    // 阻止herf默认事件
+                    event.preventDefault();
+                });
+            };
+
+//            设置添加按钮的状态
+            var setAddBtnState = function () {
+                $(options.addBtn).each( function (i, ele) {
+                    if ($.inArray($(ele).attr('value'), vObj.aVal) >= 0) {
+                        $(ele).removeClass(options.activeBtn);
+                        $(ele).addClass(options.disableBtn);
+                    } else {
+                        $(ele).removeClass(options.disableBtn);
+                        $(ele).addClass(options.activeBtn);
+                    }
+                });
+            };
+
+//            设置input隐藏域
+            var setInput = function () {
+                if (!$('input[name="' + options.inputName + '"]').length > 0) {
+                    var oInput = $('<input />');
+                    oInput.attr('name', options.inputName);
+                    oInput.attr('type', 'hidden');
+                    $(_this).parent().append(oInput);
+                    return oInput;
+                } else {
+                    return $('input[name="' + options.inputName + '"]');
+                }
+            };
+
+//            设置input值
+            var setInputValue = function () {
+                var oInput = setInput();
+                oInput.val(vObj.aVal.join(','));
+            };
+
+//            设置数组的值
+            var setArrValue = function (iValue) {
+                var ind = $.inArray(iValue, vObj.aVal);
+                if (vObj.aVal.length == 1 && ind) {
+                        alert('不能多选');
+                        return false;
+                    }
+                if ( ind >= 0) {
+                    vObj.aVal.splice(ind, 1);
+                } else {
+                    vObj.aVal.push(iValue);
+                }
+            };
+
+//            背景绑定事件
+            $(vObj.oBg).on('click', function () {
+                setInputValue();
+                vObj.oBg.fadeOut(options.anime);
+                vObj.oBox.fadeOut(options.anime);
+            });
+            
+            $('body').delegate('.selectVerseBtn','click', function () {
+                setInputValue();
+                vObj.oBg.fadeOut(options.anime);
+                vObj.oBox.fadeOut(options.anime);
+            });
+
+//            搜索
+            if (typeof(options.searchBtn) != 'undefined' && typeof(options.searchInput) != 'undefined') {
+
+                $(document).on('click', options.searchBtn, function () {
+                    console.log($('input[name="' + options.searchInput + '"]').val());
+                    console.log($('input[name="' + options.searchInput + '"]'));
+                    var param = options.searchInput;
+                    vObj.searchVal[param] = $('input[name="' + options.searchInput + '"]').val();
+                    vObj.url = '';
+                    ajaxGetView();
+                })
+            }
+        }
+    }(jQuery);
+
+    $("#relation_book").loadView({
+        'ev': 'click',
+        'mode': 'center',
+        'box': {
+            'width': '800px',
+            'height': '660px',
+        },
+        'inputName': 'verse_id',
+        'ajaxOpt': {
+            'url': '/verse/ajaxVerseList',
+            'type': 'GET',
+            'dataType': 'json'
+        },
+        'searchBtn': '.search',
+        'searchInput': 'search_title'
+    });
+</script>

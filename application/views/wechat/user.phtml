@@ -1,0 +1,48 @@
+<div class="dux-tools">
+  <div class="tools-function clearfix">
+    <div class="float-left"> 
+	<a class="button button-small bg-main icon-list" href="/wechatuser/index"> 微信用户列表</a> 
+	</div>
+  </div>
+</div>
+<div class="admin-main">
+    <div class="panel dux-box">
+        <div class="table-responsive">
+            <table id="table" class="table table-hover ">
+                <tbody>
+                    <tr>
+                        <th width="100">用户编号</th>
+                        <th width="140">所属微信</th>
+                        <th width="*">微信昵称</th>
+                        <th width="*">微信openid</th>
+                        <th width="*">微信unionid</th>
+                        <th width="220">绑定用户</th>
+                        <th width="140">操作</th>
+                    </tr>
+                    <?php if(!empty($data)):?>
+                    <?php foreach ($data as $key=>$val):?>
+                    <tr>
+                        <td><?php echo $val['id'];?></td>
+                        <td><?php echo $val['wid']?></td>
+                        <td><?php echo $val['nickname'];?></td>
+                        <td><?php echo $val['openid'];?></td>
+                        <td><?php echo $val['unionid'];?></td>
+                        <td><?php echo $val['uid'];?></td>
+                        <td>
+                            <a class="button bg-gray button-small icon-share-square-o " href="javascript:;"> 暂无相关操作</a>
+                        </td>
+                    </tr>
+                    <?php endforeach;?>
+                    <?php endif;?>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="panel-foot table-foot clearfix">
+            <div class="float-right">
+                <?php echo $listpage;?>
+            <ul class='pagination pagination-small'>    </ul>            
+            </div>
+        </div>
+    </div>
+</div>

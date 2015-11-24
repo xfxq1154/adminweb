@@ -1,0 +1,190 @@
+<div class="dux-tools">
+    <div class="bread-head">订单管理<span class="small">编辑订单</span>
+
+        <div class="float-right">
+            <a class="button button-small bg-main icon-list" href="/bporder">
+            订单列表</a>  
+        </div>
+
+    </div>
+
+    <!-- <div class="tools-function clearfix">
+        <div class="float-left">
+            <a class="button button-small bg-main icon-list" href="javascript:;">
+            内容列表</a>
+        </div>
+        <div class="button-group float-right">
+            <a class="button button-small bg-dot icon-plus dropdown-toggle"> 添加 <span class="downward"></span></a>
+            <ul class="drop-menu pull-right">
+                <li><a href="/admin.php?r=duxcms/AdminFormData/add&fieldset_id=1">添加内容</a></li>
+            </ul>
+        </div>
+    </div> -->
+</div>
+<div class="admin-main">
+    <form method="post" class="form-x dux-form form-auto" id="form" action="/bporder/edit">
+        <div class="tab dux-tab">
+            <div class="panel dux-box  active">
+                <!-- tab head start-->
+                <div class="panel-head">
+                    <div class="tab-head">
+                        <strong>订单管理</strong>
+                        <ul class="tab-nav">
+                            <li class="active"><a href="#tab-1">编辑订单</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- tab head end -->
+
+                <!-- table body start-->
+                 <div class="tab-body">
+
+                    <!-- tab 1 start -->
+                    <div class="tab-panel active" id="tab-1">
+                        <div class="form-group">
+                            <div class="label">
+                                <label>订单ID</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="order_id" name="order_id" size="60" datatype="*" value="<?php echo $order['order_id']; ?>" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="label">
+                                <label>付款金额</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="payment_fee" name="payment_fee" size="60" datatype="*" value="<?php echo $order['payment_fee']; ?>" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="label">
+                                <label>优惠金额</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="discount_fee" name="discount_fee" size="60" datatype="*" placeholder="标题" value="<?php echo $order['discount_fee']; ?>">
+                                <div class="input-note">请填写标题</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="label">
+                                <label>外部交易号</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="outer_tid" name="outer_tid" size="60" datatype="*" value="<?php echo $order['outer_tid']; ?>">
+                                <div class="input-note">请填写商品摘要</div>
+                            </div>
+                        </div>
+<!--                        <div class="form-group">
+                            <div class="label">
+                                <label>订单状态<?=$product[product_type]?></label>
+                            </div>
+                            <div class="field">
+                                <div class="button-group radio">
+                                    <label class="button <?php if (0 == $product['type']) : ?> active <?php endif;?>">
+                                        <input name="type" value="0" type="radio" <?php if ($product['product_type'] == 0) : ?> checked <?php endif;?>>
+                                        <span class="icon icon-check text-green"></span> 实物
+                                    </label>
+
+                                    <label class="button <?php if (1 == $product['type']) : ?> active <?php endif;?>">
+                                        <input name="type" value="1" type="radio" <?php if ($product['product_type'] == 1) : ?> checked <?php endif;?>>
+                                        <span class="icon icon-check text-green"></span> 手艺
+                                    </label>
+                                    <label class="button <?php if (2 == $product['type']) : ?> active <?php endif;?>">
+                                        <input name="type" value="2" type="radio" <?php if ($product['product_type'] == 2) : ?> checked <?php endif;?>>
+                                        <span class="icon icon-check text-green"></span> 组局
+                                    </label>
+
+                                    <label class="button <?php if (3 == $product['type']) : ?> active <?php endif;?>">
+                                        <input name="type" value="3" type="radio" <?php if ($product['product_type'] == 3) : ?> checked <?php endif;?>>
+                                        <span class="icon icon-check text-green"></span> 众筹
+                                    </label>
+
+                                </div>
+                            </div>
+                        </div>-->
+                        <div class="form-group">
+                            <div class="label">
+                                <label>收货人信息：省</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="receiver_province" name="receiver_province" size="60" datatype="*" value="<?php echo $order['receiver_province']; ?>">
+                                <div class="input-note">请填写省</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="label">
+                                <label>收货人信息：市</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="receiver_city" name="receiver_city" size="60" datatype="*" value="<?php echo $order['receiver_city']; ?>">
+                                <div class="input-note">请填写市</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="label">
+                                <label>收货人信息：区县</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="receiver_district" name="receiver_district" size="60" datatype="*" value="<?php echo $order['receiver_district']; ?>">
+                                <div class="input-note">请填写区县</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="label">
+                                <label>收货人信息：详细地址</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="receiver_address" name="receiver_address" size="60" datatype="*" value="<?php echo $order['receiver_address']; ?>">
+                                <div class="input-note">请填写详细地址</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="label">
+                                <label>收货人信息：邮政编码</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="receiver_zip" name="receiver_zip" size="60" datatype="*" value="<?php echo $order['receiver_zip']; ?>">
+                                <div class="input-note">请填写邮政编码</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="label">
+                                <label>收货人信息：姓名</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="receiver_name" name="receiver_name" size="60" datatype="*" value="<?php echo $order['receiver_name']; ?>">
+                                <div class="input-note">请填写姓名</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="label">
+                                <label>收货人信息：手机号</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="receiver_mobile" name="receiver_mobile" size="60" datatype="*" value="<?php echo $order['receiver_mobile']; ?>">
+                                <div class="input-note">请填写手机号</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- tab 1 end  -->
+                </div>
+                <!-- table body end -->
+
+                <div class="panel-foot">
+                    <div class="form-button">
+                        <div id="tips"></div>
+                        <button class="button bg-main" type="submit">保存</button>
+                        <button class="button bg" type="reset">重置</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script  type="text/javascript">
+    Do.ready('base', function () {
+        //表单综合处理
+        $('#form').duxFormPage();
+    });
+</script>

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="renderer" content="webkit">
+<title>罗辑思维CMS管理系统</title>
+<?php echo Asset::getResource('pintuer.css', 'admincenter/common');?>
+<?php echo Asset::getResource('admin.css', 'admincenter/lib');?>
+<?php echo Asset::getResource('jquery.js', 'admincenter');?>
+<?php echo Asset::getResource('pintuer.js', 'admincenter/common');?>
+<?php echo Asset::getResource('respond.js', 'admincenter/common');?>
+<style>
+body,html{overflow: hidden;}
+* {
+	margin: 0;
+	padding: 0;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+body {
+	
+	font-family: 'Open Sans', Arial, Helvetica, Sans-serif, Verdana, Tahoma;
+}
+ul {
+	list-style-type: none;
+}
+
+a {
+	color: #b63b4d;
+	text-decoration: none;
+}
+
+/** =======================
+ * Contenedor Principal
+ ===========================*/
+h1 {
+ 	color: #FFF;
+ 	font-size: 24px;
+ 	font-weight: 400;
+ 	text-align: center;
+ 	margin-top: 80px;
+ }
+
+h1 a {
+ 	color: #c12c42;
+ 	font-size: 16px;
+ }
+ul{padding:0px;margin: 0px;}
+ .accordion {
+ 	width: 100%;
+ 	max-width: 360px;
+ 	/*margin: 30px auto 20px;*/
+ 	background: #FFF;
+ 	-webkit-border-radius: 4px;
+ 	-moz-border-radius: 4px;
+ 	border-radius: 4px;
+ }
+
+.accordion .link {
+	cursor: pointer;
+	display: block;
+	padding: 15px 15px 15px 42px;
+	color: #4D4D4D;
+	font-size: 14px;
+	font-weight: 700;
+	border-bottom: 1px solid #CCC;
+	position: relative;
+	-webkit-transition: all 0.4s ease;
+	-o-transition: all 0.4s ease;
+	transition: all 0.4s ease;
+}
+
+.accordion li:last-child .link {
+	border-bottom: 0;
+}
+
+.accordion li i {
+	position: absolute;
+	top: 16px;
+	left: 12px;
+	font-size: 18px;
+	color: #595959;
+	-webkit-transition: all 0.4s ease;
+	-o-transition: all 0.4s ease;
+	transition: all 0.4s ease;
+}
+
+.accordion li i.icon-chevron-down {
+	right: 12px;
+	left: auto;
+	font-size: 16px;
+}
+
+.accordion li.open .link {
+	color: #b63b4d;
+}
+
+.accordion li.open i {
+	color: #b63b4d;
+}
+.accordion li.open i.icon-chevron-down {
+	-webkit-transform: rotate(180deg);
+	-ms-transform: rotate(180deg);
+	-o-transform: rotate(180deg);
+	transform: rotate(180deg);
+}
+
+/**
+ * Submenu
+ -----------------------------*/
+ .submenu {
+ 	display: none;
+ 	background: #444359;
+ 	font-size: 14px;
+ }
+
+ .submenu li {
+ 	border-bottom: 1px solid #4b4a5e;
+ }
+
+ .submenu a {
+ 	display: block;
+ 	text-decoration: none;
+ 	color: #d9d9d9;
+ 	padding: 12px;
+ 	padding-left: 42px;
+ 	-webkit-transition: all 0.25s ease;
+ 	-o-transition: all 0.25s ease;
+ 	transition: all 0.25s ease;
+ }
+
+ .submenu a:hover, .submenu li.active a {
+ 	background: #b63b4d;
+ 	color: #FFF;
+ }
+</style>
+</head>
+<body>
+<div class="dux-head clearfix">
+    <div class="dux-logo">
+        <a href="#" target="_blank">
+            <img src="<?php echo Asset::getResource('logo.jpg', 'admincenter/lib');?>" alt="WechatPHP微信开发框架管理系统" />
+        </a>
+        <button class="button icon-navicon admin-nav-btn" data-target=".admin-nav"></button>
+        <button class="button icon-navicon icon-ellipsis-v admin-menu-btn" data-target=".admin-menu"></button>
+    </div>
+    <div class="dux-nav">
+        <ul class="nav  nav-navicon nav-inline admin-nav" id="nav">
+        </ul>
+        <ul class="nav  nav-navicon nav-menu nav-inline admin-nav nav-tool">
+            <!--li> <a href="/" target="_blank" class="icon-home"></a></li>
+            <li> <a href="#" target="dux-iframe" class="icon-user"></a></li-->
+            <li> <a href="/user/logout" class="dux-logout bg-red icon-power-off"></a></li>
+        </ul>
+    </div>
+</div>
+<div class="dux-sidebar">
+    
+        <div class="nav-head" id="nav-head"></div>
+        <ul id="accordion" class="accordion"></ul>
+    
+</div>
+<div class="dux-admin">
+        <iframe id="dux-iframe" name="dux-iframe" class="dux-iframe" src="" frameborder="0"></iframe>
+</div>
+<script  type="text/javascript">
+    var Accordion = function(el, multiple) {
+            this.el = el || {};
+            this.multiple = multiple || false;
+
+            // Variables privadas
+            var links = this.el.find('.link');
+            // Evento
+            links.on('click', {el: this.el, multiple: this.multiple}, this.dropdown)
+    }
+
+    Accordion.prototype.dropdown = function(e) {
+            var $el = e.data.el;
+                    $this = $(this),
+                    $next = $this.next();
+
+            $next.slideToggle();
+            $this.parent().toggleClass('open');
+
+            if (!e.data.multiple) {
+                    $el.find('.submenu').not($next).slideUp().parent().removeClass('open');
+            };
+    }
+    //生成主菜单
+    var data = <?php echo json_encode($nav);?>;
+    var topNav = '';
+    for(var i in data){
+        if(data[i]['menu'] != ''){
+            topNav += '<li><a href="javascript:;" topid="'+data[i].order+'" data="'+i+'" url="" class="icon-'+data[i].icon+'"> '+data[i].name+'</a></li>';
+        }
+    }
+    $('#nav').html(topNav);
+    //绑定导航连接
+    $('#nav').on('click','a',function(){
+        $('#nav-head').text($(this).text());
+        var n = $(this).attr('data');
+        var tags = data[n]['tags'];
+        var tagsHtml =  '';
+        if(tags != ''){
+            for(var i in tags){
+                tagsHtml += '<li>';
+		tagsHtml += '	<div class="link"><i class="icon-sitemap"></i>'+tags[i].name+'<i class="icon-chevron-down"></i></div>';
+		tagsHtml += '	<ul class="submenu">';
+                var menu = tags[i].menu;
+                if(menu != ''){
+                    for(var j in menu){
+                        tagsHtml += '<li><a href="javascript:;" url="'+menu[j].url+'" class="icon-'+menu[j].icon+'"> '+menu[j].name+'</a></li>';
+                    }
+                }
+		tagsHtml += '	</ul>';
+		tagsHtml += '</li>';
+            }
+        }
+        $('#accordion').html(tagsHtml);
+        new Accordion($('#accordion'), false);
+        //设置样式
+        $('#nav li').removeClass('active');
+        $(this).parent('li').addClass('active');
+        //打开菜单
+        $('#accordion .link:first').click();
+        $('#accordion a:first').click();
+    });
+    //绑定菜单连接
+    $('#accordion').on('click','a',function(){
+        var url = $(this).attr('url');
+        $('.dux-iframe').attr('src',url);
+        //设置样式
+        $('#accordion li').removeClass('active');
+        $(this).parent('li').addClass('active');
+    });
+    $('#nav a:first').click();
+
+</script>
+</body>
+</html>

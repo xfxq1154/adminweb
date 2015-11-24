@@ -1,0 +1,304 @@
+<script type="text/javascript" src="<?=ASSET_URL?>/admincenter/lib/editor/ueditor.config.js"></script>
+<script type="text/javascript" src="<?=ASSET_URL?>/admincenter/lib/editor/ueditor.all.js"></script>
+<link rel="stylesheet" type="text/css" href="<?=ASSET_URL?>/admincenter/lib/editor/themes/default/css/ueditor.css" meta="screen">
+<?php echo Asset::getResource('promot.css', 'admincenter/common');?>
+<div class="dux-tools">
+    <div class="bread-head">音频列表<span class="small">
+        <a href="/audio/list" class="bread-head button  <?php echo (empty($t))?('bg-red'):('bg-dot'); ?> " >全部音频</a>
+        <a class="button  <?php echo ($t == 1)?('bg-red'):('bg-dot'); ?> bread-head" href="/audio/list/t/1">未排期音频</a>
+        <a class="button  <?php echo ($type == 2)?('bg-red'):('bg-dot'); ?> bread-head" href="/audio/list/type/2">收费</a>
+        <a class="button  <?php echo ($type == 1)?('bg-red'):('bg-dot'); ?> bread-head" href="/audio/list/type/1">免费</a>
+        </span>
+        <div class="button-group float-right">
+            <a class="button button-small bg-dot icon-plus dropdown-toggle"> 添加 <span class="downward"></span></a>
+            <ul class="drop-menu pull-right">
+                <li><a href="/audio/add">添加音频</a></li>
+            </ul>
+        </div>
+    </div>
+
+</div>
+
+<div class="dux-tools">
+    <div> <input name="kwd" type="text" id="kwd" placeholder="输入关键字" value="<?=$kwd?>" />  <a class="searchbtn button button-small bg-blue" url = "/audio/list/t/<?=$t?>/kwd/">搜索</a></div>
+</div>
+
+<div class="admin-main">
+    <div class="panel dux-box">
+        <div class="table-responsive">
+            <table id="table" class="table table-hover ">
+                <tbody>
+                    <tr>
+                        <th width="100">ID</th>
+                        <th width="*">语音信息</th>
+                        <th width="*">时长</th>
+                        <th width="*">文稿</th>
+                        <th width="*">MP3</th>
+                        <th width="*">AMR</th>
+                        <th width="*">播放数</th>
+                        <th width="*">类型</th>
+                        <th width="*">操作</th>
+                    </tr>
+                    <?php if ($alist) : ?>
+                        <?php foreach($alist as $val) : ?>
+                            <tr>
+                                <td><?php echo $val['id']; ?></td>
+                                <td style="width:300px;"><?php echo $val['title']; ?><br />排期:<?php echo ($val['schedule'] > 0)?($val['topic_title']):('<a style="color:green;" >未排期</a>'); ?><br /> by:<?=$val['operator_name'];?> &nbsp;<?=$val['ctime'];?></td>
+                                <td>
+                                    <?php echo $val['duration']; ?>
+                                </td>
+                                <td style="width:400px;"><a aid="<?=$val['id']?>" class="editAudioList" style="color:blue;cursor:pointer;">修改文稿</a></td>
+                                <td><i class="icon-play audioplay" mp3_url="<?php echo $val['mp3_play_url']; ?>" data="<?php echo $val['id']; ?>"></i></td>
+                                <td><?php echo $val['amr_url']; ?></td>
+
+                                <td><?php echo $val['play_count']; ?></td>
+                                <td>
+                                    <?php if ($val['type'] == 1) : ?>
+                                        免费
+                                    <?php else : ?>
+                                        收费
+                                    <?php endif; ?>
+                                </td>
+                                <td>
+                                    <a class="button bg-blue button-small icon-pencil" href="/audio/edit/aid/<?php echo $val['id']; ?>/m/edit" title="编辑"></a>
+
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+
+                </tbody>
+            </table>
+        </div>
+        
+        <?php if($pagger):?>
+        <div class="panel dux-box panel-foot clearfix" style="margin-bottom:10px;border-radius: 4px;">
+        <?=$pagger?>
+        </div>
+        <?php endif;?>
+
+
+
+    </div>
+
+    <div id="fade" class="black_overlay">
+    </div>
+    <div id="MyDiv" class="white_content" style="width:40%;height:95%;left:30%;">
+        <div style="text-align: right; cursor: default; height: 40px;">
+        <span style="font-size: 16px;" class="closeBoxJs">关闭</span>
+        </div>
+
+
+    <div class="contentListContainer contentul" style="display: none;">
+
+        <div class="field">                           
+          <script id="editor" type="text/plain" style="width:554px;min-height:500px;"></script>
+        </div>
+
+        <div><button class="saveBtnjs" aid="" style="height:30px;width: 60px;margin:10px 0 0 200px;">保存</button></div>
+
+    </div>
+
+</div>
+
+
+
+    <script>  
+   var audio = '';
+   $(document).ready(function(){
+       var ue = UE.getEditor('editor',{
+                    enableAutoSave: false,
+                    saveInterval: 0
+                       });
+
+        ue.addListener('contentChange', function(editor) {
+             $('#textNum').val(ue.getContentTxt().length);
+         });
+       
+       $('.audioplay').click(function(){
+           
+           if(audio!==null){
+            if(audio.src != $(this).attr('mp3_url')){
+                removeAudio();
+                createAudio(); 
+                loading(this);
+            }
+            if(audio.paused){
+                audio.play();
+            }else{
+               audio.pause();// 这个就是暂停
+            }
+        }
+       });
+       function pauseplay(){
+           $('.audioplay').removeClass('icon-pause icon-spinner icon-spin').addClass('icon-play');
+       }
+       function loading(f){
+           audio.src = $(f).attr('mp3_url');
+           
+           audio.addEventListener('abort', function(){
+               alert('7');
+           },false);
+           audio.addEventListener('loadeddata',function(){
+               
+               pauseplay();
+               $(f).removeClass('icon-spinner icon-spin').addClass('icon-pause');
+           }, false);
+           audio.addEventListener('pause',function(){
+               
+               $(f).removeClass('icon-pause').addClass('icon-play');
+           },false);
+           audio.addEventListener('play', function(){
+               pauseplay();
+               $(f).removeClass('icon-play').addClass('icon-spinner icon-spin');
+           },false);
+           audio.addEventListener('playing', function(){
+               pauseplay();
+               $(f).removeClass('icon-play icon-spinner icon-spin').addClass('icon-pause');
+           },false);
+           audio.addEventListener('ended', function(){
+               pauseplay();
+           },false)
+       }
+       
+       function removeAudio(){
+           $('#musicplay').remove();
+           audio = '';
+       }
+       function createAudio(){
+           $('body').append('<audio src="" preload="false" controls="false" id="musicplay" hidden></audio>');
+           audio = document.getElementById('musicplay');
+       }
+   });
+
+
+
+    Do.ready('base', function () {
+    $('#table').duxTable();
+    });
+
+    var ue = UE.getEditor('editor',{
+    enableAutoSave: false,
+    saveInterval: 0
+       });
+
+//    $('.editAudioList').click(function(){
+//            $('.contentListContainer').show();
+//            ShowDiv('MyDiv','fade');
+//    });
+
+    function ShowDiv(show_div,bg_div){
+        document.getElementById(show_div).style.display='block';
+        document.getElementById(bg_div).style.display='block' ;
+        var bgdiv = document.getElementById(bg_div);
+        bgdiv.style.width = document.body.scrollWidth;
+        // bgdiv.style.height = $(document).height();
+        $("#"+bg_div).height($(document).height());
+};
+
+
+//关闭弹出层
+$('.closeBoxJs').on('click',function(){
+    CloseDiv('MyDiv','fade');
+});
+
+
+$('.editAudioList').on('click',function(){
+    var aid = $(this).attr('aid');
+    $('.saveBtnjs').attr('aid',aid);
+     $.ajax({
+              type: 'POST',
+              url: '/audio/getcontent',
+              data: {aid:aid},
+              dataType: 'json',
+              timeout: 0,
+              context:$('body'),
+              success: function(data){
+                  if(data.status == 'ok'){
+                      var str = '';
+
+                      //$('.contentul').html(data.res);
+                      ue.setContent(data.res);
+                      $('.mp3ListContainer').hide();
+                      $('.contentListContainer').show();
+                      ShowDiv('MyDiv','fade');
+                  }else{
+                      alert('请求失败');
+                  }
+
+
+
+              },
+              error:function(xhr,type){
+                  alert('请求错误！');
+              }
+           });
+
+});
+
+
+
+$('.saveBtnjs').on('click',function(){
+    var aid = $(this).attr('aid');
+    var cont = ue.getContent();
+     $.ajax({
+              type: 'POST',
+              url: '/audio/setcontent',
+              data: {aid:aid,content:cont},
+              dataType: 'json',
+              timeout: 0,
+              context:$('body'),
+              success: function(data){
+                  if(data.status == 'ok'){
+                      alert('保存成功');
+                      CloseDiv('MyDiv','fade');
+                      window.location.href='/audio/list';
+                  }else{
+                      alert('保存失败');
+                  }
+
+
+
+              },
+              error:function(xhr,type){
+                  alert('请求错误！');
+              }
+           });
+
+});
+
+//search
+
+$('.searchbtn').click(function(){
+    var kwd = $('#kwd').val();
+    var url = $(this).attr('url');
+    url = url+kwd;
+    window.location.href = url;
+});
+
+
+
+//关闭弹出层
+function CloseDiv(show_div,bg_div)
+{
+    document.getElementById(show_div).style.display='none';
+    document.getElementById(bg_div).style.display='none';
+};
+
+
+function delHtmlTag(str){
+        return str.replace(/<[^>]+>/g,"");//去掉所有的html标记
+}
+
+function Trim(str,is_global){
+            var result;
+            result = str.replace(/(^\s+)|(\s+$)/g,"");
+            if(is_global.toLowerCase()=="g")
+            {
+                result = result.replace(/\s/g,"");
+             }
+            return result;
+}
+
+    </script>
+</div>

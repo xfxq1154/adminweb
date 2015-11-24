@@ -1,0 +1,151 @@
+<script language="JavaScript" type="text/javascript" src="<?=ASSET_URL?>/admincenter/js/calendar/WdatePicker.js"></script>
+<div class="dux-tools">
+    <div class="bread-head">推荐广告位管理<span class="small">编辑推荐广告位</span>
+
+        <div class="float-right">
+            <a class="button button-small bg-main icon-list" href="/advarea/index">推荐广告位列表</a>
+        </div>
+
+    </div>
+</div>
+<div class="admin-main">
+    <form method="post" class="form-x dux-form form-auto" id="form" action="/advarea/edit">
+        <div class="tab dux-tab">
+            <div class="panel dux-box  active">
+                <!-- tab head start-->
+                <div class="panel-head">
+                    <div class="tab-head">
+                        <strong>推荐广告位配置</strong>
+                        <ul class="tab-nav">
+                            <li class="active"><a href="#tab-1">编辑推荐广告位</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- tab head end -->
+
+                <!-- table body start-->
+                 <div class="tab-body">
+
+                    <!-- tab 1 start -->
+                    <div class="tab-panel active" id="tab-1">
+                        <div class="form-group">
+                            <div class="label">
+                                <label>文本信息</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="txt" name="txt" size="60" datatype="*" placeholder="文本信息" value="<?php echo $adv['txt']; ?>">
+                                <div class="input-note">请填写文本信息</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="label">
+                                <label>链接/关联ID</label>
+                            </div>
+                            <div class="field">
+                                <div class="button-group radio">
+                                    <label class="button <?php if($adv['class'] ==1):?> active <?php endif;?>">
+                                        <input name="class" value="1" type="radio" datatype="*" <?php if($adv['class'] ==1):?> checked <?php endif;?>>
+                                        <span class="icon icon-check text-green"></span> 电子书
+                                    </label>
+
+                                    <label class="button <?php if($adv['class'] ==2):?> active <?php endif;?>">
+                                        <input name="class" value="2" type="radio" datatype="*" <?php if($adv['class'] ==2):?> checked <?php endif;?>>
+                                        <span class="icon icon-check text-green"></span> 音频排期
+                                    </label>
+
+                                </div>
+                                <input type="text" class="input" style="width:220px;" id="url" name="url" size="60" datatype="*" placeholder="链接/关联ID" value="<?php echo $adv['url']; ?>">
+                                <div class="input-note">请填写链接/关联ID</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="label">
+                                <label>图片</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input show_uo_imgs" id="images" datatype="*" placeholder="请上传图片" readonly value="<?php echo IMG_HOST . '/' . $adv['img']; ?>">
+                                <input type="hidden" name="img" value="<?php echo $adv['img']; ?>" >
+                                <a class="button bg-blue button-small " data="images" id="image_upload" preview="image_preview" href="javascript:;" ><span class="icon-upload"> 上传</span></a>
+                                <a class="button bg-blue button-small icon-picture-o" id="image_preview" href="javascript:;" > 预览</a>
+                                <div class="input-note">请上传图片</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="label">
+                                <label>区域位置</label>
+                            </div>
+                            <div class="field">
+                                <select class="input paytypebtn" name="type">
+                                    <option value="1">音频-购买BANNER</option>
+                                </select>
+                                <div class="input-note">请选择区域位置</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="label">
+                                <label>排序</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="docking_mobile" name="order" size="60" datatype="n" placeholder="排序编号" value="<?php echo $adv['order']; ?>">
+                                <div class="input-note">请填写排序</div>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <div class="label">
+                                <label>状态</label>
+                            </div>
+                            <div class="field">
+                                <div class="button-group radio">
+                                    <label class="button <?php if ($adv['status'] == 1) : ?> active <?php endif; ?>">
+                                        <input name="status" value="1" type="radio" datatype="*" <?php if ($adv['status'] == 1) : ?> checked <?php endif; ?>>
+                                        <span class="icon icon-check text-green"></span> 启用
+                                    </label>
+
+                                    <label class="button <?php if ($adv['status'] == 0) : ?> active <?php endif; ?>">
+                                        <input name="status" value="0" type="radio" datatype="*" <?php if ($adv['status'] == 0) : ?> checked <?php endif; ?>>
+                                        <span class="icon icon-check text-green"></span> 禁用
+                                    </label>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- tab 1 end -->
+
+                 </div>
+                <!-- table body end-->
+
+                <div class="panel-foot">
+                    <div class="form-button">
+                        <div id="tips"></div>
+                        <input type="hidden" name="id" value="<?php echo $adv['id']; ?>">
+                        <button class="button bg-main" type="submit">保存</button>
+                        <button class="button bg" type="reset">重置</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script  type="text/javascript">
+    Do.ready('base', function () {
+        //表单综合处理
+        duxConfig.upDir = '';
+        $('#form').duxFormPage();
+        $('#image_upload').duxFileUpload({
+            uploadUrl: '/audiotopic/upload',
+            type: 'jpg,png,gif',
+            complete: function (data) {
+                $('.show_uo_imgs').val(data.host + '/' + data.path);
+                $(':input[name="img"]').val(data.path);
+            }
+        });
+    });
+</script>

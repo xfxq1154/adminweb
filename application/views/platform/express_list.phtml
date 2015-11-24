@@ -1,0 +1,164 @@
+<div class="dux-tools">
+    <div class="bread-head">快递管理<span class="small">管理商城快递</span></div><br>
+    <div class="tools-function clearfix">
+        <div class="float-left">
+            <a class="button button-small bg-main" href="/bpexpress/index?sub_status=">全部</a>
+            <a class="button button-small bg-green" href="/bpexpress/index?sub_status=1">订阅成功</a>
+            <a class="button button-small bg-blue" href="/bpexpress/index?sub_status=-2">等待订阅</a>
+            <a class="button button-small bg-red" href="/bpexpress/index?sub_status=0">订阅异常</a>
+            <a class="button button-small bg-dot" href="/bpexpress/index?sub_status=-1">订阅失败</a>
+            <a class="button button-small bg-gray" href="/bpexpress/index?sub_status=-3">监控中止</a>
+        </div>
+    </div>
+</div>
+<div class="admin-main">
+<div class="panel dux-box">
+   <div class="table-tools clearfix ">
+       <div class="float-right">
+           <form method="get" action="/bpexpress/index">
+               <input type="hidden" name="sub_status" value="<?=$_GET['sub_status']?>" />
+                <div class="form-inline">
+                    <div class="form-group">
+                        <div class="field">
+                            快递状态：
+                            <select class="input" name="status">
+                                <option value="">全部</option>
+                                <option value="0"<?=($_GET['status'] === 0) ? 'selected="selected"':'';?>>已发货</option>
+                                <option value="1"<?=($_GET['status'] == 1) ? 'selected="selected"':'';?>>已揽收</option>
+                                <option value="2"<?=($_GET['status'] == 2) ? 'selected="selected"':'';?>>在途中</option>
+                                <option value="3"<?=($_GET['status'] == 3) ? 'selected="selected"':'';?>>已签收</option>
+                                <option value="4"<?=($_GET['status'] == 4) ? 'selected="selected"':'';?>>疑难</option>
+                                <option value="5"<?=($_GET['status'] == 5) ? 'selected="selected"':'';?>>已退签</option>
+                                <option value="6"<?=($_GET['status'] == 6) ? 'selected="selected"':'';?>>派件中</option>
+                                <option value="7"<?=($_GET['status'] == 7) ? 'selected="selected"':'';?>>退回中</option>
+                                <option value="8"<?=($_GET['status'] == 8) ? 'selected="selected"':'';?>>已转投</option>
+                            </select>
+                            <!--快递状态，0已发货、1已揽收，2在途中、3已签收、4疑难、5已退签、6派件中、7退回中、8已转投-->
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="field">
+                            开始时间：<input type="text" class="input js-time" id="start_time" name="start_time" size="15" value="<?=(isset($_GET['start_time'])) ? $_GET['start_time']:date('Y/m/d H:m:s',strtotime('-1 week'));?>">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="field">
+                            结束时间：<input type="text" class="input js-time" id="end_time" name="end_time" size="15" value="<?=(isset($_GET['start_time'])) ? $_GET['end_time']:date('Y/m/d H:m:s',time());?>">
+                        </div>
+                    </div>
+                    <div class="form-button">
+                        <button class="button" type="submit">筛选</button>
+                    </div>
+                </div>
+            </form>
+       </div>
+    </div>
+    <div class="table-responsive">
+        <table id="table" class="table table-hover ">
+            <tbody>
+                <tr>
+                    <th width="*">订单号</th>
+                    <th width="*">快递单号</th>
+                    <th width="*">快递公司</th>
+                    <th width="*">目标地址</th>
+                    <th width="*">订阅状态</th>
+                    <th width="*">错误信息</th>
+                    <th width="*">快递状态</th>
+                    <th width="160">发货时间</th>
+                    <th width="160">更新时间</th>
+                </tr>
+        <?php if ($list) : ?>
+            <?php foreach ($list as $key => $val) : ?>
+                <tr>
+                    <td><a href="/bpexpress/index?order_id=<?=$val['order_id']?>"><?=$val['order_id']?></a></td>
+                    <td><a href="/bpexpress/index?exnum=<?=$val['exnum']?>"><?=$val['exnum']?></a></td>
+                    <td><a href="/bpexpress/index?excomsn=<?=$val['excomsn']?>"><?=$val['excom']?></a></td>
+                    <td><a href="#"><?=$val['tocity']?></a></td>
+            <!--<a class="bg-back bg-green bg-main bg-blue bg-dot bg-gray bg-red"></a>-->
+               <!--订阅状态，订阅快递100物流跟踪状态 -3监控中止 -2等待订阅 -1订阅失败 0订阅异常 1订阅成功 2无需订阅-->
+               <?php 
+                    switch ($val['sub_state']) {
+                        case 1:
+                            $sub_bg = 'green';
+                            break;
+                        case 0:
+                            $sub_bg = 'red';
+                            break;
+                        case -1:
+                            $sub_bg = 'gray';
+                            break;
+                        case -2:
+                            $sub_bg = 'main';
+                            break;
+                        case -3:
+                            $sub_bg = 'dot';
+                            break;
+                        default:
+                            $sub_bg = 'back';
+                            break;
+                    }
+                    
+                            //快递状态
+                            //0已发货、1已揽收
+                            //2在途中、6派件中
+                            //3已签收
+                            //7退回中、5已退签
+                            //8已转投
+                            //4疑难
+                    
+                    switch ($val['state']) {
+                        case 0:
+                            $bg = 'blue';
+                            break;
+                        case 1:
+                            $bg = 'blue';
+                            break;
+                        case 2:
+                            $bg = 'main';
+                            break;
+                        case 6:
+                            $bg = 'main';
+                            break;
+                        case 3:
+                            $bg = 'green';
+                            break;
+                        case 5:
+                            $bg = 'back';
+                            break;
+                        case 7:
+                            $bg = 'back';
+                            break;
+                        case 8:
+                            $bg = 'dot';
+                            break;
+                        case 4:
+                            $bg = 'red';
+                            break;
+                        default:
+                            $bg = 'gray';
+                            break;
+                    }
+               ?>
+                    <td><span class="tag bg-<?=$sub_bg?>"><?=$val['sub_state_text']?></span></td>
+                    <td><?=$val['sub_message']?></td>
+                    <td><span class="tag bg-<?=$bg?>"><?=$val['state_text']?></span></td>
+                    <td><?=$val['shipping_time']?></td>
+                    <td><?=$val['callback_time']?></td>
+                </tr>
+            <?php endforeach; ?>
+        <?php endif; ?>	
+            </tbody>
+        </table>
+    </div>
+    <?php if($pagger):?>
+        <div class="panel dux-box panel-foot clearfix" style="margin-top:20px;border-radius: 4px;">
+            <?=$pagger?>
+        </div>
+    <?php endif;?>
+</div>
+<script type="text/javascript" charset="utf-8">
+    Do.ready('base',function() {
+        $('.js-time').duxTime();
+    });
+</script>
+</div>

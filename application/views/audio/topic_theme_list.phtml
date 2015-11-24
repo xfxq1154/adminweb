@@ -1,0 +1,206 @@
+<div class="dux-tools">
+    <div class="bread-head">主题包排期<span class="small">主题包排期列表</span>
+        <div class="button-group float-right">
+            <a class="button button-small bg-dot icon-plus dropdown-toggle"> 添加 <span class="downward"></span></a>
+            <ul class="drop-menu pull-right">
+                <li><a href="/audiotopic/addThemePackage">添加主题包排期</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+<div class="admin-main">
+    <div id="table">
+        <div class="table-responsive">
+           
+            <?php if($pagger):?>
+            <div class="panel dux-box panel-foot clearfix" style="margin-bottom:10px;border-radius: 4px;">
+            <?=$pagger?>
+            </div>
+            <?php endif;?>
+            
+            <?php foreach ($list as $lv): $val=$lv['0']; $payVal=$lv['0'];$bookval=$lv['1'];  $st = ($val['status'] == 1)?1:2; $tid=$payVal['id'].$bookval['id']; ?>
+            <div class="panel dux-box topic<?=$val['id']?> clearfix" style="margin-bottom:10px;">
+                <div class="panel-head clearfix">
+                    <div class="float-left button-group" style="line-height: 30px;">
+                    名称：<?=$val['title']?>   &nbsp;&nbsp;   计费类型：主题包　&nbsp;&nbsp;    上线：<?=$val['datetime']?>   　By：<?=$val['user']?>
+                    <span style="padding-left:20px;">排期状态：<span id="topic_status<?=$tid?>"><?php echo ($payVal['status'] == 1)?('上架'):('下架');?></span></span>
+                    </div>
+                    <div class="float-right button-group">
+                        <?php if(($val['datetime'] > date("Y-m-d")) || $showEdit):?>
+                        <a style="margin-right:10px;" class="button bg-blue button-small icon-pencil" 
+                           href="/audiotopic/modifyThemePackage/tid/<?=$lv['0']['id']?>-<?=$lv['1']['id']?>/d/<?=$val['datetime']?>" 
+                           title="编辑">
+                        </a>
+                        <a  class="button bg-green button-small icon updateStatusBtn" 
+                            href="javascript:;" removeclass="topic<?=$val['id']?>" 
+                            url="/audiotopic/updateStatus/tid/<?=$lv['0']['id']?>-<?=$lv['1']['id']?>/type/2/d/<?=$payVal['datetime']?>/st/" 
+                            data="<?=$payVal['id']?>" tid="<?=$tid?>" st="<?=$st?>"
+                            title="<?php echo $stitle = ($payVal['status'] == 1)?('下架'):('上架');?>">
+                            <?=$stitle?>
+                        </a>
+                        <?php endif;?>
+                    </div>
+                </div>
+                <div class="panel-body"><span class="float-left">封面：</span><img src="<?=$val['icon']?>" height="200"></div>
+                
+                
+                <div class="panel-body" style="height: auto; overflow: hidden;">
+                    <span class="float-left">付费音频：</span>
+                    <div class="float-left">
+                        <textarea class="input-block audiolist" style="width: 600px; height: 80px; display: none;" readonly="readonly"><?=$payVal['audio']?></textarea>
+                        <button class="viewfile" tid="<?=$payVal['id']?>" data="topic<?=$payVal['id']?>" style="vertical-align: top; width: 80px; height: 80px; display: none;">文件预览</button>
+                        <div class="clearfix selectlist checkbox"></div>
+                        <div class="clearfix selectnote checkbox">共0个音频文件，累计时长：0秒</div>
+                    </div>
+                </div>
+                <?php if(!empty($bookval['booklist'])): ?>
+                <div class="panel-body" style="height: auto; overflow: hidden;">
+                    <span class="float-left">电子书</span>
+                    <div  class="float-left" id="show_ebook_box">
+                        <ul>
+                            <?php foreach ($bookval['booklist'] as $bv): ?>
+                            <li><div class="p-l">
+                            <img width="80" alt="" src="<?=$bv['cover']?>">
+                            </div>
+                            <div class="p-l width"><span><b><?=$bv['title']?></b></span>
+                            <span><b><?php echo ($bv['type'] == 1)?('全文'):('干货'); ?></b></span>
+                            <span><?=$bv['author']?></span>
+                            <span>￥<?=$bv['price']?></span>
+                            </div>
+                            </li>
+                            <?php endforeach;  ?>
+                        </ul>
+                    </div>
+                </div>
+                <?php endif; ?>
+            </div>
+            <?php endforeach;?>
+            
+        </div>
+        <?php if($pagger):?>
+        <div class="panel dux-box panel-foot clearfix" style="margin-bottom:10px;border-radius: 4px;">
+        <?=$pagger?>
+        </div>
+        <?php endif;?>
+    </div>
+    <script>
+    Do.ready('base', function () {
+        $('#table').duxTable();
+        
+        $('.viewfile').click(function(){
+            request = false;
+            tablebox = $(this).attr('data');
+            str = '.'+tablebox+' .audiolist';
+            tid = $(this).attr('tid');
+            audiolist = $(str).val();
+            
+            if(audiolist){
+                $('.'+tablebox+' .selectlist').children('label').remove();
+                $.ajax({
+                    url: '/audiotopic/audiolist/act/list',
+                    type: 'POST',
+                    dataType: 'json',
+                    async:false,
+                    data: {audiolist: audiolist,tid:tid},
+                    success: function(data){
+                        request = true;
+                        if(data.status == 'error'){
+                            alert(data.code);
+                            return false;
+                        }
+                        loadlist(data.data, '.'+tablebox+' .selectlist', '.'+tablebox+' .selectnote');
+
+                    }
+                });
+            }
+            return false;
+        });
+        $('.viewfile').each(function(){
+            $(this).click();
+        });
+        
+        
+        
+        //更新上下架
+        $('.updateStatusBtn').click(function(){
+           var _this = $(this);
+           var url = $(this).attr('url');
+           var tid = $(this).attr('tid');
+           var title = $(this).attr('title');
+           var newTitle = (title =='上架'?'下架':'上架');
+           var st = $(this).attr('st');
+           url+=st;
+           st = (st == 1?2:1);
+            if(confirm('确定'+title+'？')){
+               
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    dataType: 'json',
+                    async:false,
+                    data: {},
+                    success: function(data){
+                        
+                        if(data.status == 1){
+                            _this.html(newTitle);
+                            $('#topic_status'+tid).html(title);
+                            _this.attr('st',st);
+                            _this.attr('title',newTitle);
+                        }else{
+                            alert(data.info);
+                            return false;
+                        }
+                        
+
+                    }
+                });
+            }
+            return false;
+        });
+        
+
+        function loadlist(data, dom, note){
+            var str = "";
+            var atime = 0;
+            $.each(data, function (i, item) {
+                str += appendAudio(item);
+                atime += parseInt(item.duration);
+            });
+            $(dom).append(str);
+            $(note).html( '共'+data.length+'个音频文件，累计时长：'+formatSeconds(atime) );
+        }
+        function appendAudio(item){
+            var str = "";
+            str +=  "  <label class=\"button active\" style=\"margin: 0 5px 5px 0;  float: left;  position: relative;  font-weight: normal;\">";
+            //str +=  "  <input name=\"aid[]\" value=\""+item.id+"\" type=\"checkbox\" checked=\"checked\">";
+            str +=  "  <span class=\"icon icon-check text-green\"></span>"+item.title+" ";
+            str +=  "   </label>";
+            return str;
+        }
+        
+    });
+    function formatSeconds(value) {
+        var theTime = parseInt(value);// 秒
+        var theTime1 = 0;// 分
+        var theTime2 = 0;// 小时
+        if(theTime > 60) {
+           theTime1 = parseInt(theTime/60);
+           theTime = parseInt(theTime%60);
+           if(theTime1 > 60) {
+              theTime2 = parseInt(theTime1/60);
+              theTime1 = parseInt(theTime1%60);
+            }
+        }
+        var result = ""+parseInt(theTime)+"秒";
+        if(theTime1 > 0) {
+            result = ""+parseInt(theTime1)+"分"+result;
+        }
+        if(theTime2 > 0) {
+            result = ""+parseInt(theTime2)+"小时"+result;
+        }
+        return result;
+   }
+    </script>
+</div>

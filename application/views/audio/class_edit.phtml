@@ -1,0 +1,117 @@
+
+<div class="dux-tools">
+    <div class="bread-head">音频分类<span class="small">编辑音频分类</span>
+
+        <div class="float-right">
+            <a class="button button-small bg-main icon-list" href="/audioclass/class">音频分类列表</a>
+        </div>
+
+    </div>
+</div>
+<div class="admin-main">
+    <form method="post" class="form-x dux-form form-auto" id="form" action="/audioclass/edit">
+        <div class="tab dux-tab">
+            <div class="panel dux-box  active">
+                <!-- tab head start-->
+                <div class="panel-head">
+                    <div class="tab-head">
+                        <strong>音频分类配置</strong>
+                        <ul class="tab-nav">
+                            <li class="active"><a href="#tab-1">编辑音频分类</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- tab head end -->
+
+                <!-- table body start-->
+                 <div class="tab-body">
+
+                    <!-- tab 1 start -->
+                    <div class="tab-panel active" id="tab-1">
+                        <div class="form-group">
+                            <div class="label">
+                                <label>分类名称</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="code" name="name" size="60" datatype="*" placeholder="分类名称" value="<?php echo $audio['name']; ?>">
+                                <div class="input-note">请填写分类名称</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="label">
+                                <label>分类ICON</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input show_uo_imgs" id="images" datatype="*" placeholder="请上传ICON" readonly value="<?php echo IMG_HOST . '/' . $audio['icon']; ?>">
+                                <input type="hidden" name="icon" value="<?php echo $audio['icon']; ?>" />
+                                <a class="button bg-blue button-small " data="images" id="image_upload" preview="image_preview" href="javascript:;" ><span class="icon-upload"> 上传</span></a>
+                                <a class="button bg-blue button-small icon-picture-o" id="image_preview" href="javascript:;" > 预览</a>
+                                <div class="input-note">请上传分类ICON</div>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <div class="label">
+                                <label>分类排序</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="tel" name="order" size="60" datatype="*" placeholder="分类排序" value="<?php echo $audio['order']; ?>">
+                                <div class="input-note">请填写分类排序</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="label">
+                                <label>分类状态</label>
+                            </div>
+                            <div class="field">
+                                <div class="button-group radio">
+                                    <label class="button <?php if (1 == $audio['status']) : ?> active <?php endif;?>">
+                                        <input name="status" value="1" type="radio" <?php if ($audio['status'] == 1) : ?> checked <?php endif;?>>
+                                        <span class="icon icon-check text-green"></span> 正常
+                                    </label>
+
+                                    <label class="button <?php if (0 == $audio['status']) : ?> active <?php endif;?>">
+                                        <input name="status" value="0" type="radio" <?php if ($audio['status'] == 0) : ?> checked <?php endif;?>>
+                                        <span class="icon icon-check text-green"></span> 删除
+                                    </label>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- tab 1 end -->
+
+                 </div>
+                <!-- table body end-->
+
+                <div class="panel-foot">
+                    <div class="form-button">
+                        <input type="hidden" name="id" value="<?php echo $audio['id']; ?>">
+                        <div id="tips"></div>
+                        <button class="button bg-main" type="submit">保存</button>
+                        <button class="button bg" type="reset">重置</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script  type="text/javascript">
+    Do.ready('base', function () {
+        //表单综合处理
+        duxConfig.upDir = '';
+        $('#form').duxFormPage();
+        $('#image_upload').duxFileUpload({
+            uploadUrl: '/audiotopic/upload',
+            type: 'jpg,png,gif',
+            complete: function (data) {
+                $('.show_uo_imgs').val(data.host + '/' + data.path);
+                $(':input[name="icon"]').val(data.path);
+            }
+        });
+    });
+</script>

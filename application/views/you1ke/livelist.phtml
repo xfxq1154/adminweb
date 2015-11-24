@@ -1,0 +1,64 @@
+<script language="JavaScript" type="text/javascript" src="<?=ASSET_URL?>/admincenter/js/calendar/WdatePicker.js"></script>
+<div class="dux-tools">
+    <div class="tools-function clearfix">
+        <div class="float-left">
+            <a class="button button-small bg-main" href="">音频流量</a>
+        </div>
+    </div>
+</div>
+<div class="table-tools clearfix ">
+    <div class="float-left">
+        <div class="form-inline">
+            <form method="post" action="/you1kelive/index" enctype="multipart/form-data">
+                <div class="form-group">
+                    <div class="field">
+                        <input type="text" class="input datebtn" style="width:220px;" name="start_time" value="<?=$st;?>" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd- 00:00:00'})" style="cursor:pointer;" size="60" datatype="*" placeholder="用户关注开始时间" autocomplete="off">
+                    </div>—
+                    <div class="field">
+                        <input type="text" class="input datebtn" style="width:220px;" name="end_time" value="<?=$et;?>" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd- 23:59:59'})" style="cursor:pointer;" size="60" datatype="*" placeholder="用户关注结束时间" autocomplete="off">
+                    </div>
+                </div>
+                <div class="form-button">
+                    <button class="button" type="submit" name="submit">搜索</button>
+                </div>
+                <div class="form-button">
+                    <button class="button" type="submit" name="excel" id="excel" value="1">导出</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="table-responsive">
+    <table id="table" class="table table-hover ">
+        <tbody>
+            <tr>
+                <th width="*">播放次数</th>
+                <th width="*">日期</th>
+            </tr>
+            <?php if(!empty($data)):?>
+            <?php foreach ($data as $key => $value):?>
+            <tr>
+                <td><?=$value['nums'];?></td>
+                <td><?=$value['creation_time'];?></td>
+            </tr>
+            <?php endforeach;?>
+            <?php endif;?>
+        </tbody>
+    </table>
+</div>
+<div class="panel-foot table-foot clearfix">
+    <div class="float-right">
+        <?php echo $page;?>
+    </div>
+    <?php if($pagger):?>
+        <div class="panel dux-box panel-foot clearfix" style="margin-top:10px;border-radius: 4px;">
+            <?=$pagger?>
+        </div>
+    <?php endif;?>
+</div>
+<script>
+    Do.ready('base', function () {
+        $('#table').duxTable();
+    });
+</script>
+

@@ -1,0 +1,145 @@
+<script language="JavaScript" type="text/javascript" src="<?=ASSET_URL?>/admincenter/js/calendar/WdatePicker.js"></script>
+<div class="dux-tools">
+    <div class="bread-head">电子书授权方管理<span class="small">编辑电子书授权方</span>
+
+        <div class="float-right">
+            <a class="button button-small bg-main icon-list" href="/ip/list">电子书授权方列表</a>
+        </div>
+
+    </div>
+</div>
+<div class="admin-main">
+    <form method="post" class="form-x dux-form form-auto" id="form" action="/ip/edit">
+        <div class="tab dux-tab">
+            <div class="panel dux-box  active">
+                <!-- tab head start-->
+                <div class="panel-head">
+                    <div class="tab-head">
+                        <strong>电子书授权方配置</strong>
+                        <ul class="tab-nav">
+                            <li class="active"><a href="#tab-1">编辑电子书授权方</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- tab head end -->
+
+                <!-- table body start-->
+                 <div class="tab-body">
+
+                    <!-- tab 1 start -->
+                    <div class="tab-panel active" id="tab-1">
+                        <div class="form-group">
+                            <div class="label">
+                                <label>授权方</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="mechanism" name="mechanism" size="60" datatype="*" placeholder="授权方" value="<?php echo $row['mechanism']; ?>">
+                                <div class="input-note">请填写授权方名称</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="label">
+                                <label>接口人</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="interface" name="interface" size="60" datatype="*" placeholder="接口人" value="<?php echo $row['interface']; ?>">
+                                <div class="input-note">请填写接口人</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="label">
+                                <label>接口人手机号</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="interface_mobile" name="interface_mobile" size="60" datatype="n" placeholder="接口人手机号" value="<?php echo $row['interface_mobile']; ?>">
+                                <div class="input-note">请填写接口人手机号</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="label">
+                                <label>授权截止</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input datebtn" style="width:220px;" id="date_end" name="date_end"   onfocus="WdatePicker()" style="cursor:pointer;" size="60" datatype="*" placeholder="授权截止" autocomplete="off" value="<?php echo $row['date_end']; ?>">
+                                <div class="input-note">授权截止</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="label">
+                                <label>对接人</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="docking" name="docking" size="60" datatype="*" placeholder="对接人" value="<?php echo $row['docking']; ?>">
+                                <div class="input-note">请填写对接人</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="label">
+                                <label>对接人手机号</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="docking_mobile" name="docking_mobile" size="60" datatype="n" placeholder="对接人手机号" value="<?php echo $row['docking_mobile']; ?>">
+                                <div class="input-note">请填写对接人手机号</div>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <div class="label">
+                                <label>上线状态</label>
+                            </div>
+                            <div class="field">
+                                <div class="button-group radio">
+                                    <label class="button <?php if ($row['status'] == 0) : ?> active <?php endif; ?>">
+                                        <input name="status" value="0" type="radio" datatype="*"
+                                        <?php if ($row['status'] == 0) : ?> checked <?php endif; ?> />
+                                        <span class="icon icon-check text-green"></span> 立刻
+                                    </label>
+
+                                    <label class="button <?php if ($row['status'] == 1) : ?> active <?php endif; ?>">
+                                        <input name="status" value="1" type="radio" datatype="*"
+                                        <?php if ($row['status'] == 1) : ?> checked <?php endif; ?> />
+                                        <span class="icon icon-check text-green"></span> 稍后手动
+                                    </label>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- tab 1 end -->
+
+                 </div>
+                <!-- table body end-->
+
+                <div class="panel-foot">
+                    <div class="form-button">
+                        <div id="tips"></div>
+                        <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
+                        <button class="button bg-main" type="submit">保存</button>
+                        <button class="button bg" type="reset">重置</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script  type="text/javascript">
+    Do.ready('base', function () {
+        //表单综合处理
+        duxConfig.upDir = '';
+        $('#form').duxFormPage();
+        $('#image_upload').duxFileUpload({
+            uploadUrl: '/audioclass/upload',
+            type: 'jpg,png,gif',
+            complete: function (data) {
+                $('.show_uo_imgs').val(data.savepath);
+            }
+        });
+    });
+</script>

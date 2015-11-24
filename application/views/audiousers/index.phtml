@@ -1,0 +1,87 @@
+<div class="dux-tools">
+    <div class="bread-head">iGet用户列表<span class="small">iGet用户列表</span></div>
+</div>
+
+<div class="dux-tools">
+    <div> 
+        <input name="kwd" type="text" id="kwd" placeholder="输入用户id" value="<?=$userid?>" />  
+        <input value="<?=$uphone?>" type="text"   id="phone" name="phone"   datatype="*" placeholder="用户手机号" autocomplete="off">
+        
+        <a class="searchbtn button button-small bg-blue" url = "/audioUsers/index">搜索</a>
+        <span style="float:right;margin-right: 20px;">得到用户总数：<?=$total;?></span><span style="float:right;margin: 0  20px 0 20px;">有手机号用户数：<?=$phoneNum;?></span><span style="float:right;">没有手机号用户数：<?=$noPhoneNum;?></span>
+    </div>
+</div>
+
+<div class="admin-main">
+    <?php if($pagger):?>
+        <div class="panel dux-box panel-foot clearfix" style="margin-bottom:10px;border-radius: 4px;">
+            <?=$pagger?>
+        </div>
+    <?php endif;?>
+    <div class="panel dux-box">
+
+        <div class="table-responsive">
+            <table id="table" class="table table-hover ">
+                <tbody>
+                <tr>
+                    <th width="100">用户ID</th>
+                    <th width="*">用户名</th>
+                    <th width="*">手机号</th>
+                    <th width="*">总积分</th>
+                    <th width="*">今天积分</th>
+                    <th width="*">获取积分时间</th>
+                    <th width="*">最后登录时间</th>
+                    <th width="*">登录次数</th>
+                </tr>
+                <?php if ($users) : ?>
+                    <?php foreach($users as $user) : ?>
+                        <tr>
+                            <td><a href="/charge/uinfo/uid/<?php echo $user['uid']; ?>"><?php echo $user['uid']; ?></a></td>
+                            <td><a href="/charge/uinfo/uid/<?php echo $user['uid']; ?>"><?php echo isset($user['nickname']) ? $user['nickname'] : ''; ?></a></td>
+                            <td><?php echo isset($user['phone']) ? $user['phone'] : ''; ?></td>
+                            <td><?php echo $user['points']; ?></td>
+                            <td><?php echo $user['points_today']; ?></td>
+                            <td><?php echo $user['points_date']; ?></td>
+                            <td><?php echo $user['last_login_date']; ?></td>
+                            <td><?php echo $user['login_count']; ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <?php if($pagger):?>
+        <div class="panel dux-box panel-foot clearfix" style="margin-top:10px;border-radius: 4px;">
+            <?=$pagger?>
+        </div>
+    <?php endif;?>
+</div>
+<script>
+    Do.ready('base', function () {
+        $('#table').duxTable();
+    });
+    
+    $('.searchbtn').click(function(){
+    var kwd = $('#kwd').val();
+    var phone = $('#phone').val();
+    var url = $(this).attr('url');
+    
+    
+    
+   
+    if(kwd !='' && kwd !=''){
+        url+='/uid/'+kwd;
+    }
+    
+    if(phone !='' && phone !=null){
+        url+='/phone/'+phone;
+    }
+    
+    
+    
+    
+    window.location.href = url;
+});
+</script>

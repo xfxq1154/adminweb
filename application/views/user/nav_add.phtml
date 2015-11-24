@@ -1,0 +1,99 @@
+<div class="dux-tools">
+    <div class="bread-head">后台菜单管理                <span class="small">添加后台菜单</span>
+    </div>
+    <br>
+    <div class="tools-function clearfix">
+        <div class="button-group float-right">
+            <a class="button button-small bg-main icon-list" href="/nav/index">
+                菜单列表</a>
+        </div>
+    </div>
+</div>
+<div class="admin-main">
+    <form method="post" class="form-x dux-form form-auto" id="form" action="/nav/add">
+        <div class="tab dux-tab">
+            <div class="panel dux-box  active">
+                <div class="panel-head">
+                    <div class="tab-head">
+                        <strong>菜单管理</strong>
+                        <ul class="tab-nav">
+                            <li class="active"><a href="#tab-1">添加菜单</a></li>
+                            <!--li><a href="#tab-2">接口配置</a></li>
+                            <li><a href="#tab-3">微信支付配置</a></li>
+                            <li><a href="#tab-4">网站微信登录配置</a></li>
+                            <li><a href="#tab-5">使用说明</a></li-->
+                        </ul>
+                    </div>
+                </div>
+                <div class="tab-body">
+                    <div class="tab-panel active" id="tab-1">
+                        <div class="form-group">
+                            <div class="label">
+                                <label>菜单名字</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="code" name="name" size="60" datatype="*" placeholder="菜单名字" autocomplete="off">
+                                <div class="input-note">请填用户角色</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="label">
+                                <label>菜单小图标</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="code" name="icon" size="60" datatype="*" placeholder="菜单小图标" autocomplete="off">
+                                <div class="input-note">请填菜单小图标</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="label">
+                                <label>控制器</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="controller" name="controller" size="60" datatype="*" placeholder="控制器" autocomplete="off">
+                                <div class="input-note">请填控制器 Controller</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="label">
+                                <label>动作</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="action" name="action" size="60" datatype="*" placeholder="动作" autocomplete="off">
+                                <div class="input-note">请填动作 Action</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="label">
+                                <label>所属分类</label>
+                            </div>
+                            <div class="field">
+                                <select class="input" name="cid" id="cid" >
+                                    <option value="0" <?php if($id == 0):?>selected="selected"<?php endif;?>>作为顶级分类</option>
+                                    <?php foreach ($list as $nav) : ?>
+                                    <option value="<?=$nav['id']?>" <?php if($id == $nav['id']):?>selected="selected"<?php endif;?> <?php if($nav['depth'] > 2){echo 'style="background-color:#CCC" disabled="disabled"';}?>><?=$nav['depthstr'].$nav['name']?></option>
+                                    <?php endforeach;?>
+                                </select>
+                                <div class="input-note">请选择所属分类</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-foot">
+                    <div class="form-button">
+                        <div id="tips"></div>
+                        <button class="button bg-main" type="submit">保存</button>
+                        <button class="button bg" type="reset">重置</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script  type="text/javascript">
+    Do.ready('base', function () {
+        //表单综合处理
+        $('#form').duxFormPage();
+    });
+</script>

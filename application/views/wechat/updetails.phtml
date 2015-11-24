@@ -1,0 +1,253 @@
+
+<div class="dux-tools">
+  <div class="tools-function clearfix">
+    <div class="float-left"><a class="button button-small bg-main icon-list" href="javascript:;"> 编辑 又一课 微信</a></div>
+  </div>
+</div>
+<div class="admin-main">
+<form method="post" class="form-x dux-form form-auto" id="form" action="/wechat/upDetails">
+    <div class="tab dux-tab">
+        <div class="panel dux-box  active">
+            <div class="panel-head">
+                <div class="tab-head">
+                    <strong>微信接口配置</strong>
+                    <ul class="tab-nav">
+                        <li class="active"><a href="#tab-1">基本配置</a></li>
+                        <li><a href="#tab-2">接口配置</a></li>
+                        <li><a href="#tab-3">微信支付配置</a></li>
+                        <li><a href="#tab-4">网站微信登录配置</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="tab-body">
+                <div class="tab-panel active" id="tab-1">
+                    <div class="form-group">
+                        <div class="label">
+                            <label>帐号类型</label>
+                        </div>
+                        <div class="field">
+                            <div class="button-group button-group-small radio">
+                                <label class="button <?php if ($data['tepy'] != 1):?>active"<?php endif;?>><input name="tepy" value="1" <?php if ($data['tepy'] != 1):?> checked="checked"<?php endif;?> type="radio"><span class="icon icon-check"></span> 订阅号</label>
+                                <label class="button <?php if ($data['tepy'] == 1):?>active"<?php endif;?>><input name="tepy" value="2" <?php if ($data['tepy'] == 1):?> checked="checked"<?php endif;?> type="radio"><span class="icon icon-check"></span> 服务号</label>
+                            </div>
+                            <div class="input-note">请选择微信公众账号类型,<font color="#000">根据微信公众账号当前情况，正确选择</font></div>
+                        </div>
+                    </div>
+                    <div class="form-group"> 
+                        <div class="label">
+                            <label>是否认证</label>
+                        </div>
+                        <div class="field">
+                            <div class="button-group button-group-small radio">
+                                <label class="button <?php if ($data['isreg'] == 1):?>active"<?php endif;?>><input name="isreg" value="1" <?php if ($data['isreg'] == 1):?>checked="checked"<?php endif;?> type="radio"><span class="icon icon-check"></span> 是</label>
+                                <label class="button <?php if ($data['isreg'] != 1):?>active"<?php endif;?>><input name="isreg" value="0" <?php if ($data['isreg'] != 1):?>checked="checked"<?php endif;?> type="radio"><span class="icon icon-check"></span> 否</label>
+                            </div>
+                            <div class="input-note">帐号是否通过微信认证,<font color="#000">根据微信公众账号当前情况，正确选择</font></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="label">
+                            <label>帐号名称</label>
+                        </div>
+                        <div class="field">
+                            <input type="text" class="input" style="width:340px;" id="title" name="name" size="60" datatype="*" value="<?php echo $data['name']; ?>">
+                            <div class="input-note">请填写微信公众账号名称</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="label">
+                            <label>微信号</label>
+                        </div>
+                        <div class="field">
+                            <input type="text" class="input" style="width:340px;" id="title" name="code" size="60" datatype="*" value="<?php echo $data['code'];?>">
+                            <div class="input-note">请填写微信公众账号微信号</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="label">
+                            <label>微信原始ID</label>
+                        </div>
+                        <div class="field">
+                            <input type="text" class="input" style="width:340px;" id="title" name="oldcode" size="60" datatype="*" value="<?=$data['oldcode'];?>">
+                            <div class="input-note">请填写微信公众账号的原始ID</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="label">
+                            <label>二维码</label>
+                        </div>
+                        <div class="field">
+                            <input type="text" class="input show_uo_imgs" id="image" name="img" value="<?php echo $data['img'];?>" datatype="*">
+                            <a class="button bg-blue button-small " data="image" id="image_upload" preview="image_preview" href="javascript:;" ><span class="icon-upload"> 上传</span></a>
+                            <a class="button bg-blue button-small icon-picture-o" id="image_preview" href="javascript:;" > 预览</a>
+                            <div class="input-note">请上传微信公众账号二维码</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="label">
+                            <label>微信头像</label>
+                        </div>
+                        <div class="field">
+                            <input type="text" class="input show_uo_imgss" id="images" name="avaimg" value="<?=$data['avaimg'];?>" datatype="*">
+                            <a class="button bg-blue button-small " data="images" id="image_uploads" preview="image_previews" href="javascript:;" ><span class="icon-upload"> 上传</span></a>
+                            <a class="button bg-blue button-small icon-picture-o" id="image_previews" href="javascript:;" > 预览</a>
+                            <div class="input-note">请上传微信公众账号头像</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="label">
+                            <label>微信关注图文链接</label>
+                        </div>
+                        <div class="field">
+                            <input type="text" class="input" style="width:440px;" id="title" name="gurl" size="60" datatype="*" value="<?=$data['gurl'];?>">
+                            <div class="input-note">请填写微信公众账号的关注图文链接</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="label">
+                            <label for="sitename">账号绑定</label>
+                        </div>
+                        <div class="field">
+                            <div class="button-group button-group-small radio">
+                                <label class="button <?php if ($data['isuser'] == 1):?>active<?php endif;?>"><input name="isuser" value="1" <?php if ($data['isuser'] == 1):?>checked="checked"<?php endif;?> type="radio"><span class="icon icon-check"></span> 开启</label>
+                                <label class="button <?php if ($data['isuser'] != 1):?>active<?php endif;?>"><input name="isuser" value="0" <?php if ($data['isuser'] != 1):?>checked="checked"<?php endif;?> type="radio"><span class="icon icon-check"></span> 关闭</label>
+                            </div>
+                            <div class="input-note">开启后，所有功能均需要绑定微信才可使用</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-panel" id="tab-2">
+                    <div class="form-group">
+                        <div class="label">
+                            <label for="sitename">接口状态</label>
+                        </div>
+                        <div class="field">
+                            <div class="button-group button-group-small radio">
+                                <label class="button <?php if ($data['isopen'] == 1):?>active<?php endif;?>"><input name="isopen" value="1" <?php if ($data['isopen'] == 1):?>checked="checked"<?php endif;?> type="radio"><span class="icon icon-check"></span> 正常</label>
+                                <label class="button <?php if ($data['isopen'] != 1):?>active<?php endif;?>"><input name="isopen" value="0" <?php if ($data['isopen'] != 1):?>checked="checked"<?php endif;?> type="radio"><span class="icon icon-times"></span> 关闭</label>
+                            </div>
+                            <div class="input-note">设置接口通讯状态，一般用于接口维护等使用</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="label">
+                            <label>微信接口Token</label>
+                        </div>
+                        <div class="field">
+                            <input type="text" class="input" style="width:240px;" id="title" name="token" size="60" datatype="*" value="<?=$data['token'];?>">
+                            <div class="input-note">请填写开发者模式的Token,请确保与微信公众平台一致</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="label">
+                            <label>微信接口AppID</label>
+                        </div>
+                        <div class="field">
+                            <input type="text" class="input" style="width:240px;" id="title" name="appid" size="60" datatype="*" value="<?=$data['appid'];?>">
+                            <div class="input-note">请填写开发者模式的AppID,请确保与微信公众平台一致</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="label">
+                            <label>微信接口AppSecret</label>
+                        </div>
+                        <div class="field">
+                            <input type="text" class="input" style="width:320px;" id="title" name="appsecret" size="60" datatype="*" value="<?=$data['appsecret'];?>">
+                            <div class="input-note">请填写开发者模式的AppSecret,请确保与微信公众平台一致</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="label">
+                            <label>EncodingAESKey</label>
+                        </div>
+                        <div class="field">
+                            <input type="text" class="input" style="width:440px;" id="title" name="aeskey" size="60" datatype="*" value="<?=$data['aeskey'];?>">
+                            <div class="input-note">消息加解密方式务必选择安全模式，填写获取到的EncodingAESKey</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-panel" id="tab-3">
+                    <div class="form-group">
+                        <div class="label">
+                            <label>partnerid</label>
+                        </div>
+                        <div class="field">
+                            <input type="text" class="input" style="width:240px;" id="title" name="partnerid" size="60" value="<?=$data['partnerid'];?>">
+                            <div class="input-note">请填写财付通商户身份标识</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="label">
+                            <label>partnerkey</label>
+                        </div>
+                        <div class="field">
+                            <input type="text" class="input" style="width:240px;" id="title" name="partnerkey" size="60"  value="<?=$data['partnerkey'];?>">
+                            <div class="input-note">请填写财付通商户权限密钥Key</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="label">
+                            <label>paysignkey</label>
+                        </div>
+                        <div class="field">
+                            <input type="text" class="input" style="width:320px;" id="title" name="paysignkey" size="60"  value="<?=$data['paysignkey'];?>">
+                            <div class="input-note">请填写商户签名密钥Key</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-panel" id="tab-4">
+                    <div class="form-group">
+                        <div class="label">
+                            <label>loginappid</label>
+                        </div>
+                        <div class="field">
+                            <input type="text" class="input" style="width:240px;" id="title" name="loginappid" size="60" value="<?=$data['loginappid'];?>">
+                            <div class="input-note">请填写微信公众平台获取的网站授权登录AppID</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="label">
+                            <label>loginappsecret</label>
+                        </div>
+                        <div class="field">
+                            <input type="text" class="input" style="width:240px;" id="title" name="loginappsecret" size="60"  value="<?=$data['loginappsecret'];?>">
+                            <div class="input-note">请填写微信公众平台获取的网站授权登录AppSecret</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-foot">
+                <div class="form-button">
+                    <div id="tips"></div>
+                    <input type="hidden" name="wechatid" id="wechat_id" type="hidden" value="<?php echo $id;?>">
+                    <button class="button bg-main" type="submit">保存</button>
+                    <button class="button bg" type="reset">重置</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+</div>
+
+<script type="text/javascript">
+    Do.ready('base', function () {
+        //表单综合处理
+        $('#form').duxFormPage();
+        //上传缩略图
+        $('#image_upload').duxFileUpload({
+            uploadUrl: '/wechat/img',
+            type: 'jpg,png,gif',
+            complete: function (data) {
+                $('.show_uo_imgs').val(data.savepath);
+            }
+        });
+        //上传头像
+        $('#image_uploads').duxFileUpload({
+            type: 'jpg,png,gif',
+            uploadUrl: '/wechat/img',
+            complete: function (data) {
+                $('.show_uo_imgss').val(data.savepath);
+            }
+        });
+    }); 
+</script>

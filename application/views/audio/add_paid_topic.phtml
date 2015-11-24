@@ -1,0 +1,429 @@
+<script language="JavaScript" type="text/javascript" src="<?=ASSET_URL?>/admincenter/js/calendar/WdatePicker.js"></script>
+<div class="dux-tools">
+    <div class="bread-head">音频排期                <span class="small">添加音频排期</span>
+    </div>
+    <br>
+    <div class="tools-function clearfix">
+        <div class="button-group float-right">
+            <a class="button button-small bg-main icon-list" href="/audiotopic/ListDailyPackage">
+                日常包排期列表</a>
+        </div>
+    </div>
+</div>
+<div class="admin-main">
+    <form method="post" class="form-x dux-form form-auto" id="form" action="/audiotopic/addPaidTopic">
+        <div class="tab dux-tab">
+            <div class="panel dux-box  active">
+                <div class="panel-head">
+                    <div class="tab-head">
+                        <strong>菜单管理</strong>
+                        <ul class="tab-nav">
+                            <li class="active"><a href="#tab-4" id="tabtn4" num="4" class="tablists " >收费音频</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="tab-body">
+
+
+
+                    <div class="tab-panel active" id="tab-4">
+
+
+                        <div class="form-group">
+                            <div class="label">
+                                <label>上线日期</label>
+                            </div>
+                            <div class="field">
+                                <input type="hidden" class="input" style="width:220px;" id="statusBtn" name="status" value="1" size="60" datatype="*1-12" errormsg="" placeholder="" autocomplete="off">
+                                <input type="text" class="input datebtn" style="width:220px;" id="datetime" name="datetime"   onfocus="WdatePicker({minDate:'%y-%M-{%d+1}'})" style="cursor:pointer;" size="60" datatype="*" placeholder="音频上线日期" autocomplete="off">
+                                <div class="input-note">请选择音频上线日期</div><div id="paychecknote" style="display: none;color: red;">当天的排期已存在，不能重复</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <input name="type" type="hidden" value="1" />
+                        </div>
+
+                        <div class="form-group">
+                            <div class="label">
+                                <label>售卖价格</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="audio_price" name="audio_price" size="60"  placeholder="售卖价格" autocomplete="off">
+                                <div class="input-note">请填售卖价格</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="label">
+                                <label>买赠学分</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="audio_points" name="audio_points" size="60"  placeholder="买赠学分" autocomplete="off">
+                                <div class="input-note">请填买赠学分</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="label">
+                                <label>音频包标题</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input " style="width: 220px;" id="audio_title" name="audio_title" size="60"  placeholder="音频包标题" autocomplete="off"  />
+                                <div class="input-note">请填写音频包标题</div>
+                            </div>
+                        </div>
+
+                         <div class="form-group">
+                            <div class="label">
+                                <label>音频包摘要</label>
+                            </div>
+                            <div class="field">
+                                <!--<input type="text" class="input" style="width:220px;" id="audio_summary" name="audio_summary" size="60" datatype="*" placeholder="音频包摘要"> -->
+                                <textarea type="text" class="input " style="width: 500px; height: 80px;" id="audio_summary" name="audio_summary" size="60"  placeholder="音频包摘要" autocomplete="off"></textarea>
+                                <div class="input-note">请填写音频包摘要</div>
+                            </div>
+                        </div>
+
+                         <div class="form-group">
+                            <div class="label">
+                                <label>音频包简介</label>
+                            </div>
+                            <div class="field">
+                                <!--<input type="text" class="input" style="width:220px;" id="audio_summary" name="audio_summary" size="60" datatype="*" placeholder="音频包摘要"> -->
+                                <textarea type="text" class="input " style="width: 500px; height: 80px;" id="audio_brife" name="audio_brife" size="200"  placeholder="音频包简介" autocomplete="off"></textarea>
+                                <div class="input-note">请填写音频包简介(显示在音频包详情页，非必填)</div>
+                            </div>
+                        </div>
+
+                        <!-- 封面图片 -->
+                        <div class="form-group">
+                            <div class="label">
+                                <label>音频包封面</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input show_uo_imgs" id="images1" placeholder="请上传封面" readonly>
+                                <input type="hidden" name="audio_cover" >
+                                <a class="button bg-blue button-small " data="images1" id="image_upload1" preview="image_preview1" href="javascript:;" ><span class="icon-upload"> 上传</span></a>
+                                <a class="button bg-blue button-small icon-picture-o" id="image_preview1" href="javascript:;" > 预览</a>
+                                <div class="input-note">请上传封面(600x600)</div>
+                            </div>
+                        </div>
+
+                        <!-- 封面图片 -->
+                        <div class="form-group">
+                            <div class="label">
+                                <label>音频包头图</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input show_uo_imgs" id="images2" placeholder="请上传头图" readonly>
+                                <input type="hidden" name="audio_banner" >
+                                <a class="button bg-blue button-small " data="images2" id="image_upload2" preview="image_preview2" href="javascript:;" ><span class="icon-upload"> 上传</span></a>
+                                <a class="button bg-blue button-small icon-picture-o" id="image_preview2" href="javascript:;" > 预览</a>
+                                <div class="input-note">请上传头图(960x540)</div>
+                            </div>
+                        </div>
+
+                         <div class="form-group">
+                            <div class="label">
+                                <label>收费音频包</label>
+                            </div>
+                            <div class="field">
+                                <textarea type="text" class="input payaudiolist" style="width: 500px; height: 80px;" id="audiolist" name="payaudiolist" size="60"  placeholder="音频列表" autocomplete="off"></textarea>
+                                <button class="button viewfile_payment" style="vertical-align: top; width: 100px; height: 80px;" >文件预览</button>
+                                <div class="clearfix paylist checkbox"></div>
+                                <div class="clearfix paynote checkbox"></div>
+                                <div class="input-note">请输入音频列表 id,id,id,id</div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+
+
+
+                    <div class="panel-foot pfcont">
+
+
+
+                       <div class="form-button footablist" id="footab-4" >
+                            <div class="newtipslist" id="tips"></div>
+
+                            <button class="button bg-main submitBtn saveBtn" type="submit">保存</button>
+                            <!--<button class="button bg-main submitBtn otherSubmit" n="4"  style="cursor:pointer;"  type="submit">保存并上架</button>-->
+                            <button class="button bg submitBtn" type="reset" >重置</button>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+    </form>
+</div>
+
+
+
+
+<script  type="text/javascript">
+    Do.ready('base', function () {
+
+        $('#form').duxFormPage();
+        duxConfig.upDir = '';
+
+
+
+         $('#image_upload1').duxFileUpload({
+            uploadUrl: '/audiotopic/upload',
+            type: 'jpg,png,gif',
+            complete: function (data) {
+                $('.show_uo_imgs').eq(0).val(data.host + '/' + data.path);
+                $(':input[name="audio_cover"]').val(data.path);
+            }
+        });
+
+        $('#image_upload2').duxFileUpload({
+            uploadUrl: '/audiotopic/upload',
+            type: 'jpg,png,gif',
+            complete: function (data) {
+                $('.show_uo_imgs').eq(1).val(data.host + '/' + data.path);
+                $(':input[name="audio_banner"]').val(data.path);
+            }
+        });
+
+
+
+ });
+
+        //免费音频预览
+        $('.viewfile').click(function(){
+            audiolist = $('.audiolist').val();
+            if(audiolist){
+                $('.selectlist').children('label').remove();
+                $.ajax({
+                    url: '/audiotopic/audiolist/',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {audiolist: audiolist},
+                    success: function(data){
+                        if(data.status == 'error'){
+                            alert(data.code);
+                            $('.audiolist').val('');
+                            return false;
+                        }
+                        loadlist(data.data, 'selectlist','.selectnote','audiolist');
+                    }
+                });
+            }
+            return false;
+        });
+
+
+        //收费音频预览
+        $('.viewfile_payment').click(function(){
+            audiolist = $('.payaudiolist').val();
+            if(audiolist){
+                $('.paylist').children('label').remove();
+                $.ajax({
+                    url: '/audiotopic/audiolist/',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {audiolist: audiolist},
+                    success: function(data){
+                        if(data.status == 'error'){
+                            alert(data.code);
+                            $('.payaudiolist').val('');
+                            return false;
+                        }
+                        loadlist(data.data, 'paylist','.paynote','payaudiolist');
+                    }
+                });
+            }
+            return false;
+        });
+
+
+
+        //电子书列表预览
+        $('.ebookview').click(function(){
+            var ebooklist = $('.ebook').val();
+            if ("" != ebooklist){
+                if (contains(ebooklist, "，", true)){
+                    alert("不能含有中文逗号，请使用英文逗号");return false;
+                }
+            }
+            if(ebooklist){
+                $('.ebooklist').html('');//children('label').remove();
+                $.ajax({
+                    url: '/audiotopic/getEbookList',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {ebooklist: ebooklist},
+                    success: function(data){
+                        if(data.status == 'error'){
+                            alert(data.code);
+                            return false;
+                        }
+
+                        var bookids = '';
+                        var str = "<ul>";
+                        $.each(data.data, function (i, item) {
+                            var btype = (item.type=='1'?'全文':'干货');
+                            bookids+=item.id+',';
+
+                            str += '<li>' + '<div class="p-l"><img src="' + item.cover +
+                            '" alt="" width="80" /></div>' +
+                            '<div class="p-l width">' +
+                            '<span><b>' + item.title + '</b></span>' + "\n" +
+                            '<span><b>' + btype + '</b></span>' + "\n" +
+
+                            '<span>' + item.author + '</span>' + "\n" +
+                            '<span>￥<input name="bookprice[]" value="'+item.price+'" /></span></div></li>' + "\n";
+
+                        });
+                        str+="</ul>";
+                        var bids = bookids.substr(0,bookids.length-1);
+                        $('.ebooklist').append(str);
+                        $('.ebook').val(bids);
+                        //ebooklist(data.data, 'ebooklist','.ebooknote');
+                    }
+                });
+            }
+            return false;
+        });
+
+
+
+
+
+
+
+
+    function loadlist(data, dom,note,audio_input_class){
+        var str = "";
+        var atime = 0;
+        var ids = '';
+        $.each(data, function (i, item) {
+            ids += item.id+',';
+            str += appendAudio(item);
+            atime += parseInt(item.duration);
+        });
+        ids =ids.substring(0,ids.length-1);
+        $('.'+audio_input_class).val(ids);
+        $('.' + dom).append(str);
+         $(note).html( '共'+data.length+'个音频文件，累计时长：'+formatSeconds(atime) );
+    }
+    function appendAudio(item){
+        var str = "";
+        str +=  "  <label class=\"button active\" style=\"margin: 0 5px 5px 0;  float: left;  position: relative;  font-weight: normal;\">";
+        str +=  "  <input name=\"aid[]\" value=\""+item.id+"\" type=\"checkbox\" checked=\"checked\">";
+        str +=  "  "+item.title+" ";
+        str +=  "   </label>";
+        return str;
+    }
+
+     function formatSeconds(value) {
+        var theTime = parseInt(value);// 秒
+        var theTime1 = 0;// 分
+        var theTime2 = 0;// 小时
+        if(theTime > 60) {
+           theTime1 = parseInt(theTime/60);
+           theTime = parseInt(theTime%60);
+           if(theTime1 > 60) {
+              theTime2 = parseInt(theTime1/60);
+              theTime1 = parseInt(theTime1%60);
+            }
+        }
+        var result = ""+parseInt(theTime)+"秒";
+        if(theTime1 > 0) {
+            result = ""+parseInt(theTime1)+"分"+result;
+        }
+        if(theTime2 > 0) {
+            result = ""+parseInt(theTime2)+"小时"+result;
+        }
+        return result;
+   }
+
+
+  $('.checkDailyRecord').on('click',function(){
+      var topicDate = $('#datetime').val();
+          if(topicDate == '' || topicDate == null){
+            alert('请填写排期日期');return false;
+          }
+          checkPayRecord(topicDate);
+      return;
+
+  });
+
+  function checkPayRecord(topicDate){
+      $.ajax({
+              type: 'POST',
+              url: '/audiotopic/checkPayTypeRecord',
+              data:{dtime:topicDate,topictype:1},
+              dataType: 'json',
+              timeout: 0,
+              context:$('body'),
+              success: function(data){
+                  if(data.status == 'ok'){
+                      $('#paychecknote').hide();
+                      alert('没有当天的日常排期记录,可以添加排期');
+                  }else{
+                      alert('当天的日常排期已存在，不能重复！');
+                      $('#paychecknote').show();
+                  }
+
+
+
+              },
+              error:function(xhr,type){
+                  alert('请求失败！');
+              }
+           });
+  }
+
+
+   function contains(str, subStr, isIgnoreCase) {
+
+    if (isIgnoreCase) {
+        // 忽略大小写
+        str = str.toLowerCase();
+        subStr = subStr.toLowerCase();
+    }
+
+    var startChar = subStr.substring(0,1);
+    var strLen = subStr.length;
+
+    for (var j=0; j<str.length-strLen+1; j++) {
+        if (str.charAt(j) == startChar) {
+            /* 如果匹配起始字符,开始查找 */
+            if (str.substring(j, j+strLen) == subStr) {
+                /*如果从j开始的字符与 str 匹配 */
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+$('body').delegate('.nextab','click',function(){
+    var n =  $(this).attr('n');
+    $('#tabtn'+n).trigger("click");
+});
+
+
+$('body').delegate('.otherSubmit','click',function(){
+    $('#statusBtn').val(2);
+    //$('form').submit();
+});
+
+$('body').delegate('.saveBtn','click',function(){
+    $('#statusBtn').val(1);
+    //$('form').submit();
+});
+
+
+
+</script>

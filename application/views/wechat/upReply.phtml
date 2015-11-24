@@ -1,0 +1,152 @@
+<div class="dux-tools">
+  <div class="tools-function clearfix">
+    <div class="float-left"><a class="button button-small bg-main icon-list" href="/index.php?m=admin&c=wechat&a=editkeyword&wechatid=1&wkid=2"> 编辑至 又一课 微信账号</a></div>
+  </div>
+</div>
+<div class="admin-main">
+<form method="post" class="form-x dux-form form-auto" id="form" action="/wechat/upReply">
+    <div class="tab dux-tab">
+        <div class="panel dux-box  active">
+            <div class="tab-body">
+                <div class="tab-panel active" id="tab-1">
+                    <div class="form-group">
+                        <div class="label">
+                            <label>回复类型</label>
+                        </div>
+                        <div class="field">
+                            <div class="button-group button-group-small radio">
+                                <label class="button <?php if ($data['tepy'] == 1):?>active<?php endif;?>"><input name="tepy" id="keyword_tepy" value="1" <?php if($data['tepy'] == 1):?>checked="checked"<?php endif;?> type="radio"><span class="icon icon-check"></span> 文本回复</label>
+                                <label class="button <?php if ($data['tepy'] == 2):?>active<?php endif;?>"><input name="tepy" id="keyword_tepy" value="2" <?php if($data['tepy'] == 2):?>checked="checked"<?php endif;?> type="radio"><span class="icon icon-check"></span> 图文回复</label>
+                                <label class="button <?php if ($data['tepy'] == 3):?>active<?php endif;?>"><input name="tepy" id="keyword_tepy" value="3" <?php if($data['tepy'] == 3):?>checked="checked"<?php endif;?> type="radio"><span class="icon icon-check"></span> 语音回复</label>
+                                <label class="button <?php if ($data['tepy'] == 4):?>active<?php endif;?>"><input name="tepy" id="keyword_tepy" value="4" <?php if($data['tepy'] == 4):?>checked="checked"<?php endif;?> type="radio"><span class="icon icon-check"></span> 图片回复</label>
+                                <label class="button <?php if ($data['tepy'] == 98):?>active<?php endif;?>"><input name="tepy" id="keyword_tepy" value="98" <?php if($data['tepy'] == 98):?>checked="checked"<?php endif;?> type="radio"><span class="icon icon-check"></span> 应用回复</label>
+                                <label class="button <?php if ($data['tepy'] == 99):?>active<?php endif;?>"><input name="tepy" id="keyword_tepy" value="99" <?php if($data['tepy'] == 99):?>checked="checked"<?php endif;?> type="radio"><span class="icon icon-check"></span> 接口回复</label>
+                             </div>
+                            <div class="input-note">请选择自动回复的类型方式</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="label">
+                            <label>规则名称</label>
+                        </div>
+                        <div class="field">
+                            <input type="text" class="input" style="width:240px;" id="keyword_name" name="name" datatype="*" value="<?php echo $data['name'];?>">
+                            <div class="input-note">请填写自动回复的规则名称，仅作为自己识别即可</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="label">
+                            <label>关键词</label>
+                        </div>
+                        <div class="field">
+                            <input type="text" class="input" style="width:280px;" id="keyword_keys" name="keys" datatype="*" value="<?php echo $data['keys'];?>">
+                            <div class="input-note">请填写自动回复所匹配的关键词</div>
+                        </div>
+                    </div>
+                    <div class="form-group typeid" id="typeid_1" <?php if ($data['tepy'] == 1):?>style="display: show;"<?php else:?>style="display: none;"<?php endif;?>>
+                        <div class="label">
+                            <label>回复内容</label>
+                        </div>
+                        <div class="field">
+                            <textarea class="input" id="keyword_content" style="width:300px;height:420px" name="content"><?php echo $data['content'];?></textarea>
+                            <div class="input-note">请填写自动回复的内容支持简单的html标签和微信表情代码</div>
+                        </div>
+                    </div>
+                    <div class="form-group typeid" id="typeid_2" <?php if ($data['tepy'] == 2):?>style="display: show;"<?php else:?>style="display: none;"<?php endif;?>>
+                        <div class="label">
+                            <label>图文内容</label>
+                        </div>
+                        <div class="field">
+                            <input type="text" class="input" style="width:400px;" id="keyword_tmcontent" name="tmcontent" value="<?php echo $data['tmcontent'];?>" onkeyup="javascript:this.value=this.value.replace(/，/ig,',');">
+                            <div class="input-note">请填写自动回复的图文的对应内容编号，多个使用英文逗号分隔,最多10条。</div>
+                        </div>
+                    </div>
+                    <div class="form-group typeid" id="typeid_3" <?php if ($data['tepy'] == 3):?>style="display: show;"<?php else:?>style="display: none;"<?php endif;?>>
+                        <div class="label">
+                            <label>语音内容</label>
+                        </div>
+                        <div class="field">
+                            <input type="text" class="input" style="width:400px;" id="keyword_yycontent" name="yycontent" value="<?php echo $data['yycontent'];?>">
+                            <div class="input-note">请填写上传到微信素材库的语音media_id。</div>
+                        </div>
+                    </div>
+                    <div class="form-group typeid" id="typeid_4" <?php if ($data['tepy'] == 4):?>style="display: show;"<?php else:?>style="display: none;"<?php endif;?>>
+                        <div class="label">
+                            <label>图片内容</label>
+                        </div>
+                        <div class="field">
+                            <input type="text" class="input" style="width:400px;" id="keyword_tpcontent" name="tpcontent" value="<?php echo $data['tpcontent'];?>">
+                            <div class="input-note">请填写上传到微信素材库的图片media_id。</div>
+                        </div>
+                    </div>
+                    <div class="form-group typeid" id="typeid_98" <?php if ($data['tepy'] == 98):?>style="display: show;"<?php else:?>style="display: none;"<?php endif;?>>
+                        <div class="label">
+                            <label>选择应用</label>
+                        </div>
+                        <div class="field">
+                            <input type="text" class="input" style="width:400px;" id="keyword_apcontent" name="apcontent" value="<?php echo $data['apcontent'];?>">
+                            <div class="input-note">请填写自动回复的应用方法名称。</div>
+                        </div>
+                    </div>
+                    <div class="form-group typeid" id="typeid_99" <?php if ($data['tepy'] == 99):?>style="display: show;"<?php else:?>style="display: none;"<?php endif;?>>
+                        <div class="label">
+                            <label>接口地址</label>
+                        </div>
+                        <div class="field">
+                            <input type="text" class="input" style="width:400px;" id="keyword_jkcontent" name="jkcontent" value="<?php echo $data['jkcontent'];?>">
+                            <div class="input-note">请填写自动回复的对接接口，<a style="color:red" href="http://wechat.you1ke.com/Data/File/wechatapitest.zip" target="_blank">点击这里</a>下载接口开发文档。</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="label">
+                            <label for="sitename">账号绑定</label>
+                        </div>
+                        <div class="field">
+                            <div class="button-group button-group-small radio">
+                                <label class="button <?php if ($data['isuser'] == 1):?>active<?php endif;?>"><input name="isuser" value="1" <?php if ($data['isuser'] == 1):?>checked="checked"<?php endif;?> type="radio"><span class="icon icon-check"></span> 开启</label>
+                                <label class="button <?php if ($data['isuser'] == 0):?>active<?php endif;?>"><input name="isuser" value="0" <?php if ($data['isuser'] == 0):?>checked="checked"<?php endif;?> type="radio"><span class="icon icon-times"></span> 关闭</label>
+                            </div>
+                            <div class="input-note">开启后，该关键词需要绑定微信才可使用</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="label">
+                            <label for="sitename">关键词状态</label>
+                        </div>
+                        <div class="field">
+                            <div class="button-group button-group-small radio">
+                                <label class="button <?php if ($data['state'] == 1):?>active<?php endif;?>"><input name="state" value="1" <?php if ($data['state'] == 1):?>checked="checked"<?php endif;?> type="radio"><span class="icon icon-check"></span> 正常</label>
+                                <label class="button <?php if ($data['state'] == 0):?>active<?php endif;?>"><input name="state" value="0" <?php if ($data['state'] == 0):?>checked="checked"<?php endif;?> type="radio"><span class="icon icon-times"></span> 关闭</label>
+                            </div>
+                            <div class="input-note">请选择关键词的状态</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-foot">
+                <div class="form-button">
+                    <div id="tips"></div>
+                    <input type="hidden" name="wechatid" id="keyword_wid" type="hidden" value="<?php echo $wid;?>">
+                    <input type="hidden" name="keywordid" id="keyword_id" type="hidden" value="<?php echo $kid;?>">
+                    <button class="button bg-main" type="submit">保存</button>
+                    <button class="button bg" type="reset">重置</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+</div>
+<script type="text/javascript">
+    
+    Do.ready('base', function () {
+        //表单综合处理
+        $('#form').duxFormPage();
+		//
+		$(".button-group #keyword_tepy").change(function() { 
+			var thisid = $(this).val();
+			$(".typeid").hide();
+			$("#typeid_"+thisid).show();
+		}); 
+    }); 
+
+</script>

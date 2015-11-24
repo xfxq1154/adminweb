@@ -1,0 +1,111 @@
+
+<div class="dux-tools">
+    <div class="bread-head">电子书分类<span class="small">添加电子书分类</span>
+
+        <div class="float-right">
+            <a class="button button-small bg-main icon-list" href="/bookclass/list">电子书分类列表</a>
+        </div>
+
+    </div>
+</div>
+<div class="admin-main">
+    <form method="post" class="form-x dux-form form-auto" id="form" action="/bookclass/add">
+        <div class="tab dux-tab">
+            <div class="panel dux-box  active">
+                <!-- tab head start-->
+                <div class="panel-head">
+                    <div class="tab-head">
+                        <strong>电子书分类配置</strong>
+                        <ul class="tab-nav">
+                            <li class="active"><a href="#tab-1">添加电子书分类</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- tab head end -->
+
+                <!-- table body start-->
+                 <div class="tab-body">
+
+                    <!-- tab 1 start -->
+                    <div class="tab-panel active" id="tab-1">
+
+                        <div class="form-group">
+                            <div class="label">
+                                <label>所属分类</label>
+                            </div>
+                            <div class="field">
+                                <select class="input js-assign" target="#tpl" name="pid" datatype="*">
+                                    <option value="0" <?php if($id == 0):?>selected="selected"<?php endif;?>>作为顶级分类</option>
+                                    <?php foreach ($list as $nav) : ?>
+                                        <option value="<?=$nav['id']?>" <?php if($id == $nav['id']):?>selected="selected"<?php endif;?> <?php if($nav['depth'] >= 2){echo 'style="background-color:#CCC" disabled="disabled"';}?>><?=$nav['depthstr'].$nav['name']?></option>
+                                    <?php endforeach;?>
+                                </select>
+                                <div class="input-note">请选择所属分类</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="label">
+                                <label>分类名称</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="code" name="name" size="60" datatype="*" placeholder="分类名称">
+                                <div class="input-note">请填写分类名称</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="label">
+                                <label>分类ICON</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input show_uo_imgs" id="images" datatype="*" placeholder="请上传ICON" readonly>
+                                <input type="hidden" name="icon">
+                                <a class="button bg-blue button-small " data="images" id="image_upload" preview="image_preview" href="javascript:;" ><span class="icon-upload"> 上传</span></a>
+                                <a class="button bg-blue button-small icon-picture-o" id="image_preview" href="javascript:;" > 预览</a>
+                                <div class="input-note">请上传分类ICON</div>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <div class="label">
+                                <label>分类排序</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="tel" name="order" size="60" datatype="*" placeholder="分类排序">
+                                <div class="input-note">请填写分类排序</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- tab 1 end -->
+
+                 </div>
+                <!-- table body end-->
+
+                <div class="panel-foot">
+                    <div class="form-button">
+                        <div id="tips"></div>
+                        <button class="button bg-main" type="submit">保存</button>
+                        <button class="button bg" type="reset">重置</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script  type="text/javascript">
+    Do.ready('base', function () {
+        //表单综合处理
+        duxConfig.upDir = '';
+        $('#form').duxFormPage();
+        $('#image_upload').duxFileUpload({
+            uploadUrl: '/audiotopic/upload',
+            type: 'jpg,png,gif',
+            complete: function (data) {
+                $('.show_uo_imgs').val(data.host + '/' + data.path);
+                $(':input[name="icon"]').val(data.path);
+            }
+        });
+    });
+</script>

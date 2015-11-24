@@ -1,0 +1,75 @@
+<div class="dux-tools">
+    <div class="bread-head">电子书授权方管理<span class="small">电子书授权方列表</span>
+        <div class="button-group float-right">
+            <a class="button button-small bg-dot icon-plus dropdown-toggle"> 添加 <span class="downward"></span></a>
+            <ul class="drop-menu pull-right">
+                <li><a href="/ip/add">添加电子书授权方</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+<div class="admin-main">
+    <?php if($pagger):?>
+        <div class="panel dux-box panel-foot clearfix" style="margin-bottom:10px;border-radius: 4px;">
+            <?=$pagger?>
+        </div>
+    <?php endif;?>
+    <div class="panel dux-box">
+
+        <div class="table-responsive">
+            <table id="table" class="table table-hover ">
+                <tbody>
+                    <tr>
+                        <th width="100">ID</th>
+                        <th width="*">授权机构</th>
+                        <th width="*">接口人</th>
+                        <th width="*">接口人手机号</th>
+                        <th width="*">授权截止</th>
+                        <th width="*">上架量</th>
+                        <th width="*">对接人</th>
+                        <th width="*">对接人手机号</th>
+                        <th width="*">状态</th>
+                        <th width="*">操作</th>
+                    </tr>
+                    <?php if ($list) : ?>
+                        <?php foreach($list as $val) : ?>
+                            <tr>
+                                <td><?php echo $val['id']; ?></td>
+                                <td><?php echo $val['mechanism']; ?></td>
+                                <td><?php echo $val['interface']; ?></td>
+                                <td><?php echo $val['interface_mobile']; ?></td>
+                                <td><?php echo $val['date_end']; ?></td>
+                                <td><?php echo $val['count']; ?></td>
+                                <td><?php echo $val['docking']; ?></td>
+                                <td><?php echo $val['docking_mobile']; ?></td>
+                                <td>
+                                    <?php if ($val['status'] == 0) : ?>
+                                        <span class="tag bg-green">正常</span>
+                                    <?php elseif($val['status'] == 1) : ?>
+                                        <span class="tag">禁用</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td>
+                                    <a class="button bg-blue button-small icon-pencil" href="/ip/edit/id/<?php echo $val['id']; ?>" title="编辑"></a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <?php if($pagger):?>
+        <div class="panel dux-box panel-foot clearfix" style="margin-top:10px;border-radius: 4px;">
+            <?=$pagger?>
+        </div>
+    <?php endif;?>
+</div>
+<script>
+Do.ready('base', function () {
+$('#table').duxTable();
+});
+</script>

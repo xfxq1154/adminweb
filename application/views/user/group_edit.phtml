@@ -1,0 +1,70 @@
+<div class="dux-tools">
+    <div class="bread-head">用户组权限管理                <span class="small">管理网站后台用户组</span>
+    </div>
+    <br>
+    <div class="tools-function clearfix">
+        <div class="float-left">
+            <a class="button button-small bg-back icon-list" href="/group/index">
+                用户组列表</a>  
+        </div>
+        <div class="button-group float-right">
+            <a class="button button-small bg-dot icon-plus dropdown-toggle"> 添加 <span class="downward"></span></a> 
+            <ul class="drop-menu pull-right">
+                <li><a href="/group/add">添加用户组</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="admin-main">
+    <form method="post" class="form-x dux-form form-auto" id="form" action="/group/edit/id/<?=$ginfo['id']?>">
+        <div>
+            <input type="text" class="input Validform_error" style="width:220px;" id="code" name="name" value="<?=$ginfo['name']?>" size="60" datatype="*" placeholder="用户角色" nullmsg="请填写信息！">
+        </div>
+        <div class="panel dux-box  active">
+            <?php foreach ($navlist as $nav):?>
+            <div class="panel-head">
+                <strong><?=$nav['name']?> - 操作权限 <?=$ginfo['name']?><input type="hidden" name="nav_purview[]" value="<?=$nav['id']?>"></strong>
+            </div>
+            <div class="panel-body">
+                <?php foreach($nav['menu'] as $pid => $enav):?>
+                <div class="form-group">
+                    <div class="button-group checkbox" style="float:left;width: 110px;height: auto;">
+                        <label class="js-attr button<?php if( Tools::checkpower($ginfo['menu'], $enav['id']) ){ echo ' active'; }?>" data-jsattr="<?=$enav['id']?>" <?php if( Tools::checkpower($ginfo['menu'], $enav['id']) ){ echo ' data-jsint="1"'; }else{echo 'data-jsint="0"';}?>><input name="menu_purview[]" value="<?=$nav['id'].'-'.$enav['id']?>" type="checkbox" <?php if( Tools::checkpower($ginfo['menu'], $enav['id']) ){ echo 'checked="checked"'; }?>><span class="icon icon-check text-red"></span> <?=$enav['name']?></label>
+                    </div>
+                    
+                    <div class="button-group checkbox js-attr-<?=$enav['id']?>" style="float:left;">
+                        <?php foreach($enav['menu'] as $sid => $snav):?>
+                        <label class="button<?php if( Tools::checkpower($ginfo['menu'], $snav['id']) ){ echo ' active'; }?>" style="margin: 0 5px 5px 0;"><input name="submenu_purview[]" value="<?=$nav['id'].'-'.$enav['id'].'-'. $snav['id']?>" type="checkbox" <?php if( Tools::checkpower($ginfo['menu'], $snav['id']) ){ echo 'checked="checked"'; }?>><span class="icon icon-check text-green"></span> <?=$snav['name']?></label>
+                         <?php endforeach;?>
+                    </div>
+                    
+                </div>
+                <?php endforeach;?>
+            </div>
+            <?php endforeach;?>
+            <div class="panel-foot">
+                <div class="form-button">
+                    <div id="tips"></div>
+                    <input type="hidden" name="group_id" type="hidden" value="<?=$ginfo['id']?>">
+                    <button class="button bg-main" type="submit">保存</button>
+                    <button class="button bg" type="reset">重置</button>
+                </div>
+            </div>
+        </div>
+    </form>
+<script>
+$(function(){
+   $(".js-attr").click(function () { 
+        var thisopen = $(this);
+        var thisid = thisopen.attr("data-jsattr");
+        $(".js-attr-"+thisid+" .button").each(function () {
+            $(this).addClass('active');
+        });
+        $(".js-attr-"+thisid+" :checkbox").each(function () { 
+              $(this).attr("checked", !$(this).attr("checked")); 
+        });
+    });
+});
+</script>
+</div>
