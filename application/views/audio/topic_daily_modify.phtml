@@ -116,7 +116,9 @@
                             </div>
                             <div class="field">
                                 <button class="button bg-main" type="button" id="relation_book">关联金句</button>
-                                <input type="hidden" name="verse_id" id="verse_id" value="<?php if(isset($verseinfo['id'])){echo $verseinfo['id'];};?>" />
+                                <?php if(isset($verseinfo['id']) && $verseinfo['id']) : ?>
+                                    <input type="hidden" name="verse_id" id="verse_id" value="<?php echo $verseinfo['id']; ?>" />
+                                <?php endif; ?>
                                 <div class="previewVerseList" style="margin:10px 0 0 0;"><?php echo ($verseinfo)?$verseinfo['source']:''; ?></div>
                             </div>
                         </div>
@@ -160,7 +162,7 @@
                             <a class="button bg-main nextab" n="4" style="cursor:pointer;">下一步</a>
 
                         </div>
-                    
+
                        <div class="form-button footablist" id="footab-4" style="display:none;">
                             <div class="newtipslist" id="tips"></div>
                             <a class="button bg-main nextab" n="1"  style="cursor:pointer;">上一步</a>
@@ -688,20 +690,20 @@ function viewbook(){
                 var hasclass = $(this).hasClass('bg-green');
                 setPreviewBox($(this).attr('value'));
             });
-            
+
             var setPreviewBox = function(v){
                 var verseTitle = $('.verse_title_'+v).html();
-                
+
                 if ($.inArray(v, vObj.aVal) >= 0) {
                     $('.previewVerseList').html(verseTitle);
                 }else{
-                    
+
                     if (!vObj.aVal.length) {
                         $('.previewVerseList').html('');
                     }
-                    
+
                 }
-                
+
             };
 
 //            获取分页的值
@@ -725,7 +727,7 @@ function viewbook(){
                     if ( ind >= 0) {
                         $(ele).removeClass(options.activeBtn);
                         $(ele).addClass(options.disableBtn);
-                        
+
                         if (oImg.length > 0) {
                             vObj.aImg[$(ele).attr('value')] = {
                                 'url': oImg.attr('src'),
@@ -737,7 +739,7 @@ function viewbook(){
                     } else {
                         $(ele).removeClass(options.disableBtn);
                         $(ele).addClass(options.activeBtn);
-                        
+
                         if (oImg.length > 0) {
                             delete vObj.aImg[$(ele).attr('value')];
                         }
@@ -792,11 +794,11 @@ function viewbook(){
 
 //            设置数组的值
             var setArrValue = function (iValue) {
-               
+
                 var ind = $.inArray(iValue, vObj.aVal);
                 if (vObj.aVal.length == 1 && ind) {
                         alert('不能多选');
-                        
+
                         return false;
                     }
                 if ( ind >= 0) {
@@ -804,7 +806,7 @@ function viewbook(){
                 } else {
                     vObj.aVal.push(iValue);
                 }
-                
+
             };
 
 //            背景绑定事件
@@ -814,7 +816,7 @@ function viewbook(){
                 vObj.oBox.fadeOut(options.anime);
                 addPrevImg();
             });
-            
+
             $('body').delegate('.selectVerseBtn','click', function () {
                 setInputValue();
                 vObj.oBg.fadeOut(options.anime);

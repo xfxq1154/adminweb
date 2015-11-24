@@ -393,8 +393,14 @@ class VerseRelationModel
 
             $rs = $stmt->fetch(PDO::FETCH_ASSOC);
             $stmt->closeCursor();
-            $rs = ($count)?( $rs ? $rs['num'] : 0):(CustomArray::removeKeyPrefix($rs, 'r_'));
-            return $rs;
+            
+            
+            if($count){
+                return (int)$rs['num'];
+            }else{
+                return $rs?(CustomArray::removeKeyPrefix($rs, 'r_')):array();
+            }
+            
         }
         catch (PDOException $e)
         {
@@ -438,7 +444,7 @@ class VerseRelationModel
                             //查询此条排期电子书是否关联过金句，有则修改日期，没有返回
                             $wh = ' AND r_object_id = '.$v.' AND r_type > 1 ';
                             $row = $this->find($wh,'*',false);
-                            if($row['id']){
+                            if(isset($row['id'])){
                                     $re = $this->update($date,$row['id']);
                             }
                             
