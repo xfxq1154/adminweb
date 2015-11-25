@@ -1,8 +1,18 @@
 <?php
 
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * 
  */
-
+class CacheModel{
+    use Trait_Redis;
+    
+    public $redisMaster;
+    
+    public function __construct() {
+        $this->redisMaster = $this->getRedis('audio');
+    }
+    
+    public function removeTopicRedis($day){
+        $this->redisMaster->del('audio:iget:iget_topic_' . $day);
+    }
+}

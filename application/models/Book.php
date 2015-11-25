@@ -189,12 +189,34 @@ class BookModel {
 
             $this->adminLog->add($log);
             $this->dbMaster->commit();
+            $this->deleteCache($id);
             return true;
         } catch (PDOException $e) {
 
             $this->dbMaster->rollBack();
             die($e->getMessage());
         }
+    }
+    /**
+     * 删除排期缓存
+     * @param type $id
+     */
+    public function deleteCache($id) {
+        
+            
+        if($id){
+            //排期信息
+            $audioTopic = new AudioTopicModel();
+            $topic = $audioTopic->getTopicByEbook($id);
+            if($topic){
+                foreach ($topic as $info) {
+                    $cache = new CacheModel();
+                    $cache->removeTopicRedis($topic['t_datetime']);
+                }
+                
+            }
+        }
+        
     }
 
 

@@ -12,6 +12,7 @@ use Trait_Redis;
     public $dbMaster; //主从数据库 配置
     public $tableName = '`a_audio`';
     public $adminLog;
+    public $audioTopic;
 
     public function __construct() {
         $this->dbMaster = $this->getDb('audio');
@@ -254,9 +255,26 @@ use Trait_Redis;
                 }
                 
             }
+            $this->deleteCache($id);
             return $res;
         } catch (PDOException $e) {
             die($e->getMessage());
+        }
+    }
+    
+    public function deleteCache($id) {
+        $info = $this->findById($id);//音频信息
+        if($info){
+            $tid = $info['schedule'];
+            if($tid){
+                //排期信息
+                $audioTopic = new AudioTopicModel();
+                $topic = $audioTopic->getTopicById($tid);
+                if($topic){
+                    $cache = new CacheModel();
+                    $cache->removeTopicRedis($topic['datetime']);
+                }
+            }
         }
     }
 
