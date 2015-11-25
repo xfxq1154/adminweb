@@ -176,9 +176,8 @@ class AudioTopicModel {
         try {
             $sql = "SELECT {$fields} FROM {$this->tableName} WHERE `t_class` = 1 and CONCAT(',',t_audio,',') LIKE '%,{$id},%' ";
             $stmt = $this->dbMaster->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
-            $stmt->execute(array(':id' => $id));
+            $stmt->execute();
             $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            
             return $row ? $row: array();
         } catch (PDOException $e) {
             Tools::error($e);

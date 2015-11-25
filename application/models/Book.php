@@ -189,6 +189,7 @@ class BookModel {
 
             $this->adminLog->add($log);
             $this->dbMaster->commit();
+            
             $this->deleteCache($id);
             return true;
         } catch (PDOException $e) {
@@ -211,7 +212,7 @@ class BookModel {
             if($topic){
                 foreach ($topic as $info) {
                     $cache = new CacheModel();
-                    $cache->removeTopicRedis($topic['t_datetime']);
+                    $cache->removeTopicRedis($info['t_datetime']);
                 }
                 
             }
