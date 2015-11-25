@@ -50,7 +50,7 @@ class BpfinanceController extends Base {
             $export_data['page_size'] = 100;
             $export_data['mobile'] = $mobile;
             $export_data['order_id'] = $order_id;
-            $export_data['status'] = 'ALL' ? '' : $status;
+            $export_data['status'] = $status == 'ALL' ? '' : $status;
             $export_data['paid'] = $status == 'ALL' ? 1 : '';
             $export_data['start_created'] = $time_start;
             $export_data['end_created'] = $time_end;
@@ -67,15 +67,16 @@ class BpfinanceController extends Base {
                     $val = $val + $exnum;
                     unset($val['order_detail']);
                 }
-                header('Content-Type: application/vnd.ms-excel');
-                header('Content-Disposition: attachment;filename="'.date("YmdHis").'.xls"');  
-                header('Cache-Control: max-age=0');
-                    echo iconv('utf-8', 'gbk', implode("\t", array_keys($order_data['orders'][0]))),"\n";
-                foreach ($order_data['orders'] as $value) {
-                    echo iconv('utf-8', 'gbk', implode("\t", $value)),"\n";
+                if($n == 1){
+                    $title=array('订单ID','订单号','商品总价','优惠金额','实付金额','运费','店铺ID','购买人ID','省份','城市','地区','详细地址','邮政编码','收货人的姓名','收货人的手机号码','外部交易编号','订单状态',
+                                '订单状态','支付类型','付款时间','订单创建时间','订单更新时间','订单明细ID','商品ID','商品货号','SKU_ID','外部SKU号','SKU详情','商品标题','商品主图片地址','购买数量',
+                                '已发货数量','商品售价','商品支付单价','预售商品预发货时间','是否预售','快递公司','快递单号','快递状态');
+                    Base::export($order_data['orders'], $title);
+                }else{
+                    Base::export($order_data['orders']);
                 }
                 
-                if($order_data['total_nums'] == 0){
+                if($order_data['has_next'] == 0){
                     exit;
                 }
                 

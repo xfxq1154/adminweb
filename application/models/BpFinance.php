@@ -60,8 +60,6 @@ class BpFinanceModel {
         $o['payment_fee'] = $order['payment_fee'];
         $o['post_fee'] = $order['post_fee'];
         $o['showcase_id'] = $order['showcase_id'];
-        $o['seller_id'] = $order['seller_id'];
-        $o['showcase_id'] = $order['showcase_id'];
         $o['buyer_id'] = $order['buyer_id'];
         $o['receiver_province'] = $order['receiver_province'];
         $o['receiver_city'] = $order['receiver_city'];
@@ -87,7 +85,7 @@ class BpFinanceModel {
     public function tidy_express($data){
         $e['excom'] = $data[0]['excom'];
         $e['exnum'] = $data[0]['exnum'];
-        $e['state'] = $data[0]['state'];
+        $e['estate'] = $data[0]['state'];
         return $e;
     }
 
