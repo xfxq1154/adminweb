@@ -21,6 +21,8 @@ class BpFinanceModel {
         'TRADE_CLOSED' => '退款完成',
         'TRADE_CLOSED_BY_USER' => '已关闭',
     );
+    
+    private $pay_type= array('WECHAT'=>'微信支付','JDPAY'=>'京东支付');
 
     public function getList($params) {
         $result = $this->request(self::ORDER_LIST, $params);
@@ -69,9 +71,8 @@ class BpFinanceModel {
         $o['receiver_name'] = $order['receiver_name'];
         $o['receiver_mobile'] = $order['receiver_mobile'];
         $o['outer_tid'] = $order['outer_tid'];
-        $o['state'] = $order['state'];
         $o['state_name'] = $this->order_status[$order['state']];
-        $o['pay_type'] = $order['pay_type'];
+        $o['pay_type'] = $this->pay_type[$order['pay_type']];
         $o['pay_time'] = $order['pay_time'];
         $o['create_time'] = $order['create_time'];
         $o['update_time'] = $order['update_time'];
