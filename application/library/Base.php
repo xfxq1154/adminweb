@@ -161,5 +161,25 @@ abstract class Base extends Yaf_Controller_Abstract {
         }
         return $url;
     }
+    
+    /**
+     * 导出数据
+     * @param type $data
+     * @param type $head 标题行，如果没有请传1
+     */
+    static function export($data, $head = '') {
+        
+        if ($head) {
+            header('Content-Type: application/vnd.ms-excel');
+            header('Content-Disposition: attachment;filename="'.date("YmdHis").'.xls"');  
+            header('Cache-Control: max-age=0');
+            if($head != 1){
+                echo iconv('utf-8', 'gbk', implode("\t", $head)),"\n";
+            }
+        }
+        foreach ($data as $value) {
+            echo iconv('utf-8', 'gbk', implode("\t", $value)),"\n";
+        }
+    }
 
 }
