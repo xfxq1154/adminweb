@@ -114,11 +114,23 @@ class AudioTopicModel {
                 }
                 
             }
-
+            $this->deleteCache($id);
             return $res;
         } catch (PDOException $e) {
             Tools::error($e);
         }
+    }
+    
+    public function deleteCache($id) {
+   
+        //排期信息
+        $topic = $this->getTopicById($id);
+        if($topic){
+            $cache = new CacheModel();
+            $cache->removeTopicRedis($topic['datetime']);
+            //CacheModel::removeTopicRedis($topic['datetime']);
+        }
+
     }
 
     public function delete($id) {
@@ -157,7 +169,22 @@ class AudioTopicModel {
             Tools::error($e);
         }
     }
-
+    
+    public function getTopicByEbook($id, $fields = '*') {
+        if (empty($id))
+            return array();
+        try {
+            $sql = "SELECT {$fields} FROM {$this->tableName} WHERE `t_class` = 1 and CONCAT(',',t_audio,',') LIKE '%,{$id},%' ";
+            $stmt = $this->dbMaster->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+            $stmt->execute();
+            $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $row ? $row: array();
+        } catch (PDOException $e) {
+            Tools::error($e);
+        }
+    }
+    
+    
     /**
      * 获取排期列表
      * @return 

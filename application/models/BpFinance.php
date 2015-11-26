@@ -21,6 +21,8 @@ class BpFinanceModel {
         'TRADE_CLOSED' => '退款完成',
         'TRADE_CLOSED_BY_USER' => '已关闭',
     );
+    
+    private $pay_type= array('WECHAT'=>'微信支付','JDPAY'=>'京东支付');
 
     public function getList($params) {
         $result = $this->request(self::ORDER_LIST, $params);
@@ -60,8 +62,6 @@ class BpFinanceModel {
         $o['payment_fee'] = $order['payment_fee'];
         $o['post_fee'] = $order['post_fee'];
         $o['showcase_id'] = $order['showcase_id'];
-        $o['seller_id'] = $order['seller_id'];
-        $o['showcase_id'] = $order['showcase_id'];
         $o['buyer_id'] = $order['buyer_id'];
         $o['receiver_province'] = $order['receiver_province'];
         $o['receiver_city'] = $order['receiver_city'];
@@ -71,9 +71,8 @@ class BpFinanceModel {
         $o['receiver_name'] = $order['receiver_name'];
         $o['receiver_mobile'] = $order['receiver_mobile'];
         $o['outer_tid'] = $order['outer_tid'];
-        $o['state'] = $order['state'];
         $o['state_name'] = $this->order_status[$order['state']];
-        $o['pay_type'] = $order['pay_type'];
+        $o['pay_type'] = $this->pay_type[$order['pay_type']];
         $o['pay_time'] = $order['pay_time'];
         $o['create_time'] = $order['create_time'];
         $o['update_time'] = $order['update_time'];
@@ -87,7 +86,7 @@ class BpFinanceModel {
     public function tidy_express($data){
         $e['excom'] = $data[0]['excom'];
         $e['exnum'] = $data[0]['exnum'];
-        $e['state'] = $data[0]['state'];
+        $e['estate'] = $data[0]['state'];
         return $e;
     }
 
