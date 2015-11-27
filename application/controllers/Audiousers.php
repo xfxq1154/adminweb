@@ -40,34 +40,32 @@ class AudiousersController extends Base
        
         
         $where = '';
-        $w = '';
+        $wh = '';
         $condition = array();
         if(!empty($userid))
         {
               $where .= ' and u_uid = :uid ';
               $condition['bind'][':uid'] = $userid;
               $pageUrl .= '/uid/'.$userid;
-              $w.=" and u_uid =  ".$userid;
-              
+              $wh.=" and u_uid = '".$userid."' ";
         }
         if(!empty($uphone))
         {
                 $where .= ' and u_phone = :uphone ';
                 $condition['bind'][':uphone'] = $uphone;
                 $pageUrl .= '/phone/'.$uphone;
-                $w.=" u_phone =  '".$uphone."'";
+                $wh.=" and u_phone = '".$uphone."' ";
         }
         
         if(!empty($where))
         {
                 $condition[0] = $where;
-                $total = $this->audioUsers->getCount($where);
+                $total = $this->audioUsers->getCount($wh);
         }
         
-        
-        
-        
-         $this->renderPagger($p, $total, $pageUrl, self::PAGE_SIZE);
+       
+       
+        $this->renderPagger($p, $total, $pageUrl, self::PAGE_SIZE);
         $limit = ($p - 1) * self::PAGE_SIZE . ',' . self::PAGE_SIZE;
         
         $condition['order by'] = 'u_id DESC';
