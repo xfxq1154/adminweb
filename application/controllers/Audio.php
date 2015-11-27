@@ -157,14 +157,7 @@ class AudioController extends Base {
                         $resfop = $this->audioQiniu->insert(array('aid' => $res, 'nid' => $fop, 'next' => $next));
                     }
                 }
-                
-                if (!empty($_POST['mp3key'])) {
-                    $fop = $this->qiniu->pfop($_POST['mp3key'],'mp3/ab/128000');
-                    if (empty($fop['error']) && !is_array($fop)) {
-                        $next = (time() + 60);
-                        $resfop = $this->audioQiniu->insert(array('aid' => $res, 'nid' => $fop, 'next' => $next));
-                    }
-                }
+
                 
                 //add audio tag 
                 $audioTag = $_POST['tags'];
@@ -278,14 +271,6 @@ class AudioController extends Base {
                             $next = (time() + 60);
                             $resfop = $this->audioQiniu->insert(array('aid' => $aid, 'nid' => $fop, 'next' => $next));
 
-                        }
-                        
-                        //ios key url
-                       
-                        $fop = $this->qiniu->pfop($_POST['mp3key'],'mp3/ab/128000');
-                        if (empty($fop['error']) && !is_array($fop)) {
-                            $next = (time() + 60);
-                            $resfop = $this->audioQiniu->insert(array('aid' => $aid, 'nid' => $fop, 'next' => $next));
                         }
                         
 
