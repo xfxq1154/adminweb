@@ -1,4 +1,5 @@
-<script language="JavaScript" type="text/javascript" src="<?=ASSET_URL?>/admincenter/js/calendar/WdatePicker.js"></script>
+<script language="JavaScript" type="text/javascript"
+        src="<?= ASSET_URL ?>/admincenter/js/calendar/WdatePicker.js"></script>
 <script>
 
     $(function () {
@@ -24,7 +25,7 @@
                         $("#children").html(oOpt2);
                     } else {
                         var sOpt = "<option value='0'>请选择分类</option>" + "\n";
-                        for(var i in data) {
+                        for (var i in data) {
                             sOpt += "<option value=\"" + data[i]['id'] + "\">" + data[i]['name'] + "</option>" +
                                 "\n";
                         }
@@ -33,7 +34,7 @@
                     }
                 });
 
-                request.fail( function (jqXHR, textStatus) {
+                request.fail(function (jqXHR, textStatus) {
                     console.log("request failed: " + textStatus);
                 });
             }
@@ -78,7 +79,7 @@
                     var aId = [];
 
                     // 查询到有效电子书
-                    for(var i in data['books']) {
+                    for (var i in data['books']) {
 
                         // 判断日期是否有效
                         var bAdd = true;
@@ -169,7 +170,8 @@
                                     <option value="0">请选择分类</option>
                                     <?php if ($classList) : ?>
                                         <?php foreach ($classList as $value) : ?>
-                                            <option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
+                                            <option
+                                                value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
                                         <?php endforeach; ?>
                                     <?php endif; ?>
                                 </select>
@@ -177,6 +179,7 @@
                                     <option value="0">请选择分类</option>
 
                                 </select>
+
                                 <div class="input-note">电子书分类</div>
                             </div>
 
@@ -191,12 +194,12 @@
                             <div class="field">
                                 <div class="button-group radio">
                                     <label class="button">
-                                        <input name="status" value="1" type="radio" datatype="*" />
+                                        <input name="status" value="1" type="radio" datatype="*"/>
                                         <span class="icon icon-check text-green"></span> 上架
                                     </label>
 
                                     <label class="button">
-                                        <input name="status" value="2" type="radio" datatype="*" />
+                                        <input name="status" value="2" type="radio" datatype="*"/>
                                         <span class="icon icon-check text-green"></span> 库存
                                     </label>
 
@@ -212,12 +215,12 @@
                             <div class="field">
                                 <div class="button-group radio">
                                     <label class="button">
-                                        <input name="type" value="1" type="radio" datatype="*" />
+                                        <input name="type" value="1" type="radio" datatype="*"/>
                                         <span class="icon icon-check text-green"></span> 全文
                                     </label>
 
                                     <label class="button">
-                                        <input name="type" value="2" type="radio" datatype="*" />
+                                        <input name="type" value="2" type="radio" datatype="*"/>
                                         <span class="icon icon-check text-green"></span> 干货版
                                     </label>
 
@@ -233,27 +236,27 @@
                             <div class="field">
                                 <div class="button-group radio">
                                     <label class="button ">
-                                        <input name="style" value="1" type="radio" datatype="*" />
+                                        <input name="style" value="1" type="radio" datatype="*"/>
                                         <span class="icon icon-check text-green"></span> 无
                                     </label>
 
                                     <label class="button">
-                                        <input name="style" value="2" type="radio" datatype="*" />
+                                        <input name="style" value="2" type="radio" datatype="*"/>
                                         <span class="icon icon-check text-green"></span> 新上
                                     </label>
 
                                     <label class="button">
-                                        <input name="style" value="3" type="radio" datatype="*" />
+                                        <input name="style" value="3" type="radio" datatype="*"/>
                                         <span class="icon icon-check text-green"></span> 独家
                                     </label>
 
                                     <label class="button">
-                                        <input name="style" value="4" type="radio" datatype="*" />
+                                        <input name="style" value="4" type="radio" datatype="*"/>
                                         <span class="icon icon-check text-green"></span> 首发
                                     </label>
 
                                     <label class="button">
-                                        <input name="style" value="5" type="radio" datatype="*" />
+                                        <input name="style" value="5" type="radio" datatype="*"/>
                                         <span class="icon icon-check text-green"></span> 热销
                                     </label>
 
@@ -267,7 +270,10 @@
                                 <label>电子书运营标题 * </label>
                             </div>
                             <div class="field">
-                                <input type="text" class="input" style="width:220px;" id="operating_title" name="operating_title" size="60" datatype="*1-16" errormsg="最多16个字符" placeholder="电子书运营标题">
+                                <input type="text" class="input" style="width:220px;" id="operating_title"
+                                       name="operating_title" size="60" datatype="*1-16" errormsg="最多16个字符"
+                                       placeholder="电子书运营标题">
+
                                 <div class="input-note">请填写电子书运营标题, 最多16个字符</div>
                             </div>
                         </div>
@@ -278,7 +284,9 @@
                                 <label>常规定价 * </label>
                             </div>
                             <div class="field">
-                                <input type="text" class="input" style="width:220px;" id="price" name="price" size="60" datatype="/^[0-9]+(.[0-9]+)?$/" placeholder="常规定价">
+                                <input type="text" class="input" style="width:220px;" id="price" name="price" size="60"
+                                       datatype="/^[0-9]+(.[0-9]+)?$/" placeholder="常规定价">
+
                                 <div class="input-note">请填写常规定价</div>
                             </div>
                         </div>
@@ -289,7 +297,9 @@
                                 <label>购买新奖励学分 * </label>
                             </div>
                             <div class="field">
-                                <input type="text" class="input" style="width:220px;" id="integral" name="integral" size="60" datatype="n" placeholder="购买新奖励学分">
+                                <input type="text" class="input" style="width:220px;" id="integral" name="integral"
+                                       size="60" datatype="n" placeholder="购买新奖励学分">
+
                                 <div class="input-note">请填写购买新奖励学分</div>
                             </div>
                         </div>
@@ -300,10 +310,14 @@
                                 <label>书封面 * </label>
                             </div>
                             <div class="field">
-                                <input type="text" class="input show_uo_imgs" id="images1" datatype="*" placeholder="请上传书封面" readonly>
+                                <input type="text" class="input show_uo_imgs" id="images1" datatype="*"
+                                       placeholder="请上传书封面" readonly>
                                 <input type="hidden" name="cover">
-                                <a class="button bg-blue button-small " data="images1" id="image_upload1" preview="image_preview1" href="javascript:;" ><span class="icon-upload"> 上传</span></a>
-                                <a class="button bg-blue button-small icon-picture-o" id="image_preview1" href="javascript:;" > 预览</a>
+                                <a class="button bg-blue button-small " data="images1" id="image_upload1"
+                                   preview="image_preview1" href="javascript:;"><span class="icon-upload"> 上传</span></a>
+                                <a class="button bg-blue button-small icon-picture-o" id="image_preview1"
+                                   href="javascript:;"> 预览</a>
+
                                 <div class="input-note">请上传书封面，尺寸为252×336</div>
                             </div>
                         </div>
@@ -314,10 +328,14 @@
                                 <label>头图 * </label>
                             </div>
                             <div class="field">
-                                <input type="text" class="input show_uo_imgs" id="images2" datatype="*" placeholder="请上传头图" readonly>
+                                <input type="text" class="input show_uo_imgs" id="images2" datatype="*"
+                                       placeholder="请上传头图" readonly>
                                 <input type="hidden" name="banner">
-                                <a class="button bg-blue button-small " data="images2" id="image_upload2" preview="image_preview2" href="javascript:;" ><span class="icon-upload"> 上传</span></a>
-                                <a class="button bg-blue button-small icon-picture-o" id="image_preview2" href="javascript:;" > 预览</a>
+                                <a class="button bg-blue button-small " data="images2" id="image_upload2"
+                                   preview="image_preview2" href="javascript:;"><span class="icon-upload"> 上传</span></a>
+                                <a class="button bg-blue button-small icon-picture-o" id="image_preview2"
+                                   href="javascript:;"> 预览</a>
+
                                 <div class="input-note">请上传头图，尺寸为960x540</div>
                             </div>
                         </div>
@@ -334,7 +352,9 @@
                                 <label>书名</label>
                             </div>
                             <div class="field">
-                                <input type="text" class="input" style="width:220px;" id="source_name" name="source_name" size="60" placeholder="书名">
+                                <input type="text" class="input" style="width:220px;" id="source_name"
+                                       name="source_name" size="60" placeholder="书名">
+
                                 <div class="input-note">请填书名</div>
                             </div>
                         </div>
@@ -344,7 +364,9 @@
                                 <label>版本</label>
                             </div>
                             <div class="field">
-                                <input type="text" class="input" style="width:220px;" id="source_version" name="source_version" size="60" placeholder="版本">
+                                <input type="text" class="input" style="width:220px;" id="source_version"
+                                       name="source_version" size="60" placeholder="版本">
+
                                 <div class="input-note">请填版本</div>
                             </div>
                         </div>
@@ -354,7 +376,9 @@
                                 <label>册/卷/部/季</label>
                             </div>
                             <div class="field">
-                                <input type="text" class="input" style="width:220px;" id="source_volume" name="source_volume" size="60" placeholder="册/卷/部/季">
+                                <input type="text" class="input" style="width:220px;" id="source_volume"
+                                       name="source_volume" size="60" placeholder="册/卷/部/季">
+
                                 <div class="input-note">请填册/卷/部/季</div>
                             </div>
                         </div>
@@ -364,7 +388,9 @@
                                 <label>原作者</label>
                             </div>
                             <div class="field">
-                                <input type="text" class="input" style="width:220px;" id="source_author" name="source_author" size="60" placeholder="原作者">
+                                <input type="text" class="input" style="width:220px;" id="source_author"
+                                       name="source_author" size="60" placeholder="原作者">
+
                                 <div class="input-note">原作者</div>
                             </div>
                         </div>
@@ -374,7 +400,9 @@
                                 <label>编/译/批评</label>
                             </div>
                             <div class="field">
-                                <input type="text" class="input" style="width:220px;" id="source_compilation" name="source_compilation" size="60" placeholder="编/译/批评">
+                                <input type="text" class="input" style="width:220px;" id="source_compilation"
+                                       name="source_compilation" size="60" placeholder="编/译/批评">
+
                                 <div class="input-note">请填编/译/批评</div>
                             </div>
                         </div>
@@ -384,7 +412,9 @@
                                 <label>出版社</label>
                             </div>
                             <div class="field">
-                                <input type="text" class="input" style="width:220px;" id="source_press" name="source_press" size="60" placeholder="出版社">
+                                <input type="text" class="input" style="width:220px;" id="source_press"
+                                       name="source_press" size="60" placeholder="出版社">
+
                                 <div class="input-note">请填出版社</div>
                             </div>
                         </div>
@@ -394,7 +424,11 @@
                                 <label>出版日期</label>
                             </div>
                             <div class="field">
-                                <input type="text" class="input datebtn" style="width:220px;" id="source_publication_date" name="source_publication_date"   onfocus="WdatePicker()" style="cursor:pointer;" size="60" placeholder="出版日期" autocomplete="off">
+                                <input type="text" class="input datebtn" style="width:220px;"
+                                       id="source_publication_date" name="source_publication_date"
+                                       onfocus="WdatePicker()" style="cursor:pointer;" size="60" placeholder="出版日期"
+                                       autocomplete="off">
+
                                 <div class="input-note">请填出版日期</div>
                             </div>
                         </div>
@@ -404,7 +438,9 @@
                                 <label>ISBN</label>
                             </div>
                             <div class="field">
-                                <input type="text" class="input" style="width:220px;" id="source_ISBN" name="source_ISBN" size="60" placeholder="ISBN">
+                                <input type="text" class="input" style="width:220px;" id="source_ISBN"
+                                       name="source_ISBN" size="60" placeholder="ISBN">
+
                                 <div class="input-note">ISBN</div>
                             </div>
                         </div>
@@ -414,7 +450,9 @@
                                 <label>开本</label>
                             </div>
                             <div class="field">
-                                <input type="text" class="input" style="width:220px;" id="source_folio" name="source_folio" size="60" placeholder="开本">
+                                <input type="text" class="input" style="width:220px;" id="source_folio"
+                                       name="source_folio" size="60" placeholder="开本">
+
                                 <div class="input-note">开本</div>
                             </div>
                         </div>
@@ -436,7 +474,10 @@
                                 <label>分享标题 * </label>
                             </div>
                             <div class="field">
-                                <input type="text" class="input" style="width:220px;" id="other_share_title" name="other_share_title" size="60" datatype="*1-25" errormsg="最多25个字符" placeholder="分享标题">
+                                <input type="text" class="input" style="width:220px;" id="other_share_title"
+                                       name="other_share_title" size="60" datatype="*1-25" errormsg="最多25个字符"
+                                       placeholder="分享标题">
+
                                 <div class="input-note">请填写分享标题, 最多25个字符</div>
                             </div>
                         </div>
@@ -448,7 +489,10 @@
                             </div>
                             <div class="field">
                                 <!-- <input type="text" class="input" style="width:220px;" id="other_share_summary" name="other_share_summary" size="60" datatype="*1-30" errormsg="最多30个字符" placeholder="列表页|分享摘要">-->
-                                <textarea type="text" class="input " style="width: 500px; height: 80px;" id="other_share_summary" name="other_share_summary" size="60" datatype="*" placeholder="列表页|分享摘要" autocomplete="off"></textarea>
+                                <textarea type="text" class="input " style="width: 500px; height: 80px;"
+                                          id="other_share_summary" name="other_share_summary" size="60" datatype="*"
+                                          placeholder="列表页|分享摘要" autocomplete="off"></textarea>
+
                                 <div class="input-note">请填写列表页|分享摘要</div>
                             </div>
                         </div>
@@ -459,7 +503,9 @@
                                 <label>内容介绍 * </label>
                             </div>
                             <div class="field">
-                                <textarea datatype="*" class="input" id="other_content" name="other_content"  rows="3" cols="62" ></textarea>
+                                <textarea datatype="*" class="input" id="other_content" name="other_content" rows="3"
+                                          cols="62"></textarea>
+
                                 <div class="input-note">请填写内容介绍</div>
                             </div>
                         </div>
@@ -470,9 +516,11 @@
                                 <label>数据</label>
                             </div>
                             <div class="field">
-<!--                                <input type="text" class="input" style="width:220px;" id="other_sign" name="other_sign" size="60" placeholder="数据">-->
-                                原书<input type="text" class="input" size='5' name="other_data[words]" >万字，得到为你提炼出<input type="text" class="input" size='5' name="other_data[process]" >万字干货<br />
-                                <input type="text" class="input" size='5' name="other_data[times]">分钟读透《<input type="text" class="input" size='10' name="other_data[b_name]">》 <br />
+                                <!--                                <input type="text" class="input" style="width:220px;" id="other_sign" name="other_sign" size="60" placeholder="数据">-->
+                                原书<input type="text" class="input" size='5' name="other_data[words]">万字，得到为你提炼出<input
+                                    type="text" class="input" size='5' name="other_data[process]">万字干货<br/>
+                                <input type="text" class="input" size='5' name="other_data[times]">分钟读透《<input
+                                    type="text" class="input" size='10' name="other_data[b_name]">》 <br/>
                                 帮你节省<input type="text" class="input" size='5' name="other_data[savetimes]">小时阅读时间。
                                 <div class="input-note">请填数据</div>
                             </div>
@@ -484,7 +532,9 @@
                                 <label>金句推荐 * </label>
                             </div>
                             <div class="field">
-                                <textarea datatype="*" class="input" id="other_recommend" name="other_recommend"  rows="3" cols="62" ></textarea>
+                                <textarea datatype="*" class="input" id="other_recommend" name="other_recommend"
+                                          rows="3" cols="62"></textarea>
+
                                 <div class="input-note">请填写金句推荐</div>
                             </div>
                         </div>
@@ -496,8 +546,10 @@
                                 <input type="hidden" name="ebook_size">
                             </div>
                             <div class="field">
-                                <input type="text" class="input show_uo_imgs" id="images3" name="ebook" datatype="*" placeholder="电子书上传" readonly>
-                                <a class="button bg-blue button-small " data="images3" id="image_upload3" preview="image_preview3" href="javascript:;" ><span class="icon-upload"> 上传</span></a>
+                                <input type="text" class="input show_uo_imgs" id="images3" name="ebook" datatype="*"
+                                       placeholder="电子书上传" readonly>
+                                <a class="button bg-blue button-small " data="images3" id="image_upload3"
+                                   preview="image_preview3" href="javascript:;"><span class="icon-upload"> 上传</span></a>
                                 <!-- <a class="button bg-blue button-small icon-picture-o" id="image_preview3" href="javascript:;" > 预览</a> -->
                                 <div class="input-note">请上传电子书zip格式</div>
                             </div>
@@ -509,7 +561,9 @@
                                 <label>上传包的名称</label>
                             </div>
                             <div class="field">
-                                <input type="text" class="input" style="width:220px;" id="book_filename" name="book_filename" size="60" placeholder="上传包的名称" readonly datatype="*">
+                                <input type="text" class="input" style="width:220px;" id="book_filename"
+                                       name="book_filename" size="60" placeholder="上传包的名称" readonly datatype="*">
+
                                 <div class="input-note">上传包的名称</div>
                             </div>
                         </div>
@@ -520,8 +574,11 @@
                                 <label>关联电子书</label>
                             </div>
                             <div class="field">
-                                <textarea class="input" id="other_related_book" name="other_related_book" rows="3" cols="62"></textarea>
-                                <a class="button bg-blue button-big" id="show_ebook" href="javascript:;" style="vertical-align:top;">更新预览</a>
+                                <textarea class="input" id="other_related_book" name="other_related_book" rows="3"
+                                          cols="62"></textarea>
+                                <a class="button bg-blue button-big" id="show_ebook" href="javascript:;"
+                                   style="vertical-align:top;">更新预览</a>
+
                                 <div class="input-note">请填写关联电子书</div>
                                 <div class="wran" style="display:none;"></div>
                                 <div id="show_ebook_box">
@@ -534,7 +591,7 @@
                     </div>
                     <!-- start tab4 -->
 
-                    <div class="tab-panel active" id="tab-5">
+                    <div class="tab-panel" id="tab-5">
                         <div class="form-group">
                             <div class="label">
                                 <label>关联金句</label>
@@ -546,9 +603,29 @@
                                 </div>
                             </div>
                         </div>
+                        <!--                        tic-->
+                        <div class="form-group">
+                            <div class="label"></div>
+                            <div class="field">可以手动
+                                <button class="button button-small bg-main icon-plus add_verse_btn" type="button"></button>
+                                也可以点击上面的按钮关联
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <div class="label"></div>
+                            <div class="field">
+                                <div class="appen_box">
+
+                                </div>
+                            </div>
+                        </div>
+
+
                     </div>
 
-<!--                    end tab5-->
+                    <!--                    end tab5-->
 
                 </div>
                 <!-- table body end-->
@@ -565,189 +642,312 @@
     </form>
 </div>
 
+<div style="display: none;" id="verse_box">
+    <div class="panel" style="width: 600px;">
+        <div class="panel-head b_h">
+            请填写金句
+        </div>
+        <div class="panel-body">
+            <div class="form-group">
+<!--                <div class="label">-->
+<!--                    <label>金句来源(于哪本书) * </label>-->
+<!--                </div>-->
+                <div class="field">
+                    <input type="text" class="input" style="width:220px;" name="source[]" size="60" datatype="*" placeholder="金句来源(于哪本书)">
+                    <div class="input-note">请填写金句来源(于哪本书)</div>
+                </div>
+            </div>
+
+            <!--                        内容-->
+            <div class="form-group">
+<!--                <div class="label">-->
+<!--                    <label>内容 * </label>-->
+<!--                </div>-->
+                <div class="field">
+                    <textarea class="input" name="content[]" rows="3" cols="62" datatype="*"></textarea>
+                    <div class="input-note">请填写内容</div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-foot b_b">
+            <div class="form-button">
+                <button class="button bg-main icon-ok" type="button"></button>
+                <button class="button bg-red icon-trash-o del_btn" type="button"></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $( function () {
+
+        var b = true;
+        var isFirst = false;
+
+        $('.add_verse_btn').on('click', function () {
+
+            if (!b) {
+                alert('写完一个先呗');
+                return false;
+            }
+            var sHtml = $('#verse_box').html();
+            $('.appen_box').append(sHtml);
+
+            b = false;
+
+        });
+
+
+        //             del
+        $('.tab-body').on('click', '.del_btn', function () {
+
+            $(this).closest('.panel').remove();
+
+            b = true;
+        })
+
+//            ok
+        $('.tab-body').on('click', '.icon-ok', function () {
+
+            var sourceVal = $("input[name='source[]']").eq($('.icon-ok').index($(this))).val();
+            var sContent = $(":input[name='content[]']").eq($('.icon-ok').index($(this))).val();
+            console.log(sContent);
+            if (sourceVal == '' || sContent == '') {
+                $(this).submit();
+                return false;
+            }
+
+            if (typeof($(this).attr('flag')) == 'undefined') {
+                $(this).attr('flag', 1);
+                if (!b) {
+                    b = true;
+                }
+            }
+
+            $(this).parent().parent().prev('.panel-body').slideToggle()
+        })
+
+    });
+
+
+</script>
+
 <div id="hidden_element" style="display:none;">
 
-<!-- start ebook -->
-<div class="tab-panel" id="ebook2">
+    <!-- start ebook -->
+    <div class="tab-panel" id="ebook2">
 
-    <!-- 电子书信息 -->
-    <div class="form-group">
-        <div class="label">
-            <label>作者标题</label>
+        <!-- 电子书信息 -->
+        <div class="form-group">
+            <div class="label">
+                <label>作者标题</label>
+            </div>
+            <div class="field">
+                <input type="text" class="input" style="width:220px;" id="ebook_author_title" name="ebook_author_title"
+                       size="60" placeholder="作者标题">
+
+                <div class="input-note">作者标题</div>
+            </div>
         </div>
-        <div class="field">
-            <input type="text" class="input" style="width:220px;" id="ebook_author_title" name="ebook_author_title" size="60" placeholder="作者标题">
-            <div class="input-note">作者标题</div>
+
+        <div class="form-group">
+            <div class="label">
+                <label>作者</label>
+            </div>
+            <div class="field">
+                <input type="text" class="input" style="width:220px;" id="author" name="author" size="60"
+                       placeholder="作者">
+
+                <div class="input-note">作者</div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="label">
+                <label> 类别</label>
+            </div>
+            <div class="field">
+                <input type="text" class="input" style="width:220px;" id="ebook_type" name="ebook_type" size="60"
+                       placeholder=" 类别">
+
+                <div class="input-note"> 类别</div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="label">
+                <label>版本</label>
+            </div>
+            <div class="field">
+                <input type="text" class="input" style="width:220px;" id="version" name="version" size="60"
+                       placeholder="版本">
+
+                <div class="input-note">版本</div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="label">
+                <label> 编撰日期</label>
+            </div>
+            <div class="field">
+                <input type="text" class="input datebtn" style="width:220px;" id="ebook_compilation_date"
+                       name="ebook_compilation_date" onfocus="WdatePicker()" style="cursor:pointer;" size="60"
+                       placeholder="编撰日期" autocomplete="off">
+
+                <div class="input-note">编撰日期</div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="label">
+                <label>字数</label>
+            </div>
+            <div class="field">
+                <input type="text" class="input" style="width:220px;" id="count" name="count" size="60"
+                       placeholder="字数">
+
+                <div class="input-note">字数</div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="label">
+                <label>备注</label>
+            </div>
+            <div class="field">
+                <textarea class="input" id="ebook_remarks" name="remarks" rows="3" cols="62"></textarea>
+
+                <div class="input-note">备注</div>
+            </div>
         </div>
     </div>
+    <!-- end ebook -->
 
-    <div class="form-group">
-        <div class="label">
-            <label>作者</label>
+    <!-- start full_ebook -->
+    <div class="tab-panel" id="ebook1">
+
+        <!-- 全本电子书信息 -->
+        <div class="form-group">
+            <div class="label">
+                <label>书名</label>
+            </div>
+            <div class="field">
+                <input type="text" class="input" style="width:220px;" id="wholebook_name" name="wholebook_name"
+                       size="60" placeholder="书名">
+
+                <div class="input-note">书名</div>
+            </div>
         </div>
-        <div class="field">
-            <input type="text" class="input" style="width:220px;" id="author" name="author" size="60" placeholder="作者">
-            <div class="input-note">作者</div>
+
+        <div class="form-group">
+            <div class="label">
+                <label>版本</label>
+            </div>
+            <div class="field">
+                <input type="text" class="input" style="width:220px;" id="version" name="version" size="60"
+                       placeholder="版本">
+
+                <div class="input-note">版本</div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="label">
+                <label>册/卷/部/季</label>
+            </div>
+            <div class="field">
+                <input type="text" class="input" style="width:220px;" id="wholebook_volume" name="wholebook_volume"
+                       size="60" placeholder="册/卷/部/季">
+
+                <div class="input-note">册/卷/部/季</div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="label">
+                <label>原作者</label>
+            </div>
+            <div class="field">
+                <input type="text" class="input" style="width:220px;" id="author" name="author" size="60"
+                       placeholder="原作者">
+
+                <div class="input-note">原作者</div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="label">
+                <label>编/译/批评</label>
+            </div>
+            <div class="field">
+                <input type="text" class="input" style="width:220px;" id="wholebook_compilation"
+                       name="wholebook_compilation" size="60" placeholder="编/译/批评">
+
+                <div class="input-note">编/译/批评</div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="label">
+                <label>字数</label>
+            </div>
+            <div class="field">
+                <input type="text" class="input" style="width:220px;" id="count" name="count" size="60"
+                       placeholder="字数">
+
+                <div class="input-note">字数</div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="label">
+                <label>IP授权方</label>
+            </div>
+            <div class="field">
+                <select class="input js-assign" target="#tpl" id="wholebook_authorization"
+                        name="wholebook_authorization">
+                    <option value="0">请选择IP授权方</option>
+                    <?php if ($ipList) : ?>
+                        <?php foreach ($ipList as $val) : ?>
+                            <option value="<?php echo $val['id']; ?>"><?php echo $val['mechanism']; ?></option>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </select>
+
+                <div class="input-note">请选择IP授权方</div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="label">
+                <label>授权截止</label>
+            </div>
+            <div class="field">
+                <input type="text" class="input datebtn" style="width:220px;" id="wholebook_authorization_deadline"
+                       name="wholebook_authorization_deadline" onfocus="WdatePicker()" style="cursor:pointer;" size="60"
+                       placeholder="授权截止" autocomplete="off">
+
+                <div class="input-note">授权截止</div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="label">
+                <label>备注</label>
+            </div>
+            <div class="field">
+                <textarea class="input" id="remarks" name="remarks" rows="3" cols="62"></textarea>
+
+                <div class="input-note">备注</div>
+            </div>
         </div>
     </div>
-
-    <div class="form-group">
-        <div class="label">
-            <label> 类别</label>
-        </div>
-        <div class="field">
-            <input type="text" class="input" style="width:220px;" id="ebook_type" name="ebook_type" size="60" placeholder=" 类别">
-            <div class="input-note"> 类别</div>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <div class="label">
-            <label>版本</label>
-        </div>
-        <div class="field">
-            <input type="text" class="input" style="width:220px;" id="version" name="version" size="60" placeholder="版本">
-            <div class="input-note">版本</div>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <div class="label">
-            <label> 编撰日期</label>
-        </div>
-        <div class="field">
-            <input type="text" class="input datebtn" style="width:220px;" id="ebook_compilation_date" name="ebook_compilation_date"   onfocus="WdatePicker()" style="cursor:pointer;" size="60" placeholder="编撰日期" autocomplete="off">
-            <div class="input-note">编撰日期</div>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <div class="label">
-            <label>字数</label>
-        </div>
-        <div class="field">
-            <input type="text" class="input" style="width:220px;" id="count" name="count" size="60" placeholder="字数">
-            <div class="input-note">字数</div>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <div class="label">
-            <label>备注</label>
-        </div>
-        <div class="field">
-            <textarea class="input" id="ebook_remarks" name="remarks" rows="3" cols="62"></textarea>
-            <div class="input-note">备注</div>
-        </div>
-    </div>
+    <!-- end full_ebook -->
 </div>
-<!-- end ebook -->
 
-<!-- start full_ebook -->
-<div class="tab-panel" id="ebook1">
-
-    <!-- 全本电子书信息 -->
-    <div class="form-group">
-        <div class="label">
-            <label>书名</label>
-        </div>
-        <div class="field">
-            <input type="text" class="input" style="width:220px;" id="wholebook_name" name="wholebook_name" size="60" placeholder="书名">
-            <div class="input-note">书名</div>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <div class="label">
-            <label>版本</label>
-        </div>
-        <div class="field">
-            <input type="text" class="input" style="width:220px;" id="version" name="version" size="60" placeholder="版本">
-            <div class="input-note">版本</div>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <div class="label">
-            <label>册/卷/部/季</label>
-        </div>
-        <div class="field">
-            <input type="text" class="input" style="width:220px;" id="wholebook_volume" name="wholebook_volume" size="60" placeholder="册/卷/部/季">
-            <div class="input-note">册/卷/部/季</div>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <div class="label">
-            <label>原作者</label>
-        </div>
-        <div class="field">
-            <input type="text" class="input" style="width:220px;" id="author" name="author" size="60" placeholder="原作者">
-            <div class="input-note">原作者</div>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <div class="label">
-            <label>编/译/批评</label>
-        </div>
-        <div class="field">
-            <input type="text" class="input" style="width:220px;" id="wholebook_compilation" name="wholebook_compilation" size="60" placeholder="编/译/批评">
-            <div class="input-note">编/译/批评</div>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <div class="label">
-            <label>字数</label>
-        </div>
-        <div class="field">
-            <input type="text" class="input" style="width:220px;" id="count" name="count" size="60" placeholder="字数">
-            <div class="input-note">字数</div>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <div class="label">
-            <label>IP授权方</label>
-        </div>
-        <div class="field">
-            <select class="input js-assign" target="#tpl" id="wholebook_authorization" name="wholebook_authorization">
-                <option value="0">请选择IP授权方</option>
-                <?php if ($ipList) : ?>
-                    <?php foreach ($ipList as $val) : ?>
-                        <option value="<?php echo $val['id']; ?>"><?php echo $val['mechanism']; ?></option>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </select>
-            <div class="input-note">请选择IP授权方</div>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <div class="label">
-            <label>授权截止</label>
-        </div>
-        <div class="field">
-            <input type="text" class="input datebtn" style="width:220px;" id="wholebook_authorization_deadline" name="wholebook_authorization_deadline"   onfocus="WdatePicker()" style="cursor:pointer;" size="60" placeholder="授权截止" autocomplete="off">
-            <div class="input-note">授权截止</div>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <div class="label">
-            <label>备注</label>
-        </div>
-        <div class="field">
-            <textarea class="input" id="remarks" name="remarks"  rows="3" cols="62" ></textarea>
-            <div class="input-note">备注</div>
-        </div>
-    </div>
-</div>
-<!-- end full_ebook -->
-</div>
-<script  type="text/javascript">
-
+<script type="text/javascript">
 
 
     Do.ready('base', function () {
@@ -796,7 +996,7 @@
 
     !function ($) {
 
-        $.fn.loadView = function(options) {
+        $.fn.loadView = function (options) {
 
 //            默认配置
             var defaultOpt = {
@@ -852,8 +1052,8 @@
 //            设置模式
             switch (options.mode) {
                 case 'center':
-                    var iLeft = ($(document).width() -  parseInt(options.box.width)) / 2;
-                    var iTop = ($(document).height() -  parseInt(options.box.height)) / 2;
+                    var iLeft = ($(document).width() - parseInt(options.box.width)) / 2;
+                    var iTop = ($(document).height() - parseInt(options.box.height)) / 2;
 
                     options.box.left = Math.ceil(iLeft) + 'px';
                     options.box.top = Math.ceil(iTop) + 'px';
@@ -925,7 +1125,7 @@
             });
 
 //            获取分页的值
-            var getPage = function() {
+            var getPage = function () {
                 $(document).on('click', options.pageer, function (event) {
                     vObj.url = $(this).attr('href');
 
@@ -937,12 +1137,12 @@
 
 //            设置添加按钮的状态
             var setAddBtnState = function () {
-                $(options.addBtn).each( function (i, ele) {
+                $(options.addBtn).each(function (i, ele) {
 
                     var oImg = $(ele).parent().parent().find('img');
                     var ind = $.inArray($(ele).attr('value'), vObj.aVal);
 
-                    if ( ind >= 0) {
+                    if (ind >= 0) {
                         $(ele).removeClass(options.activeBtn);
                         $(ele).addClass(options.disableBtn);
 
@@ -980,7 +1180,7 @@
                     if (!$.isEmptyObject(vObj.aImg)) {
 
                         for (var i in vObj.aImg) {
-                            var oImg = $('<div><img width="100" src="' + vObj.aImg[i].url + '" title="' + vObj.aImg[i].title  + '" ><span>' + vObj.aImg[i].title + '</span></div>');
+                            var oImg = $('<div><img width="100" src="' + vObj.aImg[i].url + '" title="' + vObj.aImg[i].title + '" ><span>' + vObj.aImg[i].title + '</span></div>');
                             vObj.oImg.prepend(oImg);
                         }
                     }
@@ -1021,7 +1221,7 @@
                     }
                 }
 
-                if ( ind >= 0) {
+                if (ind >= 0) {
                     vObj.aVal.splice(ind, 1);
                 } else {
                     vObj.aVal.push(iValue);
@@ -1063,7 +1263,7 @@
             var prevImg = function () {
 
                 if (typeof(options.prevImgBtn) != 'undefined') {
-                    $(options.prevImgBtn).each( function (i, ele) {
+                    $(options.prevImgBtn).each(function (i, ele) {
 
                         $(ele).parent('td').css({
                             'position': 'relative'
@@ -1111,7 +1311,7 @@
         'searchBtn': '.search',
         'searchInput': 'search_title',
         'pageer': '.pagination a',
-        'addBtn': '.icon-plus',
+        'addBtn': '#table .icon-plus',
         'disableBtn': 'bg-gray',
         'activeBtn': 'bg-green',
         'setPrevTitle': function (id, vObj) {

@@ -111,16 +111,19 @@ class BookController extends Base
 //            关联金句
             $relationVerse = $this->getRequest()->getPost('verse_id');
 
+            $source = $this->getRequest()->getPost('source');
+            $content = $this->getRequest()->getPost('content');
+
             if ($relationVerse) {
                 $relationVerse = explode(',', $relationVerse);
             }
 
             if ($lastInsertId = $this->book->insert(['book' => $book, 'bookInfo' => $bookInfo])) {
 
-
+                $type = $book['type'] == 1 ? 3 : 2;
                 if (isset($relationVerse)) {
                     foreach ($relationVerse as $vid) {
-                        $type = $book['type'] == 1 ? 3 : 2;
+
                         $this->verseRelation->insert(array(
                             'object_id' => $lastInsertId,
                             'vid' => $vid,
@@ -128,6 +131,31 @@ class BookController extends Base
                         ));
                     }
                 }
+
+//                手动填写的金句
+                if ($source && $content) {
+
+                    if ($source && $content) {
+                        array_walk_recursive($source, function ($val, $key) use ($content, $type, $lastInsertId) {
+
+                            $verseId = $this->verse->insert(array(
+                                'source' => $val,
+                                'content' => $content[$key],
+                                'state' => 1
+                            ));
+
+                            if ($verseId) {
+                                $this->verseRelation->insert(array(
+                                    'vid' => $verseId,
+                                    'type' => $type,
+                                    'object_id' => $lastInsertId
+                                ));
+                            }
+
+                        });
+                    }
+                }
+
 
                 if (1 == $book['status']) {
                     // 如果电子书是上架状态。添加到audiotopic_book 表
@@ -281,6 +309,7 @@ class BookController extends Base
                 }
             }
 
+            unset($value);
             $versies = $this->verseRelation->findRelationByBookId($id, ' r_vid');
 
             if ($versies) {

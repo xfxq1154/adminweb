@@ -30,7 +30,7 @@ class AudiousersController extends Base
         
         $pageUrl = '/audiousers/index/p/{p}';
         $allNum = $this->audioUsers->getCount();
-        $hasPhoneNum = $this->audioUsers->getCount(' and u_phone != "" ');
+        $hasPhoneNum = $this->audioUsers->getCount(' and u_phone != "" and u_phone > 0 ');
         $noPhoneNum  = ($allNum - $hasPhoneNum);
         
         
