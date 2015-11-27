@@ -82,12 +82,12 @@ class VerseController extends Base
 
         if ($this->getRequest()->isPost()) {
 
-            $bookId = $this->getRequest()->getPost('book_id');
-            $relation = array();
-
-            if ($bookId) {
-                $relation = explode(',', $bookId);
-            }
+//            $bookId = $this->getRequest()->getPost('book_id');
+//            $relation = array();
+//
+//            if ($bookId) {
+//                $relation = explode(',', $bookId);
+//            }
 
             $data = array(
                 'source' => $this->getRequest()->getPost('source'),
@@ -98,10 +98,10 @@ class VerseController extends Base
             if ($verseId = $this->verse->insert($data)) {
 
 //                设置金句和电子书关联
-                if ($relation) {
-                    $addRelationData = $this->verseRelation->setRelationData($verseId, $relation);
-                    $this->verseRelation->insert($addRelationData);
-                }
+//                if ($relation) {
+//                    $addRelationData = $this->verseRelation->setRelationData($verseId, $relation);
+//                    $this->verseRelation->insert($addRelationData);
+//                }
 
                 echo json_encode(array(
                     'info' => '添加成功',
@@ -130,7 +130,7 @@ class VerseController extends Base
 
             $id = (int)$this->getRequest()->getPost('id');
 
-            $bookId = $this->getRequest()->getPost('book_id');
+//            $bookId = $this->getRequest()->getPost('book_id');
 
             $updateData = array(
                 'source' => $this->getRequest()->getPost('source'),
@@ -140,8 +140,8 @@ class VerseController extends Base
 
             if ($this->verse->updateById($id, $updateData) !== false) {
 
-                $relation = $bookId ? explode(',', $bookId) : array();
-                $this->verseRelation->reSetRelation($relation, $id);
+//                $relation = $bookId ? explode(',', $bookId) : array();
+//                $this->verseRelation->reSetRelation($relation, $id);
 
                 echo json_encode(array(
                     'info' => '修改成功',
@@ -160,20 +160,20 @@ class VerseController extends Base
 
             $id = (int)$id;
             $verse = $this->verse->getById($id);
-            $relations = $this->verseRelation->findRelationsByVid($id, 'r_object_id');
+//            $relations = $this->verseRelation->findRelationsByVid($id, 'r_object_id');
 
-            if ($relations) {
-                $bookIds = array();
-                foreach ($relations as $val) {
-
-                    $bookIds[] = $val['object_id'];
-                }
-
-                $relationBooks = $this->book->getBookById($bookIds, ' b_id, b_cover, b_operating_title ');
-
-                $this->_view->relationBookIds = $bookIds;
-                $this->_view->relationBooks = $relationBooks;
-             }
+//            if ($relations) {
+//                $bookIds = array();
+//                foreach ($relations as $val) {
+//
+//                    $bookIds[] = $val['object_id'];
+//                }
+//
+//                $relationBooks = $this->book->getBookById($bookIds, ' b_id, b_cover, b_operating_title ');
+//
+//                $this->_view->relationBookIds = $bookIds;
+//                $this->_view->relationBooks = $relationBooks;
+//             }
 
             $this->_view->verse = $verse;
             $this->layout('verse/edit.phtml');

@@ -92,7 +92,7 @@ class VerseModel
             $this->whereStr = '';
         }
         try {
-            $sql = 'SELECT ' . $f . ' FROM ' . $this->tableName . ' WHERE 1 ' . $where . ($limit ? ' LIMIT ' . $limit : '');
+            $sql = 'SELECT ' . $f . ' FROM ' . $this->tableName . ' WHERE 1 ' . $where . ' ORDER BY v_id DESC ' . ($limit ? ' LIMIT ' . $limit : '');
             $stmt = $this->dbSlave->prepare($sql);
             $stmt->execute();
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);

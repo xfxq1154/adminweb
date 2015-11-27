@@ -30,6 +30,7 @@ class RechargeController extends Base
      */
     public function addAction()
     {
+        $this->checkRole();
         if ($this->getRequest()->isPost()) {
 
             $mobile = $this->getRequest()->getPost('mobile');
