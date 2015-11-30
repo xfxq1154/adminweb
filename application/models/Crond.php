@@ -205,45 +205,64 @@ class CrondModel {
         
         switch ($status['code']) {
             case 0:
-                $thumbKey = $status['items']['0']['key'] ;
-                $thumbCmd = $status['items']['0']['cmd'] ;
-                $avinfo = $this->qiniu->getAvinfo($thumbKey);
-                //处理成功
-                $sql = 'UPDATE `a_qiniu` SET `q_count` = `q_count` + 1 , `q_status` = 0 WHERE `q_id` = ' . $data['id'] . ' Limit 1';
-                $stmt = $this->dbMaster->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
-                $stmt->execute();
-                $stmt->closeCursor();
-                if(strpos($thumbCmd, '/mp3/ab/128000/') === false){
-                    //不存在 amr
-                    $sql = "UPDATE `a_audio` SET `a_amr_url` = '" . $status['items'][0]['key'] . "' ,`a_thumb_size` = '".$avinfo['format']['size']."' WHERE `a_id`=" . $data['aid'] . ' Limit 1';
-                    $stmt = $this->dbMaster->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
-                    $stmt->execute();
-                    $stmt->closeCursor();
-
-                    $sql = "UPDATE `a_audio_mp3_record` SET `m_amr` = '" . $status['items'][0]['key'] . "' ,`m_thumb_size` = '".$avinfo['format']['size']."'  WHERE `m_mp3key`='" . $status['inputKey'] . "'";
-                    $stmt = $this->dbMaster->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
-                    $stmt->execute();
-                    $stmt->closeCursor();
+                $items = $status['items'];
+                if(!$items){ return; }
+                foreach($items as $file){
+                    $thumbKey = $file['key'] ;
+                    $thumbCmd = $file['cmd'] ;
+                    $filecode = $file['code'];
                     
-                    
-                }else{ 
+                    if($filecode == 0){
+                        $avinfo = $this->qiniu->getAvinfo($thumbKey);
+                        //处理成功
+                        $sql = 'UPDATE `a_qiniu` SET `q_count` = `q_count` + 1 , `q_status` = 0 WHERE `q_id` = ' . $data['id'] . ' Limit 1';
+                        $stmt = $this->dbMaster->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+                        $stmt->execute();
+                        $stmt->closeCursor();
+                        if(strpos($thumbCmd, '/mp3/ab/48000/') !== false){
+                            //48000
+                            $sql = "UPDATE `a_audio` SET `a_low_url` = '" . $thumbKey . "' ,`a_low_size` = '".$avinfo['format']['size']."' WHERE `a_id`=" . $data['aid'] . ' Limit 1';
+                            $stmt = $this->dbMaster->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+                            $stmt->execute();
+                            $stmt->closeCursor();
 
-                    //存在 mp3 libmp3lame
-                    
-                    $sql = "UPDATE `a_audio` SET `a_ios_url` = '" . $status['items'][0]['key'] . "' ,`a_ios_size` = '".$avinfo['format']['size']."' WHERE `a_id`=" . $data['aid'] . ' Limit 1';
-                    $stmt = $this->dbMaster->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
-                    $stmt->execute();
-                    $stmt->closeCursor();
+                            $sql = "UPDATE `a_audio_mp3_record` SET `m_low` = '" . $thumbKey . "' ,`m_low_size` = '".$avinfo['format']['size']."'  WHERE `m_mp3key`='" . $status['inputKey'] . "'";
+                            $stmt = $this->dbMaster->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+                            $stmt->execute();
+                            $stmt->closeCursor();
+                        }
+                        if(strpos($thumbCmd, '/mp3/ab/64000/') !== false){
+                            //64000 amr
+                            $sql = "UPDATE `a_audio` SET `a_amr_url` = '" . $thumbKey . "' ,`a_thumb_size` = '".$avinfo['format']['size']."' WHERE `a_id`=" . $data['aid'] . ' Limit 1';
+                            $stmt = $this->dbMaster->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+                            $stmt->execute();
+                            $stmt->closeCursor();
 
-                    $sql = "UPDATE `a_audio_mp3_record` SET `m_ios` = '" . $status['items'][0]['key'] . "' ,`m_ios_size` = '".$avinfo['format']['size']."'  WHERE `m_mp3key`='" . $status['inputKey'] . "'";
-                    $stmt = $this->dbMaster->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
-                    $stmt->execute();
-                    $stmt->closeCursor();
+                            $sql = "UPDATE `a_audio_mp3_record` SET `m_amr` = '" . $thumbKey . "' ,`m_thumb_size` = '".$avinfo['format']['size']."'  WHERE `m_mp3key`='" . $status['inputKey'] . "'";
+                            $stmt = $this->dbMaster->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+                            $stmt->execute();
+                            $stmt->closeCursor();
+
+
+                        }
+                        if(strpos($thumbCmd, '/mp3/ab/128000/') !== false){ 
+
+                            //存在 128000
+
+                            $sql = "UPDATE `a_audio` SET `a_ios_url` = '" . $thumbKey . "' ,`a_ios_size` = '".$avinfo['format']['size']."' WHERE `a_id`=" . $data['aid'] . ' Limit 1';
+                            $stmt = $this->dbMaster->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+                            $stmt->execute();
+                            $stmt->closeCursor();
+
+                            $sql = "UPDATE `a_audio_mp3_record` SET `m_ios` = '" . $thumbKey . "' ,`m_ios_size` = '".$avinfo['format']['size']."'  WHERE `m_mp3key`='" . $status['inputKey'] . "'";
+                            $stmt = $this->dbMaster->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+                            $stmt->execute();
+                            $stmt->closeCursor();
+                        }
+                        
+                    }
                 }
                 
-               
-
-
                 break;
             case 3: case 4:
                 //处理失败
