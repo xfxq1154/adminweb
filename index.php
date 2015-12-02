@@ -7,7 +7,7 @@ session_start();
 header("Content-type: text/html; charset=utf-8");
 define("ROOT_PATH",  realpath(dirname(__FILE__) . '/'));
 //设置报错级别
-include_once dirname(ROOT_PATH).'/configs/admincenter.config.php';
+include_once dirname(ROOT_PATH).'/configs/storecp.config.php';
 switch (ENVIRONMENT){
     case 'develop':
         error_reporting(7);
