@@ -9,7 +9,7 @@ class AdminNavModel {
 
     use Trait_DB;
 
-use Trait_Redis;
+    use Trait_Redis;
 
     public $dbMaster, $dbSlave; //主从数据库 配置
     public $tableName = 'admin_nav';
