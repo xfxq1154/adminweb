@@ -12,6 +12,7 @@ class SdataController extends Base{
         Trait_Layout;
     
     public $sdata; 
+    public $date;
     
     public function init(){
         $this->initAdmin();
@@ -35,17 +36,28 @@ class SdataController extends Base{
         $result = $this->sdata->getList($params);
         var_dump($result);
         foreach ($result as $val){
-            $order_num[] = $val['order_num'];  //下单笔数
-            $paied_num[] = $val['paied_num'];  //付款笔数
-            $paied_sum[] = $val['paied_sum'];  //付款金额
+            $key = '"'.date('m-d',strtotime($val['create_time'])).'"';
+            $data[$key] = $val;
         }
+        $dates = $this->_get_time_string($start_created, $end_created);
+        foreach ($dates as $val){
+            if(isset($data[$val])){
+                $order_num[] = $data[$val]['order_num'];  //下单笔数
+                $paied_num[] = $data[$val]['paied_num'];  //付款笔数
+                $paied_sum[] = $data[$val]['paied_sum'];  //付款金额
+            } else {
+                $order_num[] = '';  //下单笔数
+                $paied_num[] = '';  //付款笔数
+                $paied_sum[] = '';  //付款金额
+            }
+        }
+        
         $order_num_string = implode(',', $order_num);
         $paied_num_string = implode(',', $paied_num);
         $paied_sum_string = implode(',', $paied_sum);
         
-        $this->assign('dates', $this->_get_time_string($start_created, $end_created));
+        $this->assign('dates', implode(',', $dates));
         $this->assign('result', array('下单笔数'=>$order_num_string, '付款笔数'=>$paied_num_string, '付款金额'=>$paied_sum_string));
-        $this->assign('rgba', array('order_num'=>'120,20,20,0.8', 'paied_num'=>'20,120,220,0.8', 'paied_sum'=>'50,22,120,0.8'));
         
         $this->layout('sdata/index.phtml');
     }
@@ -55,10 +67,10 @@ class SdataController extends Base{
         $start  = strtotime($start_created);  
         $stop   = strtotime($end_created);  
         $extend = ($stop-$start)/86400;
-        for ($i = 0; $i < $extend; $i++) {
+        for ($i = 1; $i < $extend; $i++) {
             $date[] = '"'.date('m-d',$start + 86400 * $i).'"';
         }
-        return implode(',', $date);
+        return $date;
     }
     
 }
