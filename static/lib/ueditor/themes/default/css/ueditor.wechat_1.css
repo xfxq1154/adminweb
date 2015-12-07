@@ -1,0 +1,486 @@
+.edui-toolbar-primary {
+  position: relative;
+  background-color: #f4f5f9;
+}
+.edui-default .edui-toolbar.edui-toolbar-primary .edui-button,
+.edui-default .edui-toolbar.edui-toolbar-primary .edui-splitbutton,
+.edui-default .edui-toolbar.edui-toolbar-primary .edui-menubutton,
+.edui-default .edui-toolbar.edui-toolbar-primary .edui-combox {
+  margin: 1px 4px;
+}
+.edui-default .edui-toolbar.edui-toobar-secondary {
+  display: none;
+  padding-left: 4px;
+}
+.show-edui-more .edui-default .edui-toolbar.edui-toobar-secondary {
+  display: block;
+}
+.edui-toolbar {
+  border-bottom: 1px solid #e7e7eb;
+}
+.edui-editor-toolbarbox.show-edui-more .edui-for-more .edui-button-wrap {
+  border: 1px solid #e7e7eb;
+  background-color: #ffffff;
+}
+.edui-toolbar .edui-button .edui-icon,
+.edui-toolbar .edui-menubutton .edui-icon,
+.edui-toolbar .edui-splitbutton .edui-icon {
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+  display: inline-block;
+}
+.icon_edui_zoom {
+  position: absolute;
+  right: 4px;
+  top: 2px;
+  width: 26px;
+  height: 26px;
+  vertical-align: middle;
+  display: inline-block;
+  line-height: 100px;
+  overflow: hidden;
+  border: 1px solid transparent;
+}
+.icon_edui_zoom.zoom_out_switch {
+  background:url(../images/ueditor_z25df2d.png) 0px 0px no-repeat;
+}
+.icon_edui_zoom.zoom_in_switch {
+  background:url(../images/ueditor_z25df2d.png) 0px -36px no-repeat;
+}
+.icon_edui_zoom:hover {
+  border: 1px solid #e7e7eb;
+  background-color: #ffffff;
+}
+.edui-default .edui-for-more .edui-icon {
+  background:url(../images/ueditor_z25df2d.png) 0px -72px no-repeat;
+  width: 26px;
+  height: 26px;
+  vertical-align: middle;
+  display: inline-block;
+}
+.edui-default .edui-for-insertvote .edui-icon {
+  background:url(../images/ueditor_z25df2d.png) 0px -108px no-repeat;
+}
+.edui-default .edui-for-insertcard .edui-icon {
+  background:url(../images/ueditor_z25df2d.png) 0px -138px no-repeat;
+}
+.edui-default .edui-for-undo .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_undo.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-redo .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_redo.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-bold .edui-icon {
+  background:url(../images/ueditor_z25df2d.png) 0px -168px no-repeat;
+}
+.edui-default .edui-for-italic .edui-icon {
+  background:url(../images/ueditor_z25df2d.png) 0px -198px no-repeat;
+}
+.edui-default .edui-for-fontborder .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_fontborder.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-underline .edui-icon {
+  background:url(../images/ueditor_z25df2d.png) 0px -228px no-repeat;
+}
+.edui-default .edui-for-strikethrough .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_strikethrough.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-subscript .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_subscript.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-superscript .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_superscript.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-blockquote .edui-icon {
+  background:url(../images/ueditor_z25df2d.png) 0px -258px no-repeat;
+}
+.edui-default .edui-for-forecolor .edui-icon {
+  background:url(../images/ueditor_z25df2d.png) 0px -288px no-repeat;
+}
+.edui-default .edui-for-backcolor .edui-icon {
+  background:url(../images/ueditor_z25df2d.png) 0px -318px no-repeat;
+}
+.edui-default .edui-for-inserttable .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_inserttable.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-autotypeset .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_autotypeset.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-justifyleft .edui-icon {
+  background:url(../images/ueditor_z25df2d.png) 0px -348px no-repeat;
+}
+.edui-default .edui-for-justifycenter .edui-icon {
+  background:url(../images/ueditor_z25df2d.png) 0px -378px no-repeat;
+}
+.edui-default .edui-for-justifyright .edui-icon {
+  background:url(../images/ueditor_z25df2d.png) 0px -408px no-repeat;
+}
+.edui-default .edui-for-justifyjustify .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_justifyjustify.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-insertorderedlist .edui-icon {
+  background:url(../images/ueditor_z25df2d.png) 0px -438px no-repeat;
+}
+.edui-default .edui-for-insertunorderedlist .edui-icon {
+  background:url(../images/ueditor_z25df2d.png) 0px -468px no-repeat;
+}
+.edui-default .edui-for-lineheight .edui-icon {
+  background:url(../images/ueditor_z25df2d.png) 0px -498px no-repeat;
+}
+.edui-default .edui-for-rowspacingbottom .edui-icon {
+  background:url(../images/ueditor_z25df2d.png) 0px -528px no-repeat;
+}
+.edui-default .edui-for-rowspacingtop .edui-icon {
+  background:url(../images/ueditor_z25df2d.png) 0px -558px no-repeat;
+}
+.edui-default .edui-for-horizontal .edui-icon {
+  background:url(../images/ueditor_z25df2d.png) 0px -588px no-repeat;
+}
+.edui-default .edui-for-link .edui-icon {
+  background:url(../images/ueditor_z25df2d.png) 0px -618px no-repeat;
+}
+.edui-default .edui-for-code .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_code.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-insertimage .edui-icon {
+  background:url(../images/ueditor_z25df2d.png) 0px -648px no-repeat;
+}
+.edui-default .edui-for-insertframe .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_insertframe.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-emoticon .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_emoticon.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-spechars .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_spechars.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-help .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_help.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-print .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_print.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-preview .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_preview.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-selectall .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_selectall.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-searchreplace .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_searchreplace.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-map .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_map.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-gmap .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_gmap.png?__sprite) no-repeat 0 0;
+}
+/*小视频的icon 跟视频一样*/
+.edui-default .edui-for-insertvideo2 .edui-icon {
+  background:url(../images/ueditor_z25df2d.png) 0px -678px no-repeat;
+}
+.edui-default .edui-for-insertaudio .edui-icon {
+  background:url(../images/ueditor_z25df2d.png) 0px -708px no-repeat;
+}
+.edui-default .edui-for-time .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_time.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-date .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_date.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-cut .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_cut.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-copy .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_copy.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-paste .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_paste.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-formatmatch .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_formatmatch.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-pasteplain .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_pasteplain.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-directionalityltr .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_directionalityltr.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-directionalityrtl .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_directionalityrtl.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-source .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_source.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-removeformat .edui-icon {
+  background:url(../images/ueditor_z25df2d.png) 0px -738px no-repeat;
+}
+.edui-default .edui-for-unlink .edui-icon {
+  background:url(../images/ueditor_z25df2d.png) 0px -768px no-repeat;
+}
+.edui-default .edui-for-touppercase .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_touppercase.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-tolowercase .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_tolowercase.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-insertrow .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_insertrow.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-insertrownext .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_insertrownext.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-insertcol .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_insertcol.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-insertcolnext .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_insertcolnext.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-mergeright .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_mergeright.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-mergedown .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_mergedown.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-splittorows .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_splittorows.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-splittocols .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_splittocols.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-insertparagraphbeforetable .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_insertparagraphbeforetable.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-deleterow .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_deleterow.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-deletecol .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_deletecol.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-splittocells .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_splittocells.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-mergecells .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_mergecells.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-deletetable .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_deletetable.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-cleardoc .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_cleardoc.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-fullscreen .edui-icon {
+  background: transparent url(../images/icon_edui_fullscreen.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-anchor .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_anchor.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-pagebreak .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_pagebreak.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-imagenone .edui-icon {
+  background:url(../images/ueditor_z25df2d.png) 0px -798px no-repeat;
+}
+.edui-default .edui-for-imageleft .edui-icon {
+  background:url(../images/ueditor_z25df2d.png) 0px -828px no-repeat;
+}
+.edui-default .edui-for-wordimage .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_wordimage.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-imageright .edui-icon {
+  background:url(../images/ueditor_z25df2d.png) 0px -858px no-repeat;
+}
+.edui-default .edui-for-imagecenter .edui-icon {
+  background:url(../images/ueditor_z25df2d.png) 0px -888px no-repeat;
+}
+.edui-default .edui-for-indent .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_indent.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-outdent .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_outdent.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-webapp .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_webapp.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-table .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_table.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-edittable .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_edittable.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-template .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_template.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-delete .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_delete.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-highlightcode .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_highlightcode.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-deletehighlightcode .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_deletehighlightcode.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-attachment .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_attachment.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-edittd .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_edittd.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-snapscreen .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_snapscreen.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-scrawl .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_scrawl.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-background .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_background.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-music .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_music.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-formula .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_formula.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-aligntd .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_aligntd.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-insertparagraphtrue .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_insertparagraphtrue.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-insertparagraph .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_insertparagraph.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-insertcaption .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_insertcaption.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-deletecaption .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_deletecaption.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-inserttitle .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_inserttitle.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-deletetitle .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_deletetitle.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-aligntable .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_aligntable.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-tablealignment-left .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_tablealignment.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-tablealignment-center .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_tablealignment.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-tablealignment-right .edui-icon {
+  background: transparent url(/mpres/htmledition/images/icon/ueditor/icon_edui_tablealignment.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-fullscreen .edui-icon {
+  background: transparent url(../images/icon_edui_fullscreen.png?__sprite) no-repeat 0 0;
+}
+.edui-default .edui-for-insertvideo .edui-icon {
+  background: url(../images/ueditor_z25df2d.png) 0px -678px no-repeat;
+}
+.edui-default .edui-for-simpleupload .edui-icon {
+  background: url(../images/ueditor_z25df2d.png) 0px -648px no-repeat;
+}
+.edui-for-fullscreen{
+  position: absolute;
+  right: 4px;
+  top: 2px;
+  width: 26px;
+  height: 26px;
+  vertical-align: middle;
+  display: inline-block;
+  line-height: 20px;
+  overflow: hidden;
+  border: 1px solid transparent;
+}
+#edui27_state .edui-default{height: 24px;}
+/*splitbutton*/
+.edui-toolbar .edui-menubutton-body .edui-arrow,
+.edui-toolbar .edui-splitbutton-body .edui-arrow,
+.edui-toolbar .edui-combox-body .edui-arrow {
+  background: transparent url(../images/edui-arrow218877.png) no-repeat 0 0;
+  height: 20px;
+  vertical-align: middle;
+  display: inline-block;
+}
+.edui-toolbar .edui-splitbutton-body .edui-arrow,
+.edui-toolbar .edui-combox-body .edui-arrow {
+  width: 10px;
+  background-position: 50% 50%;
+}
+.edui-default .edui-toolbar .edui-menubutton .edui-menubutton-body {
+  padding-right: 10px;
+}
+.edui-toolbar .edui-menubutton-body .edui-arrow {
+  position: absolute;
+  width: 100%;
+  left: 0;
+  top: 0;
+  background-position: 90% 50%;
+}
+/*分隔线*/
+.edui-default .edui-toolbar .edui-separator {
+  width: 1px;
+  height: 20px;
+  background-color: #e7e7eb;
+  margin: 4px 2px;
+}
+.edui-button .edui-button-wrap,
+.edui-splitbutton .edui-splitbutton-body,
+.edui-menubutton .edui-menubutton-body,
+.edui-combox .edui-combox-body {
+  border: 1px solid transparent;
+}
+.edui-button .edui-state-hover .edui-button-wrap,
+.edui-button .edui-state-checked .edui-button-wrap,
+.edui-button .edui-state-active .edui-button-wrap,
+.edui-splitbutton .edui-state-hover .edui-splitbutton-body,
+.edui-splitbutton .edui-state-checked .edui-splitbutton-body,
+.edui-splitbutton .edui-state-active .edui-splitbutton-body,
+.edui-menubutton .edui-state-hover .edui-menubutton-body,
+.edui-menubutton .edui-state-checked .edui-menubutton-body,
+.edui-menubutton .edui-state-active .edui-menubutton-body,
+.edui-combox .edui-state-hover .edui-combox-body,
+.edui-combox .edui-state-opened .edui-combox-body,
+.edui-combox .edui-state-active .edui-combox-body {
+  border: 1px solid #e7e7eb;
+  background-color: #ffffff;
+}
+.edui-default .edui-popup-content {
+  border: 1px solid #e7e7eb;
+  *border-right-width: 2px;
+  *border-bottom-width: 2px;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+  padding: 5px;
+  background: #ffffff;
+}
+.edui-default .edui-menu-body .edui-state-hover {
+  padding: 0 !important;
+  background-color: #f4f5f9;
+  border: 1px solid #e7e7eb;
+}
+.edui-default .edui-colorpicker-preview {
+  height: 20px;
+  border: 1px solid #e7e7eb;
+  margin-left: 1px;
+  width: 128px;
+  float: left;
+}
+.edui-default .edui-colorpicker-nocolor {
+  float: right;
+  margin-right: 1px;
+  font-size: 12px;
+  line-height: 14px;
+  height: 14px;
+  border: 1px solid #e7e7eb;
+  padding: 3px 5px;
+  cursor: pointer;
+}
+#edui27_state .edui-default {
+  height: 23px;
+}

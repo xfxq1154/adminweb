@@ -1,0 +1,179 @@
+<!-- ECharts单文件引入 -->
+<script src="<?=ASSET_URL?>/static/lib/js/chart/echarts-all.js"></script>
+<div class="dux-tools">
+    <div class="bread-head">数据统计<span class="small">订单数据统计</span></div><br>
+</div>
+<div class="table-tools clearfix ">
+    <div class="float-left">
+        <form method="GET" action="/sdata/index" >
+            <div class="form-inline">
+                <div class="form-group">
+                    <div class="field">
+                        开始时间：<input type="text" id="d4321" class="input datebtn" style="width:220px;" id="datetime" name="start_time" value="<?=$start_time;?>" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'d4322\',{d:-30})||\'%y-%M-%d\'}'})" style="cursor:pointer;" size="60" datatype="*" placeholder="" autocomplete="off">
+                    </div>
+                    <div class="field">
+                        结束时间：<input type="text" id="d4322" class="input datebtn" style="width:220px;" id="datetime" name="end_time"  value="<?=$end_time;?>" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'d4321\',{d:30});}'})" style="cursor:pointer;" size="60" datatype="*" placeholder="" autocomplete="off">
+                    </div>&nbsp;
+                    <div class="field">
+                        <input type="text" class="input" id="keyword" name="showcase" size="20" value="<?=$showcase?>" placeholder="请输入店铺ID">
+                    </div>
+                </div>
+                <div class="form-button">
+                    <button class="button" type="submit">搜索</button>
+                </div>
+                <div class="form-button">
+                    <button class="button" type="submit" name="excel" id="excel" value="1">导出</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div class="admin-main">
+    
+        <div class="line-big">
+        <div class="xm2">
+            <div class="panel dux-box dux-dashboard">
+                <div class="clearfix">
+                    <div class="media media-x ">
+                        <div class="float-left">
+                            <div class="txt dashboard-head radius-small bg-red  icon-user"></div>
+                        </div>
+                        <div class="media-body text-center">
+                            <h2><strong>1</strong></h2>
+                            访客数
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+        </div>
+        <div class="xm2">
+            <div class="panel dux-box dux-dashboard">
+                <div class="clearfix">
+                    <div class="media media-x ">
+                        <div class="float-left">
+                            <div class="txt dashboard-head radius-small bg-blue icon-key"></div>
+                        </div>
+                        <div class="media-body text-center">
+                            <h2><strong>3</strong></h2>
+                            付款人数
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+        </div>
+        <div class="xm2">
+            <div class="panel dux-box dux-dashboard">
+                <div class="clearfix">
+                    <div class="media media-x ">
+                        <div class="float-left">
+                            <div class="txt dashboard-head radius-small bg-green icon-file-text-o"></div>
+                        </div>
+                        <div class="media-body text-center">
+                            <h2><strong>23</strong></h2>
+                            付款笔数
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+        </div>
+        <div class="xm2">
+            <div class="panel dux-box dux-dashboard">
+                <div class="clearfix">
+                    <div class="media media-x ">
+                        <div class="float-left">
+                            <div class="txt dashboard-head radius-small bg-yellow icon-comments"></div>
+                        </div>
+                        <div class="media-body text-center">
+                            <h2><strong>0</strong></h2>
+                            商品销量
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+        </div>
+        <div class="xm2">
+            <div class="panel dux-box dux-dashboard">
+                <div class="clearfix">
+                    <div class="media media-x ">
+                        <div class="float-left">
+                            <div class="txt dashboard-head radius-small bg-yellow icon-comments"></div>
+                        </div>
+                        <div class="media-body text-center">
+                            <h2><strong>0</strong></h2>
+                            付款金额
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+        </div>
+        <div class="xm2">
+            <div class="panel dux-box dux-dashboard">
+                <div class="clearfix">
+                    <div class="media media-x ">
+                        <div class="float-left">
+                            <div class="txt dashboard-head radius-small bg-yellow icon-comments"></div>
+                        </div>
+                        <div class="media-body text-center">
+                            <h2><strong>0</strong></h2>
+                            客单价
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+        </div>
+    </div>
+    
+    <div class="panel dux-box">
+        <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+        <div id="main" style="height:400px"></div>
+    </div>
+<script type="text/javascript" charset="utf-8">
+    Do.ready('base',function() {
+        $('.js-time').duxTime();
+    });
+</script>
+<script type="text/javascript">
+        // 基于准备好的dom，初始化echarts图表
+        var myChart = echarts.init(document.getElementById('main')); 
+        
+        var option = {
+            tooltip: {
+                show: true
+            },
+            legend: {
+                data:['下单笔数','付款笔数','付款金额']
+            },
+            xAxis : [
+                {
+                    type : 'category',
+                    data : [<?=$dates?>]
+                }
+            ],
+            yAxis : [
+                {
+                    type : 'value'
+                }
+            ],
+            series : [
+                <?php foreach($result as $key => $val):?>
+                {
+                    "name":"<?=$key?>",
+                    "type":"bar",
+                    "data":[<?=$val?>]
+                },
+                <?php endforeach;?>
+            ]
+        };
+
+        // 为echarts对象加载数据 
+        myChart.setOption(option); 
+    </script>
+</div>
