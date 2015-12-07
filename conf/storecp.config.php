@@ -12,7 +12,7 @@ define('API_PAY_URL','http://pay.dev.didatrip.com/');
 define('API_PAY_SECRET', 'a051fe1ec88311e4ae396c4008bff0be');
 
 //asset
-define('ASSET_URL', 'http://storecp.xdw.dev.com/static/');
+define('ASSET_URL', 'http://storecp.xdw.dev.com/');
 define('ASSET_IMG_URL', ASSET_URL . '/images');
 define('ASSET_IMG_PATH','/data/home/xdw/storecp/static/images');
 define('ASSET_JS_URL', ASSET_URL . '/js');
