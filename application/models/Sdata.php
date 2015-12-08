@@ -36,7 +36,7 @@ class SdataModel {
             'paied_people_repeat' => $data['paied_people_repeat'],
             'paied_people_sum' => $data['paied_people_sum'],
             'paied_people_num' => $data['paied_people_num'],
-            'create_time' => $data['ctime'],
+            'date' => $data['date'],
         );
 
         return $format_data;
