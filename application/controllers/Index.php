@@ -51,7 +51,9 @@ class IndexController extends Base {
             }
             $navlist[$key] = $nav;
         }
+        
         //var_dump($navlist);
+//        unset($navlist[0]);
         $this->assign('nav_tag', $nav_tag);
         $this->getView()->assign('nav', $navlist);
 

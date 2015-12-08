@@ -1,4 +1,4 @@
-<script language="JavaScript" type="text/javascript" src="<?=ASSET_URL?>/admincenter/js/calendar/WdatePicker.js"></script>
+<script language="JavaScript" type="text/javascript" src="<?=ASSET_URL?>/static/js/calendar/WdatePicker.js"></script>
 <div class="dux-tools">
     <div class="bread-head">用户作品<span class="small">用户作品</span></div><br>
 </div>
@@ -46,7 +46,7 @@
                     <td><?=$val['openid']?></td>
                     <td><?=$val['origin_img_url']?></td>
                     <td><?=$val['poster_text']?></td>
-                    <td><img src="<?=$val['poster_img_url']?>" width="100" height="80" ></td>
+                    <td><img src="<?=$val['poster_img_url']?>" width="300" height="80" class="tooltip"></td>
                     <td><?=$val['page_view']?></td>
                     <td><?=$val['theme']?></td>
                     <td>
@@ -68,38 +68,4 @@
         </div>
     <?php endif;?>
 </div>
-    <script type="text/javascript">
-        Do.ready('base', function () {
-        $('#table').duxTable();
-        });
-    
-        $(function(){
-            var x = 20;
-            var y = 20;
-            var sTop = 0;
-            function showImg(sTop){
-                $("a.tooltip").hover(function(){
-                    if($("#newTip").length > 0 ){
-                        $("#newTip").remove();
-                    }
-                    var $div = $("<div id='newTip'><img width='350' src='"+this.href+"'/></div>");
-                    $("body").append($div);
-                    $div.css({"position":"absolute","background":"silver"}).show("fast");
-                },function(){
-                    $("#newTip").remove();
-                }).mousemove(function(e){
-                    var smallImgH = $(this).offset().top;
-                    var bigImgH = $("#newTip").height();
-                    var windowH = $(window).height();
-                    if(smallImgH - sTop -30 < windowH - bigImgH){
-                        $("#newTip").css({"left":(e.pageX+x)+'px',"top":(e.pageY)+'px'}).show("fast");
-                    }else if(smallImgH - sTop < bigImgH){
-                        $("#newTip").css({"left":(e.pageX+x)+'px',"top":(e.pageY- bigImgH/2 - y)+'px'}).show("fast");
-                    }else{
-                        $("#newTip").css({"left":(e.pageX+x)+'px',"top":(e.pageY - bigImgH - y)+'px'}).show("fast");
-                    }
-                });
-            }
-        })
-    </script>
 </div>

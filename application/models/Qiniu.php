@@ -83,11 +83,20 @@ use Trait_Redis;
      * @param type $format
      */
     public function pfop($key = '2015-5-21成功.mp3', $format = 'mp3/ab/64000') {
+        
+        //qiniu mp3/201511/26/201511261148361931651363.mp3
+        
+        //128k
+        $fop1 = 'avthumb/mp3/ab/128000/acodec/libmp3lame|saveas/'. \Qiniu\entry($this->bucket, $this->createQiniuKey($key, '128000'));
+        //64k
+        $fop2 = 'avthumb/mp3/ab/64000/acodec/libmp3lame|saveas/'. \Qiniu\entry($this->bucket, $this->createQiniuKey($key, '64000'));
+        //48k
+        $fop3 = 'avthumb/mp3/ab/48000/acodec/libmp3lame|saveas/'. \Qiniu\entry($this->bucket, $this->createQiniuKey($key, '48000'));
+        
+        
         $pipeline = 'dedao';
         $pfop = New PersistentFop($this->auth, $this->bucket, $pipeline);
-        $format = str_replace('/acodec/libmp3lame', '', $format);
-        $skey = $this->randomkey(1,$format);
-        $fops = 'avthumb/' . $format.'/acodec/libmp3lame|saveas/'. \Qiniu\entry($this->bucket, $skey);
+        $fops = [$fop1,$fop2,$fop3];
         list($id, $err) = $pfop->execute($key, $fops);
 
         if ($err !== null) {
@@ -199,6 +208,16 @@ use Trait_Redis;
         }
         return $fileType[0] . $code . $fileType[1];
         
+    }
+    
+    function createQiniuKey($key,$rate='128000'){
+        if(empty($key)) return '';
+        $skey = explode('/', $key);
+        if(count($skey) != 4){
+            return '';
+        }
+        $skey[3] = $rate . '_'.$skey[3];
+        return implode('/', $skey);
     }
 
 }

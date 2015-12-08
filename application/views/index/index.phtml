@@ -6,11 +6,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <meta name="renderer" content="webkit">
 <title>罗辑思维CMS管理系统</title>
-<?php echo Asset::getResource('pintuer.css', 'admincenter/common');?>
-<?php echo Asset::getResource('admin.css', 'admincenter/lib');?>
-<?php echo Asset::getResource('jquery.js', 'admincenter');?>
-<?php echo Asset::getResource('pintuer.js', 'admincenter/common');?>
-<?php echo Asset::getResource('respond.js', 'admincenter/common');?>
+<?php echo Asset::getResource('pintuer.css', 'static/common');?>
+<?php echo Asset::getResource('admin.css', 'static/lib');?>
+<?php echo Asset::getResource('jquery.js', 'static');?>
+<?php echo Asset::getResource('pintuer.js', 'static/common');?>
+<?php echo Asset::getResource('respond.js', 'static/common');?>
 <style>
 body,html{overflow: hidden;}
 * {
@@ -143,7 +143,7 @@ ul{padding:0px;margin: 0px;}
 <div class="dux-head clearfix">
     <div class="dux-logo">
         <a href="#" target="_blank">
-            <img src="<?php echo Asset::getResource('logo.jpg', 'admincenter/lib');?>" alt="WechatPHP微信开发框架管理系统" />
+            <img src="<?php echo Asset::getResource('logo.jpg', 'static/lib');?>" alt="WechatPHP微信开发框架管理系统" />
         </a>
         <button class="button icon-navicon admin-nav-btn" data-target=".admin-nav"></button>
         <button class="button icon-navicon icon-ellipsis-v admin-menu-btn" data-target=".admin-menu"></button>
@@ -152,8 +152,7 @@ ul{padding:0px;margin: 0px;}
         <ul class="nav  nav-navicon nav-inline admin-nav" id="nav">
         </ul>
         <ul class="nav  nav-navicon nav-menu nav-inline admin-nav nav-tool">
-            <!--li> <a href="/" target="_blank" class="icon-home"></a></li>
-            <li> <a href="#" target="dux-iframe" class="icon-user"></a></li-->
+            <li> <a href="/user/" target="dux-iframe" class="icon-user"></a></li>
             <li> <a href="/user/logout" class="dux-logout bg-red icon-power-off"></a></li>
         </ul>
     </div>

@@ -6,27 +6,27 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <meta name="renderer" content="webkit">
 <title>罗辑思维CMS管理系统</title>
-<?php echo Asset::getResource('pintuer.css', 'admincenter/common');?>
-<?php echo Asset::getResource('admin.css', 'admincenter/lib');?>
-<?php echo Asset::getResource('jquery.js', 'admincenter');?>
-<?php echo Asset::getResource('pintuer.js', 'admincenter/common');?>
-<?php echo Asset::getResource('respond.js', 'admincenter/common');?>
+<?php echo Asset::getResource('pintuer.css', 'static/common');?>
+<?php echo Asset::getResource('admin.css', 'static/lib');?>
+<?php echo Asset::getResource('jquery.js', 'static');?>
+<?php echo Asset::getResource('pintuer.js', 'static/common');?>
+<?php echo Asset::getResource('respond.js', 'static/common');?>
 <script>
 var duxConfig = {
 	//基础配置
-	baseDir : '<?=ASSET_URL?>/admincenter/js/',
-	baseUrl : '<?=ASSET_URL?>/admincenter/',
+	baseDir : '<?=ASSET_URL?>/static/js/',
+	baseUrl : '<?=ASSET_URL?>/static/',
 	uploadUrl : "",
         upDir : '',
 	//自定义配置
-	libDir : '<?=ASSET_URL?>/admincenter/lib/js/',
+	libDir : '<?=ASSET_URL?>/static/lib/js/',
 	sessId  : '',
 	editorUploadUrl : "",
 	};
 </script>
-<?php echo Asset::getResource('do.js', 'admincenter');?>
-<?php echo Asset::getResource('config.js', 'admincenter');?>
-<?php echo Asset::getResource('definition.js', 'admincenter/lib');?>
+<?php echo Asset::getResource('do.js', 'static');?>
+<?php echo Asset::getResource('config.js', 'static');?>
+<?php echo Asset::getResource('definition.js', 'static/lib');?>
 <style>
 	body {overflow-x:hidden; background-color: #eff3f6;}
 </style>

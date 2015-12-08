@@ -1,0 +1,6 @@
+body {
+    background-color: #ededed;
+    font-family: "Helvetica Neue", "Hiragino Sans GB", Helvetica, "Microsoft YaHei", "微软雅黑", "宋体", Arial, sans-serif;
+	border-top: 4px solid #44b549;
+}
+.dux-login { position: absolute; top: 50%; margin-top: -140px; left: 50%; margin-left: -150px; }
