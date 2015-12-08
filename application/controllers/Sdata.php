@@ -26,19 +26,35 @@ class SdataController extends Base{
         $end_created = $this->getRequest()->get('end_time');
         $showcase_id = $this->getRequest()->get('showcase_id');
         if(!$start_created || !$end_created){
-            $start_created = date('Y-m-d',strtotime('-7 day')).' 00:00:00';
-            $end_created = date('Y-m-d',strtotime('today')).' 00:00:00';
+            $start_created = date('Y-m-d',strtotime('-8 day')).' 00:00:00';
+            $end_created = date('Y-m-d',strtotime('-1 day')).' 00:00:00';
         }
         $params['showcase_id'] = $showcase_id;
         $params['start_created'] = $start_created;
         $params['end_created'] = $end_created;
         
         $result = $this->sdata->getList($params);
-        var_dump($result);
+        
         foreach ($result as $val){
-            $key = '"'.date('m-d',strtotime($val['create_time'])).'"';
+            $key = '"'.date('m-d',strtotime($val['date'])).'"';
             $data[$key] = $val;
+            
+            $order_people += $val['order_people'];  //付款人数
+            $paied_people += $val['paied_people'];  //付款人数
+            $paied_num_total += $val['paied_num'];     //付款笔数
+            $paied_sum_total += $val['paied_sum'];  //付款金额
+            $paied_people_sum += $val['paied_people_sum'];  //客单价
+            
         }
+        $this->assign('start_time', $start_created);
+        $this->assign('end_time', $end_created);
+        $this->assign('showcase_id', $showcase_id);
+        $this->assign('order_people', $order_people);
+        $this->assign('paied_people', $paied_people);
+        $this->assign('paied_num', $paied_num_total);
+        $this->assign('paied_sum', $paied_sum_total);
+        $this->assign('paied_people_sum', $paied_people_sum);
+        
         $dates = $this->_get_time_string($start_created, $end_created);
         foreach ($dates as $val){
             if(isset($data[$val])){
@@ -67,7 +83,7 @@ class SdataController extends Base{
         $start  = strtotime($start_created);  
         $stop   = strtotime($end_created);  
         $extend = ($stop-$start)/86400;
-        for ($i = 1; $i < $extend; $i++) {
+        for ($i = 0; $i < $extend; $i++) {
             $date[] = '"'.date('m-d',$start + 86400 * $i).'"';
         }
         return $date;

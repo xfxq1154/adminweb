@@ -1,3 +1,4 @@
+<script language="JavaScript" type="text/javascript" src="<?=ASSET_URL?>/static/js/calendar/WdatePicker.js"></script>
 <!-- ECharts单文件引入 -->
 <script src="<?=ASSET_URL?>/static/lib/js/chart/echarts-all.js"></script>
 <div class="dux-tools">
@@ -5,7 +6,7 @@
 </div>
 <div class="table-tools clearfix ">
     <div class="float-left">
-        <form method="GET" action="/sdata/index" >
+        <form method="GET" action="/sdata/order" >
             <div class="form-inline">
                 <div class="form-group">
                     <div class="field">
@@ -15,7 +16,7 @@
                         结束时间：<input type="text" id="d4322" class="input datebtn" style="width:220px;" id="datetime" name="end_time"  value="<?=$end_time;?>" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'d4321\',{d:30});}'})" style="cursor:pointer;" size="60" datatype="*" placeholder="" autocomplete="off">
                     </div>&nbsp;
                     <div class="field">
-                        <input type="text" class="input" id="keyword" name="showcase" size="20" value="<?=$showcase?>" placeholder="请输入店铺ID">
+                        <input type="text" class="input" id="keyword" name="showcase_id" size="20" value="<?=$showcase_id?>" placeholder="请输入店铺ID">
                     </div>
                 </div>
                 <div class="form-button">
@@ -41,8 +42,8 @@
                             <div class="txt dashboard-head radius-small bg-red  icon-user"></div>
                         </div>
                         <div class="media-body text-center">
-                            <h2><strong>1</strong></h2>
-                            访客数
+                            <h2><strong><?=$order_people?></strong></h2>
+                            下单人数
                         </div>
                     </div>
                 </div>
@@ -57,7 +58,7 @@
                             <div class="txt dashboard-head radius-small bg-blue icon-key"></div>
                         </div>
                         <div class="media-body text-center">
-                            <h2><strong>3</strong></h2>
+                            <h2><strong><?=$paied_people?></strong></h2>
                             付款人数
                         </div>
                     </div>
@@ -73,7 +74,7 @@
                             <div class="txt dashboard-head radius-small bg-green icon-file-text-o"></div>
                         </div>
                         <div class="media-body text-center">
-                            <h2><strong>23</strong></h2>
+                            <h2><strong><?=$paied_num?></strong></h2>
                             付款笔数
                         </div>
                     </div>
@@ -105,7 +106,7 @@
                             <div class="txt dashboard-head radius-small bg-yellow icon-comments"></div>
                         </div>
                         <div class="media-body text-center">
-                            <h2><strong>0</strong></h2>
+                            <h2><strong><?=$paied_sum?></strong></h2>
                             付款金额
                         </div>
                     </div>
@@ -121,7 +122,7 @@
                             <div class="txt dashboard-head radius-small bg-yellow icon-comments"></div>
                         </div>
                         <div class="media-body text-center">
-                            <h2><strong>0</strong></h2>
+                            <h2><strong><?=$paied_people_sum?></strong></h2>
                             客单价
                         </div>
                     </div>
@@ -135,45 +136,195 @@
         <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
         <div id="main" style="height:400px"></div>
     </div>
+    <div class="line-big">
+        <div class="xm6">
+            <div class="panel dux-box">
+                <div id="pie1" style="height:400px"></div>
+            </div>
+        </div>
+        <div  class="xm6">
+            <div class="panel dux-box">
+                <div id="pie2" style="height:400px"></div>
+            </div>
+        </div>
+    </div>
 <script type="text/javascript" charset="utf-8">
     Do.ready('base',function() {
         $('.js-time').duxTime();
     });
 </script>
 <script type="text/javascript">
-        // 基于准备好的dom，初始化echarts图表
-        var myChart = echarts.init(document.getElementById('main')); 
-        
-        var option = {
-            tooltip: {
-                show: true
-            },
-            legend: {
-                data:['下单笔数','付款笔数','付款金额']
-            },
-            xAxis : [
-                {
-                    type : 'category',
-                    data : [<?=$dates?>]
-                }
-            ],
-            yAxis : [
-                {
-                    type : 'value'
-                }
-            ],
-            series : [
-                <?php foreach($result as $key => $val):?>
-                {
-                    "name":"<?=$key?>",
-                    "type":"bar",
-                    "data":[<?=$val?>]
-                },
-                <?php endforeach;?>
-            ]
-        };
+    // 基于准备好的dom，初始化echarts图表
+    var myChart = echarts.init(document.getElementById('main')); 
 
-        // 为echarts对象加载数据 
-        myChart.setOption(option); 
-    </script>
+    var option = {
+        tooltip: {
+            show: true
+        },
+        legend: {
+            data:['下单笔数','付款笔数','付款金额']
+        },
+        xAxis : [
+            {
+                type : 'category',
+                data : [<?=$dates?>]
+            }
+        ],
+        yAxis : [
+            {
+                type : 'value'
+            }
+        ],
+        series : [
+            <?php foreach($result as $key => $val):?>
+            {
+                "name":"<?=$key?>",
+                "type":"bar",
+                "data":[<?=$val?>]
+            },
+            <?php endforeach;?>
+        ]
+    };
+
+    // 为echarts对象加载数据 
+    myChart.setOption(option); 
+</script>
+<script type="text/javascript">
+    // 图表实例化------------------
+// srcipt标签式引入
+var myChart = echarts.init(document.getElementById('pie1'));
+
+// 过渡---------------------
+myChart.showLoading({
+    text: '正在努力的读取数据中...',    //loading话术
+});
+
+// ajax getting data...............
+
+// ajax callback
+myChart.hideLoading();
+
+// 图表使用-------------------
+option = {
+    title : {
+        text: '支付方式统计',
+        subtext: '订单数量',
+        x:'center'
+    },
+    tooltip : {
+        trigger: 'item',
+        formatter: "{a} <br/>{b} : {c} ({d}%)"
+    },
+    legend: {
+        orient : 'vertical',
+        x : 'left',
+        data:['WECHAT','JDPAY']
+    },
+    toolbox: {
+        show : true,
+        feature : {
+            mark : {show: true},
+            dataView : {show: true, readOnly: false},
+            magicType : {
+                show: true, 
+                type: ['pie', 'funnel'],
+                option: {
+                    funnel: {
+                        x: '25%',
+                        width: '60%',
+                        funnelAlign: 'left',
+                        max: 1548
+                    }
+                }
+            },
+            restore : {show: true},
+            saveAsImage : {show: true}
+        }
+    },
+    calculable : true,
+    series : [
+        {
+            name:'支付方式',
+            type:'pie',
+            radius : '55%',
+            center: ['50%', '60%'],
+            data:[
+                {value:335, name:'WECHAT'},
+                {value:310, name:'JDPAY'},
+            ]
+        }
+    ]
+};
+                    
+myChart.setOption(option);
+</script>
+<script type="text/javascript">
+    // 图表实例化------------------
+// srcipt标签式引入
+var myChart = echarts.init(document.getElementById('pie2'));
+
+// 过渡---------------------
+myChart.showLoading({
+    text: '正在努力的读取数据中...',    //loading话术
+});
+
+// ajax getting data...............
+
+// ajax callback
+myChart.hideLoading();
+
+// 图表使用-------------------
+option = {
+    title : {
+        text: '支付方式统计',
+        subtext: '支付金额',
+        x:'center'
+    },
+    tooltip : {
+        trigger: 'item',
+        formatter: "{a} <br/>{b} : {c} ({d}%)"
+    },
+    legend: {
+        orient : 'vertical',
+        x : 'left',
+        data:['WECHAT','JDPAY']
+    },
+    toolbox: {
+        show : true,
+        feature : {
+            mark : {show: true},
+            dataView : {show: true, readOnly: false},
+            magicType : {
+                show: true, 
+                type: ['pie', 'funnel'],
+                option: {
+                    funnel: {
+                        x: '25%',
+                        width: '60%',
+                        funnelAlign: 'left',
+                        max: 1548
+                    }
+                }
+            },
+            restore : {show: true},
+            saveAsImage : {show: true}
+        }
+    },
+    calculable : true,
+    series : [
+        {
+            name:'支付方式',
+            type:'pie',
+            radius : '55%',
+            center: ['50%', '60%'],
+            data:[
+                {value:335, name:'WECHAT'},
+                {value:310, name:'JDPAY'},
+            ]
+        }
+    ]
+};
+                    
+myChart.setOption(option);
+</script>
 </div>
