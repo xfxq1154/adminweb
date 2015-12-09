@@ -26,8 +26,8 @@ class SdataController extends Base{
         $end_created = $this->getRequest()->get('end_time');
         $showcase_id = $this->getRequest()->get('showcase_id');
         if(!$start_created || !$end_created){
-            $start_created = date('Y-m-d',strtotime('-8 day')).' 00:00:00';
-            $end_created = date('Y-m-d',strtotime('-1 day')).' 00:00:00';
+            $start_created = date('Y-m-d',strtotime('-7 day')).' 00:00:00';
+            $end_created = date('Y-m-d',strtotime('today')).' 00:00:00';
         }
         $params['showcase_id'] = $showcase_id;
         $params['start_created'] = $start_created;
