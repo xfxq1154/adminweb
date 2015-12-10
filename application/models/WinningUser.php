@@ -14,7 +14,7 @@ class WinningUserModel {
     public $adminLog;
 
     public function __construct() {
-        $this->dbMaster = $this->getDb('operate');
+        $this->dbMaster = $this->getDb('master_operate');
         $this->adminLog = new AdminLogModel();
     }
 

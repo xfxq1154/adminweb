@@ -13,7 +13,7 @@ class WorksModel{
     public $tableName = '`poster`';
     
     public function __construct() {
-        $this->dbMaster = $this->getDb('operate');
+        $this->dbMaster = $this->getDb('master_operate');
     }
     
     /**
@@ -78,7 +78,7 @@ class WorksModel{
             $stmt = $this->dbMaster->prepare($sql);
             return $stmt->execute();
         } catch (Exception $exc) {
-            return FALSE;
+            Tools::error($exc);
         }
     }
 
