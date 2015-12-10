@@ -15,7 +15,7 @@ class IndexController extends Base {
 
     //从2.1开始, errorAction支持直接通过参数获取异常
     public function indexAction() {
-
+        
         $userInfo = $this->userInfo;
         $navlist = $this->adminNav->getNavList($userInfo['group']);
         $navlist = $this->adminNav->formatIconNav($navlist);
@@ -29,7 +29,7 @@ class IndexController extends Base {
             }
             
         }
-
+        krsort($navlist);
         foreach ($navlist as $key => $nav) {
             if($nav['menu']){
                 foreach ($nav['menu'] as $menu){
@@ -49,13 +49,12 @@ class IndexController extends Base {
                 $nav['tags'] = array_values($nav_tag[$nav['order']]);
                 unset($nav['menu']);
             }
-            $navlist[$key] = $nav;
+            $navlist2[] = $nav;
+            
         }
-        
-        //var_dump($navlist);
-//        unset($navlist[0]);
+        $this->assign('uid', $userInfo['id']);
         $this->assign('nav_tag', $nav_tag);
-        $this->getView()->assign('nav', $navlist);
+        $this->getView()->assign('nav', $navlist2);
 
     }
 }
