@@ -3,7 +3,9 @@
 class TagController extends Base {
 
     use Trait_Layout, Trait_Pagger;
-
+    
+    public $tags;
+    
     public function init() {
         $this->initAdmin();
         $this->tags = new TagsModel();
@@ -37,5 +39,22 @@ class TagController extends Base {
         } else {
             $this->layout('tag/add.phtml');
         }
+    }
+    
+    public function deleteAction(){
+        $this->checkRole();
+        $id = json_decode($this->getRequest()->getPost('data'), true)['id'];
+        
+        if(empty($id)){
+            return FALSE;
+        }
+        $rs = $this->tags->delete($id);
+        
+        if($rs){
+            Tools::output(['info' => '删除成功', 'status' => 1, 'url' => '/tag/delete']);
+        } else {
+            Tools::output(['info' => '删除失败', 'status' => 0]);
+        }
+        exit;
     }
 }

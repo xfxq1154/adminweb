@@ -25,6 +25,7 @@
                         <th width="100">ID</th>
                         <th width="*">Nav 顶级分类ID</th>
                         <th width="*">标签名</th>
+                        <th width="*">操作</th>
                     </tr>
                     <?php if ($tags) : ?>
                         <?php foreach($tags as $val) : ?>
@@ -32,6 +33,7 @@
                                 <td><?php echo $val['tag_id']; ?></td>
                                 <td><?php echo $val['tag_top_id']; ?></td>
                                 <td><?php echo $val['tag_name']; ?></td>
+                                <td><a class="button bg-red button-small icon-trash-o js-del" href="javascript:;" url="/Tag/delete" data='{"id":<?php echo $val['tag_id']; ?>}' title="删除"></a></td>
                             </tr>
                         <?php endforeach; ?>
                     <?php endif; ?>

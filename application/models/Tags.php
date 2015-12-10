@@ -16,7 +16,7 @@ class TagsModel {
     public function selectAll($limit = '') {
 
         try {
-            $sql = 'SELECT * FROM ' . $this->tableName . ($limit ? ' LIMIT ' . $limit : '');;
+            $sql = 'SELECT * FROM ' . $this->tableName . ($limit ? ' LIMIT ' . $limit : '');
             $stmt = $this->dbMaster->prepare($sql);
             $stmt->execute();
 
@@ -66,6 +66,19 @@ class TagsModel {
             return $this->dbMaster->lastInsertId();
         } catch (PDOException $e) {
             die($e->getMessage());
+        }
+    }
+    
+    public function delete($id){
+        if(empty($id)){
+            return FALSE;
+        }
+        $sql = "DELETE FROM $this->tableName WHERE tag_id = :id";
+        try {
+            $stmt = $this->dbMaster->prepare($sql);
+            return $stmt->execute(array(':id'=>$id));
+        } catch (Exception $ex) {
+            Tools::error($ex); 
         }
     }
 }
