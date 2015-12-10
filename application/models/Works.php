@@ -34,6 +34,20 @@ class WorksModel{
     }
     
     /**
+     * 总榜中奖用户
+     */
+    public function totalDay(){
+        try {
+            $sql = "SELECT * FROM $this->tableName ORDER BY uv DESC LIMIT 5";
+            $stmt = $this->dbMaster->prepare($sql);
+            $stmt->execute();
+            return $stmt->fetchALL(PDO::FETCH_ASSOC);
+        } catch (Exception $ex) {
+            return FALSE;
+        }
+    }
+    
+    /**
      * get count
      *
      * @return mixed int or false

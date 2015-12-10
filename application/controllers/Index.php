@@ -29,7 +29,7 @@ class IndexController extends Base {
             }
             
         }
-        krsort($navlist);
+//        krsort($navlist);
         foreach ($navlist as $key => $nav) {
             if($nav['menu']){
                 foreach ($nav['menu'] as $menu){
@@ -52,9 +52,11 @@ class IndexController extends Base {
             $navlist2[] = $nav;
             
         }
+        $user[8] = $navlist2[0];
+        unset($navlist2[0]);
         $this->assign('uid', $userInfo['id']);
         $this->assign('nav_tag', $nav_tag);
-        $this->getView()->assign('nav', $navlist2);
+        $this->getView()->assign('nav', $navlist2 + $user);
 
     }
 }

@@ -1,12 +1,17 @@
-<script language="JavaScript" type="text/javascript" src="<?=ASSET_URL?>/static/js/calendar/WdatePicker.js"></script>
+<script language="JavaScript" type="text/javascript" src="<?=ASSET_URL?>/admincenter/js/calendar/WdatePicker.js"></script>
 <div class="dux-tools">
-    <div class="bread-head">中奖用户<span class="small">中奖用户</span></div><br>
+    <div class="bread-head">中奖用户<span class="small">总榜中奖用户</span></div><br>
 </div>
+<div class="tools-function clearfix">
+    <div class="float-left">&nbsp;
+        <a class="button button-small bg-main icon-list" href="/Operate/oneday/">日榜中奖用户</a>
+    </div>
+</div> 
 <div class="admin-main">
 <div class="panel dux-box">
    <div class="table-tools clearfix ">
        <div class="float-left">
-           <form method="get" action="/operate/winning">
+<!--           <form method="get" action="/operate/winning">
                 <div class="form-inline">
                     <div class="form-group">
                         <div class="field">
@@ -23,31 +28,31 @@
                         <button class="button" type="submit">查询</button>
                     </div>
                 </div>
-            </form>
+            </form>-->
        </div>
     </div>
     <div class="table-responsive">
         <table id="table" class="table table-hover ">
             <tbody>
                 <tr>
-                    <th width="*">日期</th>
+                    <th width="*">作品ID</th>
                     <th width="*">OPENID</th>
-                    <th width="*">微信昵称</th>
+                    <th width="*">用户作品</th>
                     <th width="*">真实姓名</th>
                     <th width="*">手机号</th>
+                    <th width="*">微信昵称</th>
                     <th width="*">浏览数</th>
-                    <th width="*">页面URL</th>
                 </tr>
         <?php if ($list) : ?>
             <?php foreach ($list as $key => $val) : ?>
                 <tr>
-                    <td><?=$val['ctime']?></td>
+                    <td><?=$val['id']?></td>
                     <td><?=$val['openid']?></td>
-                    <td><?=$val['nickname']?></td>
+                    <td><a href="<?=$val['poster_img_url']?>" target="_black"><?=$val['poster_img_url']?></a></td>
                     <td><?=$val['name']?></td>
                     <td><?=$val['phone']?></td>
-                    <td><?=$val['browse']?></td>
-                    <td><?=$val['page_url']?></td>
+                    <td><?=$val['nickname']?></td>
+                    <td><?=$val['uv']?></td>
                 </tr>
             <?php endforeach; ?>
         <?php endif; ?>	
