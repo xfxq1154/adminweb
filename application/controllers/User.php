@@ -78,7 +78,6 @@ class UserController extends Base {
 
         $list = $this->admin->getAdminList();
         $groups = $this->adminUser->getGroups();
-
         foreach ($list as &$val) {
             $val['gname'] = isset($groups[$val['id']]['name']) ?
                     $groups[$val['id']]['name'] : '无用户组';
@@ -257,5 +256,5 @@ class UserController extends Base {
             exit;
         }
     }
-
+    
 }

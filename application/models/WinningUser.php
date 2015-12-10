@@ -9,6 +9,8 @@ class WinningUserModel {
 
     public $dbMaster; //主从数据库 配置
     public $tableName = '`user`';
+    public $tableNmae_rank = '`ranking`';
+    public $tableName_poster = '`poster`';
     public $adminLog;
 
     public function __construct() {
@@ -22,17 +24,30 @@ class WinningUserModel {
      * @param string limit
      * @return array result
      */
-    public function getList($limit = '',$where = '') {
-
+    public function total() {
+        $sql = "SELECT a.*,b.name,b.nickname,b.phone FROM $this->tableName_poster a left join $this->tableName b on a.openid = b.openid WHERE `delete` = 1 ORDER BY uv DESC LIMIT 5";
+        
         try {
-            $sql = 'SELECT * FROM ' . $this->tableName . ' where 1  '.$where.' ORDER BY id DESC ' .
-                    ($limit ? ' LIMIT ' . $limit : '');
             $stmt = $this->dbMaster->prepare($sql);
             $stmt->execute();
-
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             die($e->getMessage());
+        }
+    }
+    
+    /**
+     * ranking 中奖用户
+     */
+    public function isWinning() {
+        $sql = "SELECT a.*,b.name,b.nickname,b.phone FROM $this->tableNmae_rank a left join $this->tableName b on a.openid = b.openid WHERE rank >= 1 AND rank <= 3 AND update_time <> DATE_FORMAT(NOW(),'%Y-%m-%d')";
+        
+        try {
+            $stmt = $this->dbMaster->prepare($sql);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $exc) {
+            return FALSE;
         }
     }
 
