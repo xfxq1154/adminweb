@@ -26,7 +26,7 @@ class SdataController extends Base{
         $end_created = $this->getRequest()->get('end_time');
         $showcase_id = $this->getRequest()->get('showcase_id');
         if(!$start_created || !$end_created){
-            $start_created = date('Y-m-d',strtotime('today'));
+            $start_created = date('Y-m-d',strtotime('-7 day'));
             $end_created = date('Y-m-d',strtotime('today'));
         }
         $params['showcase_id'] = $showcase_id;
@@ -80,7 +80,7 @@ class SdataController extends Base{
         }
         
         $this->assign('result', array('下单笔数'=>$order_num_string, '付款笔数'=>$paied_num_string, '付款金额'=>$paied_sum_string));
-        $this->layout('sdata/index.phtml');
+        $this->layout('sdata/order.phtml');
     }
     
     public function _get_time_string($start_created, $end_created) {
