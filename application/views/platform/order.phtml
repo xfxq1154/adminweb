@@ -45,10 +45,10 @@
                         <th width="*">店铺ID</th>
                         <th width="*">买家UID</th>
                         <th width="*">收货人姓名</th>
-                        <th width="*">收货人手机号</th>
+                        <th width="*">支付方式</th>
                         <th width="*">订单状态</th>
                         <th width="*">付款时间</th>
-                        <!--<th width="100">操作</th>-->
+                        <th width="*">订单创建时间</th>
                     </tr>
                     <?php if ($list) : ?>
                         <?php foreach ($list as $val) : ?>
@@ -58,7 +58,7 @@
                                 <td><?php echo $val['showcase_id']; ?></td>
                                 <td><?php echo $val['buyer_id'] ? : '--'; ?></td>
                                 <td><?php echo $val['receiver_name'] ? :'--'; ?></td>
-                                <td><?php echo $val['receiver_mobile'] ? : '--'; ?></td>
+                                <td><span class="tag bg-<?=$bg = $val['pay_type'] == 'WECHAT' ? 'blue' : 'green';?>"><?php echo $val['pay_type'] == 'WECHAT' ? '微信支付' : '京东支付'; ?></span></td>
                                 <?php
                                 switch ($val['state']){
                                     case 'WAIT_BUYER_PAY':
@@ -84,10 +84,7 @@
                                 ?>
                                 <td><span class="tag bg-<?=$bg?>"><?php echo $val['state_name']; ?></span></td>
                                 <td><?php echo $val['pay_time']; ?></td>
-<!--                                <td>
-                                    <a class="button bg-blue button-small icon-pencil" href="/bporder/edit/id/<?php echo $val['order_id']; ?>" title="编辑"></a>
-                                    <a class="button bg-red button-small icon-trash-o js-del" href="javascript:;" url="/bporder/delete" data='{"id":"<?php echo $val['order_id']; ?>"}' title="删除"></a>
-                                </td>-->
+                                <td><?php echo $val['create_time'];?></td>
                             </tr>
                         <?php endforeach; ?>
                     <?php endif; ?>
