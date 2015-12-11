@@ -43,9 +43,9 @@ class SdataController extends Base{
             $paied_people += $val['paied_people'];  //付款人数
             $paied_num_total += $val['paied_num'];     //付款笔数
             $paied_sum_total += $val['paied_sum'];  //付款金额
-            $paied_people_sum += $val['paied_people_sum'];  //客单价
-            
         }
+        $paied_people_sum = $paied_sum_total / $paied_people;  //客单价
+        
         $this->assign('start_time', $start_created);
         $this->assign('end_time', $end_created);
         $this->assign('showcase_id', $showcase_id);
