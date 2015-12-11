@@ -66,9 +66,9 @@ class SdataController extends Base{
                     $paied_num[] = $data[$val]['paied_num'];  //付款笔数
                     $paied_sum[] = $data[$val]['paied_sum'];  //付款金额
                 } else {
-                    $order_num[] = '';  //下单笔数
-                    $paied_num[] = '';  //付款笔数
-                    $paied_sum[] = '';  //付款金额
+                    $order_num[] = 0;  //下单笔数
+                    $paied_num[] = 0;  //付款笔数
+                    $paied_sum[] = 0;  //付款金额
                 }
             }
 
@@ -79,7 +79,9 @@ class SdataController extends Base{
             $this->assign('dates', implode(',', $dates));
         }
         
-        $this->assign('result', array('下单笔数'=>$order_num_string, '付款笔数'=>$paied_num_string, '付款金额'=>$paied_sum_string));
+        $this->assign('order_num_string', $order_num_string);
+        $this->assign('paied_num_string', $paied_num_string);
+        $this->assign('paied_sum_string', $paied_sum_string);
         $this->layout('sdata/order.phtml');
     }
     

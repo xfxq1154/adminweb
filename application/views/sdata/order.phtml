@@ -155,34 +155,56 @@
 </script>
 <script type="text/javascript">
     // 基于准备好的dom，初始化echarts图表
-    var myChart = echarts.init(document.getElementById('main')); 
-
+    var myChart = echarts.init(document.getElementById('main'), 'macarons'); 
     var option = {
-        tooltip: {
-            show: true
+        tooltip : {
+            trigger: 'axis'
         },
         legend: {
             data:['下单笔数','付款笔数','付款金额']
         },
+        toolbox: {
+            show : true,
+            feature : {
+                mark : {show: true},
+                dataView : {show: true, readOnly: false},
+                magicType : {show: true, type: ['line', 'bar']},
+                restore : {show: true},
+                saveAsImage : {show: true}
+            }
+        },
+        calculable : true,
         xAxis : [
             {
                 type : 'category',
+                boundaryGap : false,
                 data : [<?=$dates?>]
             }
         ],
         yAxis : [
             {
-                type : 'value'
+                type : 'value',
+                axisLabel : {
+                    formatter: '{value} °C'
+                }
             }
         ],
         series : [
-            <?php foreach($result as $key => $val):?>
             {
-                "name":"<?=$key?>",
-                "type":"bar",
-                "data":[<?=$val?>]
+                name:'下单笔数',
+                type:'line',
+                data:[<?=$order_num_string?>],
             },
-            <?php endforeach;?>
+            {
+                name:'付款笔数',
+                type:'line',
+                data:[<?=$paied_num_string?>],
+            },
+            {
+                name:'付款金额',
+                type:'line',
+                data:[<?=$paied_sum_string?>],
+            }
         ]
     };
 
