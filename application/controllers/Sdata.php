@@ -34,7 +34,10 @@ class SdataController extends Base{
         $params['end_created'] = $end_created;
         
         $result = $this->sdata->getList($params);
-        
+        $order_people = 0;
+        $paied_people = 0;
+        $paied_num_total = 0;
+        $paied_sum_total = 0;
         foreach ($result as $val){
             $key = '"'.date('m-d',strtotime($val['date'])).'"';
             $data[$key] = $val;
@@ -44,7 +47,10 @@ class SdataController extends Base{
             $paied_num_total += $val['paied_num'];     //付款笔数
             $paied_sum_total += $val['paied_sum'];  //付款金额
         }
-        $paied_people_sum = $paied_sum_total / $paied_people;  //客单价
+        $paied_people_sum = 0;
+        if($paied_people > 0){
+            $paied_people_sum = $paied_sum_total / $paied_people;  //客单价
+        }
         
         $this->assign('start_time', $start_created);
         $this->assign('end_time', $end_created);
