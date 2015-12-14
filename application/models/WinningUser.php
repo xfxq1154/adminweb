@@ -40,7 +40,10 @@ class WinningUserModel {
      * ranking 中奖用户
      */
     public function isWinning() {
-        $sql = "SELECT a.*,b.name,b.nickname,b.phone FROM $this->tableNmae_rank a left join $this->tableName b on a.openid = b.openid WHERE rank >= 1 AND rank <= 3 AND update_time <> DATE_FORMAT(NOW(),'%Y-%m-%d')";
+        
+        $where = " rank >= 1 AND rank <= 3 AND update_time <> DATE_FORMAT(NOW(),'%Y-%m-%d') ";
+        $where .= " AND update_time >= '2015-12-14 00:00:00' AND update_time <= '2015-12-21 00:00:00'";
+        $sql = "SELECT a.*,b.name,b.nickname,b.phone FROM $this->tableNmae_rank a left join $this->tableName b on a.openid = b.openid WHERE $where ";
         
         try {
             $stmt = $this->dbMaster->prepare($sql);
