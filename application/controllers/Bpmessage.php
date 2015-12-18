@@ -23,7 +23,7 @@ class BpmessageController extends Base{
         $t = (int) $this->getRequest()->get('t',9);
         $p = (int) $this->getRequest()->get('p' ,1);
         
-        $page_size = 10;
+        $page_size = 20;
         $message_list = [
             'page_no'=> $p,
             'page_size'=> $page_size,
