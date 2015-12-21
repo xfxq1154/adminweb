@@ -9,15 +9,15 @@ class BpShowcaseController extends Base {
 
     use Trait_Layout,
         Trait_Pagger;
-
+    
     public $showcase;
-
+    const  UCAPI_URL = 'user/register';
     public function init() {
         $this->initAdmin();
         $this->checkRole();
         $this->showcase = new BpShowcaseModel();
     }
-
+    
     function indexAction() {
         $t = (int) $this->getRequest()->get('t');
         $p = (int) $this->getRequest()->getParam('p', 1);
@@ -51,6 +51,59 @@ class BpShowcaseController extends Base {
         $showcases = $this->showcase->getInfoById($showcase_id);
         $this->assign("showcase", $showcases);
         $this->layout('platform/showcase_info.phtml');
+    }
+    
+    /**
+     * 创建店铺
+     */
+    public function createAction(){
+        if($_POST){
+            $data['phone'] = $_POST['phone'];
+            $data['password'] = $_POST['pw'];
+            $data['resname'] = $_POST['resname'];
+            $data['nickname'] = $_POST['nickname'];
+            $data['signature'] = $_POST['signature'];
+            $data['wechat'] = $_POST['wechat'];
+            $data['phone_message'] = $_POST['message'];
+            $data['intro'] = $_POST['summary'];
+            $data['name'] = $_POST['sname'];
+            
+            
+            $params['mobile'] = $_POST['phone'];
+            $params['passwd'] = $_POST['pw'];
+            $rs = Ucapi::request(self::UCAPI_URL, $params, 'POST' ,TRUE);
+            
+            if(!empty($rs)){
+                $data['user_id'] = $rs['user_id'];
+            }
+            
+            $resule = $this->showcase->create($data);
+            if($resule === FALSE){
+                $error = $this->showcase->getError();
+                switch ($error){
+                    case 40001:
+                        $msg = '店铺名称已存在';
+                        $code = 40001; 
+                    break;
+                    case 40002:
+                        $msg = '此用户以创建店铺';
+                        $code = 40002; 
+                    break;
+                    case 10007:
+                        $msg = '缺少参数';
+                        $code = 10007; 
+                    break;
+                    case 10004:
+                        $msg = '系统异常';
+                        $code = 10004; 
+                    break;
+                }
+                echo json_encode(['info' => $msg, 'status' => $code, 'url' => 'bpshowcase/create']);exit;
+            }
+            echo json_encode(['info' => '创建成功', 'status' => 1]);
+            exit;
+        }
+        $this->layout('platform/add_showcase.phtml');
     }
     
     /**

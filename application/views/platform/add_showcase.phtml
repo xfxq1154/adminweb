@@ -1,0 +1,123 @@
+<div class="dux-tools">
+    <div class="bread-head">店铺管理<span class="small">添加大神</span>
+        <div class="float-right">
+            <a class="button button-small bg-main icon-list" href="/bpshowcase/index">店铺列表</a>
+        </div>
+    </div>
+</div>
+<div class="admin-main">
+    <form method="post" class="form-x dux-form form-auto" id="form" action="/bpshowcase/create" enctype="multipart/form-data">
+        <div class="tab dux-tab">
+            <div class="panel dux-box  active">
+                <div class="tab-body">
+                    <div class="tab-panel active" id="tab-1">
+                        <div class="form-group">
+                            <div class="label">
+                                <label>店铺名称:</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="sname" name="sname" size="60" datatype="*1-14" errormsg="最多14个字符" value="" placeholder="店铺名称">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="label">
+                                <label>主账号:</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="phone" name="phone" size="60" datatype="*1-14" errormsg="最多14个字符" value="" placeholder="主账号">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="label">
+                                <label>主账号密码:</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="password" name="pw" size="60" datatype="*1-14" errormsg="最多14个字符" value="" placeholder="主账号密码">
+                                <button class="button bg-green" type="button" id="pass" style="width: 130px; height: 40px;">生成随机密码</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="label">
+                                <label>真实姓名:</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="resname" name="resname" size="60" datatype="*1-14" errormsg="最多14个字符" value="" placeholder="真实姓名">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="label">
+                                <label>大神花名:</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="nickname" name="nickname" size="60" datatype="*1-14" errormsg="最多14个字符" value="" placeholder="大神花名">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="label">
+                                <label>大神签名:</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:320px;" id="signature" name="signature" size="60" datatype="*1-50" errormsg="最多50个字符" value="" placeholder="大神签名">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="label">
+                                <label>可公开给买家的微信号:</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="wechat" name="wechat" size="60" datatype="*1-50" errormsg="最多50个字符" value="" placeholder="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="label">
+                                <label>接受系统消息的手机号:</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="message" name="message" size="60" datatype="*1-11" errormsg="最多50个字符" value="" placeholder="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="label">
+                                <label>大神简要介绍:</label>
+                            </div>
+                            <div class="field">
+                                <textarea type="text" class="input  Validform_error" style="width: 500px; height: 150px;" id="summary" name="summary" nullmsg="请填写信息！"></textarea>
+                            </div>
+                        </div>
+                        <div class="panel-foot">
+                            <div class="form-button">
+                                <div id="tips"></div>
+                                <button class="button bg-main" type="submit">保存</button>
+                                <button class="button bg" type="reset">重置</button>
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    //生成随机密码
+    $(document).ready(function(){
+        $('#pass').click(function(){
+            var len = 7;
+            var str = 'ABCD0EFGHIJKL8MNOPQRS7TU3VW4XYZ9abcde1fghijkl5mno2pqrstuvwxyz_';
+            var maxPos = str.length;
+            var pwd = '';
+            for (i = 0; i <= len; i++){
+                pwd += str.charAt(Math.floor(Math.random() * maxPos));
+            }
+            $("#password").val(pwd);
+        })
+    })
+</script>
+
+<script  type="text/javascript">
+    Do.ready('base', function () {
+        //表单综合处理
+        $('#form').duxFormPage();
+        
+    });
+</script>
