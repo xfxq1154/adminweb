@@ -22,7 +22,7 @@
             <li><a href="<?= $paggerObj->getPageUrl($paggerObj->getNext()) ?>">下一页</a></li>
             <li><a href="<?= $paggerObj->getPageUrl($paggerObj->getLast()) ?>">末页</a></li>
         <?php endif; ?>
-            <li><a>共<?= $paggerObj->getPageCount() ?>页</a></li>
+            <li><a>共<?= $paggerObj->getPageCount() ?>页,<?= $paggerObj->getTotalRecord() ?>条记录</a></li>
         <!--li><a>去第<input type="text" class="page_go" value="<?=$paggerObj->getPageCount()?>">页</a></li-->
     </ul>
 <?php endif; ?>
