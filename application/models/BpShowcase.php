@@ -70,13 +70,18 @@ class BpShowcaseModel {
         return Sapi::request(self::SHOWCASE_DELETE, $params, "POST");
     }
 
-    public function block($order_id) {
-        $params['showcase_id'] = $order_id;
-        return Sapi::request(self::SHOWCASE_BLOCK, $params, "POST");
+    public function block($params) {
+        if(empty($params)){
+            return FALSE;
+        }
+        $result = Sapi::request(self::SHOWCASE_BLOCK, $params, "POST");
+        return $result;
     }
 
-    public function unblock($order_id) {
-        $params['showcase_id'] = $order_id;
+    public function unblock($params) {
+        if(empty($params)){
+            return;
+        }
         return Sapi::request(self::SHOWCASE_UNBLOCK, $params, "POST");
     }
     

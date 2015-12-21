@@ -11,7 +11,11 @@ class BpShowcaseController extends Base {
         Trait_Pagger;
     
     public $showcase;
-    const  UCAPI_URL = 'user/register';
+    
+    const UCAPI_URL = 'user/register';
+    const UPAPI_URL_UPPW = 'user/update_pwd';
+    const UPAPI_GETINFO = 'user/getinfo';
+    
     public function init() {
         $this->initAdmin();
         $this->checkRole();
@@ -67,11 +71,9 @@ class BpShowcaseController extends Base {
             $data['phone_message'] = $_POST['message'];
             $data['intro'] = $_POST['summary'];
             $data['name'] = $_POST['sname'];
-            
-            
             $params['mobile'] = $_POST['phone'];
             $params['passwd'] = $_POST['pw'];
-            $rs = Ucapi::request(self::UCAPI_URL, $params, 'POST' ,TRUE);
+            $rs = Ucapi::request(self::UCAPI_URL, $params, 'POST');
             
             if(!empty($rs)){
                 $data['user_id'] = $rs['user_id'];
@@ -83,28 +85,54 @@ class BpShowcaseController extends Base {
                 switch ($error){
                     case 40001:
                         $msg = '店铺名称已存在';
-                        $code = 40001; 
                     break;
                     case 40002:
-                        $msg = '此用户以创建店铺';
-                        $code = 40002; 
+                        $msg = '此用户已创建店铺';
                     break;
-                    case 10007:
+                    case 10001:
                         $msg = '缺少参数';
-                        $code = 10007; 
                     break;
-                    case 10004:
+                    case 10000:
                         $msg = '系统异常';
-                        $code = 10004; 
                     break;
                 }
-                echo json_encode(['info' => $msg, 'status' => $code, 'url' => 'bpshowcase/create']);exit;
+                Tools::output(array('info'=>$msg,'status'=>1));
             }
-            echo json_encode(['info' => '创建成功', 'status' => 1]);
-            exit;
+            Tools::output(array('info'=>'创建成功','status'=>1,'url'=>'/bpshowcase/create'));
         }
         $this->layout('platform/add_showcase.phtml');
     }
+    
+    /*
+     * 重设密码
+     */
+    public function resetAction(){
+        if($_POST){
+            $user_id = $_POST['user_id'];
+            $pw = $_POST['pw'];
+            
+            if(!$user_id || !$pw){
+                Tools::output(array('info'=>'缺少参数','status'=>1));
+            }
+            $info = Ucapi::request(self::UPAPI_GETINFO, array('uid'=>$user_id));
+            if($info['phone']){
+                $phone = $info['phone'];
+            }else{
+                Tools::output(array('info'=>'手机号为空','status'=>1));
+            }
+            $result = Ucapi::request(self::UPAPI_URL_UPPW, array('mobile'=>$phone,'newpwd'=>$pw), 'POST');
+            if($result){
+                Tools::output(array('info'=>'修改成功','status'=>1, 'url'=>'/bpshowcase/index'));
+            }
+            Tools::output(array('info'=>'修改失败','status'=>1));
+        }
+        $name = $this->getRequest()->get('title');
+        $user_id = $this->getRequest()->get('user_id');
+        $this->assign('title', urldecode($name));
+        $this->assign('user_id', $user_id);
+        $this->layout('platform/reset.phtml');
+    }
+    
     
     /**
      * 商户审核
@@ -131,12 +159,16 @@ class BpShowcaseController extends Base {
      */
     function blockAction() {
         $showcase_id = json_decode($this->getRequest()->getPost('data'), true)['id'];
-//        echo "id is ".$showcase_id;
-        $result = $this->showcase->block($showcase_id);
-//        var_dump($result);
-        $msg = ($result === "") ? "冻结成功" : "冻结失败";
-        $status = ($result === "") ? 1 : 0;
-        echo json_encode(['info' => $msg, 'status' => $status]);
+        if(!$showcase_id){
+            return FALSE;
+        }
+        $params['showcase_id'] = $showcase_id;
+        $result = $this->showcase->block($params);
+        if($result){
+            Tools::output(['info' => '冻结失败', 'status' => 0]);
+        }  else {
+            Tools::output(['info' => '冻结成功', 'status' => 1, 'url' => '/bpshowcase/index']);
+        }
         exit;
     }
     
@@ -145,10 +177,16 @@ class BpShowcaseController extends Base {
      */
     function unblockAction() {
         $showcase_id = json_decode($this->getRequest()->getPost('data'), true)['id'];
-        $result = $this->showcase->unblock($showcase_id);
-        $msg = ($result == "") ? "解冻成功" : "解冻失败";
-        $status = ($result == "") ? 1 : 0;
-        echo json_encode(['info' => $msg, 'status' => $status]);
+        if(!$showcase_id){
+            return FALSE;
+        }
+        $params['showcase_id'] = $showcase_id;
+        $result = $this->showcase->unblock($params);
+        if($result){
+            Tools::output(['info' => '解冻失败', 'status' => 0]);
+        }  else {
+            Tools::output(['info' => '解冻成功', 'status' => 1, 'url' => '/bpshowcase/index']);
+        }
         exit;
     }
     

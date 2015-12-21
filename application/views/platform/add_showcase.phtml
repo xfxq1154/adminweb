@@ -6,7 +6,7 @@
     </div>
 </div>
 <div class="admin-main">
-    <form method="post" class="form-x dux-form form-auto" id="form" action="/bpshowcase/create" enctype="multipart/form-data">
+    <form method="post" class="form-x dux-form form-auto" id="form" action="/bpshowcase/create" >
         <div class="tab dux-tab">
             <div class="panel dux-box  active">
                 <div class="tab-body">
@@ -16,7 +16,7 @@
                                 <label>店铺名称:</label>
                             </div>
                             <div class="field">
-                                <input type="text" class="input" style="width:220px;" id="sname" name="sname" size="60" datatype="*1-14" errormsg="最多14个字符" value="" placeholder="店铺名称">
+                                <input type="text" class="input" style="width:220px;" id="sname" name="sname" size="60" datatype="*1-14" errormsg="最多14个字符" value="" placeholder="">
                             </div>
                         </div>
                         <div class="form-group">
@@ -24,7 +24,7 @@
                                 <label>主账号:</label>
                             </div>
                             <div class="field">
-                                <input type="text" class="input" style="width:220px;" id="phone" name="phone" size="60" datatype="*1-14" errormsg="最多14个字符" value="" placeholder="主账号">
+                                <input type="text" class="input" style="width:220px;" id="phone" name="phone" size="60" datatype="*1-14" errormsg="最多14个字符" value="" placeholder="">
                             </div>
                         </div>
                         <div class="form-group">
@@ -32,7 +32,7 @@
                                 <label>主账号密码:</label>
                             </div>
                             <div class="field">
-                                <input type="text" class="input" style="width:220px;" id="password" name="pw" size="60" datatype="*1-14" errormsg="最多14个字符" value="" placeholder="主账号密码">
+                                <input type="text" class="input" style="width:220px;" id="password" name="pw" size="60" datatype="*1-14" errormsg="最多14个字符" value="" placeholder="">
                                 <button class="button bg-green" type="button" id="pass" style="width: 130px; height: 40px;">生成随机密码</button>
                             </div>
                         </div>
@@ -42,7 +42,7 @@
                                 <label>真实姓名:</label>
                             </div>
                             <div class="field">
-                                <input type="text" class="input" style="width:220px;" id="resname" name="resname" size="60" datatype="*1-14" errormsg="最多14个字符" value="" placeholder="真实姓名">
+                                <input type="text" class="input" style="width:220px;" id="resname" name="resname" size="60" datatype="*1-14" errormsg="最多14个字符" value="" placeholder="">
                             </div>
                         </div>
                         <div class="form-group">
@@ -50,7 +50,7 @@
                                 <label>大神花名:</label>
                             </div>
                             <div class="field">
-                                <input type="text" class="input" style="width:220px;" id="nickname" name="nickname" size="60" datatype="*1-14" errormsg="最多14个字符" value="" placeholder="大神花名">
+                                <input type="text" class="input" style="width:220px;" id="nickname" name="nickname" size="60" datatype="*1-14" errormsg="最多14个字符" value="" placeholder="">
                             </div>
                         </div>
                         <div class="form-group">
@@ -58,7 +58,7 @@
                                 <label>大神签名:</label>
                             </div>
                             <div class="field">
-                                <input type="text" class="input" style="width:320px;" id="signature" name="signature" size="60" datatype="*1-50" errormsg="最多50个字符" value="" placeholder="大神签名">
+                                <input type="text" class="input" style="width:320px;" id="signature" name="signature" size="60" datatype="*1-50" errormsg="最多50个字符" value="" placeholder="">
                             </div>
                         </div>
                         <div class="form-group">
@@ -98,8 +98,13 @@
         </div>
     </form>
 </div>
-<script>
-    //生成随机密码
+<script  type="text/javascript">
+    Do.ready('base', function () {
+        //表单综合处理
+        $('#form').duxFormPage();
+    });
+
+//    //生成随机密码
     $(document).ready(function(){
         $('#pass').click(function(){
             var len = 7;
@@ -112,12 +117,4 @@
             $("#password").val(pwd);
         })
     })
-</script>
-
-<script  type="text/javascript">
-    Do.ready('base', function () {
-        //表单综合处理
-        $('#form').duxFormPage();
-        
-    });
 </script>

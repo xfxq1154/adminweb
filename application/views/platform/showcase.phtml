@@ -1,11 +1,5 @@
 <div class="dux-tools">
     <div class="bread-head">商户管理<span class="small">商户列表</span>
-<!--        <div class="button-group float-right">
-            <a class="button button-small bg-dot icon-plus dropdown-toggle"> 添加 <span class="downward"></span></a>
-            <ul class="drop-menu pull-right">
-                <li><a href="/user/add">添加用户</a></li>
-            </ul>
-        </div>-->
     </div>
     <br>
     <div class="tools-function clearfix">
@@ -15,7 +9,12 @@
             <a class="button button-small bg-main icon-list" href="/bpshowcase?t=2">待审企业</a>
             <a class="button button-small bg-main icon-list" href="/bpshowcase?t=3">已冻结</a>
         </div>
-        
+        <div class="button-group float-right">
+            <a class="button button-small bg-dot icon-plus dropdown-toggle"> 添加 <span class="downward"></span></a>
+            <ul class="drop-menu pull-right">
+                <li><a href="/bpshowcase/create">添加店铺</a></li>
+            </ul>
+        </div>
     </div> 
 </div>
 <div class="admin-main">
@@ -29,8 +28,6 @@
                         <th width="*">店铺名称</th>
                         <th width="*">店铺别名</th>
                         <th width="*">店主昵称</th>
-<!--                        <th width="*">店主签名</th>-->
-                        <!--<th width="*">店铺摘要</th>-->
                         <th width="*">大神认证状态</th>
                         <th width="*">企业认证状态</th>
                         <th width="*">冻结</th>
@@ -45,17 +42,16 @@
                                 <td><a href="/bpshowcase/info?id=<?=$val['showcase_id']?>"><?php echo $val['name']; ?></a></td>
                                 <td><a href="/sdata/order?showcase_id=<?=$val['showcase_id']?>"><?php echo $val['alias']; ?></a></td>
                                 <td><?php echo $val['nickname'] ? : '--'; ?></td>
-<!--                                <td><?php echo $val['signature'] ? :'--'; ?></td>-->
-<!--                                <td><?php echo $val['intro']; ?></td>-->
                                 <td><a href="/bpshowcase/auditing?showcase_id=<?=$val['showcase_id']?>&type=1"><?php echo $val['status_person_name'] ?></a></td>
                                 <td><a href="/bpshowcase/auditing?showcase_id=<?=$val['showcase_id']?>&type=2"><?php echo $val['status_com_name'] ?></a></td>
                                 <td><?php echo $val['block'] == 1 ? "是" : '否';?></td>
                                 <td><?php echo $val['ctime']; ?></td>
                                 <td>
-                                    <?php if ($val[block] == "0") : ?>
-                                    <a href="javascript:;" url="/bpshowcase/block" data='{"id":<?php echo $val['showcase_id']; ?>}' title="冻结" class="button bg-red button-small icon-lock js-action" success="location.reload()"></a>
+                                    <a class="button bg-green button-small" href="/bpshowcase/reset/id/<?php echo $val['showcase_id'];?>/user_id/<?=$val['user_id']?>/title/<?=$val['name']?>" title="重置密码">重置密码</a>
+                                    <?php if ($val['block'] == "0") : ?>
+                                    <a href="javascript:;" url="/bpshowcase/block" data='{"id":<?php echo $val['showcase_id']; ?>}' title="冻结" class="button bg-red button-small icon-lock js-action" ></a>
                                     <?php else : ?>
-                                    <a href="javascript:;" url="/bpshowcase/unblock" data='{"id":<?php echo $val['showcase_id']; ?>}' title="解冻" class="button bg-green button-small icon-unlock js-action" success="location.reload()"></a>
+                                    <a href="javascript:;" url="/bpshowcase/unblock" data='{"id":<?php echo $val['showcase_id']; ?>}' title="解冻" class="button bg-green button-small icon-unlock js-action" ></a>
                                     <?php endif; ?>
                                 </td>
                             </tr>
@@ -71,8 +67,8 @@
         </div>
     <?php endif;?>
     <script>
-    Do.ready('base', function () {
-    $('#table').duxTable();
-    });
+        Do.ready('base', function () {
+        $('#table').duxTable();
+        });
     </script>
 </div>
