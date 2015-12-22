@@ -17,6 +17,7 @@ class BpShowcaseModel {
     const SHOWCASE_PASS = 'showcase/pass';
     const SHOWCASE_UNPASS = 'showcase/unpass';
     const SHOWCASE_CREATE = 'showcase/create';
+    const PAYMENT_SELLER_ACCOUNT = 'api/accounts/';
     
     const SHOWCASE_UPGRADESUCCESS ='showcase/upgradesuccess';
     const SHOWCASE_UPGRADEFAIL ='showcase/upgradefail';
@@ -43,11 +44,24 @@ class BpShowcaseModel {
         return $this->format_showcase_batch($result);
     }
     
+    /**
+     * 创建店铺
+     */
     public function create($params){
         $result = Sapi::request(self::SHOWCASE_CREATE, $params, 'POST');
         if($result === FALSE){
             $this->_setError();
         }
+        return $result;
+    }
+    
+    /**
+     * 通知支付平台
+     */
+    public function createPaymentSellerAccount($showcase_id){
+        $url = PAYMENT_HOST.self::PAYMENT_SELLER_ACCOUNT;
+        $params['user_id'] = $showcase_id;
+        $result = Curl::request($url, $params, 'post');
         return $result;
     }
 

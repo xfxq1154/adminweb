@@ -98,6 +98,7 @@ class BpShowcaseController extends Base {
                 }
                 Tools::output(array('info'=>$msg,'status'=>1));
             }
+            $this->showcase->createPaymentSellerAccount($resule);
             Tools::output(array('info'=>'创建成功','status'=>1,'url'=>'/bpshowcase/create'));
         }
         $this->layout('platform/add_showcase.phtml');
