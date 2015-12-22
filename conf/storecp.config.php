@@ -28,3 +28,4 @@ define('SAPI_SOURCE_ID','WEB0001');
 
 define('SDATA_HOST','http://sdata.yanbo.dev.com/');
 define('SDATA_SOURCE_ID','WEB0001');
+define('UC_API','http://http://ucapi.dev.didatrip.com/');

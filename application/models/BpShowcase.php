@@ -16,12 +16,13 @@ class BpShowcaseModel {
     const SHOWCASE_UNBLOCK = 'showcase/unblock';
     const SHOWCASE_PASS = 'showcase/pass';
     const SHOWCASE_UNPASS = 'showcase/unpass';
+    const SHOWCASE_CREATE = 'showcase/create';
+    const PAYMENT_SELLER_ACCOUNT = 'api/accounts/';
     
     const SHOWCASE_UPGRADESUCCESS ='showcase/upgradesuccess';
     const SHOWCASE_UPGRADEFAIL ='showcase/upgradefail';
-
-
     const SHOWCASE_APPROVE_DETAIL = 'showcase/approve_detail';
+    private $_error = null;
 
     
     
@@ -39,8 +40,29 @@ class BpShowcaseModel {
     }
     
     public function getList($params) {
-        $result = $this->request(self::SHOWCASE_LIST, $params);
+        $result = Sapi::request(self::SHOWCASE_LIST, $params);
         return $this->format_showcase_batch($result);
+    }
+    
+    /**
+     * 创建店铺
+     */
+    public function create($params){
+        $result = Sapi::request(self::SHOWCASE_CREATE, $params, 'POST');
+        if($result === FALSE){
+            $this->_setError();
+        }
+        return $result;
+    }
+    
+    /**
+     * 通知支付平台
+     */
+    public function createPaymentSellerAccount($showcase_id){
+        $url = PAYMENT_HOST.self::PAYMENT_SELLER_ACCOUNT;
+        $params['user_id'] = $showcase_id;
+        $result = Curl::request($url, $params, 'post');
+        return $result;
     }
 
     public function getInfoById($showcase_id) {
@@ -48,52 +70,57 @@ class BpShowcaseModel {
             //return false;
         }
         $params['showcase_id'] = $showcase_id;
-        $result = $this->request(self::SHOWCASE_DETAIL, $params);
+        $result = Sapi::request(self::SHOWCASE_DETAIL, $params);
 
         return $this->format_showcase_struct($result);
     }
 
     public function update($params) {
-        return $this->request(self::SHOWCASE_UPDATE, $params, "POST");
+        return Sapi::request(self::SHOWCASE_UPDATE, $params, "POST");
     }
 
     public function delete($order_id) {
         $params['showcase_id'] = $order_id;
-        return $this->request(self::SHOWCASE_DELETE, $params, "POST");
+        return Sapi::request(self::SHOWCASE_DELETE, $params, "POST");
     }
 
-    public function block($order_id) {
-        $params['showcase_id'] = $order_id;
-        return $this->request(self::SHOWCASE_BLOCK, $params, "POST");
+    public function block($params) {
+        if(empty($params)){
+            return FALSE;
+        }
+        $result = Sapi::request(self::SHOWCASE_BLOCK, $params, "POST");
+        return $result;
     }
 
-    public function unblock($order_id) {
-        $params['showcase_id'] = $order_id;
-        return $this->request(self::SHOWCASE_UNBLOCK, $params, "POST");
+    public function unblock($params) {
+        if(empty($params)){
+            return;
+        }
+        return Sapi::request(self::SHOWCASE_UNBLOCK, $params, "POST");
     }
     
     public function pass($showcase_id, $type) {
         $params['showcase_id'] = $showcase_id;
         $params['type'] = $type;
-        return $this->request(self::SHOWCASE_PASS, $params, "POST");
+        return Sapi::request(self::SHOWCASE_PASS, $params, "POST");
     }
     
     public function unpass($showcase_id, $refuse_reason, $type) {
         $params['showcase_id'] = $showcase_id;
         $params['refuse_reason'] = $refuse_reason;
         $params['type'] = $type;
-        return $this->request(self::SHOWCASE_UNPASS, $params, "POST");
+        return Sapi::request(self::SHOWCASE_UNPASS, $params, "POST");
     }
     
     public function upgradesuccess($showcase_id) {
         $params['showcase_id'] = $showcase_id;
-        return $this->request(self::SHOWCASE_UPGRADESUCCESS, $params, "POST");
+        return Sapi::request(self::SHOWCASE_UPGRADESUCCESS, $params, "POST");
     }
     
     public function upgradefail($showcase_id, $refuse_reason) {
         $params['showcase_id'] = $showcase_id;
         $params['refuse_reason'] = $refuse_reason;
-        return $this->request(self::SHOWCASE_UPGRADEFAIL, $params, "POST");
+        return Sapi::request(self::SHOWCASE_UPGRADEFAIL, $params, "POST");
     }
 
     /*
@@ -168,23 +195,37 @@ class BpShowcaseModel {
         }
         return $datas;
     }
-
-    private function request($uri, $params = array(), $requestMethod = 'GET', $jsonDecode = true, $headers = array(), $timeout = 10) {
-
-        $sapi = $this->getApi('sapi');
-
-        $params['sourceid'] = Yaf_Application::app()->getConfig()->api->sapi->source_id;
-        $params['timestamp'] = time();
-
-        $result = $sapi->request($uri, $params, $requestMethod);
-        
-        if (isset($result['status_code']) && $result['status_code'] == 0) {
-            return isset($result['data']) ? $result['data'] : array();
-        } else {
-            echo $result;
-            echo json_encode($result);
-            return false;
+    
+    private function _setError(){
+        $error_info = Sapi::getError();
+        $code = $error_info['code'];
+        switch ($code){
+            case 10006:
+                $this->_error = 10002;
+                break;
+            case 10007:
+                $this->_error = 10001;
+                break;
+            case 40001:
+                $this->_error = 40001;
+                break;
+            case 40002:
+                $this->_error = 40002;
+                break;
+            case 40003:
+                $this->_error = 40003;
+                break;
+            case 40004:
+                $this->_error = 40004;
+                break;
+            default :
+                $this->_error = 10000;
+                break;
         }
+    }
+    
+    public function getError(){
+        return $this->_error;
     }
 
 }
