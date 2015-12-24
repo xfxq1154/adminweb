@@ -82,7 +82,7 @@
             </div>
             <br>
         </div>
-        <div class="xm2">
+<!--        <div class="xm2">
             <div class="panel dux-box dux-dashboard">
                 <div class="clearfix">
                     <div class="media media-x ">
@@ -97,8 +97,8 @@
                 </div>
             </div>
             <br>
-        </div>
-        <div class="xm2">
+        </div>-->
+        <div class="xm3">
             <div class="panel dux-box dux-dashboard">
                 <div class="clearfix">
                     <div class="media media-x ">
@@ -114,7 +114,7 @@
             </div>
             <br>
         </div>
-        <div class="xm2">
+        <div class="xm3">
             <div class="panel dux-box dux-dashboard">
                 <div class="clearfix">
                     <div class="media media-x ">
@@ -133,9 +133,11 @@
     </div>
     
     <div class="panel dux-box">
+        <div class="panel-head">交易趋势</div>
         <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
         <div id="main" style="height:400px"></div>
     </div>
+    <br>
     <div class="line-big">
         <div class="xm6">
             <div class="panel dux-box">
@@ -232,9 +234,8 @@ myChart.hideLoading();
 // 图表使用-------------------
 option = {
     title : {
-        text: '支付方式统计',
-        subtext: '订单数量',
-        x:'center'
+        text:'支付方式统计',
+        x: 'center'
     },
     tooltip : {
         trigger: 'item',
@@ -243,113 +244,30 @@ option = {
     legend: {
         orient : 'vertical',
         x : 'left',
-        data:['WECHAT','JDPAY']
+        data:[]
     },
-    toolbox: {
-        show : true,
-        feature : {
-            mark : {show: true},
-            dataView : {show: true, readOnly: false},
-            magicType : {
-                show: true, 
-                type: ['pie', 'funnel'],
-                option: {
-                    funnel: {
-                        x: '25%',
-                        width: '60%',
-                        funnelAlign: 'left',
-                        max: 1548
-                    }
-                }
-            },
-            restore : {show: true},
-            saveAsImage : {show: true}
-        }
-    },
-    calculable : true,
+    calculable : false,
     series : [
+        
         {
-            name:'支付方式',
+            name:'支付单数',
             type:'pie',
-            radius : '55%',
-            center: ['50%', '60%'],
+            radius : [10, 140],
+            
+            // for funnel
+            x: '60%',
+            width: '35%',
+            funnelAlign: 'left',
+            max: 1048,
+            
             data:[
-                {value:335, name:'WECHAT'},
-                {value:310, name:'JDPAY'},
+                {value:<?=$paied_num_wx?>, name:'微信支付'},
+                {value:<?=$paied_num_jd?>, name:'京东支付'}
             ]
         }
     ]
 };
-                    
-myChart.setOption(option);
-</script>
-<script type="text/javascript">
-    // 图表实例化------------------
-// srcipt标签式引入
-var myChart = echarts.init(document.getElementById('pie2'));
-
-// 过渡---------------------
-myChart.showLoading({
-    text: '正在努力的读取数据中...',    //loading话术
-});
-
-// ajax getting data...............
-
-// ajax callback
-myChart.hideLoading();
-
-// 图表使用-------------------
-option = {
-    title : {
-        text: '支付方式统计',
-        subtext: '支付金额',
-        x:'center'
-    },
-    tooltip : {
-        trigger: 'item',
-        formatter: "{a} <br/>{b} : {c} ({d}%)"
-    },
-    legend: {
-        orient : 'vertical',
-        x : 'left',
-        data:['WECHAT','JDPAY']
-    },
-    toolbox: {
-        show : true,
-        feature : {
-            mark : {show: true},
-            dataView : {show: true, readOnly: false},
-            magicType : {
-                show: true, 
-                type: ['pie', 'funnel'],
-                option: {
-                    funnel: {
-                        x: '25%',
-                        width: '60%',
-                        funnelAlign: 'left',
-                        max: 1548
-                    }
-                }
-            },
-            restore : {show: true},
-            saveAsImage : {show: true}
-        }
-    },
-    calculable : true,
-    series : [
-        {
-            name:'支付方式',
-            type:'pie',
-            radius : '55%',
-            center: ['50%', '60%'],
-            data:[
-                {value:335, name:'WECHAT'},
-                {value:310, name:'JDPAY'},
-            ]
-        }
-    ]
-};
-                    
+                     
 myChart.setOption(option);
 </script>
 </div>
