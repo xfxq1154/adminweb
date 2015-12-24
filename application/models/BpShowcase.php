@@ -19,6 +19,7 @@ class BpShowcaseModel {
     const SHOWCASE_CREATE = 'showcase/create';
     const PAYMENT_SELLER_ACCOUNT = 'api/accounts/';
     
+    
     const SHOWCASE_UPGRADESUCCESS ='showcase/upgradesuccess';
     const SHOWCASE_UPGRADEFAIL ='showcase/upgradefail';
     const SHOWCASE_APPROVE_DETAIL = 'showcase/approve_detail';
@@ -61,13 +62,15 @@ class BpShowcaseModel {
     public function createPaymentSellerAccount($showcase_id){
         $url = PAYMENT_HOST.self::PAYMENT_SELLER_ACCOUNT;
         $params['user_id'] = $showcase_id;
+        $params['channels'] = 'WECHAT,JDPAY';
+        $params['sys_code'] = 'PLATFORM';
         $result = Curl::request($url, $params, 'post');
         return $result;
     }
-
+    
     public function getInfoById($showcase_id) {
         if (!$showcase_id) {
-            //return false;
+            return false;
         }
         $params['showcase_id'] = $showcase_id;
         $result = Sapi::request(self::SHOWCASE_DETAIL, $params);
