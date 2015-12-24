@@ -70,7 +70,7 @@ class BpShowcaseModel {
     
     public function getInfoById($showcase_id) {
         if (!$showcase_id) {
-            //return false;
+            return false;
         }
         $params['showcase_id'] = $showcase_id;
         $result = Sapi::request(self::SHOWCASE_DETAIL, $params);
