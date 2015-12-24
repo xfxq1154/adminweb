@@ -31,6 +31,8 @@ class SdataModel {
             'order_sum' => $data['order_sum'],
             'order_people' => $data['order_people'],
             'paied_num' => $data['paied_num'],
+            'paied_num_wx' => $data['paied_num_wx'],
+            'paied_num_jd' => $data['paied_num_jd'],
             'paied_sum' => $data['paied_sum'],
             'paied_people' => $data['paied_people'],
             'paied_people_repeat' => $data['paied_people_repeat'],
