@@ -22,7 +22,10 @@ class BpShowcaseController extends Base {
         $this->showcase = new BpShowcaseModel();
     }
     
-    function indexAction() {
+    /**
+     * 店铺详情页
+     */
+    public function indexAction() {
         $t = (int) $this->getRequest()->get('t');
         $p = (int) $this->getRequest()->getParam('p', 1);
         $size = 10;
@@ -40,8 +43,8 @@ class BpShowcaseController extends Base {
                 $params['block'] = 1;
                 break;  
         }
-        $params[page_no] = $p;
-        $params[page_size] = $size;
+        $params['page_no'] = $p;
+        $params['page_size'] = $size;
         $showcasesList = $this->showcase->getList($params);
         $count = $showcasesList['total_nums'];
 
@@ -49,8 +52,11 @@ class BpShowcaseController extends Base {
         $this->renderPagger($p, $count, '/bpshowcase/index/p/{p}/t/'.$t, $size);
         $this->layout("platform/showcase.phtml");
     }
-
-    function infoAction() {
+    
+    /**
+     * 店铺简介
+     */
+    public function infoAction() {
         $showcase_id = $this->getrequest()->get('id');
         $showcases = $this->showcase->getInfoById($showcase_id);
         $this->assign("showcase", $showcases);
@@ -139,7 +145,7 @@ class BpShowcaseController extends Base {
     /**
      * 商户审核
      */
-    function auditingAction() {
+    public function auditingAction() {
         $showcase_id = $this->getrequest()->get('showcase_id');
         if(!$showcase_id){
             Tools::output(['info' => '店铺ID为空', 'status' => 0]);
@@ -155,7 +161,7 @@ class BpShowcaseController extends Base {
     /**
      * API:冻结
      */
-    function blockAction() {
+    public function blockAction() {
         $showcase_id = json_decode($this->getRequest()->getPost('data'), true)['id'];
         if(!$showcase_id){
             return FALSE;
@@ -173,7 +179,7 @@ class BpShowcaseController extends Base {
     /**
      * API:解冻
      */
-    function unblockAction() {
+    public function unblockAction() {
         $showcase_id = json_decode($this->getRequest()->getPost('data'), true)['id'];
         if(!$showcase_id){
             return FALSE;
@@ -191,7 +197,7 @@ class BpShowcaseController extends Base {
     /**
      * API:驳回
      */
-    function unpassAction() {
+    public function unpassAction() {
         $showcase_id = json_decode($this->getRequest()->getPost('data'), true)['id'];
         $refuse_reason = json_decode($this->getRequest()->getPost('data'), true)['refuse_reason'];
         if(!$showcase_id){
@@ -209,7 +215,7 @@ class BpShowcaseController extends Base {
      /**
      * API:审核通过
      */
-    function passAction() {
+    public function passAction() {
         $showcase_id = json_decode($this->getRequest()->getPost('data'), true)['id'];
         if(!$showcase_id){
             Tools::output(['info' => '店铺ID为空', 'status' => 0]);
@@ -220,30 +226,6 @@ class BpShowcaseController extends Base {
         } else {
             Tools::output(['info'=>'认证成功', 'status' => 1, 'url' => '/bpshowcase/index']);
         }
-        exit;
-    }
-    
-    /**
-     * API:升级通过
-     */
-    function upgradesuccessAction() {
-        $showcase_id = json_decode($this->getRequest()->getPost('data'), true)['id'];
-        $result = $this->showcase->upgradesuccess($showcase_id,$refuse_reason);
-        $msg = ($result == "") ? "审核成功" : "审核失败";
-        $status = ($result == "") ? 1 : 0;
-        echo json_encode(['info' => $msg, 'status' => $status]);
-        exit;
-    }
-    /**
-     * API:升级驳回
-     */
-    function upgradefailAction() {
-        $showcase_id = json_decode($this->getRequest()->getPost('data'), true)['id'];
-        $refuse_reason = json_decode($this->getRequest()->getPost('data'), true)['refuse_reason'];
-        $result = $this->showcase->upgradefail($showcase_id,$refuse_reason);
-        $msg = ($result == "") ? "驳回成功" : "驳回失败";
-        $status = ($result == "") ? 1 : 0;
-        echo json_encode(['info' => $msg, 'status' => $status]);
         exit;
     }
 }

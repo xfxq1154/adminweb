@@ -35,7 +35,9 @@ class BpShowcaseModel {
     );
     
     
-    //店铺申请认证
+    /**
+     * 店铺申请认证
+     */
     public function approve_detail($showcase_id){
         if(!$showcase_id){
             return FALSE;
@@ -45,7 +47,13 @@ class BpShowcaseModel {
         return $this->tidy_approve($result);
     }
     
+    /**
+     * 店铺列表
+     */
     public function getList($params) {
+        if(empty($params)){
+            return FALSE;
+        }
         $result = Sapi::request(self::SHOWCASE_LIST, $params);
         return $this->format_showcase_batch($result);
     }
@@ -73,25 +81,9 @@ class BpShowcaseModel {
         return $result;
     }
     
-    public function getInfoById($showcase_id) {
-        if (!$showcase_id) {
-            return false;
-        }
-        $params['showcase_id'] = $showcase_id;
-        $result = Sapi::request(self::SHOWCASE_DETAIL, $params);
-
-        return $this->format_showcase_struct($result);
-    }
-
-    public function update($params) {
-        return Sapi::request(self::SHOWCASE_UPDATE, $params, "POST");
-    }
-
-    public function delete($order_id) {
-        $params['showcase_id'] = $order_id;
-        return Sapi::request(self::SHOWCASE_DELETE, $params, "POST");
-    }
-
+    /**
+     * 冻结店铺
+     */
     public function block($params) {
         if(empty($params)){
             return FALSE;
@@ -99,7 +91,10 @@ class BpShowcaseModel {
         $result = Sapi::request(self::SHOWCASE_BLOCK, $params, "POST");
         return $result;
     }
-
+    
+    /**
+     * 解冻店铺
+     */
     public function unblock($params) {
         if(empty($params)){
             return;
@@ -130,15 +125,17 @@ class BpShowcaseModel {
         return Sapi::request(self::SHOWCASE_UNPASS, $params, "POST");
     }
     
-    public function upgradesuccess($showcase_id) {
+    /**
+     * 店铺简介
+     */
+    public function getInfoById($showcase_id) {
+        if (!$showcase_id) {
+            return false;
+        }
         $params['showcase_id'] = $showcase_id;
-        return Sapi::request(self::SHOWCASE_UPGRADESUCCESS, $params, "POST");
-    }
-    
-    public function upgradefail($showcase_id, $refuse_reason) {
-        $params['showcase_id'] = $showcase_id;
-        $params['refuse_reason'] = $refuse_reason;
-        return Sapi::request(self::SHOWCASE_UPGRADEFAIL, $params, "POST");
+        $result = Sapi::request(self::SHOWCASE_DETAIL, $params);
+
+        return $this->format_showcase_struct($result);
     }
 
     /*
