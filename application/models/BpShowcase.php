@@ -33,10 +33,15 @@ class BpShowcaseModel {
         '2' => '已驳回审核',
         '3' => '已通过审核'
     );
-
+    
+    
+    //店铺申请认证
     public function approve_detail($showcase_id){
+        if(!$showcase_id){
+            return FALSE;
+        }
         $params['showcase_id'] = $showcase_id;
-        $result = $this->request(self::SHOWCASE_APPROVE_DETAIL, $params);
+        $result = Sapi::request(self::SHOWCASE_APPROVE_DETAIL, $params);
         return $this->tidy_approve($result);
     }
     
@@ -102,16 +107,26 @@ class BpShowcaseModel {
         return Sapi::request(self::SHOWCASE_UNBLOCK, $params, "POST");
     }
     
-    public function pass($showcase_id, $type) {
+    /**
+     * 通过认证
+     */
+    public function pass($showcase_id) {
+        if(!$showcase_id){
+            return FALSE;
+        }
         $params['showcase_id'] = $showcase_id;
-        $params['type'] = $type;
         return Sapi::request(self::SHOWCASE_PASS, $params, "POST");
     }
     
-    public function unpass($showcase_id, $refuse_reason, $type) {
+    /**
+     * 店铺认证驳回
+     */
+    public function unpass($showcase_id, $refuse_reason) {
+        if(!$showcase_id || !$refuse_reason){
+            return FALSE;
+        }
         $params['showcase_id'] = $showcase_id;
         $params['refuse_reason'] = $refuse_reason;
-        $params['type'] = $type;
         return Sapi::request(self::SHOWCASE_UNPASS, $params, "POST");
     }
     
@@ -145,11 +160,16 @@ class BpShowcaseModel {
         $s['com_scope_pro'] = $approve['com_scope_pro'];
         $s['com_expire'] = $approve['com_expire'];
         $s['create_time'] = $approve['create_time'];
-        $s['status_person'] = $approve['showcase_info']['status_person'];
-        $s['status_com'] = $approve['showcase_info']['status_com'];
+        $s['status_person'] = $approve['status_person'];
+        $s['status_com'] = $approve['status_com'];
+        $s['register_branch'] = $approve['register_branch'];
         $s['com_id_pic1'] = $approve['com_id_pic1'];
         $s['com_id_pic2'] = $approve['com_id_pic2'];
         $s['com_id_pic3'] = $approve['com_id_pic3'];
+        $s['com_id_pic4'] = $approve['com_id_pic4'];
+        $s['com_id_pic5'] = $approve['com_id_pic5'];
+        $s['com_id_pic6'] = $approve['com_id_pic6'];
+        $s['com_id_pic7'] = $approve['com_id_pic7'];
         $s['com_register_address'] = $approve['com_register_address'];
         return $s;
     }

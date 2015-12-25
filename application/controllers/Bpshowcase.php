@@ -141,18 +141,14 @@ class BpShowcaseController extends Base {
      */
     function auditingAction() {
         $showcase_id = $this->getrequest()->get('showcase_id');
-        $type = $this->getrequest()->get('type');
+        if(!$showcase_id){
+            Tools::output(['info' => '店铺ID为空', 'status' => 0]);
+        }
         $info = $this->showcase->approve_detail($showcase_id);
         $this->assign("info", $info);
-        $this->assign("type", $type);
         $this->assign("showcase_id", $showcase_id);
         $this->assign("refuse", json_encode($this->getView()->render('platform/showcase_refuse.phtml')));
-        
-        if ($type == 1) {
-            $this->layout("platform/showcase_auditing_person.phtml");
-        }else{
-            $this->layout("platform/showcase_auditing_com.phtml");
-        }
+        $this->layout("platform/showcase_auditing_com.phtml");
         
     }
 
@@ -198,11 +194,15 @@ class BpShowcaseController extends Base {
     function unpassAction() {
         $showcase_id = json_decode($this->getRequest()->getPost('data'), true)['id'];
         $refuse_reason = json_decode($this->getRequest()->getPost('data'), true)['refuse_reason'];
-        $type = json_decode($this->getRequest()->getPost('data'), true)['type'];
-        $result = $this->showcase->unpass($showcase_id,$refuse_reason,$type);
-        $msg = ($result == "") ? "驳回成功" : "驳回失败";
-        $status = ($result == "") ? 1 : 0;
-        echo json_encode(['info' => $msg, 'status' => $status]);
+        if(!$showcase_id){
+            Tools::output(['info' => '店铺ID为空', 'status' => 0]);
+        }
+        $result = $this->showcase->unpass($showcase_id,$refuse_reason);
+        if($result){
+            Tools::output(['info'=>'驳回失败', 'status' => 0]);
+        }else{
+            Tools::output(['info'=>'驳回成功', 'status' => 1, 'url' => '/bpshowcase/index']);
+        }
         exit;
     }
     
@@ -211,11 +211,15 @@ class BpShowcaseController extends Base {
      */
     function passAction() {
         $showcase_id = json_decode($this->getRequest()->getPost('data'), true)['id'];
-        $type = json_decode($this->getRequest()->getPost('data'), true)['type'];
+        if(!$showcase_id){
+            Tools::output(['info' => '店铺ID为空', 'status' => 0]);
+        }
         $result = $this->showcase->pass($showcase_id,$type);
-        $msg = ($result == "") ? "审核成功" : "审核失败";
-        $status = ($result == "") ? 1 : 0;
-        echo json_encode(['info' => $msg, 'status' => $status]);
+        if($result){
+            Tools::output(['info'=>'认证失败', 'status' => 0]);
+        } else {
+            Tools::output(['info'=>'认证成功', 'status' => 1, 'url' => '/bpshowcase/index']);
+        }
         exit;
     }
     
