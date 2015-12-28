@@ -16,6 +16,9 @@ class BpShowcaseController extends Base {
     const UPAPI_URL_UPPW = 'user/update_pwd';
     const UPAPI_GETINFO = 'user/getinfo';
     
+    const ADMIN = '0';
+
+
     public function init() {
         $this->initAdmin();
         $this->checkRole();
@@ -70,7 +73,7 @@ class BpShowcaseController extends Base {
         if($_POST){
             $data['phone'] = $_POST['phone'];
             $data['password'] = $_POST['pw'];
-            $data['resname'] = $_POST['resname'];
+            $data['realname'] = $_POST['resname'];
             $data['nickname'] = $_POST['nickname'];
             $data['signature'] = $_POST['signature'];
             $data['wechat'] = $_POST['wechat'];
@@ -106,6 +109,15 @@ class BpShowcaseController extends Base {
             }
             //通知支付平台
             $this->showcase->createPaymentSellerAccount($resule);
+            //添加到管理员表
+            $clerk_date['user_id'] = $rs['user_id'];
+            $clerk_date['group_id'] = self::ADMIN;
+            $clerk_date['phone'] = $data['phone'];
+            $clerk_date['showcase_id'] = $resule;
+            $clerk_date['realname'] = $data['realname'];
+            
+            $this->showcase->addClerk($clerk_date);
+            
             Tools::output(array('info'=>'创建成功','status'=>1,'url'=>'/bpshowcase/create'));
         }
         $this->layout('platform/add_showcase.phtml');

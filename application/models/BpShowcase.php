@@ -19,6 +19,8 @@ class BpShowcaseModel {
     const SHOWCASE_CREATE = 'showcase/create';
     const PAYMENT_SELLER_ACCOUNT = 'api/accounts/';
     
+    const CLERK_ADDCLERK = 'clerk/create';
+    
     
     const SHOWCASE_UPGRADESUCCESS ='showcase/upgradesuccess';
     const SHOWCASE_UPGRADEFAIL ='showcase/upgradefail';
@@ -136,6 +138,20 @@ class BpShowcaseModel {
         $result = Sapi::request(self::SHOWCASE_DETAIL, $params);
 
         return $this->format_showcase_struct($result);
+    }
+    
+    /*
+     * 添加店员
+     */
+    public function addClerk($params){
+        if(empty($params)){
+            return FALSE;
+        }
+        $result = Sapi::request(self::CLERK_ADDCLERK, $params, "POST");
+        if($result === FALSE){
+            $this->_setError();
+        }
+        return $result;
     }
 
     /*
