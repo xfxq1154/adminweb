@@ -109,9 +109,7 @@ class BpShowcaseController extends Base {
             }
             //通知支付平台
             $auccount_status = $this->showcase->createPaymentSellerAccount($resule);
-            if($auccount_status['code'] == 0){
-                Tools::output(array('info'=>'创建成功','status'=>1,'url'=>'/bpshowcase'));
-            } else {
+            if($auccount_status['code'] != 0){
                 Tools::output(array('info'=>'创建失败','status'=>0));
             }
             //添加到管理员表
