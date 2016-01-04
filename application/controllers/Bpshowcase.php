@@ -12,13 +12,8 @@ class BpShowcaseController extends Base {
     
     public $showcase;
     
-    const UCAPI_URL = 'user/register';
-    const UPAPI_URL_UPPW = 'user/update_pwd';
-    const UPAPI_GETINFO = 'user/getinfo';
+    const ADMIN = '0'; //店长
     
-    const ADMIN = '0';
-
-
     public function init() {
         $this->initAdmin();
         $this->checkRole();
@@ -82,7 +77,8 @@ class BpShowcaseController extends Base {
             $data['name'] = $_POST['sname'];
             $params['mobile'] = $_POST['phone'];
             $params['passwd'] = $_POST['pw'];
-            $rs = Ucapi::request(self::UCAPI_URL, $params, 'POST');
+            //ucapi 用户注册
+            $rs = $this->showcase->register($params);
             if(empty($rs)){
                 Tools::output(array('info'=>'参数错误','status'=>1));
             }
@@ -136,13 +132,15 @@ class BpShowcaseController extends Base {
             if(!$user_id || !$pw){
                 Tools::output(array('info'=>'缺少参数','status'=>1));
             }
-            $info = Ucapi::request(self::UPAPI_GETINFO, array('uid'=>$user_id));
+            //ucapi 用户详情
+            $info = $this->showcase->getInfo(array('uid'=>$user_id));
             if($info['phone']){
                 $phone = $info['phone'];
             }else{
                 Tools::output(array('info'=>'手机号为空','status'=>1));
             }
-            $result = Ucapi::request(self::UPAPI_URL_UPPW, array('mobile'=>$phone,'newpwd'=>$pw), 'POST');
+            //ucapi 修改密码
+            $result = $this->showcase->UpPwd(array('mobile'=>$phone,'newpwd'=>$pw));
             if($result){
                 Tools::output(array('info'=>'修改成功','status'=>1, 'url'=>'/bpshowcase/index'));
             }

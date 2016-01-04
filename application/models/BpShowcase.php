@@ -21,13 +21,12 @@ class BpShowcaseModel {
     
     const CLERK_ADDCLERK = 'clerk/create';
     
-    
-    const SHOWCASE_UPGRADESUCCESS ='showcase/upgradesuccess';
-    const SHOWCASE_UPGRADEFAIL ='showcase/upgradefail';
     const SHOWCASE_APPROVE_DETAIL = 'showcase/approve_detail';
-    private $_error = null;
-
     
+    const UCAPI_REGISTER = 'user/register';
+    const UCAPI_UPPW = 'user/update_pwd';
+    const UCAPI_GETINFO = 'user/getinfo';
+    private $_error = null;
     
     private $showcase_status = array(
         '0' => '草稿',
@@ -149,7 +148,49 @@ class BpShowcaseModel {
         }
         $result = Sapi::request(self::CLERK_ADDCLERK, $params, "POST");
         if($result === FALSE){
-            $this->_setError();
+            return FALSE;
+        }
+        return $result;
+    }
+    
+    /*
+     * 用户注册
+     */
+    public function register($params){
+        if(empty($params)){
+            return FALSE;
+        }
+        $result = Ucapi::request(self::UCAPI_REGISTER, $params, 'POST');
+        if($result === FALSE){
+            return FALSE;
+        }
+        return $result;
+    }
+    
+    /**
+     * 用户详情
+     */
+    public function getInfo($params){
+        if(empty($params)){
+            return FALSE;
+        }
+        $result = Ucapi::request(self::UCAPI_GETINFO,  $params);
+        if($result === FALSE){
+            return FALSE;
+        }
+        return $result;
+    }
+    
+    /**
+     * 修改密码
+     */
+    public function UpPwd($params){
+        if(empty($params)){
+            return FALSE;
+        }
+        $result = Ucapi::request(self::UCAPI_UPPW, $params, 'POST');
+        if($result === FALSE){
+            return FALSE;
         }
         return $result;
     }
