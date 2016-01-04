@@ -1,31 +1,14 @@
 <div class="dux-tools">
     <div class="bread-head">店铺管理<span class="small">店铺审核</span>
-
         <div class="float-right">
-            <a class="button button-small bg-main icon-list" href="/bpshowcase">
-            店铺列表</a>  
+            <a class="button button-small bg-main icon-list" href="/bpshowcase">店铺列表</a>
         </div>
-
     </div>
-
-    <!-- <div class="tools-function clearfix">
-        <div class="float-left">
-            <a class="button button-small bg-main icon-list" href="javascript:;">
-            内容列表</a>
-        </div>
-        <div class="button-group float-right">
-            <a class="button button-small bg-dot icon-plus dropdown-toggle"> 添加 <span class="downward"></span></a>
-            <ul class="drop-menu pull-right">
-                <li><a href="/admin.php?r=duxcms/AdminFormData/add&fieldset_id=1">添加内容</a></li>
-            </ul>
-        </div>
-    </div> -->
 </div>
 <div class="admin-main">
     <form method="post" class="form-x dux-form form-auto" id="form" action="/bpshowcase/edit">
         <div class="tab dux-tab">
             <div class="panel dux-box  active">
-                <!-- tab head start-->
                 <div class="panel-head">
                     <div class="tab-head">
                         <strong>店铺管理</strong>
@@ -34,12 +17,7 @@
                         </ul>
                     </div>
                 </div>
-                <!-- tab head end -->
-
-                <!-- table body start-->
                  <div class="tab-body">
-
-                    <!-- tab 1 start -->
                     <div class="tab-panel active" id="tab-1">
                         <div class="form-group">
                             <div class="label">
@@ -123,20 +101,19 @@
                                 <p><img src="<?php echo $info['com_id_pic1']; ?>" width="600px"></p>
                                 <p><img src="<?php echo $info['com_id_pic2']; ?>" width="600px"></p>
                                 <p><img src="<?php echo $info['com_id_pic3']; ?>" width="600px"></p>
+                                <p><img src="<?php echo $info['com_id_pic4']; ?>" width="600px"></p>
+                                <p><img src="<?php echo $info['com_id_pic5']; ?>" width="600px"></p>
+                                <p><img src="<?php echo $info['com_id_pic6']; ?>" width="600px"></p>
+                                <p><img src="<?php echo $info['com_id_pic7']; ?>" width="600px"></p>
                             </div>
                         </div>
                     </div>
-                    <!-- tab 1 end  -->
                 </div>
-                <!-- table body end -->
-
                 <div class="panel-foot">
                     <div class="form-button">
-                        <div id="tips"></div>
-                        <button class="button bg" type="reset">加入黑名单</button>
                         <?php if ($info['status_com'] == 1) : ?>
-                        <a href="javascript:;" url="/bpshowcase/unpass" data='{"id":"<?=$showcase_id?>","type":"<?=$type?>"}' title="驳回" class="button bg js-open" success="location.reload()">驳回</a>
-                        <a href="javascript:;" url="/bpshowcase/pass" data='{"id":"<?=$showcase_id?>","type":"<?=$type?>"}' title="通过认证" class="button bg-main js-action" success="location.reload()">通过认证</a>
+                        <a href="javascript:;" url="/bpshowcase/unpass" data='{"id":"<?=$showcase_id?>"}' title="驳回" class="button bg js-open">驳回</a>
+                        <a href="javascript:;" url="/bpshowcase/pass" data='{"id":"<?=$showcase_id?>"}' title="通过认证" class="button bg-main js-action">通过认证</a>
                         <?php endif; ?>
                     </div>
                 </div>

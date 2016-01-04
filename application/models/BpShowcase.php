@@ -19,13 +19,14 @@ class BpShowcaseModel {
     const SHOWCASE_CREATE = 'showcase/create';
     const PAYMENT_SELLER_ACCOUNT = 'api/accounts/';
     
+    const CLERK_ADDCLERK = 'clerk/create';
     
-    const SHOWCASE_UPGRADESUCCESS ='showcase/upgradesuccess';
-    const SHOWCASE_UPGRADEFAIL ='showcase/upgradefail';
     const SHOWCASE_APPROVE_DETAIL = 'showcase/approve_detail';
-    private $_error = null;
-
     
+    const UCAPI_REGISTER = 'user/register';
+    const UCAPI_UPPW = 'user/update_pwd';
+    const UCAPI_GETINFO = 'user/getinfo';
+    private $_error = null;
     
     private $showcase_status = array(
         '0' => '草稿',
@@ -33,14 +34,27 @@ class BpShowcaseModel {
         '2' => '已驳回审核',
         '3' => '已通过审核'
     );
-
+    
+    
+    /**
+     * 店铺申请认证
+     */
     public function approve_detail($showcase_id){
+        if(!$showcase_id){
+            return FALSE;
+        }
         $params['showcase_id'] = $showcase_id;
-        $result = $this->request(self::SHOWCASE_APPROVE_DETAIL, $params);
+        $result = Sapi::request(self::SHOWCASE_APPROVE_DETAIL, $params);
         return $this->tidy_approve($result);
     }
     
+    /**
+     * 店铺列表
+     */
     public function getList($params) {
+        if(empty($params)){
+            return FALSE;
+        }
         $result = Sapi::request(self::SHOWCASE_LIST, $params);
         return $this->format_showcase_batch($result);
     }
@@ -61,13 +75,60 @@ class BpShowcaseModel {
      */
     public function createPaymentSellerAccount($showcase_id){
         $url = PAYMENT_HOST.self::PAYMENT_SELLER_ACCOUNT;
-        $params['user_id'] = $showcase_id;
+        $params['seller_id'] = $showcase_id;
         $params['channels'] = 'WECHAT,JDPAY';
         $params['sys_code'] = 'PLATFORM';
         $result = Curl::request($url, $params, 'post');
         return $result;
     }
     
+    /**
+     * 冻结店铺
+     */
+    public function block($params) {
+        if(empty($params)){
+            return FALSE;
+        }
+        $result = Sapi::request(self::SHOWCASE_BLOCK, $params, "POST");
+        return $result;
+    }
+    
+    /**
+     * 解冻店铺
+     */
+    public function unblock($params) {
+        if(empty($params)){
+            return;
+        }
+        return Sapi::request(self::SHOWCASE_UNBLOCK, $params, "POST");
+    }
+    
+    /**
+     * 通过认证
+     */
+    public function pass($showcase_id) {
+        if(!$showcase_id){
+            return FALSE;
+        }
+        $params['showcase_id'] = $showcase_id;
+        return Sapi::request(self::SHOWCASE_PASS, $params, "POST");
+    }
+    
+    /**
+     * 店铺认证驳回
+     */
+    public function unpass($showcase_id, $refuse_reason) {
+        if(!$showcase_id || !$refuse_reason){
+            return FALSE;
+        }
+        $params['showcase_id'] = $showcase_id;
+        $params['refuse_reason'] = $refuse_reason;
+        return Sapi::request(self::SHOWCASE_UNPASS, $params, "POST");
+    }
+    
+    /**
+     * 店铺简介
+     */
     public function getInfoById($showcase_id) {
         if (!$showcase_id) {
             return false;
@@ -77,53 +138,61 @@ class BpShowcaseModel {
 
         return $this->format_showcase_struct($result);
     }
-
-    public function update($params) {
-        return Sapi::request(self::SHOWCASE_UPDATE, $params, "POST");
-    }
-
-    public function delete($order_id) {
-        $params['showcase_id'] = $order_id;
-        return Sapi::request(self::SHOWCASE_DELETE, $params, "POST");
-    }
-
-    public function block($params) {
+    
+    /*
+     * 添加店员
+     */
+    public function addClerk($params){
         if(empty($params)){
             return FALSE;
         }
-        $result = Sapi::request(self::SHOWCASE_BLOCK, $params, "POST");
+        $result = Sapi::request(self::CLERK_ADDCLERK, $params, "POST");
+        if($result === FALSE){
+            return FALSE;
+        }
         return $result;
     }
-
-    public function unblock($params) {
+    
+    /*
+     * 用户注册
+     */
+    public function register($params){
         if(empty($params)){
-            return;
+            return FALSE;
         }
-        return Sapi::request(self::SHOWCASE_UNBLOCK, $params, "POST");
+        $result = Ucapi::request(self::UCAPI_REGISTER, $params, 'POST');
+        if($result === FALSE){
+            return FALSE;
+        }
+        return $result;
     }
     
-    public function pass($showcase_id, $type) {
-        $params['showcase_id'] = $showcase_id;
-        $params['type'] = $type;
-        return Sapi::request(self::SHOWCASE_PASS, $params, "POST");
+    /**
+     * 用户详情
+     */
+    public function getInfo($params){
+        if(empty($params)){
+            return FALSE;
+        }
+        $result = Ucapi::request(self::UCAPI_GETINFO,  $params);
+        if($result === FALSE){
+            return FALSE;
+        }
+        return $result;
     }
     
-    public function unpass($showcase_id, $refuse_reason, $type) {
-        $params['showcase_id'] = $showcase_id;
-        $params['refuse_reason'] = $refuse_reason;
-        $params['type'] = $type;
-        return Sapi::request(self::SHOWCASE_UNPASS, $params, "POST");
-    }
-    
-    public function upgradesuccess($showcase_id) {
-        $params['showcase_id'] = $showcase_id;
-        return Sapi::request(self::SHOWCASE_UPGRADESUCCESS, $params, "POST");
-    }
-    
-    public function upgradefail($showcase_id, $refuse_reason) {
-        $params['showcase_id'] = $showcase_id;
-        $params['refuse_reason'] = $refuse_reason;
-        return Sapi::request(self::SHOWCASE_UPGRADEFAIL, $params, "POST");
+    /**
+     * 修改密码
+     */
+    public function UpPwd($params){
+        if(empty($params)){
+            return FALSE;
+        }
+        $result = Ucapi::request(self::UCAPI_UPPW, $params, 'POST');
+        if($result === FALSE){
+            return FALSE;
+        }
+        return $result;
     }
 
     /*
@@ -145,11 +214,16 @@ class BpShowcaseModel {
         $s['com_scope_pro'] = $approve['com_scope_pro'];
         $s['com_expire'] = $approve['com_expire'];
         $s['create_time'] = $approve['create_time'];
-        $s['status_person'] = $approve['showcase_info']['status_person'];
-        $s['status_com'] = $approve['showcase_info']['status_com'];
+        $s['status_person'] = $approve['status_person'];
+        $s['status_com'] = $approve['status_com'];
+        $s['register_branch'] = $approve['register_branch'];
         $s['com_id_pic1'] = $approve['com_id_pic1'];
         $s['com_id_pic2'] = $approve['com_id_pic2'];
         $s['com_id_pic3'] = $approve['com_id_pic3'];
+        $s['com_id_pic4'] = $approve['com_id_pic4'];
+        $s['com_id_pic5'] = $approve['com_id_pic5'];
+        $s['com_id_pic6'] = $approve['com_id_pic6'];
+        $s['com_id_pic7'] = $approve['com_id_pic7'];
         $s['com_register_address'] = $approve['com_register_address'];
         return $s;
     }

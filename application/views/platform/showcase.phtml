@@ -28,7 +28,6 @@
                         <th width="*">店铺名称</th>
                         <th width="*">店铺别名</th>
                         <th width="*">店主昵称</th>
-                        <th width="*">大神认证状态</th>
                         <th width="*">企业认证状态</th>
                         <th width="*">冻结</th>
                         <th width="*">创建时间</th>
@@ -42,8 +41,7 @@
                                 <td><a href="/bpshowcase/info?id=<?=$val['showcase_id']?>"><?php echo $val['name']; ?></a></td>
                                 <td><a href="/sdata/order?showcase_id=<?=$val['showcase_id']?>"><?php echo $val['alias']; ?></a></td>
                                 <td><?php echo $val['nickname'] ? : '--'; ?></td>
-                                <td><a href="/bpshowcase/auditing?showcase_id=<?=$val['showcase_id']?>&type=1"><?php echo $val['status_person_name'] ?></a></td>
-                                <td><a href="/bpshowcase/auditing?showcase_id=<?=$val['showcase_id']?>&type=2"><?php echo $val['status_com_name'] ?></a></td>
+                                <td><a href="/bpshowcase/auditing?showcase_id=<?=$val['showcase_id']?>"><?php echo $val['status_com_name'] ?></a></td>
                                 <td><?php echo $val['block'] == 1 ? "是" : '否';?></td>
                                 <td><?php echo $val['ctime']; ?></td>
                                 <td>
