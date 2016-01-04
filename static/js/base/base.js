@@ -210,7 +210,7 @@ $.ajaxSetup({
                         }
                     },
                     callback: function (data) {
-                        layer.load('表单正在处理中，请稍等 ...');
+//                        layer.load('表单正在处理中，请稍等 ...');
                         if (data.status == 1) {
                             //成功返回
                             if ($.isFunction(options.returnFun)) {
@@ -218,9 +218,7 @@ $.ajaxSetup({
                             } else {
                                 if (data.url == null || data.url == '') {
                                     //不带连接
-                                    layer.alert(data.info, 1, function () {
-                                        window.location.reload();
-                                    });
+                                    layer.alert(data.info, 1);
                                 } else {
                                     //带连接
                                     //询问框

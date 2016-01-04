@@ -9,16 +9,21 @@ class BpShowcaseController extends Base {
 
     use Trait_Layout,
         Trait_Pagger;
-
+    
     public $showcase;
-
+    
+    const ADMIN = '0'; //店长
+    
     public function init() {
         $this->initAdmin();
         $this->checkRole();
         $this->showcase = new BpShowcaseModel();
     }
-
-    function indexAction() {
+    
+    /**
+     * 店铺详情页
+     */
+    public function indexAction() {
         $t = (int) $this->getRequest()->get('t');
         $p = (int) $this->getRequest()->getParam('p', 1);
         $size = 10;
@@ -36,8 +41,8 @@ class BpShowcaseController extends Base {
                 $params['block'] = 1;
                 break;  
         }
-        $params[page_no] = $p;
-        $params[page_size] = $size;
+        $params['page_no'] = $p;
+        $params['page_size'] = $size;
         $showcasesList = $this->showcase->getList($params);
         $count = $showcasesList['total_nums'];
 
@@ -45,8 +50,11 @@ class BpShowcaseController extends Base {
         $this->renderPagger($p, $count, '/bpshowcase/index/p/{p}/t/'.$t, $size);
         $this->layout("platform/showcase.phtml");
     }
-
-    function infoAction() {
+    
+    /**
+     * 店铺简介
+     */
+    public function infoAction() {
         $showcase_id = $this->getrequest()->get('id');
         $showcases = $this->showcase->getInfoById($showcase_id);
         $this->assign("showcase", $showcases);
@@ -54,99 +62,182 @@ class BpShowcaseController extends Base {
     }
     
     /**
+     * 创建店铺
+     */
+    public function createAction(){
+        if($_POST){
+            $data['phone'] = $_POST['phone'];
+            $data['password'] = $_POST['pw'];
+            $data['realname'] = $_POST['resname'];
+            $data['nickname'] = $_POST['nickname'];
+            $data['signature'] = $_POST['signature'];
+            $data['wechat'] = $_POST['wechat'];
+            $data['phone_message'] = $_POST['message'];
+            $data['intro'] = $_POST['summary'];
+            $data['name'] = $_POST['sname'];
+            $params['mobile'] = $_POST['phone'];
+            $params['passwd'] = $_POST['pw'];
+            //ucapi 用户注册
+            $rs = $this->showcase->register($params);
+            if(empty($rs)){
+                Tools::output(array('info'=>'参数错误','status'=>1));
+            }
+            $data['user_id'] = $rs['user_id'];
+            $resule = $this->showcase->create($data);
+            if($resule === FALSE){
+                $error = $this->showcase->getError();
+                switch ($error){
+                    case 40001:
+                        $msg = '店铺名称已存在';
+                    break;
+                    case 40002:
+                        $msg = '此用户已创建店铺';
+                    break;
+                    case 10001:
+                        $msg = '缺少参数';
+                    break;
+                    case 10000:
+                        $msg = '系统异常';
+                    break;
+                }
+                Tools::output(array('info'=>$msg,'status'=>1));
+            }
+            //通知支付平台
+            $auccount_status = $this->showcase->createPaymentSellerAccount($resule);
+            if($auccount_status['code'] != 0){
+                Tools::output(array('info'=>'创建失败','status'=>0));
+            }
+            //添加到管理员表
+            $clerk_date['user_id'] = $rs['user_id'];
+            $clerk_date['group_id'] = self::ADMIN;
+            $clerk_date['phone'] = $data['phone'];
+            $clerk_date['showcase_id'] = $resule;
+            $clerk_date['realname'] = $data['realname'];
+            
+            $this->showcase->addClerk($clerk_date);
+            
+            Tools::output(array('info'=>'创建成功','status'=>1,'url'=>'/bpshowcase'));
+        }
+        $this->layout('platform/add_showcase.phtml');
+    }
+    
+    /*
+     * 重设密码
+     */
+    public function resetAction(){
+        if($_POST){
+            $user_id = $_POST['user_id'];
+            $pw = $_POST['pw'];
+            
+            if(!$user_id || !$pw){
+                Tools::output(array('info'=>'缺少参数','status'=>1));
+            }
+            //ucapi 用户详情
+            $info = $this->showcase->getInfo(array('uid'=>$user_id));
+            if($info['phone']){
+                $phone = $info['phone'];
+            }else{
+                Tools::output(array('info'=>'手机号为空','status'=>1));
+            }
+            //ucapi 修改密码
+            $result = $this->showcase->UpPwd(array('mobile'=>$phone,'newpwd'=>$pw));
+            if($result){
+                Tools::output(array('info'=>'修改成功','status'=>1, 'url'=>'/bpshowcase/index'));
+            }
+            Tools::output(array('info'=>'修改失败','status'=>1));
+        }
+        $name = $this->getRequest()->get('title');
+        $user_id = $this->getRequest()->get('user_id');
+        $this->assign('title', urldecode($name));
+        $this->assign('user_id', $user_id);
+        $this->layout('platform/reset.phtml');
+    }
+    
+    
+    /**
      * 商户审核
      */
-    function auditingAction() {
+    public function auditingAction() {
         $showcase_id = $this->getrequest()->get('showcase_id');
-        $type = $this->getrequest()->get('type');
+        if(!$showcase_id){
+            Tools::output(['info' => '店铺ID为空', 'status' => 0]);
+        }
         $info = $this->showcase->approve_detail($showcase_id);
         $this->assign("info", $info);
-        $this->assign("type", $type);
         $this->assign("showcase_id", $showcase_id);
         $this->assign("refuse", json_encode($this->getView()->render('platform/showcase_refuse.phtml')));
-        
-        if ($type == 1) {
-            $this->layout("platform/showcase_auditing_person.phtml");
-        }else{
-            $this->layout("platform/showcase_auditing_com.phtml");
-        }
+        $this->layout("platform/showcase_auditing_com.phtml");
         
     }
 
     /**
      * API:冻结
      */
-    function blockAction() {
+    public function blockAction() {
         $showcase_id = json_decode($this->getRequest()->getPost('data'), true)['id'];
-//        echo "id is ".$showcase_id;
-        $result = $this->showcase->block($showcase_id);
-//        var_dump($result);
-        $msg = ($result === "") ? "冻结成功" : "冻结失败";
-        $status = ($result === "") ? 1 : 0;
-        echo json_encode(['info' => $msg, 'status' => $status]);
+        if(!$showcase_id){
+            return FALSE;
+        }
+        $params['showcase_id'] = $showcase_id;
+        $result = $this->showcase->block($params);
+        if($result){
+            Tools::output(['info' => '冻结失败', 'status' => 0]);
+        }  else {
+            Tools::output(['info' => '冻结成功', 'status' => 1, 'url' => '/bpshowcase/index']);
+        }
         exit;
     }
     
     /**
      * API:解冻
      */
-    function unblockAction() {
+    public function unblockAction() {
         $showcase_id = json_decode($this->getRequest()->getPost('data'), true)['id'];
-        $result = $this->showcase->unblock($showcase_id);
-        $msg = ($result == "") ? "解冻成功" : "解冻失败";
-        $status = ($result == "") ? 1 : 0;
-        echo json_encode(['info' => $msg, 'status' => $status]);
+        if(!$showcase_id){
+            return FALSE;
+        }
+        $params['showcase_id'] = $showcase_id;
+        $result = $this->showcase->unblock($params);
+        if($result){
+            Tools::output(['info' => '解冻失败', 'status' => 0]);
+        }  else {
+            Tools::output(['info' => '解冻成功', 'status' => 1, 'url' => '/bpshowcase/index']);
+        }
         exit;
     }
     
     /**
      * API:驳回
      */
-    function unpassAction() {
+    public function unpassAction() {
         $showcase_id = json_decode($this->getRequest()->getPost('data'), true)['id'];
         $refuse_reason = json_decode($this->getRequest()->getPost('data'), true)['refuse_reason'];
-        $type = json_decode($this->getRequest()->getPost('data'), true)['type'];
-        $result = $this->showcase->unpass($showcase_id,$refuse_reason,$type);
-        $msg = ($result == "") ? "驳回成功" : "驳回失败";
-        $status = ($result == "") ? 1 : 0;
-        echo json_encode(['info' => $msg, 'status' => $status]);
+        if(!$showcase_id){
+            Tools::output(['info' => '店铺ID为空', 'status' => 0]);
+        }
+        $result = $this->showcase->unpass($showcase_id,$refuse_reason);
+        if($result){
+            Tools::output(['info'=>'驳回失败', 'status' => 0]);
+        }else{
+            Tools::output(['info'=>'驳回成功', 'status' => 1, 'url' => '/bpshowcase/index']);
+        }
         exit;
     }
     
      /**
      * API:审核通过
      */
-    function passAction() {
+    public function passAction() {
         $showcase_id = json_decode($this->getRequest()->getPost('data'), true)['id'];
-        $type = json_decode($this->getRequest()->getPost('data'), true)['type'];
+        if(!$showcase_id){
+            Tools::output(['info' => '店铺ID为空', 'status' => 0]);
+        }
         $result = $this->showcase->pass($showcase_id,$type);
-        $msg = ($result == "") ? "审核成功" : "审核失败";
-        $status = ($result == "") ? 1 : 0;
-        echo json_encode(['info' => $msg, 'status' => $status]);
-        exit;
-    }
-    
-    /**
-     * API:升级通过
-     */
-    function upgradesuccessAction() {
-        $showcase_id = json_decode($this->getRequest()->getPost('data'), true)['id'];
-        $result = $this->showcase->upgradesuccess($showcase_id,$refuse_reason);
-        $msg = ($result == "") ? "审核成功" : "审核失败";
-        $status = ($result == "") ? 1 : 0;
-        echo json_encode(['info' => $msg, 'status' => $status]);
-        exit;
-    }
-    /**
-     * API:升级驳回
-     */
-    function upgradefailAction() {
-        $showcase_id = json_decode($this->getRequest()->getPost('data'), true)['id'];
-        $refuse_reason = json_decode($this->getRequest()->getPost('data'), true)['refuse_reason'];
-        $result = $this->showcase->upgradefail($showcase_id,$refuse_reason);
-        $msg = ($result == "") ? "驳回成功" : "驳回失败";
-        $status = ($result == "") ? 1 : 0;
-        echo json_encode(['info' => $msg, 'status' => $status]);
+        if($result){
+            Tools::output(['info'=>'认证失败', 'status' => 0]);
+        } else {
+            Tools::output(['info'=>'认证成功', 'status' => 1, 'url' => '/bpshowcase/index']);
+        }
         exit;
     }
 }

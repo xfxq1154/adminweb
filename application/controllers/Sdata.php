@@ -49,7 +49,7 @@ class SdataController extends Base{
         }
         $paied_people_sum = 0;
         if($paied_people > 0){
-            $paied_people_sum = $paied_sum_total / $paied_people;  //客单价
+            $paied_people_sum = round($paied_sum_total / $paied_people, 2);  //客单价
         }
         
         $this->assign('start_time', $start_created);
@@ -70,10 +70,14 @@ class SdataController extends Base{
                 if(isset($data[$val])){
                     $order_num[] = $data[$val]['order_num'];  //下单笔数
                     $paied_num[] = $data[$val]['paied_num'];  //付款笔数
+                    $paied_num_wx[] = $data[$val]['paied_num_wx'];  //微信付款笔数
+                    $paied_num_jd[] = $data[$val]['paied_num_jd'];  //京东付款笔数
                     $paied_sum[] = $data[$val]['paied_sum'];  //付款金额
                 } else {
                     $order_num[] = 0;  //下单笔数
                     $paied_num[] = 0;  //付款笔数
+                    $paied_num_wx[] = 0;  //微信付款笔数
+                    $paied_num_jd[] = 0;  //京东付款笔数
                     $paied_sum[] = 0;  //付款金额
                 }
             }
@@ -85,6 +89,8 @@ class SdataController extends Base{
             $this->assign('dates', implode(',', $dates));
         }
         
+        $this->assign('paied_num_wx', array_sum($paied_num_wx));
+        $this->assign('paied_num_jd', array_sum($paied_num_jd));
         $this->assign('order_num_string', $order_num_string);
         $this->assign('paied_num_string', $paied_num_string);
         $this->assign('paied_sum_string', $paied_sum_string);
