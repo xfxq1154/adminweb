@@ -83,11 +83,10 @@ class BpShowcaseController extends Base {
             $params['mobile'] = $_POST['phone'];
             $params['passwd'] = $_POST['pw'];
             $rs = Ucapi::request(self::UCAPI_URL, $params, 'POST');
-            
-            if(!empty($rs)){
-                $data['user_id'] = $rs['user_id'];
+            if(empty($rs)){
+                Tools::output(array('info'=>'参数错误','status'=>1));
             }
-            
+            $data['user_id'] = $rs['user_id'];
             $resule = $this->showcase->create($data);
             if($resule === FALSE){
                 $error = $this->showcase->getError();
