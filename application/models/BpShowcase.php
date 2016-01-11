@@ -212,7 +212,7 @@ class BpShowcaseModel {
         $s['com_type'] = $approve['com_type'];
         $s['com_scope'] = $approve['com_scope'];
         $s['com_scope_pro'] = $approve['com_scope_pro'];
-        $s['com_expire'] = $approve['com_expire'];
+        $s['com_expire'] = date('Y-m-d', strtotime($approve['com_expire']));
         $s['create_time'] = $approve['create_time'];
         $s['status_person'] = $approve['status_person'];
         $s['status_com'] = $approve['status_com'];

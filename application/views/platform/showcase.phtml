@@ -4,9 +4,8 @@
     <br>
     <div class="tools-function clearfix">
         <div class="float-left">
-            <a class="button button-small bg-main icon-list" href="/bpshowcase?t=0">全部</a>
-            <a class="button button-small bg-main icon-list" href="/bpshowcase?t=1">待审大神</a>
-            <a class="button button-small bg-main icon-list" href="/bpshowcase?t=2">待审企业</a>
+            <a class="button button-small bg-yellow icon-list" href="/bpshowcase?t=0">全部</a>
+            <a class="button button-small bg-green icon-list" href="/bpshowcase?t=2">待审企业</a>
             <a class="button button-small bg-main icon-list" href="/bpshowcase?t=3">已冻结</a>
         </div>
         <div class="button-group float-right">
@@ -16,6 +15,25 @@
             </ul>
         </div>
     </div> 
+</div>
+<div class="table-tools clearfix ">
+    <div class="float-left">
+        <form method="GET" action="/bpshowcase/" >
+            <div class="form-inline">
+                <div class="form-group">
+                    <div class="field">
+                        <input type="text" class="input" id="keyword" name="showcase_name" size="20" value="<?=$pname?>" placeholder="店铺名称">
+                    </div>&nbsp;
+                    <div class="field">
+                        <input type="text" class="input" id="keyword" name="nickname" size="20" value="<?=$product?>" placeholder="店主昵称">
+                    </div>
+                </div>
+                <div class="form-button">
+                    <button class="button" type="submit">搜索</button>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
 <div class="admin-main">
     <div class="panel dux-box">
