@@ -26,6 +26,8 @@ class BpShowcaseController extends Base {
     public function indexAction() {
         $t = (int) $this->getRequest()->get('t');
         $p = (int) $this->getRequest()->getParam('p', 1);
+        $showcase_name = $this->getRequest()->getParam('showcase_name');
+        $nickname = $this->getRequest()->getParam('nickname');
         $size = 10;
 
         $params = array();
@@ -80,7 +82,7 @@ class BpShowcaseController extends Base {
             //ucapi 用户注册
             $rs = $this->showcase->register($params);
             if(empty($rs)){
-                Tools::output(array('info'=>'参数错误','status'=>1));
+                Tools::output(array('info'=>'手机号错误','status'=>1));
             }
             $data['user_id'] = $rs['user_id'];
             $resule = $this->showcase->create($data);

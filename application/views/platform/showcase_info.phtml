@@ -1,30 +1,14 @@
 <div class="dux-tools">
     <div class="bread-head">店铺管理<span class="small">店铺信息</span>
-
         <div class="float-right">
             <a class="button button-small bg-main icon-list">店铺列表</a>  
         </div>
-
     </div>
-
-    <!-- <div class="tools-function clearfix">
-        <div class="float-left">
-            <a class="button button-small bg-main icon-list" href="javascript:;">
-            内容列表</a>
-        </div>
-        <div class="button-group float-right">
-            <a class="button button-small bg-dot icon-plus dropdown-toggle"> 添加 <span class="downward"></span></a>
-            <ul class="drop-menu pull-right">
-                <li><a href="/admin.php?r=duxcms/AdminFormData/add&fieldset_id=1">添加内容</a></li>
-            </ul>
-        </div>
-    </div> -->
 </div>
 <div class="admin-main">
     <form method="post" class="form-x dux-form form-auto" id="form" action="/bpshowcase/edit">
         <div class="tab dux-tab">
             <div class="panel dux-box  active">
-                <!-- tab head start-->
                 <div class="panel-head">
                     <div class="tab-head">
                         <strong>店铺管理</strong>
@@ -33,12 +17,8 @@
                         <li class="active"><a href="Javascript:void();">店铺信息</a></li>
                     </ul>
                 </div>
-                <!-- tab head end -->
-
-                <!-- table body start-->
                  <div class="tab-body">
 
-                    <!-- tab 1 start -->
                     <div class="tab-panel active" id="tab-1">
                         <div class="form-group">
                             <div class="label">
@@ -62,37 +42,16 @@
                             </div>
                             <div class="field">
                                 <input type="text" class="input" style="width:220px;" id="name" name="name" size="60" datatype="*" placeholder="标题" value="<?php echo $showcase['name']; ?>" readonly>
-                                <div class="input-note">请填写店铺名称</div>
                             </div>
                         </div>
-<!--                        <div class="form-group">
-                            <div class="label">
-                                <label>店铺logo</label>
-                            </div>
-                            <div class="field">
-                                <input type="text" class="input" style="width:220px;" id="logo" name="logo" size="60" datatype="*" value="<?php echo $showcase['logo']; ?>">
-                                <div class="input-note">请填写店铺logo</div>
-                            </div>
-                        </div>-->
                         <div class="form-group">
                             <div class="label">
                                 <label>店铺介绍</label>
                             </div>
                             <div class="field">
                                 <textarea class="input" style="width:220px;height: 150px;" id="intro" name="intro" size="60" datatype="*" readonly><?php echo $showcase['intro']; ?></textarea>
-                                <div class="input-note">请填写店铺介绍</div>
                             </div>
                         </div>
-                    </div>
-                    <!-- tab 1 end  -->
-                </div>
-                <!-- table body end -->
-
-                <div class="panel-foot">
-                    <div class="form-button">
-                        <div id="tips"></div>
-                        <button class="button bg-main" type="submit">保存</button>
-                        <button class="button bg" type="reset">重置</button>
                     </div>
                 </div>
             </div>
