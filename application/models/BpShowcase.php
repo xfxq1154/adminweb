@@ -32,7 +32,8 @@ class BpShowcaseModel {
         '0' => '草稿',
         '1' => '待审核',
         '2' => '已驳回审核',
-        '3' => '已通过审核'
+        '3' => '已通过审核',
+        '4' => '已过期'
     );
     
     
@@ -199,6 +200,9 @@ class BpShowcaseModel {
      * 格式化数据
      */
     public function tidy_approve($approve) {
+        if(!$approve){
+            return array();
+        }
         $s['user_id'] = $approve['user_id'];
         $s['realname'] = $approve['realname'];
         $s['intro'] = $approve['intro'];
@@ -215,7 +219,7 @@ class BpShowcaseModel {
         $s['com_expire'] = date('Y-m-d', strtotime($approve['com_expire']));
         $s['create_time'] = $approve['create_time'];
         $s['status_person'] = $approve['status_person'];
-        $s['status_com'] = $approve['status_com'];
+        $s['status_com'] = $this->showcase_status[$approve['status_com']];
         $s['register_branch'] = $approve['register_branch'];
         $s['com_id_pic1'] = $approve['com_id_pic1'];
         $s['com_id_pic2'] = $approve['com_id_pic2'];
@@ -225,6 +229,7 @@ class BpShowcaseModel {
         $s['com_id_pic6'] = $approve['com_id_pic6'];
         $s['com_id_pic7'] = $approve['com_id_pic7'];
         $s['com_register_address'] = $approve['com_register_address'];
+        
         return $s;
     }
     
@@ -241,7 +246,6 @@ class BpShowcaseModel {
         $s['logo'] = $showcase['logo'];
         $s['intro'] = $showcase['intro'];
         $s['status_person'] = $showcase['status_person'];
-        $s['status_person_name'] = $this->showcase_status[$showcase['status_person']];
         $s['status_com'] = $showcase['status_com'];
         $s['status_com_name'] = $this->showcase_status[$showcase['status_com']];
         $s['block'] = $showcase['block'];

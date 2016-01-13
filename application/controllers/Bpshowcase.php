@@ -47,7 +47,7 @@ class BpShowcaseController extends Base {
         $params['page_size'] = $size;
         $showcasesList = $this->showcase->getList($params);
         $count = $showcasesList['total_nums'];
-
+        
         $this->assign("list", $showcasesList['showcases']);
         $this->renderPagger($p, $count, '/bpshowcase/index/p/{p}/t/'.$t, $size);
         $this->layout("platform/showcase.phtml");

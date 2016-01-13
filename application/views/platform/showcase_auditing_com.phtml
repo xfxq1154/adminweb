@@ -104,9 +104,13 @@
                                 <p><img src="<?php echo $info['com_id_pic4']; ?>" width="600px"></p>
                                 <p><img src="<?php echo $info['com_id_pic5']; ?>" width="600px"></p>
                                 <p><img src="<?php echo $info['com_id_pic6']; ?>" width="600px"></p>
-                                <?php foreach($info['com_id_pic7'] as $val) :?>
-                                <p><img src="<?php echo $val['img']; ?>" width="600px"></p>
-                                <?php endforeach;?>
+                                <?php if(is_array($info['com_id_pic7'])):?>
+                                    <?php foreach($info['com_id_pic7'] as $val) :?>
+                                    <p><img src="<?php echo $val['img']; ?>" width="600px"></p>
+                                    <?php endforeach;?>
+                                <?php else:?>
+                                <p><img src="<?php echo $info['com_id_pic7']; ?>" width="600px"></p>
+                                <?php endif;?>
                             </div>
                         </div>
                     </div>
