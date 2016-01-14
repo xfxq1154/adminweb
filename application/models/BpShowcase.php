@@ -219,7 +219,8 @@ class BpShowcaseModel {
         $s['com_expire'] = date('Y-m-d', strtotime($approve['com_expire']));
         $s['create_time'] = $approve['create_time'];
         $s['status_person'] = $approve['status_person'];
-        $s['status_com'] = $this->showcase_status[$approve['status_com']];
+        $s['status_com_name'] = $this->showcase_status[$approve['status_com']];
+        $s['status_com'] = $approve['status_com'];
         $s['register_branch'] = $approve['register_branch'];
         $s['com_id_pic1'] = $approve['com_id_pic1'];
         $s['com_id_pic2'] = $approve['com_id_pic2'];
