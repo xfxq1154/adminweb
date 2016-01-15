@@ -40,6 +40,9 @@ class BpShowcaseController extends Base {
                 $params['status_com'] = 1;
                 break;
             case 3:
+                $params['status_com'] = 3;
+                break;
+            case 11:
                 $params['block'] = 1;
                 break;  
         }
