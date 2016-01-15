@@ -42,34 +42,23 @@
                 <tbody>
                     <tr>
                         <th width="*">店铺ID</th>
-                        <th width="*">用户ID</th>
                         <th width="*">店铺名称</th>
-                        <th width="*">店铺别名</th>
                         <th width="*">店主昵称</th>
                         <th width="*">企业认证状态</th>
                         <th width="*">冻结</th>
                         <th width="*">创建时间</th>
-                        <th width="*">操作</th>
+                        <th width="*">数据</th>
                     </tr>
                     <?php if ($list) : ?>
                         <?php foreach ($list as $val) : ?>
                             <tr>
                                 <td><?php echo $val['showcase_id']; ?></td>
-                                <td><?php echo $val['user_id']; ?></td>
                                 <td><a href="/bpshowcase/info?id=<?=$val['showcase_id']?>"><?php echo $val['name']; ?></a></td>
-                                <td><a href="/sdata/order?showcase_id=<?=$val['showcase_id']?>"><?php echo $val['alias']; ?></a></td>
                                 <td><?php echo $val['nickname'] ? : '--'; ?></td>
                                 <td><a href="/bpshowcase/auditing?showcase_id=<?=$val['showcase_id']?>"><?php echo $val['status_com_name'] ?></a></td>
-                                <td><?php echo $val['block'] == 1 ? "是" : '否';?></td>
+                                <td><?php echo $val['block'] == 1 ? "<span class=\"tag bg-red\">是</span>" : "<span class=\"tag bg-green\">否</span>";?></td>
                                 <td><?php echo $val['ctime']; ?></td>
-                                <td>
-                                    <a class="button bg-green button-small" href="/bpshowcase/reset/id/<?php echo $val['showcase_id'];?>/user_id/<?=$val['user_id']?>/title/<?=$val['name']?>" title="重置密码">重置密码</a>
-                                    <?php if ($val['block'] == "0") : ?>
-                                    <a href="javascript:;" url="/bpshowcase/block" data='{"id":<?php echo $val['showcase_id']; ?>}' title="冻结" class="button bg-red button-small icon-lock js-action" ></a>
-                                    <?php else : ?>
-                                    <a href="javascript:;" url="/bpshowcase/unblock" data='{"id":<?php echo $val['showcase_id']; ?>}' title="解冻" class="button bg-green button-small icon-unlock js-action" ></a>
-                                    <?php endif; ?>
-                                </td>
+                                <td><a href="/bpproduct/index?showcase_id=<?=$val['showcase_id']?>">商品</a> | <a href="/bporder/index/?showcase=<?=$val['showcase_id']?>">订单</a> | <a href="/sdata/order?showcase_id=<?=$val['showcase_id']?>">订单统计</a></td>
                             </tr>
                         <?php endforeach; ?>
                     <?php endif; ?>

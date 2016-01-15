@@ -21,14 +21,14 @@ class BpShowcaseController extends Base {
     }
     
     /**
-     * 店铺详情页
+     * 店铺列表
      */
     public function indexAction() {
         $t = (int) $this->getRequest()->get('t');
         $p = (int) $this->getRequest()->getParam('p', 1);
         $showcase_name = $this->getRequest()->getParam('showcase_name');
         $nickname = $this->getRequest()->getParam('nickname');
-        $size = 10;
+        $size = 20;
 
         $params = array();
         
