@@ -15,8 +15,8 @@ use Trait_Redis;
     public $tableName = 'admin_log';
 
     public function __construct() {
-        $this->dbMaster = $this->getMasterDb();
-        $this->dbSlave = $this->getSlaveDb();
+        $this->dbMaster = $this->getMasterDb('storecp');
+        $this->dbSlave = $this->getSlaveDb('storecp');
     }
 
     public function add($data) {

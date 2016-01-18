@@ -16,8 +16,8 @@ use Trait_Redis;
     public $auth;
 
     public function __construct() {
-        $this->dbMaster = $this->getMasterDb();
-        $this->dbSlave = $this->getSlaveDb();
+        $this->dbMaster = $this->getMasterDb('storecp');
+        $this->dbSlave = $this->getSlaveDb('storecp');
         $this->AccessKey = Yaf_Application::app()->getConfig()->safe->qiniu->accesskey;
         $this->SecretKey = Yaf_Application::app()->getConfig()->safe->qiniu->secretkey;
         //$this->auth = new Auth($this->AccessKey, $this->SecretKey);

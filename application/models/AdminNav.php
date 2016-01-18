@@ -16,8 +16,8 @@ class AdminNavModel {
     public $group, $adminLog;
 
     public function __construct() {
-        $this->dbMaster = $this->getMasterDb();
-        $this->dbSlave = $this->getSlaveDb();
+        $this->dbMaster = $this->getMasterDb('storecp');
+        $this->dbSlave = $this->getSlaveDb('storecp');
         $this->group = new AdminGroupModel();
         $this->adminLog = new AdminLogModel();
     }

@@ -14,15 +14,17 @@ Trait Trait_DB {
     /**
      * @return PDO
      */
-    public function getMasterDb() {
-        return $this->getDb('master');
+    public function getMasterDb($dbname) {
+        $dbname .= '_master';
+        return $this->getDb($dbname);
     }
 
     /**
      * @return PDO
      */
-    public function getSlaveDb() {
-        return $this->getDb('slave');
+    public function getSlaveDb($dbname) {
+        $dbname .= '_slave';
+        return $this->getDb($dbname);
     }
 
     /**

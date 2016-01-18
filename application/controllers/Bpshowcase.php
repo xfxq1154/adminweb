@@ -26,6 +26,7 @@ class BpShowcaseController extends Base {
     public function indexAction() {
         $t = (int) $this->getRequest()->get('t');
         $p = (int) $this->getRequest()->getParam('p', 1);
+        $block = $this->getRequest()->get('block');
         $showcase_name = $this->getRequest()->getParam('showcase_name');
         $nickname = $this->getRequest()->getParam('nickname');
         $size = 20;
@@ -48,6 +49,7 @@ class BpShowcaseController extends Base {
         }
         $params['page_no'] = $p;
         $params['page_size'] = $size;
+        $params['block'] = $block > 0 ? $block : '0';
         $showcasesList = $this->showcase->getList($params);
         $count = $showcasesList['total_nums'];
         
@@ -60,7 +62,7 @@ class BpShowcaseController extends Base {
      * 店铺简介
      */
     public function infoAction() {
-        $showcase_id = $this->getrequest()->get('id');
+        $showcase_id = $this->getrequest()->get('id'); 
         $showcases = $this->showcase->getInfoById($showcase_id);
         $this->assign("showcase", $showcases);
         $this->layout('platform/showcase_info.phtml');

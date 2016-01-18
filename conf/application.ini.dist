@@ -31,7 +31,7 @@ database.slave.password = 1qaz@WSX
 
 ;passport数据库
 database.passport_master.driver = mysql
-database.passport_master.dbname = passport_1223
+database.passport_master.dbname = passport
 database.passport_master.host = db.passport.master
 database.passport_master.port = 3306
 database.passport_master.username = root
@@ -39,7 +39,7 @@ database.passport_master.password = 1qaz@WSX
 database.passport_master.charset = utf8mb4
 
 database.passport_slave.driver = mysql
-database.passport_slave.dbname = passport_1223
+database.passport_slave.dbname = passport
 database.passport_slave.host = db.passport.slave
 database.passport_slave.port = 3306
 database.passport_slave.username = root
