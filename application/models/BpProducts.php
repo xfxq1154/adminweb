@@ -7,30 +7,12 @@
 class BpProductsModel {
 
     use Trait_Api;
-
-    /**
-     *  product/create 添加一个商品
-
-      product/getlist 商品列表查询
-
-      product/detail 商品详情
-
-      product/update 商品信息修改
-
-      product/update_sku 更新商品SKU信息
-
-      product/updown 商品上下架
-
-      product/delete 删除一个商品
-
-
-     */
+    
     const PRODUCT_LIST = 'product/getlist';
     const PRODUCT_DETAIL = 'product/detail';
     const PRODUCT_UPDATE = 'product/update';
     const PRODUCT_DELETE = 'product/delete';
 
-//       0，1，2，3
     private $product_type = array(
         '0' => '实物',
         '1' => '卡券',
@@ -57,7 +39,6 @@ class BpProductsModel {
         }
         $params['product_id'] = $product_id;
         $result = $this->request(self::PRODUCT_DETAIL, $params);
-//        echo "error:".var_dump(Sapi::getError());
         return $this->format_order_struct($result);
     }
 
@@ -65,8 +46,9 @@ class BpProductsModel {
         return $this->request(self::PRODUCT_UPDATE, $params, "POST");
     }
 
-    public function delete($product_id) {
+    public function delete($product_id,$showcase_id) {
         $params['product_id'] = $product_id;
+        $params['showcase_id'] = $showcase_id;
         return $this->request(self::PRODUCT_DELETE, $params, "POST");
     }
 
@@ -75,26 +57,6 @@ class BpProductsModel {
      */
 
     public function tidy($product) {
-
-//                "seller_id":"111",
-//                "showcase_id":"111",
-//                "outer_id":"fsdfasfa",
-//                "title":"fwwefwefw",
-//                "intro":"fsdfas",
-//                "description":"fsfsdafsaf",
-//                "sold_num":"0",
-//                "quantity":"0",
-//                "price":"12.00",
-//                "post_fee":"5.00",
-//                "pic_path":"http:\/\/fdsfasfa",
-//                "item_imgs":"",
-//                "buy_quota":"0",
-//                "onsell":"0",
-//                "type":"0",
-//                "created":"2015-05-19 15:46:52",
-//                "update":"2015-05-19 15:46:52"
-
-
         $p['product_id'] = $product['product_id'];
         $p['showcase_id'] = $product['showcase_id'];
         $p['outer_id'] = $product['outer_id'];

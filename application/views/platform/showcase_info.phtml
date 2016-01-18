@@ -6,7 +6,7 @@
     </div>
 </div>
 <div class="admin-main">
-    <form method="post" class="form-x dux-form form-auto" id="form" action="/bpshowcase/edit">
+    <form method="post" class="form-x dux-form form-auto" id="form" action="">
         <div class="tab dux-tab">
             <div class="panel dux-box  active">
                 <div class="panel-head">
@@ -18,7 +18,6 @@
                     </ul>
                 </div>
                  <div class="tab-body">
-
                     <div class="tab-panel active" id="tab-1">
                         <div class="form-group">
                             <div class="label">
@@ -56,15 +55,13 @@
                             <div class="label">
                                 <label>店铺操作</label>
                             </div>
-                            <div class="field">
-                                <a class="button bg-green button-small" href="/bpshowcase/reset/id/<?php echo $showcase['showcase_id'];?>/user_id/<?=$showcase['user_id']?>/title/<?=$showcase['name']?>" title="重置密码">重置密码</a>
-                                
-                                <?php if ($showcase['block'] == "0") : ?>
-                                    <a href="javascript:;" url="/bpshowcase/block" data='{"id":<?php echo $showcase['showcase_id']; ?>}' title="冻结" class="button bg-red button-small icon-lock js-action" ></a>
+                            <div id="table" class="field">
+                                    <a class="button bg-green button-small" href="/bpshowcase/reset/id/<?php echo $showcase['showcase_id'];?>/user_id/<?=$showcase['user_id']?>/title/<?=$showcase['name']?>" title="重置密码">重置密码</a>
+                                <?php if ($showcase['block'] == 0) : ?>
+                                    <a href="javascript:;" url="/bpshowcase/block" data='{"id":<?=$showcase['showcase_id']?>}' title="冻结" class="button bg-red button-small icon-lock js-action" success="location.reload()" ></a>
                                 <?php else : ?>
-                                    <a href="javascript:;" url="/bpshowcase/unblock" data='{"id":<?php echo $showcase['showcase_id']; ?>}' title="解冻" class="button bg-green button-small icon-unlock js-action" ></a>
+                                    <a href="javascript:;" url="/bpshowcase/unblock" data='{"id":<?=$showcase['showcase_id']; ?>}' title="解冻" class="button bg-green button-small icon-unlock js-action" success="location.reload()" ></a>
                                 <?php endif; ?>
-                                
                             </div>
                         </div>
                      </div>
@@ -76,6 +73,6 @@
 <script  type="text/javascript">
     Do.ready('base', function () {
         //表单综合处理
-        $('#form').duxFormPage();
+        $('#table').duxTable();
     });
 </script>

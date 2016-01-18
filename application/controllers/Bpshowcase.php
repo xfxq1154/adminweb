@@ -60,7 +60,7 @@ class BpShowcaseController extends Base {
      * 店铺简介
      */
     public function infoAction() {
-        $showcase_id = $this->getrequest()->get('id');
+        $showcase_id = $this->getrequest()->get('id'); 
         $showcases = $this->showcase->getInfoById($showcase_id);
         $this->assign("showcase", $showcases);
         $this->layout('platform/showcase_info.phtml');

@@ -7,25 +7,8 @@
         <div class="panel-head"><strong>商品详情</strong>
         </div>
         <div class="table-responsive">
-            <table class="table">
+            <table class="table" id="table">
                 <tbody>
-<!--                    "seller_id":"111",
-//                "showcase_id":"111",
-//                "outer_id":"fsdfasfa",
-//                "title":"fwwefwefw",
-//                "intro":"fsdfas",
-//                "description":"fsfsdafsaf",
-//                "sold_num":"0",
-//                "quantity":"0",
-//                "price":"12.00",
-//                "post_fee":"5.00",
-//                "pic_path":"http:\/\/fdsfasfa",
-//                "item_imgs":"",
-//                "buy_quota":"0",
-//                "onsell":"0",
-//                "type":"0",
-//                "created":"2015-05-19 15:46:52",
-//                "update":"2015-05-19 15:46:52"-->
                     <tr>
                         <td width="250" align="right">商品ID：</td>
                         <td><?=$pinfo[product_id]?></td>
@@ -78,7 +61,7 @@
                         <td>操作</td>
                         <td>
                             <a class="button bg-blue button-small icon-pencil" href="/bpproduct/edit/id/<?=$pinfo[product_id]?>" title="编辑"></a>
-                            <a class="button bg-red button-small icon-trash-o js-del" href="javascript:;" url="/bpproduct/delete" data='{"id":<?=$pinfo[product_id]?>}' title="删除"></a>
+                            <a class="button bg-red button-small icon-trash-o js-del" href="javascript:;" url="/bpproduct/delete" data='{"id":<?=$pinfo[product_id]?>,"sid":<?=$pinfo['showcase_id']?>}' title="删除"></a>
                         </td>
                     </tr>
                 </tbody>
