@@ -9,7 +9,7 @@ class TagsModel {
     public $adminLog;
 
     public function __construct() {
-        $this->dbMaster = $this->getMasterDb();
+        $this->dbMaster = $this->getMasterDb('storecp');
         $this->adminLog = new AdminLogModel();
     }
 

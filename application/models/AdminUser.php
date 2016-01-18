@@ -16,7 +16,7 @@ use Trait_Redis;
     public $adminLog;
 
     public function __construct() {
-        $this->dbMaster = $this->getMasterDb();
+        $this->dbMaster = $this->getMasterDb('storecp');
         $this->dbSlave = &$this->dbMaster;
         $this->adminLog = new AdminLogModel();
     }

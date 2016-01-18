@@ -16,8 +16,8 @@ class AdminModel {
     public $adminUser;
 
     public function __construct() {
-        $this->dbMaster = $this->getMasterDb();
-        $this->dbSlave = $this->getSlaveDb();
+        $this->dbMaster = $this->getMasterDb('storecp');
+        $this->dbSlave = $this->getSlaveDb('storecp');
         $this->adminLog = new AdminLogModel();
         $this->adminUser = new AdminUserModel();
     }
