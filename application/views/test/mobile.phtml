@@ -18,7 +18,7 @@
                     <tr>
                         <th width="100">UID</th>
                         <th width="*">昵称</th>
-                        <th width="*">OPENID</th>
+                        <th width="*">手机号</th>
                         <th width="*">注册来源</th>
                         <th width="*">注册时间</th>
                         <th width="*">操作</th>
@@ -26,12 +26,12 @@
                     <?php if ($data) : ?>
                         <?php foreach($data as $val) : ?>
                             <tr>
-                                <td><?php echo $val['b_uid']; ?></td>
-                                <td><?php echo $val['b_nickname']; ?></td>
-                                <td><?php echo $val['b_openid']; ?></td>
-                                <td><?php echo $val['b_type']; ?></td>
-                                <td><?php echo $val['b_time']; ?></td>
-                                <td><a class="button bg-red button-small icon-trash-o js-del" href="javascript:;" url="/test/delete" data='{"uid":"<?php echo $val['b_uid']; ?>","openid":"<?php echo $val['b_openid']; ?>"}' title="删除"></a></td>
+                                <td><?php echo $val['u_id']; ?></td>
+                                <td><?php echo $val['u_nickname']; ?></td>
+                                <td><?php echo $val['u_phone']; ?></td>
+                                <td><?php echo $val['u_source']; ?></td>
+                                <td><?php echo $val['u_regtime']; ?></td>
+                                <td><a class="button bg-red button-small icon-trash-o js-del" href="javascript:;" url="/test/delete" data='{"uid":"<?php echo $val['u_id'];?>","mobile":"<?php echo $val['u_phone'];?>"}' title="删除"></a></td>
                             </tr>
                         <?php endforeach; ?>
                     <?php endif; ?>

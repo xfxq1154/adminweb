@@ -14,19 +14,19 @@ redis.audio.port = 6379
 
 
 ;数据库
-database.master.driver = mysql
-database.master.dbname = storecp
-database.master.host = passportmaster.mysql.rds.aliyuncs.com
-database.master.port = 3306
-database.master.username = root
-database.master.password = 1qaz@WSX
+database.storecp_master.driver = mysql
+database.storecp_master.dbname = storecp
+database.storecp_master.host = passportmaster.mysql.rds.aliyuncs.com
+database.storecp_master.port = 3306
+database.storecp_master.username = root
+database.storecp_master.password = 1qaz@WSX
 
-database.slave.driver = mysql
-database.slave.dbname = storecp
-database.slave.host = passportslave01.mysql.rds.aliyuncs.com
-database.slave.port = 3306
-database.slave.username = root
-database.slave.password = 1qaz@WSX
+database.storecp_slave.driver = mysql
+database.storecp_slave.dbname = storecp
+database.storecp_slave.host = passportslave01.mysql.rds.aliyuncs.com
+database.storecp_slave.port = 3306
+database.storecp_slave.username = root
+database.storecp_slave.password = 1qaz@WSX
 
 
 ;passport数据库
