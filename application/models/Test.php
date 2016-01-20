@@ -52,7 +52,7 @@ class TestModel {
             $stmt = $this->dbMaster->prepare($sql);
             $stmt->execute(array(':id' => $uid));
             
-            $sql = 'DELETE FROM ' . $this->user_bind_table . ' WHERE `b_uid`=:id limit 1';
+            $sql = 'DELETE FROM ' . $this->user_bind_table . ' WHERE `b_uid`=:id limit 3';
             $stmt = $this->dbMaster->prepare($sql);
             $res = $stmt->execute(array(':id' => $uid));
             return $res;
