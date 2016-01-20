@@ -182,6 +182,22 @@ class AdminModel {
             exit;
         }
     }
+    
+    /**
+     * 删除用户
+     */
+    public function delete($id){
+        if(!$id){
+            return FALSE;
+        }
+        try {
+            $sql = "DELETE FROM $this->tableName WHERE `admin_id` = :id LIMIT 1 ";
+            $stmt = $this->dbMaster->prepare($sql);
+            return $stmt->execute(array(':id'=> $id));
+        } catch (Exception $exc) {
+            die($exc->getMessage());
+        }
+    }
 
     /**
      * 获取一条admin用户
