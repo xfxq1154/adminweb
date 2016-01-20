@@ -240,14 +240,14 @@ class UserController extends Base {
 
         if ($this->getRequest()->isPost()) {
             $id = json_decode($this->getRequest()->getPost('data'), true)['id'];
-
+            
             if (!$id) {
                 echo json_encode(['info' => '删除失败', 'status' => 0]);
                 exit;
             }
 
             // 伪删除，改变status状态
-            $this->adminUser->updateAdminUser($id, ['status' => 0]);
+            $this->admin->delete($id);
             echo json_encode(['info' => '删除成功', 'status' => 1]);
             exit;
         } else {
