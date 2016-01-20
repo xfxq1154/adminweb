@@ -29,6 +29,7 @@ class BpShowcaseController extends Base {
         $block = $this->getRequest()->get('block');
         $showcase_name = $this->getRequest()->getParam('showcase_name');
         $nickname = $this->getRequest()->getParam('nickname');
+        $showcase_id = $this->getRequest()->getParam('showcase_id');
         $size = 20;
 
         $params = array();
@@ -50,6 +51,10 @@ class BpShowcaseController extends Base {
         $params['page_no'] = $p;
         $params['page_size'] = $size;
         $params['block'] = $block > 0 ? $block : '0';
+        $params['name'] = $showcase_name;
+        $params['nickname'] = $nickname;
+        $params['showcase_id'] =  $showcase_id;
+        
         $showcasesList = $this->showcase->getList($params);
         $count = $showcasesList['total_nums'];
         
