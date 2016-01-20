@@ -16,24 +16,79 @@ class TestController extends Base{
         $this->test_model = new TestModel();
     }
     
+    /*
+     * openid查询测试账号
+     */
     public function indexAction(){
         $user_bind = array();
-        if (!empty($GLOBALS['testAccount']['openid'])) {
-           $user_bind = $this->test_model->getUserBind($GLOBALS['testAccount']['openid']);
+        $newOpenids = array();
+        if (empty($GLOBALS['testAccount']['openid'])) {
+            $this->assign('data', $user_bind);
+            $this->layout('test/index.phtml');
+        }
+        $openids = "'".implode("','", $GLOBALS['testAccount']['openid'])."'";
+        $user_bind = $this->test_model->getUserBind($openids);
+        if (!empty($user_bind)) {
+            foreach ($user_bind as $k=>$v) {
+                $user_bind[$k]['status'] = 0;
+                $newOpenids[] = $v['b_openid'];
+            }
+        }
+        $openid = array_diff($GLOBALS['testAccount']['openid'], $newOpenids);
+        if (!empty($openid)) {
+            foreach ($openid as $v) {
+                $user_bind[] = array(
+                   'b_uid'=>'',
+                   'b_nickname'=>'',
+                   'b_type'=>'',
+                   'b_time'=>'',
+                   'b_openid'=>$v, 
+                   'status'=>1
+                );
+            }
         }
         $this->assign('data', $user_bind);
         $this->layout('test/index.phtml');
     }
     
+    /*
+     * openid查询测试账号
+     */
     public function mobileAction(){
         $user = array();
-        if (!empty($GLOBALS['testAccount']['mobile'])) {
-           $user = $this->test_model->getUser($GLOBALS['testAccount']['mobile']);
+        $newMobiles = array();
+        if (empty($GLOBALS['testAccount']['mobile'])) {
+            $this->assign('data', $user);
+            $this->layout('test/mobile.phtml');
+        }
+        $mobiles = "'".implode("','", $GLOBALS['testAccount']['mobile'])."'";
+        $user = $this->test_model->getUser($mobiles);
+        if (!empty($user)) {
+            foreach ($user as $k=>$v) {
+                $user[$k]['status'] = 0;
+                $newMobiles[] = $v['u_phone'];
+            }            
+        }
+        $mobile = array_diff($GLOBALS['testAccount']['mobile'], $newMobiles);
+        if (!empty($mobile)) {
+            foreach ($mobile as $v) {
+                $user[] = array(
+                   'u_id'=>'',
+                   'u_nickname'=>'',
+                   'u_source'=>'',
+                   'u_regtime'=>'',
+                   'u_phone'=>$v, 
+                   'status'=>1
+                );
+            }
         }
         $this->assign('data', $user);
         $this->layout('test/mobile.phtml');
     }
     
+    /*
+     * 删除测试账号
+     */
     public function deleteAction(){
         if ($this->getRequest()->isPost()) {
             $uid = json_decode($this->getRequest()->getPost('data'), true)['uid'];
@@ -46,15 +101,15 @@ class TestController extends Base{
         if (empty($openid) && empty($mobile)) {
             Tools::output(array('info'=>'参数非法1','status'=>0));
         }
-        
+
         if (!empty($openid)) {
-            if (strpos($GLOBALS['testAccount']['openid'], $openid) < 1) {
+            if (!in_array($openid, $GLOBALS['testAccount']['openid'])) {
                 Tools::output(array('info'=>'参数非法2','status'=>0));
             }
         }
         
         if (!empty($mobile)) {
-            if (strpos($GLOBALS['testAccount']['mobile'], $mobile) < 1 ) {
+            if (!in_array($mobile, $GLOBALS['testAccount']['mobile'])) {
                 Tools::output(array('info'=>'参数非法3','status'=>0));
             }
         }

@@ -9,10 +9,7 @@ class TestModel {
 
     use Trait_DB;
 
-    use Trait_Redis;
-
     public $dbMaster;
-    public $dbSlave;
     public $user_table = 'user'; //数据表
     public $user_bind_table = 'user_bind'; //数据表
     public $user_info_table = 'user_info'; //数据表
@@ -59,7 +56,6 @@ class TestModel {
             $stmt = $this->dbMaster->prepare($sql);
             $res = $stmt->execute(array(':id' => $uid));
             return $res;
-            
         } catch (Exception $ex) {
            die($ex->getMessage());
         }

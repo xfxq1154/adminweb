@@ -20,6 +20,7 @@
                         <th width="*">昵称</th>
                         <th width="*">手机号</th>
                         <th width="*">注册来源</th>
+                        <th width="*">状态</th>
                         <th width="*">注册时间</th>
                         <th width="*">操作</th>
                     </tr>
@@ -30,6 +31,7 @@
                                 <td><?php echo $val['u_nickname']; ?></td>
                                 <td><?php echo $val['u_phone']; ?></td>
                                 <td><?php echo $val['u_source']; ?></td>
+                                 <td><span class="tag bg-<?=$val['status'] == 1 ? 'red':'green'; ?>"><?=$val['status'] == 1 ? '已删除':'已存在'; ?></span></td>
                                 <td><?php echo $val['u_regtime']; ?></td>
                                 <td><a class="button bg-red button-small icon-trash-o js-del" href="javascript:;" url="/test/delete" data='{"uid":"<?php echo $val['u_id'];?>","mobile":"<?php echo $val['u_phone'];?>"}' title="删除"></a></td>
                             </tr>
