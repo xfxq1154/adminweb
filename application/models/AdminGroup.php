@@ -19,7 +19,10 @@ class AdminGroupModel {
         $this->dbMaster = $this->getMasterDb('storecp');
         $this->adminLog = new AdminLogModel();
     }
-
+    
+    /**
+     * 添加角色
+     */
     public function add($data) {
         if (empty($data) || !is_array($data))
             return false;
@@ -47,7 +50,11 @@ class AdminGroupModel {
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         return $row ? CustomArray::removeKeyPrefix($row, 'g_') : false;
     }
-
+    
+    /**
+     * 角色列表
+     * @return type array
+     */
     public function getGroupList() {
         $sql = "SELECT * FROM {$this->tableName} WHERE 1";
         $stmt = $this->dbMaster->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
@@ -61,7 +68,10 @@ class AdminGroupModel {
         }
         return $list;
     }
-
+    
+    /**
+     * @desc 修改角色
+     */
     public function updateGroup($id, $data) {
         if (empty($data) || !is_array($data) || empty($id))
             return false;
@@ -83,7 +93,10 @@ class AdminGroupModel {
         $this->adminLog->add($log);
         return $stmt->rowCount();
     }
-
+    
+    /**
+     * @desc 删除角色
+     */
     public function del($gid) {
         if (empty($gid) || ($gid == '1'))
             return false;

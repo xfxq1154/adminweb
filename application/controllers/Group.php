@@ -131,7 +131,7 @@ class GroupController extends Base {
      * 删除角色
      */
     public function deleteAction() {
-        $this->checkRole(true);
+        $this->checkRole();
         if ($_POST['data']) {
             $gid = $_POST['data'];
             $data = array(
@@ -157,9 +157,6 @@ class GroupController extends Base {
                     $data['status'] = 1;
                     break;
             }
-
-
-
             Tools::output($data);
         }
     }
