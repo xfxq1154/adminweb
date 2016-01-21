@@ -113,16 +113,13 @@ class UserController extends Base {
             }
 
             // 密码不一致
-            if ($password !== $confirmPassword) {
-                echo json_encode(['info' => '两次密码不一致', 'status' => 0]);
+            if (!empty($password)) {
+                $password = $this->TestingPw($password, $confirmPassword);
+            } else {
+                echo json_encode(['info' => '密码不能为空', 'status' => 0]);
                 exit;
             }
-
-            if (strlen($password) < 6) {
-                echo json_encode(['info' => '密码长度6位以上', 'status' => 0]);
-                exit;
-            }
-
+            
             // 添加admin
             $data = [
                 'code' => $code,
@@ -130,7 +127,7 @@ class UserController extends Base {
                 'tel' => $tel,
                 'wechat' => $wechatName,
                 'wechat_nickname' => $wechatNickname,
-                'password' => md5($password)
+                'password' => $password
             ];
             $adminId = $this->admin->addAdminUser($data);
 
@@ -167,8 +164,6 @@ class UserController extends Base {
         $this->initAdmin();
         $this->checkRole();
         if ($this->getRequest()->isPost()) {
-
-            // $code = $this->getRequest()->getPost('code');
             $name = $this->getRequest()->getPost('name');
             $tel = $this->getRequest()->getPost('tel');
             $wechat = $this->getRequest()->getPost('wechat_name');
@@ -180,17 +175,15 @@ class UserController extends Base {
             $confirmPassword = trim($this->getRequest()->getPost('confirm_password'));
 
             // 判断是否有输入密码，有则改，无则不改
-            if (!empty($password)) {
-                if ($password !== $confirmPassword) {
-                    echo json_encode(['info' => '密码不一致', 'status' => 0]);
-                    exit;
-                }
-
-                $data['password'] = md5($password);
+            if(!empty($password)){
+                $pw = $this->TestingPw($password, $confirmPassword);
+            }  else {
+                echo json_encode(['info' => '密码不能为空', 'status' => 0]);
+                exit;
             }
 
             // 更新admin
-            // $data['code'] = $code;
+            $data['password'] = $pw;
             $data['name'] = $name;
             $data['tel'] = $tel;
             $data['wechat'] = $wechat;
@@ -218,7 +211,7 @@ class UserController extends Base {
             $user = $this->admin->getAdminById($id);
             $groups = $this->adminUser->getGroups();
             $groupList = $this->adminGroup->getGroupList();
-
+            
             if (isset($groups[$user['id']])) {
                 $user['gid'] = $groups[$user['id']]['id'];
                 $user['status'] = $groups[$user['id']]['status'];
@@ -226,12 +219,15 @@ class UserController extends Base {
                 $user['gid'] = 0;
                 $user['status'] = 1;
             }
-
             $this->assign('user', $user);
             $this->assign('groupList', $groupList);
             $this->layout('user/edit.phtml');
         }
     }
+    
+    /**
+     * 删除用户
+     */
 
     public function deleteAction() {
 
@@ -254,6 +250,29 @@ class UserController extends Base {
             // 非POST请求
             echo json_encode(['info' => '非法操作', 'status' => 0]);
             exit;
+        }
+    }
+    
+    /**
+     * 检测密码
+     */
+    public function TestingPw($pw,$confirmPassword){
+        
+        if (!empty($pw) || !empty($confirmPassword)) {
+            if ($pw !== $confirmPassword) {
+                echo json_encode(['info' => '密码不一致', 'status' => 0]);
+                exit;
+            }
+            if(strlen($pw) < 9){
+                echo json_encode(['info' => '密码不得少于9位数', 'status' => 0]);
+                exit;
+            }
+            $pattern = '/[0-9a-zA-Z]+(\_)/';
+            if(!preg_match($pattern, $pw)){
+                echo json_encode(['info' => '密码必须包含字母、数字、下划线', 'status' => 0]);
+                exit;
+            }
+            return md5($pw);
         }
     }
     

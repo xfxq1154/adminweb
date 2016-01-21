@@ -47,33 +47,33 @@ class BpProductController extends Base {
         $this->layout("platform/product.phtml");
     }
 
-    function editAction() {
-        $this->checkRole();
-
-        if (!$this->getrequest()->isPost()) {
-            $product_id = $this->getrequest()->get('id');
-            $product = $this->product->getInfoById($product_id);
-
-            $this->assign("product", $product);
-            $this->layout('platform/product_edit.phtml');
-        } else {
-
-            $params = $this->getrequest()->getPost();
-
-            $result = $this->product->update($params);
-            $msg = ($result === "") ? "修改成功" : "修改失败";
-            $status = ($result === "") ? 1 : 0;
-            echo json_encode(['info' => $msg, 'status' => $status]);
-            exit;
-        }
-    }
+//    function editAction() {
+//        $this->checkRole();
+//
+//        if (!$this->getrequest()->isPost()) {
+//            $product_id = $this->getrequest()->get('id');
+//            $product = $this->product->getInfoById($product_id);
+//
+//            $this->assign("product", $product);
+//            $this->layout('platform/product_edit.phtml');
+//        } else {
+//
+//            $params = $this->getrequest()->getPost();
+//
+//            $result = $this->product->update($params);
+//            $msg = ($result === "") ? "修改成功" : "修改失败";
+//            $status = ($result === "") ? 1 : 0;
+//            echo json_encode(['info' => $msg, 'status' => $status]);
+//            exit;
+//        }
+//    }
 
     function deleteAction() {
         $this->checkRole();
 
-        $product_id = json_decode($this->getRequest()->getPost('data'), true)['id'];
-        $showcase_id = json_decode($this->getRequest()->getPost('data'), true)['sid'];
-        $result = $this->product->delete($product_id,$showcase_id);
+//        $product_id = json_decode($this->getRequest()->getPost('data'), true)['id'];
+//        $showcase_id = json_decode($this->getRequest()->getPost('data'), true)['sid'];
+//        $result = $this->product->delete($product_id,$showcase_id);
         $msg = ($result === "") ? "删除成功" : "删除失败";
         $status = ($result === "") ? 1 : 0;
         echo json_encode(['info' => $msg, 'status' => $status]);

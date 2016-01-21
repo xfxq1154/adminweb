@@ -78,9 +78,9 @@ class BpOrderController extends Base {
     function deleteAction() {
         $this->checkRole();
 
-        $order_id = json_decode($this->getRequest()->getPost('data'), true)['id'];
+//        $order_id = json_decode($this->getRequest()->getPost('data'), true)['id'];
 
-        $result = $this->order->delete($order_id);
+//        $result = $this->order->delete($order_id);
         $msg = ($result === "") ? "删除成功" : "删除失败";
         $status = ($result === "") ? 1 : 0;
         echo json_encode(['info' => $msg, 'status' => $status]);

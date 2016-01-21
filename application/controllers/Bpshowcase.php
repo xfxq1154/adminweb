@@ -186,7 +186,7 @@ class BpShowcaseController extends Base {
      * API:冻结
      */
     public function blockAction() {
-        $showcase_id = json_decode($this->getRequest()->getPost('data'), true)['id'];
+//        $showcase_id = json_decode($this->getRequest()->getPost('data'), true)['id'];
         if(!$showcase_id){
             return FALSE;
         }
