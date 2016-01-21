@@ -27,9 +27,9 @@ class BpShowcaseController extends Base {
         $t = (int) $this->getRequest()->get('t');
         $p = (int) $this->getRequest()->getParam('p', 1);
         $block = $this->getRequest()->get('block');
-        $showcase_name = $this->getRequest()->getParam('showcase_name');
-        $nickname = $this->getRequest()->getParam('nickname');
-        $showcase_id = $this->getRequest()->getParam('showcase_id');
+        $kw = $this->getRequest()->get('kw');
+        $nickname = $this->getRequest()->get('nickname');
+        $showcase_id = $this->getRequest()->get('showcase_id');
         $size = 20;
 
         $params = array();
@@ -51,14 +51,17 @@ class BpShowcaseController extends Base {
         $params['page_no'] = $p;
         $params['page_size'] = $size;
         $params['block'] = $block > 0 ? $block : '0';
-        $params['name'] = $showcase_name;
+        $params['kw'] = $kw;
         $params['nickname'] = $nickname;
-        $params['showcase_id'] =  $showcase_id;
+        $params['showcase_id'] = $showcase_id;
         
         $showcasesList = $this->showcase->getList($params);
         $count = $showcasesList['total_nums'];
         
         $this->assign("list", $showcasesList['showcases']);
+        $this->assign('kw', $kw);
+        $this->assign('nickname', $nickname);
+        $this->assign('id', $showcase_id);
         $this->renderPagger($p, $count, '/bpshowcase/index/p/{p}/t/'.$t, $size);
         $this->layout("platform/showcase.phtml");
     }
