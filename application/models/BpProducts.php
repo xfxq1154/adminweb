@@ -46,11 +46,11 @@ class BpProductsModel {
         return $this->request(self::PRODUCT_UPDATE, $params, "POST");
     }
 
-    public function delete($product_id,$showcase_id) {
-        $params['product_id'] = $product_id;
-        $params['showcase_id'] = $showcase_id;
-        return $this->request(self::PRODUCT_DELETE, $params, "POST");
-    }
+//    public function delete($product_id,$showcase_id) {
+//        $params['product_id'] = $product_id;
+//        $params['showcase_id'] = $showcase_id;
+//        return $this->request(self::PRODUCT_DELETE, $params, "POST");
+//    }
 
     /*
      * 格式化数据

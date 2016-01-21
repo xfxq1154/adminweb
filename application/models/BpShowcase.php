@@ -86,13 +86,13 @@ class BpShowcaseModel {
     /**
      * 冻结店铺
      */
-    public function block($params) {
-        if(empty($params)){
-            return FALSE;
-        }
-        $result = Sapi::request(self::SHOWCASE_BLOCK, $params, "POST");
-        return $result;
-    }
+//    public function block($params) {
+//        if(empty($params)){
+//            return FALSE;
+//        }
+//        $result = Sapi::request(self::SHOWCASE_BLOCK, $params, "POST");
+//        return $result;
+//    }
     
     /**
      * 解冻店铺

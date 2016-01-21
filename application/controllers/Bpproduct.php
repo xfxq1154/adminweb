@@ -71,9 +71,9 @@ class BpProductController extends Base {
     function deleteAction() {
         $this->checkRole();
 
-        $product_id = json_decode($this->getRequest()->getPost('data'), true)['id'];
-        $showcase_id = json_decode($this->getRequest()->getPost('data'), true)['sid'];
-        $result = $this->product->delete($product_id,$showcase_id);
+//        $product_id = json_decode($this->getRequest()->getPost('data'), true)['id'];
+//        $showcase_id = json_decode($this->getRequest()->getPost('data'), true)['sid'];
+//        $result = $this->product->delete($product_id,$showcase_id);
         $msg = ($result === "") ? "删除成功" : "删除失败";
         $status = ($result === "") ? 1 : 0;
         echo json_encode(['info' => $msg, 'status' => $status]);

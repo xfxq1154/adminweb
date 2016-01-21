@@ -49,10 +49,10 @@ class BpOrderModel {
         return $result['name']; 
     }
 
-    public function delete($order_id) {
-        $params['order_id'] = $order_id;
-        return $this->request(self::ORDER_DELETE, $params, "POST");
-    }
+//    public function delete($order_id) {
+//        $params['order_id'] = $order_id;
+//        return $this->request(self::ORDER_DELETE, $params, "POST");
+//    }
 
     /*
      * 格式化数据
