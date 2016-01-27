@@ -1,0 +1,190 @@
+<script language="JavaScript" type="text/javascript" src="<?=ASSET_URL?>/static/js/calendar/WdatePicker.js"></script>
+<div class="dux-tools">
+    <div class="bread-head">电商数据报表<span class="small">数据报表</span></div><br>
+</div>
+<div class="admin-main">
+    <form method="GET" class="form-x dux-form form-auto" action="/welcome/">
+        <div class="tab dux-tab">
+            <div class="panel dux-box  active">
+                <!-- tab head start-->
+                <div class="panel-head">
+                    <div class="tab-head">
+                        <strong>电商数据报表</strong>
+                        <ul class="tab-nav">
+                            <li class="active"><a href="#tab-1">日报表</a></li>
+                            <li><a href="#tab-2">周报表</a></li>
+                            <li><a href="#tab-3">月报表</a></li>
+                            <li><a href="#tab-4" onclick="upload()">总报表</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- tab head end -->
+
+                <!-- table body start-->
+                <div class="tab-body">
+                    <!-- tab 1 start -->
+                    <div class="tab-panel active" id="tab-1">
+                        <div class="form-group">
+                            <div class="label">
+                                <label>选择日期: </label>
+                            </div>
+                            <div class="field">
+                                <input type="text" id="d4321" class="input datebtn" style="width:220px;" id="datetime" onfocus="WdatePicker({maxDate:''})" style="cursor:pointer;" size="60" datatype="*" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="label">
+                                <label>日下单总数: </label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" size="60" value="13123" readOnly="true">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="label">
+                                <label>日支付订单总数: </label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" size="60" value="13123" readOnly="true">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="label">
+                                <label>日支付总额: </label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" size="60" value="13123" readOnly="true">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="label">
+                                <label>微信支付总额: </label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" size="60" value="13123" readOnly="true">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="label">
+                                <label>京东支付总额: </label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" size="60" value="13123" readOnly="true">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- tab 1 end -->
+                    
+                    <!-- start tab2 -->
+                    <div class="tab-panel" id="tab-2">
+                        <div class="form-group">
+                            <div class="label">
+                                <label>选择日期: </label>
+                            </div>
+                            <div class="field">
+                                <input type="text" id="d4321" class="input datebtn" style="width:220px;" id="datetime" onfocus="WdatePicker({maxDate:''})" style="cursor:pointer;" size="60" datatype="*" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="label">
+                                <label>周下单总数: </label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" size="60" value="13123" readOnly="true">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="label">
+                                <label>周支付订单总数: </label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" size="60" value="13123" readOnly="true">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="label">
+                                <label>周支付总额: </label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" size="60" value="13123" readOnly="true">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end tab2 -->
+
+                    <!-- start tab3 -->
+                    <div class="tab-panel" id="tab-3">
+                        <div class="form-group">
+                            <div class="label">
+                                <label>选择月份: </label>
+                            </div>
+                            <div class="field">
+                                <input type="text" id="d4321" class="input datebtn" style="width:220px;" id="datetime" onfocus="WdatePicker({maxDate:''})" style="cursor:pointer;" size="60" datatype="*" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="label">
+                                <label>月下单总数: </label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" size="60" value="13123" readOnly="true">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="label">
+                                <label>月支付订单总数: </label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" size="60" value="13123" readOnly="true">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="label">
+                                <label>月支付总额: </label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" size="60" value="13123" readOnly="true">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end tab3 -->
+                    
+                    <!-- start tab4 -->
+                    <div class="tab-panel" id="tab-4">
+                        <div class="form-group">
+                            <div class="label">
+                                <label>月下单总数: </label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" size="60" value="13123" readOnly="true">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="label">
+                                <label>月支付订单总数: </label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" size="60" value="13123" readOnly="true">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="label">
+                                <label>月支付总额: </label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" size="60" value="13123" readOnly="true">
+                            </div>
+                        </div>
+                    </div>
+                    <!--end tab4-->
+                </div>
+                <!--table end-->
+            </div>
+        </div>
+    </form>
+<script type="text/javascript" charset="utf-8">
+        Do.ready('base',function() {
+            $('.js-time').duxTime();
+        });
+</script>
+</div>
