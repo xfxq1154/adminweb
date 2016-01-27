@@ -29,7 +29,7 @@
                                 <label>选择日期: </label>
                             </div>
                             <div class="field">
-                                <input type="text" id="d4321" class="input datebtn" style="width:220px;" id="datetime" onfocus="WdatePicker({maxDate:''})" style="cursor:pointer;" size="60" datatype="*" autocomplete="off">
+                                <input type="text" class="input datebtn" style="width:220px;" id="time1" onFocus="WdatePicker()" style="cursor:pointer;" size="60" datatype="*" value="<?=$time;?>" >
                             </div>
                         </div>
                         <div class="form-group">
@@ -183,8 +183,25 @@
         </div>
     </form>
 <script type="text/javascript" charset="utf-8">
-        Do.ready('base',function() {
-            $('.js-time').duxTime();
-        });
+    Do.ready('base',function() {
+        $('.js-time').duxTime();
+    });
+</script>
+<script>
+    //ajax提交
+    $(document).ready(function(){
+        $('#time1').blur(function(){
+            var timeOne = $('#time1').val();
+            $.ajax({
+                url:'/welcome/index',
+                type:'POST',
+                data:{time1:timeOne},
+                dataType:'json',
+                success:function(data){
+                    alert(data);
+                }
+            })
+        })
+    })
 </script>
 </div>
