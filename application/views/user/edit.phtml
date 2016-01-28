@@ -1,25 +1,9 @@
 <div class="dux-tools">
     <div class="bread-head">用户管理<span class="small">编辑用户</span>
-
         <div class="float-right">
-            <a class="button button-small bg-main icon-list" href="/user/list">
-            用户列表</a>
+            <a class="button button-small bg-main icon-list" href="/user/list">用户列表</a>
         </div>
-
     </div>
-
-    <!-- <div class="tools-function clearfix">
-        <div class="float-left">
-            <a class="button button-small bg-main icon-list" href="javascript:;">
-            内容列表</a>
-        </div>
-        <div class="button-group float-right">
-            <a class="button button-small bg-dot icon-plus dropdown-toggle"> 添加 <span class="downward"></span></a>
-            <ul class="drop-menu pull-right">
-                <li><a href="/admin.php?r=duxcms/AdminFormData/add&fieldset_id=1">添加内容</a></li>
-            </ul>
-        </div>
-    </div> -->
 </div>
 <div class="admin-main">
     <form method="post" class="form-x dux-form form-auto" id="form" action="/user/edit">
@@ -110,7 +94,8 @@
                                 <label>登录密码</label>
                             </div>
                             <div class="field">
-                                <input type="password" class="input" style="width:220px;" id="password" name="password" size="60" placeholder="登录密码" datatype="/[\d|\w]{6}/" errormsg="密码长度6位以上" ignore="ignore" >
+                                <input type="text" class="input" style="width:220px;" id="password" name="password" size="60" placeholder="登录密码" datatype="/[\d|\w]{6}/" errormsg="密码长度6位以上" ignore="ignore" >
+                                <button class="button bg-green" type="button" id="pass" style="width: 130px; height: 40px;">生成随机密码</button>
                                 <div class="input-note">请填写登录密码</div>
                             </div>
                         </div>
@@ -120,7 +105,7 @@
                                 <label>确定登录密码</label>
                             </div>
                             <div class="field">
-                                <input type="password" class="input" style="width:220px;" id="confirm_password" name="confirm_password" size="60" datatype="*" placeholder="确定登录密码" errormsg="两次密码不一致" recheck="password" ignore="ignore" >
+                                <input type="text" class="input" style="width:220px;" id="confirm_password" name="confirm_password" size="60" datatype="*" placeholder="确定登录密码" errormsg="两次密码不一致" recheck="password" ignore="ignore" >
                                 <div class="input-note">请填写确定登录密码</div>
                             </div>
                         </div>
@@ -166,4 +151,19 @@
         //表单综合处理
         $('#form').duxFormPage();
     });
+    
+    //    //生成随机密码
+    $(document).ready(function(){
+        $('#pass').click(function(){
+            var len = 7;
+            var str = 'QWER34TY9U678456IOPAsdfSDFGH5JKLZXCVqwertyuioBNMpaghjklzxcvbnm120_';
+            var maxPos = str.length;
+            var pwd = '_1';
+            for (i = 0; i <= len; i++){
+                pwd += str.charAt(Math.floor(Math.random() * maxPos));
+            }
+            $("#password").val(pwd);
+            $("#confirm_password").val(pwd);
+        })
+    })
 </script>

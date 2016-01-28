@@ -78,7 +78,8 @@
                                 <label>登录密码</label>
                             </div>
                             <div class="field">
-                                <input type="password" class="input" style="width:220px;" id="password" name="password" size="60" datatype="/[\d|\w]{6}/" value="" placeholder="登录密码" errormsg="密码长度6位以上">
+                                <input type="text" class="input" style="width:220px;" id="password" name="password" size="60" datatype="/[\d|\w]{6}/" value="" placeholder="登录密码" errormsg="密码长度6位以上">
+                                <button class="button bg-green" type="button" id="pass" style="width: 130px; height: 40px;">生成随机密码</button>
                                 <div class="input-note">请填写登录密码</div>
                             </div>
                         </div>
@@ -88,7 +89,7 @@
                                 <label>确定登录密码</label>
                             </div>
                             <div class="field">
-                                <input type="password" class="input" style="width:220px;" id="confirm_password" name="confirm_password" size="60" datatype="*" value="" placeholder="确定登录密码" errormsg="两次密码不一致" recheck="password">
+                                <input type="text" class="input" style="width:220px;" id="confirm_password" name="confirm_password" size="60" datatype="*" value="" placeholder="确定登录密码" errormsg="两次密码不一致" recheck="password">
                                 <div class="input-note">请填写确定登录密码</div>
                             </div>
                         </div>
@@ -132,4 +133,19 @@
         //表单综合处理
         $('#form').duxFormPage();
     });
+    
+    //    //生成随机密码
+    $(document).ready(function(){
+        $('#pass').click(function(){
+            var len = 7;
+            var str = 'QWER34TY9U678456IOPAsdfSDFGH5JKLZXCVqwertyuioBNMpaghjklzxcvbnm120_';
+            var maxPos = str.length;
+            var pwd = '_1';
+            for (i = 0; i <= len; i++){
+                pwd += str.charAt(Math.floor(Math.random() * maxPos));
+            }
+            $("#password").val(pwd);
+            $("#confirm_password").val(pwd);
+        })
+    })
 </script>
