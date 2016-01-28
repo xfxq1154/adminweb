@@ -4,7 +4,7 @@ abstract class Base extends Yaf_Controller_Abstract {
 
     public $userInfo;
     public $admin, $adminNav, $adminUser, $adminGroup;
-
+    
     /**
      * 后台操作入口
      */
