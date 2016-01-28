@@ -177,13 +177,10 @@ class UserController extends Base {
             // 判断是否有输入密码，有则改，无则不改
             if(!empty($password)){
                 $pw = $this->TestingPw($password, $confirmPassword);
-            }  else {
-                echo json_encode(['info' => '密码不能为空', 'status' => 0]);
-                exit;
+                $data['password'] = $pw;
             }
 
             // 更新admin
-            $data['password'] = $pw;
             $data['name'] = $name;
             $data['tel'] = $tel;
             $data['wechat'] = $wechat;
