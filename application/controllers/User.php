@@ -25,11 +25,11 @@ class UserController extends Base {
             $user = $_POST['username'];
             $pass = $_POST['password'];
 
-            //$checkcode = $_POST['checkcode'];
-            //$code = $_SESSION['code'];
-            //if($code !== strtolower($checkcode)){
-            //    Tools::success('error', '验证码错误，请重新输入！');
-            //}
+            $checkcode = $_POST['checkcode'];
+            $code = $_SESSION['code'];
+            if($code !== strtolower($checkcode)){
+                Tools::success('error', '验证码错误，请重新输入！');
+            }
             if (empty($user) || empty($pass)) {
                 Tools::success('error', '用户名密码不能为空，请重新输入！');
             }
