@@ -5,6 +5,7 @@
 <title>管理中心 - 生活作风</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="viewport" content="width=device-width"/>
+<script src="http://api.geetest.com/get.php"></script>
 <?php echo Asset::getResource('pintuer.css', 'static/common');?>
 <?php echo Asset::getResource('login.css', 'static/lib');?>
 <?php echo Asset::getResource('jquery.js', 'static');?>
@@ -29,10 +30,9 @@
           <div class="form-group">
                 <button class="button button-block bg-main text-big">登录</button>
             </div>
-
     </form>
 </div>
-    <script>
+<script>
     $(".loginform").Validform({
                 tiptype:4,
                 postonce:true,
@@ -45,7 +45,7 @@
                         window.location.href = '/';
                     }
                 }
-});    
-    </script>
+});
+</script>
 </body>
 </html>

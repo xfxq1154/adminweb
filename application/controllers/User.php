@@ -14,6 +14,7 @@ class UserController extends Base {
 
     public function init() {
         $this->admin = new AdminModel();
+        
     }
 
     /**

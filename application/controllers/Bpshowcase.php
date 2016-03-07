@@ -56,12 +56,15 @@ class BpShowcaseController extends Base {
         $params['showcase_id'] = $showcase_id;
         
         $showcasesList = $this->showcase->getList($params);
+        
+        $idlist = $this->showcase->getByIdList();
         $count = $showcasesList['total_nums'];
         
         $this->assign("list", $showcasesList['showcases']);
         $this->assign('kw', $kw);
         $this->assign('nickname', $nickname);
         $this->assign('id', $showcase_id);
+        $this->assign('idlist', $idlist);
         $this->renderPagger($p, $count, '/bpshowcase/index/p/{p}/t/'.$t, $size);
         $this->layout("platform/showcase.phtml");
     }

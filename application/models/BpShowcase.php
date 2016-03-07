@@ -6,7 +6,7 @@
  */
 class BpShowcaseModel {
 
-    use Trait_Api;
+    use Trait_Api,Trait_DB;
 
     const SHOWCASE_LIST = 'showcase/getlist';  
     const SHOWCASE_DETAIL = 'showcase/detail';
@@ -26,6 +26,11 @@ class BpShowcaseModel {
     const UCAPI_REGISTER = 'user/register';
     const UCAPI_UPPW = 'user/update_pwd';
     const UCAPI_GETINFO = 'user/getinfo';
+    
+    public $tableName = 'showcase';
+    public $dbMaster;
+    public $dbSlave;
+    
     private $_error = null;
     
     private $showcase_status = array(
@@ -35,6 +40,11 @@ class BpShowcaseModel {
         '3' => '已通过审核',
         '4' => '已过期'
     );
+    
+    public function __construct() {
+        $this->dbMaster = $this->getMasterDb('store');
+        $this->dbSlave = $this->getSlaveDb('store');
+    }
     
     
     /**
@@ -84,15 +94,18 @@ class BpShowcaseModel {
     }
     
     /**
-     * 冻结店铺
+     * 获取所有店铺id列表
      */
-//    public function block($params) {
-//        if(empty($params)){
-//            return FALSE;
-//        }
-//        $result = Sapi::request(self::SHOWCASE_BLOCK, $params, "POST");
-//        return $result;
-//    }
+    public function getByIdList(){
+        try {
+            $sql = "SELECT id FROM $this->tableName ORDER BY ID DESC";
+            $stmt = $this->dbSlave->prepare($sql);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $ex) {
+            echo $ex->getMessage();
+        }
+    }
     
     /**
      * 解冻店铺
@@ -244,6 +257,8 @@ class BpShowcaseModel {
         $s['nickname'] = $showcase['nickname'];
         $s['signature'] = $showcase['signature'];
         $s['alias'] = $showcase['alias'];
+        $s['appid'] = $showcase['appid'];
+        $s['appsecret'] = $showcase['appsecret'];
         $s['logo'] = $showcase['logo'];
         $s['intro'] = $showcase['intro'];
         $s['status_person'] = $showcase['status_person'];

@@ -79,6 +79,21 @@ database.slave_operate.port = 3306
 database.slave_operate.username = root
 database.slave_operate.password = 1qaz@WSX
 
+;电商
+database.store_master.driver = mysql
+database.store_master.dbname = store
+database.store_master.host = 127.0.0.1
+database.store_master.port = 3306
+database.store_master.username = root
+database.store_master.password = 1qaz@WSX 
+
+database.store_slave.driver = mysql
+database.store_slave.dbname = store
+database.store_slave.host = 127.0.0.1
+database.store_slave.port = 3306
+database.store_slave.username = root
+database.store_slave.password = 1qaz@WSX
+
 
 
 api.coin.host = API_COIN_HOST
