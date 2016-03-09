@@ -27,10 +27,6 @@ class BpShowcaseModel {
     const UCAPI_UPPW = 'user/update_pwd';
     const UCAPI_GETINFO = 'user/getinfo';
     
-    public $tableName = 'showcase';
-    public $dbMaster;
-    public $dbSlave;
-    
     private $_error = null;
     
     private $showcase_status = array(
@@ -42,8 +38,6 @@ class BpShowcaseModel {
     );
     
     public function __construct() {
-        $this->dbMaster = $this->getMasterDb('store');
-        $this->dbSlave = $this->getSlaveDb('store');
     }
     
     
@@ -91,20 +85,6 @@ class BpShowcaseModel {
         $params['sys_code'] = 'PLATFORM';
         $result = Curl::request($url, $params, 'post');
         return $result;
-    }
-    
-    /**
-     * 获取所有店铺id列表
-     */
-    public function getByIdList(){
-        try {
-            $sql = "SELECT id FROM $this->tableName WHERE `block` = 0 ORDER BY ID DESC";
-            $stmt = $this->dbSlave->prepare($sql);
-            $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
-        } catch (Exception $ex) {
-            echo $ex->getMessage();
-        }
     }
     
     /**
