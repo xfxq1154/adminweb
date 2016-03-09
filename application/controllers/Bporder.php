@@ -12,14 +12,15 @@ class BpOrderController extends Base {
     
 
     public $order;
+    public $showcase;
 
     public function init() {
         $this->initAdmin();
         $this->order = new BpOrderModel();
+        $this->showcase = new BpShowcaseModel();
     }
 
     function indexAction() {
-
         $this->checkRole();
         $p = (int) $this->getRequest()->get('p' ,1);
         $number = $this->getRequest()->get('number');
@@ -43,14 +44,23 @@ class BpOrderController extends Base {
             
         ];
         $orderList = $this->order->getList($order_list);
-        $list = $orderList['orders'];
-        $count = $orderList['total_nums'];
         
-        $this->renderPagger($p ,$count , "/BpOrder/index/p/{p}?number={$mobile}&order_no={$order_id}&order_status={$state}&showcase={$showcase_id}", $page_size);
+        $showlist = $this->showcase->getList(array('page_no'=>1,'page_size'=>100));
+        $idlist = [];
+        $showcase = [];
+        foreach ($showlist['showcases'] as $key=>$val){
+            $idlist[$key]['id'] = $val['showcase_id'];
+            $idlist[$key]['name'] = $val['name'];
+            $showcase[$val['showcase_id']] = $val['name'];
+        }
+        
+        $this->renderPagger($p ,$orderList['total_nums'] , "/BpOrder/index/p/{p}?number={$mobile}&order_no={$order_id}&order_status={$state}&showcase={$showcase_id}", $page_size);
         $this->assign('mobile', $mobile);
         $this->assign('order_no', $order_id);
         $this->assign('showcase', $showcase_id);
-        $this->assign("list", $list);
+        $this->assign("list", $orderList['orders']);
+        $this->assign('idlist', $idlist);
+        $this->assign('name', $showcase);
         $this->layout("platform/order.phtml");
     }
 
