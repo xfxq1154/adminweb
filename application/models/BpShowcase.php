@@ -98,7 +98,7 @@ class BpShowcaseModel {
      */
     public function getByIdList(){
         try {
-            $sql = "SELECT id FROM $this->tableName ORDER BY ID DESC";
+            $sql = "SELECT id FROM $this->tableName WHERE `block` = 0 ORDER BY ID DESC";
             $stmt = $this->dbSlave->prepare($sql);
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
