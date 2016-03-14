@@ -1,8 +1,5 @@
 <div class="dux-tools">
     <div class="bread-head">店铺管理<span class="small">店铺信息</span>
-        <div class="float-right">
-            <a class="button button-small bg-main icon-list">店铺列表</a>  
-        </div>
     </div>
 </div>
 <div class="panel dux-box">
@@ -46,14 +43,6 @@
                     <tr>
                         <td align="right">店铺介绍</td>
                         <td><?=$showcase['intro']?></td>
-                    </tr>
-                    <tr>
-                        <td>操作</td>
-                        <td>
-                            <a class="button bg-green button-small" href="/bpshowcase/reset/id/<?php echo $showcase['showcase_id'];?>/user_id/<?=$showcase['user_id']?>/title/<?=$showcase['name']?>" title="重置密码">重置密码</a>
-                            <!--<a class="button bg-blue button-small icon-pencil" href="/bpproduct/edit/id/<?=$pinfo[product_id]?>" title="编辑"></a>-->
-                            <!--<a class="button bg-red button-small icon-trash-o js-del" href="javascript:;" url="/bpproduct/delete" data='{"id":<?=$pinfo[product_id]?>,"sid":<?=$pinfo['showcase_id']?>}' title="删除"></a>-->
-                        </td>
                     </tr>
                 </tbody>
             </table>
