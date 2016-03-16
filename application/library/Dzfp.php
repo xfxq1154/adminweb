@@ -17,6 +17,9 @@ class Dzfp {
     const APPID = 'DZFP';
     const REQUEST_CODE = '110104201110174';    #企业纳税人识别号
     
+    private $err_msg;
+    private $content;
+    
     public function fpkj($d1, $d2) {
         //*必填参数
         $kjxx_data = array(
@@ -95,8 +98,25 @@ class Dzfp {
         $this->doService('FPCX', $xmlstring);
     }
     
-    public function getpdf() {
-        $this->doService('GETPDF', $requestXML);
+    public function getpdf($FP_DM, $FP_HM, $JYM) {
+        if(!$FP_DM || !$FP_HM || $$JYM){
+            return FALSE;
+        }
+        $string = "<?xml version='1.0' encoding='utf-8'?><business ID='GETPDF'></business>";
+        $requestXML = simplexml_load_string($string);
+        $REQUEST_COMMON_FPCX = $requestXML->addChild('REQUEST_COMMON_GETPDF');
+        $REQUEST_COMMON_FPCX->addAttribute('class', 'REQUEST_COMMON_GETPDF');
+            $REQUEST_COMMON_FPCX->addChild('FP_DM', $FP_DM);
+            $REQUEST_COMMON_FPCX->addChild('FP_HM', $FP_HM);
+            $REQUEST_COMMON_FPCX->addChild('JYM', $JYM);
+        $xmlstring = $requestXML->asXML();
+
+        $result =  $this->doService('GETPDF', $xmlstring);
+        if(!$result){
+            return FALSE;
+        }
+        $resxml = simplexml_load_string($result);
+        return $resxml->RESPONSE_COMMON_GETPDF->PDF_TYPE;
     }
     
     /**
@@ -138,12 +158,15 @@ class Dzfp {
         
         $client = new SoapClient(self::WSDL);
         $result = $client->doService(['xml' => $xmlstring]);
-        $xml = simplexml_load_string($result->return);
-        if($xml->returnCode != 0){
-            $$this->setErr();
+        $xmlobj = simplexml_load_string($result->return);
+        if((string)$xmlobj->returnStateInfo->returnCode !== '0000'){
+            $this->err_msg = $xmlobj->returnStateInfo->returnMessage;
             return FALSE;
         }
-        return TRUE;
+        return base64_decode($xmlobj->data->content);
     }
     
+    public function getError() {
+        return $this->err_msg;
+    }
 }

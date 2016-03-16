@@ -8,6 +8,18 @@ class SoapController extends Base{
         $this->order_model = new BpOrderModel();
     }
 
+    public function testAction(){
+        $result = $this->dzfp->getpdf('111001571072','89278013', '03527779231551883440');
+        if(!$result){
+            echo $this->dzfp->getError();
+            exit;
+        }
+        $pdf = base64_decode($result);
+        header("Content-Type: application/pdf");
+        echo $pdf;
+        exit;
+    }
+
     public function indexAction(){
         $order_id = $this->getRequest()->get('order_id');
         $info = $this->order_model->getInfoById($order_id);
