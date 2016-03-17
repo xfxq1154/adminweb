@@ -87,7 +87,11 @@ class Dzfp {
         $REQUEST_COMMON_FPCX->addChild('XSF_NSRSBH', self::REQUEST_CODE);
         $REQUEST_COMMON_FPCX->addChild('FPQQLSH', $FPQQLSH);
         $xmlstring = $requestXML->asXML();
+        
         $result =  $this->doService('FPCX', $xmlstring);
+        if(!$result){
+            return FALSE;
+        }
         $resxml = simplexml_load_string($result);
         if($resxml->RESPONSE_COMMON_FPCX->CODE == 0){
             $this->err_msg = $resxml->RESPONSE_COMMON_FPCX->DESC;
@@ -128,7 +132,7 @@ class Dzfp {
         }
         
         $encryCf = $this->encrypt($requestXML);
-      
+        
         $data = [
             'globalInfo' => [
                 'appId' => self::APPID,
@@ -164,9 +168,7 @@ class Dzfp {
             $this->err_msg = (string)$xmlobj->returnStateInfo->returnMessage;
             return FALSE;
         }
-        if(self::ENVIRONMENT == 'develop'){
-            return base64_decode($xmlobj->data->content);
-        }
+        
         return $this->decrypt($xmlobj->data->content, $xmlobj->data->signature);
     }
     
