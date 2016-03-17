@@ -72,6 +72,7 @@ class BpOrderModel {
         $o['receiver_city'] = $order['receiver_city'];
         $o['receiver_district'] = $order['receiver_district'];
         $o['receiver_address'] = $order['receiver_address'];
+        $o['invoice_title'] = $order['invoice_title'];
         $o['receiver_zip'] = $order['receiver_zip'];
         $o['receiver_name'] = $order['receiver_name'];
         $o['receiver_mobile'] = $order['receiver_mobile'];

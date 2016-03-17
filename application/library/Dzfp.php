@@ -10,52 +10,49 @@ class Dzfp {
     const REQUEST_CODE = '110104201110174';    #企业纳税人识别号
     const ENVIRONMENT = ENVIRONMENT;    #运行环境
     
+    const FPHXZ = 0; //发票行性质 0正常行 1折扣行 2被折扣行
+
+
     private $err_msg;
     private $content;
     
-    public function fpkj($d1, $d2) {
+    public function fpkj($order, $detail) {
+        if(!$order || !$detail){
+            Tools::output(array('info'=>'必传参数缺失','status'=>1));
+        }
+        if($order['type'] == 1){
+            if(!$order['yfp_dm'] || !$order['yfp_hm']){
+                Tools::output(array('info'=>'原发票号码或代码不能为空','status'=>1));
+            }
+        }
         //*必填参数
         $kjxx_data = array(
-            'KPLX'          =>'12',   //*发票请求流水号
-            'FPQQLSH'       =>'20150722170928',   //*开票类型 0 蓝字发票 1红字发票
-            'XSF_NSRSBH'    =>'110104201110174',   //*销售方纳税人识别号
-            'XSF_MC'        =>'测试',   //*销售方名称
-            'XSF_DZDH'      =>'safd',   //*销售方地址电话
-            'XSF_YHZH'      =>'sdf',   //销售方银行账号
-            'GMF_NSRSBH'    =>'sadf',   //购买方纳税人识别号
-            'GMF_MC'        =>'asf',   //*购买方名称
-            'GMF_DZDH'      =>'sadf',   //购买方地址
-            'GMF_YHZH'      =>'sdaf',   //购买方银行账号
-            'KPR'           =>'asdf',   //*开票人
-            'SKR'           =>'sdaf',   //收款人
-            'FHR'           =>'asdf',   //复核人 
-            'YFP_DM'        =>'sadf',   //原发票代码 红字发票时必须
-            'YFP_HM'        =>'asdf',   //原发票号码 红字发票时必须
-            'JSHJ'          =>'asdf',   //*价税合计 单位元 (2位小数)
-            'HJJE'          =>'asdf',   //*合计金额 单位元 (2位小数)
-            'HJSE'          =>'asdf',   //*合计税额 单位元 (2位小数)
-            'BZ'            =>'sadf',   //备注
-            'DDRQ'          =>'sadf',   //*订单日期 同下
-            'KPRQ'          =>'sadf',   //*开票日期 yyyymmddhh24miss
-            'DDH'           =>'asdf',   //订单号
-            'XFZ_YX'        =>'asdf',   //消费者邮箱
-            'XFZ_SJH'       =>'asdf'    //*消费者手机号
-         );
-        $kjxxmx = array(
-            array(
-                'FPHXZ'     => 'asf',   //*发票行性质 0正常行、1折扣行、2被折扣行
-                'HH'        => 'asf',   //*行号 按商品明细排序 第一行1，第二行2 一次类推
-                'XMMC'      => 'asdf',   //*项目名称
-                'GGXH'      => 'asfd',   //计量单位
-                'DW'        => 'asdf',   //规格型号
-                'XMSL'      => 'asf',   //项目数量
-                'XMDJ'      => 'czv',   //项目单价 小数点后六位 不含税
-                'XMJE'      => 'af',   //*项目金额 不含税，单位元(2位小数)
-                'SL'        => 'sdfg',   //*税率 6位小数例：1%为0.01
-                'SE'        => '123',   //*税额 单位：元(2位小数)
-                'SN'        => '13'    //商品SN号
-            )
+            'FPQQLSH'       => strtotime(date('Y-m-d H:i:s')),   //*发票请求流水号
+            'KPLX'          => $order['type'],   //*开票类型 0 蓝字发票 1红字发票
+            'XSF_NSRSBH'    => self::REQUEST_CODE,   //*销售方纳税人识别号
+            'XSF_MC'        => $order['xsf_mc'],   //*销售方名称
+            'XSF_DZDH'      => $order['xsf_dzdh'],   //*销售方地址电话
+            'XSF_YHZH'      => '',   //销售方银行账号
+            'GMF_NSRSBH'    => '',   //购买方纳税人识别号
+            'GMF_MC'        => $order['invoice_title'],   //*购买方名称
+            'GMF_DZDH'      => '',   //购买方地址
+            'GMF_YHZH'      => '',   //购买方银行账号
+            'KPR'           => $order['kpr'],   //*开票人
+            'SKR'           => '',   //收款人
+            'FHR'           => '',   //复核人 
+            'YFP_DM'        => $order['type'] == 1 ? $order['yfp_dm'] : '',   //原发票代码 红字发票时必须
+            'YFP_HM'        => $order['type'] == 1 ? $order['yfp_hm'] : '',   //原发票号码 红字发票时必须
+            'JSHJ'          => $order['payment_fee'],   //*价税合计 单位元 (2位小数)
+            'HJJE'          => $order['hjje'],   //*合计金额 单位元 (2位小数)
+            'HJSE'          => $order['hjse'],   //*合计税额 单位元 (2位小数)
+            'BZ'            => '',   //备注
+            'DDRQ'          => $order['create_time'],   //*订单日期 同下
+            'KPRQ'          => date('Y-m-d H:i:s'),   //*开票日期 yyyymmddhh24miss
+            'DDH'           => $order['order_id'],   //订单号
+            'XFZ_YX'        => '',   //消费者邮箱
+            'XFZ_SJH'       => $order['receiver_mobile']    //*消费者手机号
         );
+        
         $string = "<?xml version='1.0' encoding='utf-8'?><BUSINESS ID='REQUEST_E_FAPIAO_KJ'></BUSINESS>";
         $requestXML = simplexml_load_string($string);
         $kjxx = $requestXML->addChild('KJXX');
@@ -65,14 +62,18 @@ class Dzfp {
         }
         
         $kjxxmx = $requestXML->addChild('KJXXMX');
-        $kjxxmx->addAttribute('COUNT', 1);
-        foreach ($kjxxmx as $value){
-            $kjmx = $requestXML->addChild('KJMX');
+        $kjxxmx->addAttribute('COUNT', 2);
+        
+        //格式化订单商品详情
+        $ks_info = $this->batch($detail);
+        foreach ($ks_info as $value){
+            $kjmx = $kjxxmx->addChild('KJMX');
             foreach ($value as $vk=>$vl){
                 $kjmx->addChild($vk,$vl);
             }
         }
-        $this->doService('REQUEST_E_FAPIAO_KJ', $requestXML->asXML());
+        
+        return $this->doService('REQUEST_E_FAPIAO_KJ', $requestXML->asXML());
     }
     
     /**
@@ -112,7 +113,7 @@ class Dzfp {
         $REQUEST_COMMON_FPCX->addChild('FP_HM', $FP_HM);
         $REQUEST_COMMON_FPCX->addChild('JYM', $JYM);
         $xmlstring = $requestXML->asXML();
-
+        
         $result =  $this->doService('GETPDF', $xmlstring);
         if(!$result){
             return FALSE;
@@ -132,7 +133,6 @@ class Dzfp {
         }
         
         $encryCf = $this->encrypt($requestXML);
-        
         $data = [
             'globalInfo' => [
                 'appId' => self::APPID,
@@ -164,12 +164,52 @@ class Dzfp {
         $client = new SoapClient(self::WSDL);
         $result = $client->doService(['xml' => $xmlstring]);
         $xmlobj = simplexml_load_string($result->return);
+        
         if((int)$xmlobj->returnStateInfo->returnCode == 1){
             $this->err_msg = (string)$xmlobj->returnStateInfo->returnMessage;
             return FALSE;
         }
         
         return $this->decrypt($xmlobj->data->content, $xmlobj->data->signature);
+    }
+    
+    /**
+     * foreach orderdetail
+     * @return type
+     */
+    public function batch($data){
+        if(!$data){
+            return FALSE;
+        }
+        $kjxxmx = array(
+            'FPHXZ'     => '',   //*发票行性质 0正常行、1折扣行、2被折扣行
+            'HH'        => '',   //*行号 按商品明细排序 第一行1，第二行2 一次类推
+            'XMMC'      => '',   //*项目名称
+            'GGXH'      => '',   //计量单位
+            'DW'        => '',   //规格型号
+            'XMSL'      => '',   //项目数量
+            'XMDJ'      => '',   //项目单价 小数点后六位 不含税
+            'XMJE'      => '',   //*项目金额 不含税，单位元(2位小数)
+            'SL'        => '',   //*税率 6位小数例：1%为0.01
+            'SE'        => '',   //*税额 单位：元(2位小数)
+            'SN'        => ''    //商品SN号
+        );
+        $i=1;
+        $kj_data = array();
+        foreach ($data as $key => $value){
+            $kj_data[$key]['FPHXZ'] = self::FPHXZ;
+            $kj_data[$key]['HH'] = $i++;
+            $kj_data[$key]['XMMC'] = $value['title'];
+            $kj_data[$key]['GGXH'] = '';
+            $kj_data[$key]['DW'] = '';
+            $kj_data[$key]['XMSL'] = '';
+            $kj_data[$key]['XMDJ'] = '';
+            $kj_data[$key]['XMJE'] = $value['pay_price'];
+            $kj_data[$key]['SL'] = $value['sl'];
+            $kj_data[$key]['SE'] = $value['se'];
+            $kj_data[$key]['SN'] = '';
+        }
+        return $kj_data;
     }
     
     public function getError() {

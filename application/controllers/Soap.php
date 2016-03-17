@@ -3,12 +3,22 @@ class SoapController extends Base{
     
     public $dzfp;
     public $order_model;
+    
+    const SL1 = 0.01;
+    const SL2 = 0.17;
+    const SL3 = 0;
+    const JYM = '03527779231551883440';
+
+
     public function init() {
         $this->dzfp = new Dzfp();
     }
 
     public function testAction(){
-        $result = $this->dzfp->getpdf('111001571072','89278013', '03527779231551883440');
+        $fp_dm = $this->getRequest()->get('fp_dm');
+        $fp_hm = $this->getRequest()->get('fp_hm');
+        $result = $this->dzfp->getpdf($fp_dm, $fp_hm, self::JYM);
+//        $result = $this->dzfp->getpdf('111001571072','89278013', self::JYM);
         if(!$result){
             echo $this->dzfp->getError();
             exit;
@@ -40,11 +50,32 @@ class SoapController extends Base{
 
     public function indexAction(){
         $order_id = $this->getRequest()->get('order_id');
+        $type = intval($this->getRequest()->get('type', 0));
+        $fpsl = $this->getRequest()->get('fpsl', 0.06);
+        $xsf_mc = $this->getRequest()->get('xsf_mc','测试');
+        $xsf_dzdh = $this->getRequest()->get('xsf_dzdh','北京市朝阳区通惠河北路朗园Vintage2号楼A座3/6/7/8层');
+        $kpr = $this->getRequest()->get('kpr','财务总监');
+        
+        //查询订单详情
         $info = $this->order_model->getInfoById($order_id);
-//        $order_info = $this->format_order_struct($info);
-        echo "<pre>";
-        print_r($info);exit;
-        $result = $this->dzfp->fpkj();
+        if($info['state'] !== 'TRADE_BUYER_SIGNED' || $info['invoice_title'] == ''){
+            Tools::output(array('info'=>'此订单不能开发票','status'=>1));
+        }
+        
+        //格式化订单
+        $order_info = $this->format_order_struct($info);
+        $order_info['xsf_mc'] = $xsf_mc;
+        $order_info['xsf_dzdh'] = $xsf_dzdh;
+        $order_info['kpr'] = $kpr;
+        $order_info['type'] = $type == 1 ? 1 : 0;
+        
+        //格式订单详情
+        $order_detail = $this->format_order_batch($info, $fpsl);
+        $order_info['hjse'] = $order_detail['total_fpes'];
+        $order_info['hjje'] = $order_info['payment_fee'] - $order_info['hjse'];
+        
+        //开发票
+        $result = $this->dzfp->fpkj($order_info, $order_detail['order_detail']);
         var_dump($result);exit;
     }
     
@@ -58,7 +89,7 @@ class SoapController extends Base{
         if($data === FALSE){
             return FALSE;
         }
-        $this->tidy($data);
+        return $this->tidy($data);
     }
     
     /**
@@ -66,24 +97,49 @@ class SoapController extends Base{
      */
     public function tidy($data){
         $order_info = [
-            'total_fee' => $data['total_fee'],
-            'order_id' => $data['payment_fee'],
+            'payment_fee' => $data['payment_fee'],
             'order_id' => $data['order_id'],
-            'order_id' => $data['order_id'],
-            'order_id' => $data['order_id'],
-            'order_id' => $data['order_id'],
-            'order_id' => $data['order_id'],
-            'order_id' => $data['order_id'],
-            'order_id' => $data['order_id'],
-            'order_id' => $data['order_id'],
-            'order_id' => $data['order_id'],
-            'order_id' => $data['order_id'],
-            'order_id' => $data['order_id'],
-            'order_id' => $data['order_id'],
-            'order_id' => $data['order_id'],
-            'order_id' => $data['order_id'],
+            'receiver_mobile' => $data['receiver_mobile'],
+            'invoice_title' => $data['invoice_title'],
+            'create_time' => $data['create_time']
+        ];
+        return $order_info;
+    }
+    
+    /**
+     * 格式化订单详情
+     */
+    public function format_order_batch($datas, $fpsl){
+        if($datas ===  FALSE){
+            return FALSE;
+        }
+        if(empty($datas)){
+            return array();
+        }
+        foreach ($datas['order_detail'] as &$data){
+            $data = $this->detailTidy($data, $fpsl);
+            $float = $data['se'];
+            $int += ($float * 100);
+        }
+        $datas['total_fpes'] = $int /100;
+        return $datas;
+    }
+    
+    /**
+     * 详情格式化
+     */
+    public function detailTidy($data, $fpsl){
+        $order_info = [
+            'title' => $data['title'],
+            'num' => $data['num'],
+            'shiped_num' => $data['shiped_num'],
+            'price' => $data['price'],
+            'pay_price' => $data['pay_price'] - round($data['pay_price'] - ($data['pay_price'] / (1 + $fpsl)),2),
+            'sl' => $fpsl,
+            'se' => round($data['pay_price'] - ($data['pay_price'] / (1 + $fpsl)),2)
             
         ];
+        return $order_info;
     }
    
 }
