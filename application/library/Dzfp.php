@@ -112,9 +112,9 @@ class Dzfp {
         $requestXML = simplexml_load_string($string);
         $REQUEST_COMMON_FPCX = $requestXML->addChild('REQUEST_COMMON_GETPDF');
         $REQUEST_COMMON_FPCX->addAttribute('class', 'REQUEST_COMMON_GETPDF');
-            $REQUEST_COMMON_FPCX->addChild('FP_DM', $FP_DM);
-            $REQUEST_COMMON_FPCX->addChild('FP_HM', $FP_HM);
-            $REQUEST_COMMON_FPCX->addChild('JYM', $JYM);
+        $REQUEST_COMMON_FPCX->addChild('FP_DM', $FP_DM);
+        $REQUEST_COMMON_FPCX->addChild('FP_HM', $FP_HM);
+        $REQUEST_COMMON_FPCX->addChild('JYM', $JYM);
         $xmlstring = $requestXML->asXML();
 
         $result =  $this->doService('GETPDF', $xmlstring);
