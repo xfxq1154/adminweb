@@ -87,15 +87,19 @@ class Dzfp {
      * @param type $FPQQLSH
      */
     public function fpcx($FPQQLSH) {
-        $string = "<?xml version='1.0' encoding='utf-8'?><business ID='FPCX' comment='发票查询'></business>";
+        $string = "<?xml version='1.0' encoding='utf-8'?><BUSINESS ID='FPCX' comment='发票查询'></BUSINESS>";
         $requestXML = simplexml_load_string($string);
         $REQUEST_COMMON_FPCX = $requestXML->addChild('REQUEST_COMMON_FPCX');
         $REQUEST_COMMON_FPCX->addAttribute('class', 'REQUEST_COMMON_FPCX');
-            $REQUEST_COMMON_FPCX->addChild('XSF_NSRSBH', $FPQQLSH);
-            $REQUEST_COMMON_FPCX->addChild('FPQQLSH', self::REQUEST_CODE);
+        $REQUEST_COMMON_FPCX->addChild('XSF_NSRSBH', self::REQUEST_CODE);
+        $REQUEST_COMMON_FPCX->addChild('FPQQLSH', $FPQQLSH);
         $xmlstring = $requestXML->asXML();
-
-        $this->doService('FPCX', $xmlstring);
+        $result =  $this->doService('FPCX', $xmlstring);
+        if(!$result){
+            return FALSE;
+        }
+        $resxml = simplexml_load_string($result);
+        return $resxml->RESPONSE_COMMON_FPCX->EWM;
     }
     
     public function getpdf($FP_DM, $FP_HM, $JYM) {
@@ -156,11 +160,12 @@ class Dzfp {
         }
         $xmlstring = $xml->asXML();
         
+        ini_set('default_socket_timeout', 3);
         $client = new SoapClient(self::WSDL);
         $result = $client->doService(['xml' => $xmlstring]);
         $xmlobj = simplexml_load_string($result->return);
         if((string)$xmlobj->returnStateInfo->returnCode !== '0000'){
-            $this->err_msg = $xmlobj->returnStateInfo->returnMessage;
+            $this->err_msg = (string)$xmlobj->returnStateInfo->returnMessage ? :base64_decode($xmlobj->data->content);
             return FALSE;
         }
         return base64_decode($xmlobj->data->content);
