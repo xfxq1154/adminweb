@@ -174,4 +174,55 @@ class Dzfp {
     public function getError() {
         return $this->err_msg;
     }
+
+    /**
+     * 进行CA加密
+     * @param type $src
+     * @return type
+     */
+    public function encryCfca($src) {
+        $client = $this->get_ca_client();
+
+        $sign = $client->signature($src, $this->pfxPath, $this->pfxPwd);
+        $encrypt = $client->encryCfca($src, $this->cerPath);
+        return ['encrypt' => (string)$encrypt, 'sign' => (string)$sign];
+    }
+    
+    /**
+     * 进行CA解密，如果签名不正确返回False
+     * @param type $encrypt
+     * @param type $sign
+     * @return boolean
+     */
+    public function deEncryCfca($encrypt, $sign) {
+        $client = $this->get_ca_client();
+
+        $decrypt = $client->deEncryCfca($encrypt, $this->pfxPath, $this->pfxPwd);
+        $verifySign = $client->verifySign($decrypt, $sign, $this->cerPath);
+        if(!$verifySign){
+            return FALSE;
+        }
+        return (string)$decrypt;
+    }
+    
+    private function get_ca_client(){
+        // Dir
+        $here = ROOT_PATH.'/application/library/dzfpca';
+        $javaDir = $here.DIRECTORY_SEPARATOR."java";
+        $libDir = $here.DIRECTORY_SEPARATOR."lib";
+        $configDir = $here.DIRECTORY_SEPARATOR."config";
+
+        // Java.inc
+        Yaf_Loader::import($javaDir.DIRECTORY_SEPARATOR."Java.inc");
+
+        // Library path
+        java_set_library_path($libDir);
+        // Cert
+        $this->cerPath = $configDir.DIRECTORY_SEPARATOR."test.cer";
+        $this->pfxPath = $configDir.DIRECTORY_SEPARATOR."test.pfx";
+        $this->pfxPwd  = "1";
+
+        // Test5 instance
+        return new Java("Test5");
+    }
 }
