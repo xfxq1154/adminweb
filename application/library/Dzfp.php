@@ -95,11 +95,12 @@ class Dzfp {
         $REQUEST_COMMON_FPCX->addChild('FPQQLSH', $FPQQLSH);
         $xmlstring = $requestXML->asXML();
         $result =  $this->doService('FPCX', $xmlstring);
-        if(!$result){
+        $resxml = simplexml_load_string($result);
+        if($resxml->RESPONSE_COMMON_FPCX->CODE == 0){
+            $this->err_msg = $resxml->RESPONSE_COMMON_FPCX->DESC;
             return FALSE;
         }
-        $resxml = simplexml_load_string($result);
-        return $resxml->RESPONSE_COMMON_FPCX->EWM;
+        return (array)$resxml->RESPONSE_COMMON_FPCX;
     }
     
     public function getpdf($FP_DM, $FP_HM, $JYM) {
@@ -164,8 +165,8 @@ class Dzfp {
         $client = new SoapClient(self::WSDL);
         $result = $client->doService(['xml' => $xmlstring]);
         $xmlobj = simplexml_load_string($result->return);
-        if((string)$xmlobj->returnStateInfo->returnCode !== '0000'){
-            $this->err_msg = (string)$xmlobj->returnStateInfo->returnMessage ? :base64_decode($xmlobj->data->content);
+        if((int)$xmlobj->returnStateInfo->returnCode == 1){
+            $this->err_msg = (string)$xmlobj->returnStateInfo->returnMessage;
             return FALSE;
         }
         return base64_decode($xmlobj->data->content);

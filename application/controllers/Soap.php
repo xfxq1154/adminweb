@@ -5,7 +5,6 @@ class SoapController extends Base{
     public $order_model;
     public function init() {
         $this->dzfp = new Dzfp();
-        $this->order_model = new BpOrderModel();
     }
 
     public function testAction(){
@@ -17,6 +16,25 @@ class SoapController extends Base{
         $pdf = base64_decode($result);
         header("Content-Type: application/pdf");
         echo $pdf;
+        exit;
+    }
+
+    public function test2Action(){
+        $result = $this->dzfp->fpcx('20160316131228');
+        if(!$result){
+            echo $this->dzfp->getError();
+            exit;
+        }
+        var_dump($result);
+        exit;
+    }
+
+    public function test3Action(){
+        $src = "'1234567891'";
+        $result = $this->dzfp->encryCfca($src);
+        $r2 = $this->dzfp->deEncryCfca($result['encrypt'], $result['sign']);
+        
+        var_dump("原文:$src", $result,"解密结果:$r2");
         exit;
     }
 
