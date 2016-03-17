@@ -16,6 +16,7 @@ class Dzfp {
     const WSDL = 'http://111.202.226.70:8002/zxkp_base64/services/WKWebService?wsdl';
     const APPID = 'DZFP';
     const REQUEST_CODE = '110104201110174';    #企业纳税人识别号
+    const ENVIRONMENT = ENVIRONMENT;    #运行环境
     
     private $err_msg;
     private $content;
@@ -134,21 +135,23 @@ class Dzfp {
             return FALSE;
         }
         
-        $content = base64_encode($requestXML); 
+        $encryCf = $this->encrypt($requestXML);
+      
         $data = [
-                'globalInfo' => [
-                    'appId' => self::APPID,
-                    'interfaceCode' => $interfaceCode,
-                    'requestCode' => self::REQUEST_CODE,
-                    'requestTime' => date('Y-m-d H:i:s'),
-                    'responseCode' => 'tunkong'],
-                'returnStateInfo' => [
-                    'returnCode' => '', 
-                    'returnMessage' => '',
-                    ],
-                'data' => [
-                    'content' => $content, 
-                    'signature' => '',]
+            'globalInfo' => [
+                'appId' => self::APPID,
+                'interfaceCode' => $interfaceCode,
+                'requestCode' => self::REQUEST_CODE,
+                'requestTime' => date('Y-m-d H:i:s'),
+                'responseCode' => 'tunkong'],
+            'returnStateInfo' => [
+                'returnCode' => '', 
+                'returnMessage' => '',
+                ],
+            'data' => [
+                'content' => $encryCf['encrypt'], 
+                'signature' => $encryCf['sign']
+                ]
         ];
         
         $string = "<?xml version='1.0' encoding='utf-8'?><interface></interface>";
@@ -169,7 +172,10 @@ class Dzfp {
             $this->err_msg = (string)$xmlobj->returnStateInfo->returnMessage;
             return FALSE;
         }
-        return base64_decode($xmlobj->data->content);
+        if(self::ENVIRONMENT == 'develop'){
+            return base64_decode($xmlobj->data->content);
+        }
+        return $this->decrypt($xmlobj->data->content, $xmlobj->data->signature);
     }
     
     public function getError() {
@@ -177,32 +183,42 @@ class Dzfp {
     }
 
     /**
-     * 进行CA加密
+     * 进行加密，开发环境采用base64加密，生产环境采用CA加密
      * @param type $src
      * @return type
      */
-    public function encryCfca($src) {
-        $client = $this->get_ca_client();
-
-        $sign = $client->signature($src, $this->pfxPath, $this->pfxPwd);
-        $encrypt = $client->encryCfca($src, $this->cerPath);
+    public function encrypt($src) {
+        
+        if(self::ENVIRONMENT == 'develop'){
+            $encrypt = base64_encode($src);
+            $sign = '';
+        }else{
+            $client = $this->get_ca_client();
+            $sign = $client->signature($src, $this->pfxPath, $this->pfxPwd);
+            $encrypt = $client->encryCfca($src, $this->cerPath);
+        }
+        
         return ['encrypt' => (string)$encrypt, 'sign' => (string)$sign];
     }
     
     /**
-     * 进行CA解密，如果签名不正确返回False
+     * 进行解密，如果签名不正确返回False
      * @param type $encrypt
      * @param type $sign
      * @return boolean
      */
-    public function deEncryCfca($encrypt, $sign) {
-        $client = $this->get_ca_client();
-
-        $decrypt = $client->deEncryCfca($encrypt, $this->pfxPath, $this->pfxPwd);
-        $verifySign = $client->verifySign($decrypt, $sign, $this->cerPath);
-        if(!$verifySign){
-            return FALSE;
+    public function decrypt($encrypt, $sign) {
+        if(self::ENVIRONMENT == 'develop'){
+            $decrypt = base64_decode($encrypt);
+        }else{
+            $client = $this->get_ca_client();
+            $decrypt = $client->deEncryCfca($encrypt, $this->pfxPath, $this->pfxPwd);
+            $verifySign = $client->verifySign($decrypt, $sign, $this->cerPath);
+            if(!$verifySign){
+                return FALSE;
+            }
         }
+        
         return (string)$decrypt;
     }
     
