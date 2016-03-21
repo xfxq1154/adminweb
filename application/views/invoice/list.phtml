@@ -1,12 +1,26 @@
 <div class="dux-tools">
-    <div class="bread-head">电子发票<span class="small">需要开发票订单列表</span>
-    </div>
+    <div class="bread-head">电子发票<span class="small">需要开发票订单列表</span></div>
     <br>
     <div class="tools-function clearfix">
         <div class="float-left">
-            
+            <div class="float-left">
+                <form method="post" action="/invoice/showlist" enctype="multipart/form-data" id="form">
+                    <div class="form-inline">
+                        <div class="form-group">
+                            <div class="field">
+                                <!--<input type="text" class="input" id="keyword" name="keyword" size="20" value="" placeholder="关键词">-->
+                            </div>
+                        </div>
+                        <div class="form-button">
+                            <!--<button class="button" type="submit" name="sou" value="sou">搜索</button>-->
+                            <input type="file" class="button" name="import" />
+                            <button class="button bg-main" type="submit" id="import" name="import" value="import">导入数据</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
-    </div> 
+    </div>
 </div>
 <div class="admin-main">
     <div class="panel dux-box">
@@ -16,22 +30,42 @@
                     <tr>
                         <th width="*">订单号</th>
                         <th width="*">发票台头</th>
+                        <th width="*">项目名称</th>
                         <th width="*">价税合计</th>
                         <th width="*">合计金额</th>
                         <th width="*">合计税额</th>
                         <th width="*">消费者手机号</th>
+                        <th width="*">税率</th>
+                        <th width="*">销售方地址电话</th>
+                        <th width="*">发票类型</th>
                         <th width="*">操作</th>
                     </tr>
                     <?php if ($data) : ?>
-                        <?php foreach($data as $val) : ?>
+                        <?php foreach($data['data'] as $val) : ?>
                             <tr>
                                 <td><?php echo $val['order_id']; ?></td>
                                 <td><?php echo $val['invoice_title']; ?></td>
+                                <td><?php echo $val['project_name']; ?></td>
                                 <td><?php echo $val['payment_fee']; ?></td>
                                 <td><?php echo $val['total_fee']; ?></td>
                                 <td><?php echo $val['total_tax']?></td>
                                 <td><?php echo $val['buyer_phone']; ?></td>
-                                <td><button class="button">开具发票</button></td>
+                                <td><select class="input js-assign" name="fpsl" style="width: 50px;">
+                                       <?php foreach ($tax_rate as $tax_val): ?>
+                                        <option value='<?php echo $tax_val?>'><?php echo $tax_val;?></option>
+                                        <?php endforeach;?>
+                                    </select>
+                                </td>
+                                <td><input name="xsf_dzdh" type="text" class="input" value="<?php echo $seller_address;?>"></input></td>
+                                <td>
+                                    <select class="input js-assign" name="type" style="width: 70px">
+                                        <option value="0">蓝字发票</option>
+                                        <option value="1">红字发票</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <a class="button bg-blue button-small icon-pencil" href="/soap/index/order_id/<?php echo $val['order_id']; ?>" >开具发票</a>
+                                </td>
                             </tr>
                         <?php endforeach; ?>
                     <?php endif; ?>
@@ -46,7 +80,8 @@
     <?php endif;?>
 </div>
 <script>
-Do.ready('base', function () {
-$('#table').duxTable();
-});
+    Do.ready('base', function () {
+        //表单综合处理
+        $('#form').duxFormPage();
+    });
 </script>

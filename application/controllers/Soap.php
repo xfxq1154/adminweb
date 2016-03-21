@@ -2,7 +2,7 @@
 class SoapController extends Base{
     
     public $dzfp;
-    public $order_model;
+    public $youzan_order_model;
     
     const SL1 = 0.01;
     const SL2 = 0.17;
@@ -12,8 +12,46 @@ class SoapController extends Base{
 
     public function init() {
         $this->dzfp = new Dzfp();
+        $this->youzan_order_model = new YouZanOrderModel();
     }
-
+    
+    
+    /**
+     * 开具发票
+     */
+    public function indexAction(){
+        $order_id = $this->getRequest()->get('order_id');
+        $type = intval($this->getRequest()->get('type'));
+        $fpsl = $this->getRequest()->get('fpsl');
+        $xsf_mc = $this->getRequest()->get('xsf_mc','北京四维造物信息科技有限公司');
+        $xsf_dzdh = $this->getRequest()->get('xsf_dzdh');
+        $kpr = $this->getRequest()->get('kpr','财务总监');
+        
+        //查询订单详情
+        $o_info = $this->youzan_order_model->getInfo($order_id);
+        echo "<pre>";
+        print_r($o_info);exit;
+        if($o_info['status'] !== 'TRADE_BUYER_SIGNED'){
+            echo '未收货的订单不能开发票';exit;
+        }
+        
+        //格式化订单
+        $order_info = $this->format_order_struct($info);
+        $order_info['xsf_mc'] = $xsf_mc;
+        $order_info['xsf_dzdh'] = $xsf_dzdh;
+        $order_info['kpr'] = $kpr;
+        $order_info['type'] = $type == 1 ? 1 : 0;
+        
+        //格式订单详情
+        $order_detail = $this->format_order_batch($info, $fpsl);
+        $order_info['hjse'] = $order_detail['total_fpes'];
+        $order_info['hjje'] = $order_info['payment_fee'] - $order_info['hjse'];
+        
+        //开发票
+        $result = $this->dzfp->fpkj($order_info, $order_detail['order_detail']);
+        var_dump($result);exit;
+    }
+    
     public function testAction(){
         $fp_dm = $this->getRequest()->get('fp_dm');
         $fp_hm = $this->getRequest()->get('fp_hm');
@@ -47,37 +85,8 @@ class SoapController extends Base{
         var_dump("原文:$src", $result,"解密结果:$r2");
         exit;
     }
-
-    public function indexAction(){
-        $order_id = $this->getRequest()->get('order_id');
-        $type = intval($this->getRequest()->get('type', 0));
-        $fpsl = $this->getRequest()->get('fpsl', 0.06);
-        $xsf_mc = $this->getRequest()->get('xsf_mc','测试');
-        $xsf_dzdh = $this->getRequest()->get('xsf_dzdh','北京市朝阳区通惠河北路朗园Vintage2号楼A座3/6/7/8层');
-        $kpr = $this->getRequest()->get('kpr','财务总监');
-        
-        //查询订单详情
-        $info = $this->order_model->getInfoById($order_id);
-        if($info['state'] !== 'TRADE_BUYER_SIGNED' || $info['invoice_title'] == ''){
-            Tools::output(array('info'=>'此订单不能开发票','status'=>1));
-        }
-        
-        //格式化订单
-        $order_info = $this->format_order_struct($info);
-        $order_info['xsf_mc'] = $xsf_mc;
-        $order_info['xsf_dzdh'] = $xsf_dzdh;
-        $order_info['kpr'] = $kpr;
-        $order_info['type'] = $type == 1 ? 1 : 0;
-        
-        //格式订单详情
-        $order_detail = $this->format_order_batch($info, $fpsl);
-        $order_info['hjse'] = $order_detail['total_fpes'];
-        $order_info['hjje'] = $order_info['payment_fee'] - $order_info['hjse'];
-        
-        //开发票
-        $result = $this->dzfp->fpkj($order_info, $order_detail['order_detail']);
-        var_dump($result);exit;
-    }
+    
+    
     
     /**
      * 格式化订单
