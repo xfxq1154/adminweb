@@ -1,0 +1,52 @@
+<div class="dux-tools">
+    <div class="bread-head">电子发票<span class="small">需要开发票订单列表</span>
+    </div>
+    <br>
+    <div class="tools-function clearfix">
+        <div class="float-left">
+            
+        </div>
+    </div> 
+</div>
+<div class="admin-main">
+    <div class="panel dux-box">
+        <div class="table-responsive">
+            <table id="table" class="table table-hover ">
+                <tbody>
+                    <tr>
+                        <th width="*">订单号</th>
+                        <th width="*">发票台头</th>
+                        <th width="*">价税合计</th>
+                        <th width="*">合计金额</th>
+                        <th width="*">合计税额</th>
+                        <th width="*">消费者手机号</th>
+                        <th width="*">操作</th>
+                    </tr>
+                    <?php if ($data) : ?>
+                        <?php foreach($data as $val) : ?>
+                            <tr>
+                                <td><?php echo $val['order_id']; ?></td>
+                                <td><?php echo $val['invoice_title']; ?></td>
+                                <td><?php echo $val['payment_fee']; ?></td>
+                                <td><?php echo $val['total_fee']; ?></td>
+                                <td><?php echo $val['total_tax']?></td>
+                                <td><?php echo $val['buyer_phone']; ?></td>
+                                <td><button class="button">开具发票</button></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <?php if($pagger):?>
+        <div class="panel dux-box panel-foot clearfix" style="margin-top:10px;border-radius: 4px;">
+            <?=$pagger?>
+        </div>
+    <?php endif;?>
+</div>
+<script>
+Do.ready('base', function () {
+$('#table').duxTable();
+});
+</script>

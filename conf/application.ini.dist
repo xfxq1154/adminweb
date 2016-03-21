@@ -79,6 +79,23 @@ database.slave_operate.port = 3306
 database.slave_operate.username = root
 database.slave_operate.password = 1qaz@WSX
 
+;电子发票
+database.store_invoice_master.driver = mysql
+database.store_invoice_master.dbname = store_invoice
+database.store_invoice_master.host = db.passport.master
+database.store_invoice_master.port = 3306
+database.store_invoice_master.username = root
+database.store_invoice_master.password = 1qaz@WSX
+database.store_invoice_master.charset = utf8mb4
+
+database.store_invoice_slave.driver = mysql
+database.store_invoice_slave.dbname = store_invoice
+database.store_invoice_slave.host = db.passport.slave
+database.store_invoice_slave.port = 3306
+database.store_invoice_slave.username = root
+database.store_invoice_slave.password = 1qaz@WSX
+database.store_invoice_slave.charset = utf8mb4
+
 api.coin.host = API_COIN_HOST
 api.ucapi.host = API_UCAPI_HOST
 api.audio.host = API_AUDIO_HOST
