@@ -22,8 +22,6 @@ class BpexpressController extends Base{
         $this->checkRole();
         
         $p = (int) $this->getRequest()->getParam('p', 1);
-        $size = 20;
-        
         $order_id = $this->getRequest()->get('order_id');
         $excomsn = $this->getRequest()->get('excomsn');
         $exnum = $this->getRequest()->get('exnum');
@@ -32,6 +30,7 @@ class BpexpressController extends Base{
         $start_created = $this->getRequest()->get('start_time');
         $end_created = $this->getRequest()->get('end_time');
         
+        $size = 20;
         $params['order_id'] = $order_id;
         $params['excomsn'] = $excomsn;
         $params['exnum'] = $exnum;
@@ -44,9 +43,12 @@ class BpexpressController extends Base{
         $params['page_size'] = $size;
         
         $result = $this->express->getList($params);
-        
         $this->assign('list', $result['expresses']);
-        $this->renderPagger($p, $result['total_nums'], '/bpexpress/index/p/{p}', $size);
+        $this->renderPagger($p, $result['total_nums'], "/bpexpress/index/p/{p}?start_time={$start_created}&end_time={$end_created}&order_id={$order_id}&exnum={$exnum}", $size);
+        $this->assign('start_time', $start_created);
+        $this->assign('end_time', $end_created);
+        $this->assign('order_id', $order_id);
+        $this->assign('exnum', $exnum);
         $this->layout('platform/express_list.phtml');
     }
     
