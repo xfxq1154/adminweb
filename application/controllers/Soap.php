@@ -3,6 +3,7 @@ class SoapController extends Base{
     
     public $dzfp;
     public $youzan_order_model;
+    public $youzan_order_detail;
     
     const SL1 = 0.01;
     const SL2 = 0.17;
@@ -13,6 +14,7 @@ class SoapController extends Base{
     public function init() {
         $this->dzfp = new Dzfp();
         $this->youzan_order_model = new YouZanOrderModel();
+        $this->youzan_order_detail = new YouZanOrderDetailModel();
     }
     
     
@@ -26,21 +28,17 @@ class SoapController extends Base{
         $xsf_mc = $this->getRequest()->get('xsf_mc','北京四维造物信息科技有限公司');
         $xsf_dzdh = $this->getRequest()->get('xsf_dzdh');
         $kpr = $this->getRequest()->get('kpr','财务总监');
-        
         //查询订单详情
-        $o_info = $this->youzan_order_model->getInfo($order_id);
-        echo "<pre>";
-        print_r($o_info);exit;
-        if($o_info['status'] !== 'TRADE_BUYER_SIGNED'){
-            echo '未收货的订单不能开发票';exit;
-        }
+        $order = $this->getInfoById($order_id);
+//        if($order['status'] !== 'TRADE_BUYER_SIGNED'){
+//            echo '未收货的订单不能开发票';exit;
+//        }
         
         //格式化订单
-        $order_info = $this->format_order_struct($info);
-        $order_info['xsf_mc'] = $xsf_mc;
-        $order_info['xsf_dzdh'] = $xsf_dzdh;
-        $order_info['kpr'] = $kpr;
-        $order_info['type'] = $type == 1 ? 1 : 0;
+        $order['xsf_mc'] = $xsf_mc;
+        $order['xsf_dzdh'] = $xsf_dzdh;
+        $order['kpr'] = $kpr;
+        $order['type'] = $type == 1 ? 1 : 0;
         
         //格式订单详情
         $order_detail = $this->format_order_batch($info, $fpsl);
@@ -86,35 +84,6 @@ class SoapController extends Base{
         exit;
     }
     
-    
-    
-    /**
-     * 格式化订单
-     */
-    public function format_order_struct($data){
-        if(empty($data)){
-            return FALSE;
-        }
-        if($data === FALSE){
-            return FALSE;
-        }
-        return $this->tidy($data);
-    }
-    
-    /**
-     * 订单格式化
-     */
-    public function tidy($data){
-        $order_info = [
-            'payment_fee' => $data['payment_fee'],
-            'order_id' => $data['order_id'],
-            'receiver_mobile' => $data['receiver_mobile'],
-            'invoice_title' => $data['invoice_title'],
-            'create_time' => $data['create_time']
-        ];
-        return $order_info;
-    }
-    
     /**
      * 格式化订单详情
      */
@@ -149,6 +118,23 @@ class SoapController extends Base{
             
         ];
         return $order_info;
+    }
+    
+    /**
+     * 查询有赞订单
+     */
+    public function getInfoById($order_id){
+        $o_rs = $this->youzan_order_model->getInfo($order_id);
+        if($o_rs === FALSE){
+            return FALSE;
+        }
+        $detail_info = $this->youzan_order_detail->_getOrderDetail($order_id);
+        if($detail_info == FALSE){
+            return FALSE;
+        }
+        $o_rs['order_detail'] = $detail_info;
+        $order_detail = $this->youzan_order_model->struct_order_data($o_rs);
+        return $order_detail;
     }
    
 }
