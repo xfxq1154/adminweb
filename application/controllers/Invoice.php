@@ -26,6 +26,9 @@ class InvoiceController extends Base{
      * 发票列表
      */
     public function showListAction(){
+        $this->checkLogin();
+        $this->checkRole();
+        
         $page_no = (int)$this->getRequest()->get('page_no', 1);
         $files = $this->getRequest()->getFiles('import');
         $mobile = $this->getRequest()->get('mobile');

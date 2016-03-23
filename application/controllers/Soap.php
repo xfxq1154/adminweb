@@ -21,6 +21,9 @@ class SoapController extends Base{
      * 开具发票
      */
     public function indexAction(){
+        $this->checkLogin();
+        $this->checkRole();
+        
         $order_id = $this->getRequest()->getPost('order_id');
         $type = intval($this->getRequest()->getPost('type'));
         $fpsl = $this->getRequest()->getPost('fpsl');
@@ -83,6 +86,9 @@ class SoapController extends Base{
      * 查看发票
      */
     public function getInvoiceAction(){
+        $this->checkLogin();
+        $this->checkRole();
+        
         $order_id = $this->getRequest()->get('order_id');
         $order_info = $this->invoice_model->getInfo($order_id);
         $fp_dm = $order_info['invoice_code'];
@@ -112,6 +118,9 @@ class SoapController extends Base{
      * 查询有赞订单
      */
     public function getInfoById($order_id, $fpsl){
+        $this->checkLogin();
+        $this->checkRole();
+        
         $o_rs = $this->youzan_order_model->getInfo($order_id);
         
         if($o_rs === FALSE){
