@@ -128,6 +128,7 @@ class BpShowcaseController extends Base {
             $clerk_date['group_id'] = self::ADMIN;
             $clerk_date['phone'] = $data['phone'];
             $clerk_date['showcase_id'] = $resule;
+            $clerk_date['nickname'] = $data['nickname'];
             $clerk_date['realname'] = $data['realname'];
             
             $this->showcase->addClerk($clerk_date);
