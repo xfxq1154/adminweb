@@ -4,25 +4,34 @@
     <div class="tools-function clearfix">
         <div class="float-left">
             <div class="float-left">
-                <form method="post" action="/invoice/showlist" enctype="multipart/form-data" id="form">
+                <form method="GET" action="/invoice/showlist" enctype="multipart/form-data" id="form">
+                    <div class="form-inline">
+                        <div class="form-button">
+                            <input type="file" class="button" name="import" />
+                            <button class="button bg-main" type="submit" id="import" name="import" value="import">导入数据</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="float-left" style="margin-left: 10px;">
+                <form method="GET" action="/invoice/showlist">
                     <div class="form-inline">
                         <div class="form-group">
-                            <div class="field">
-                                <!--<input type="text" class="input" id="keyword" name="keyword" size="20" value="" placeholder="关键词">-->
+                            <div class="form-button">
+                                <label>请选择发票税率:</label>&nbsp;
+                                <select class="input js-assign" name="fpsl" id="select" style="width: 50px;">
+                                    <?php foreach ($tax_rate as $tax_val): ?>
+                                        <option value='<?php echo $tax_val?>'><?php echo $tax_val;?></option>
+                                    <?php endforeach;?>
+                                </select>
+                            </div>
+                            <div class="field" style="margin-left: 5px;">
+                                <input type="text" class="input" name="mobile" size="20" value="<?=$mobile?>" placeholder="请填写手机号">
+                                <input type="text" class="input" name="order_id" size="20" value="<?=$order_id?>" placeholder="请填写订单号">
                             </div>
                         </div>
                         <div class="form-button">
-                            <!--<button class="button" type="submit" name="sou" value="sou">搜索</button>-->
-                            <input type="file" class="button" name="import" />
-                            <button class="button bg-main" type="submit" id="import" name="import" value="import">导入数据</button>
-                        </div>&nbsp;
-                        <div class="form-button">
-                            <label>请选择发票税率:</label>&nbsp;
-                            <select class="input js-assign" name="fpsl" id="select" style="width: 50px;">
-                                <?php foreach ($tax_rate as $tax_val): ?>
-                                    <option value='<?php echo $tax_val?>'><?php echo $tax_val;?></option>
-                                <?php endforeach;?>
-                            </select>
+                            <button class="button" type="submit">搜索</button>
                         </div>
                     </div>
                 </form>
@@ -31,14 +40,18 @@
     </div>
 </div>
 
-<div style="position: absolute; left: 500px; top: 300px; background: red; display: none;" id="id_box">
+<div style="position: absolute; left: 400px; top: 300px; background: #2c7; display: none; width: 200px; height: 200px;" id="id_box">
+    <h4 style="text-align: center;"><b>开具红字发票此项为必填项</b></h4>
+    <br>
+    <input type="text" class="input" size="20"  placeholder="请填写原发票号码" name="v1">
+    <br>
+    <input type="text" class="input" size="20"  placeholder="请填写原发票代码" name="v2">
+    <br>
+    <div class="form-button">
+        <input class="button bg-main" type="submit" value="提交" id="submit" style="float: left"/>
+        <button class="icon-close button bg-gray" style="float:right">关闭</button>
+    </div>
     
-    <input type="text" class="input" size="20" value="" placeholder="关键词" name="v1">
-    <input type="text" class="input" size="20" value="" placeholder="关键词" name="v2">
-    
-    <input class="button bg-main" type="submit" value="submit" id="submit"/>
-    
-    <button class="icon-close button bg-gray">close</button>
 </div>
 
 <div class="admin-main">
@@ -82,7 +95,7 @@
                                 </td>
                                 <td>
                                     <?php if($val['state'] == 2):?>
-                                        <a class="button bg-green button-small icon-eye-open" href="/soap/getinvoice/order_id/<?php echo $val['order_id'];?>" >查看发票</a>
+                                    <a class="button bg-green button-small icon-eye-open" href="/soap/getinvoice/order_id/<?php echo $val['order_id'];?> " target="_blank" >查看发票</a>
                                     <?php else:?>
                                         <a class="button bg-blue button-small icon-pencil" href="javascript:;">开具发票</a>
                                     <?php endif;?>
@@ -145,9 +158,9 @@
             
             oData = {
                     
-                order: oTr.find('td').eq(0).text(),
+                order_id: oTr.find('td').eq(0).text(),
                 type: oTr.find(':input[name="type"]').val(),
-                sl: oTr.find('.fpsl').val(),
+                fpsl: oTr.find('.fpsl').val(),
                 address: oTr.find('input[name="xsf_dzdh"]').val()
             };
             
@@ -174,11 +187,14 @@
        $("#submit").on('click', function () {
            var v1 = $.trim($("input[name='v1']").val());
            var v2 = $.trim($("input[name='v2']").val());
-           
+           oData = {
+               yfp_hm : v1,
+               yfp_dm : v2
+           };
            if (v1 && v2) {
                postData(oData);
            } else {
-               alert('不能为空');
+               alert('原发票号码、代码不能为空');
            }
            
        });
@@ -192,10 +208,7 @@
                url: '/soap/index',
                data: data
            }).done( function (data) {
-               
-               console.log(data);
-               var msg = data.status == 2 ? 'success' : 'fail';
-               alert(msg);
+               alert(data.msg);
                window.location = '/invoice/showlist';
                
            }).fail( function (a) {

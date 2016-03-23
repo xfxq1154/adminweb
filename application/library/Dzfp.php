@@ -12,17 +12,18 @@ class Dzfp {
     
     const FPHXZ = 0; //发票行性质 0正常行 1折扣行 2被折扣行
 
-
     private $err_msg;
     private $content;
     
     public function fpkj($order, $detail) {
         if(!$order || !$detail){
-            Tools::output(array('info'=>'必传参数缺失','status'=>1));
+            $this->err_msg = '必传参数缺失';
+            return FALSE;
         }
         if($order['type'] == 1){
             if(!$order['yfp_dm'] || !$order['yfp_hm']){
-                Tools::output(array('info'=>'原发票号码或代码不能为空','status'=>1));
+                $this->err_msg = '原发票号码或代码不能为空';
+                return FALSE;
             }
         }
         //*必填参数
@@ -72,16 +73,12 @@ class Dzfp {
                 $kjmx->addChild($vk,$vl);
             }
         }
-        
         $result = $this->doService('REQUEST_E_FAPIAO_KJ', $requestXML->asXML());
         if(!$result){
             return FALSE;
         }
+        
         $resxml = simplexml_load_string($result);
-        if($resxml->RESULT->CODE == 1){
-            $this->err_msg = $resxml->RESULT->DESC;
-            return FALSE;
-        }
         return (array)$resxml->RESULT;
     }
     

@@ -27,10 +27,9 @@ class InvoiceController extends Base{
      */
     public function showListAction(){
         $page_no = (int)$this->getRequest()->get('page_no', 1);
-        $page_size = (int)$this->getRequest()->get('page_size', 20);
-        $use_hax_next = $this->getRequest()->get('use_hax_next', 1);
         $files = $this->getRequest()->getFiles('import');
-        $kw = $this->getRequest()->get('kw');
+        $mobile = $this->getRequest()->get('mobile');
+        $order_id = $this->getRequest()->get('order_id');
         
         //导入
         if($this->getRequest()->isPost()){
@@ -46,7 +45,7 @@ class InvoiceController extends Base{
             $xls = new Spreadsheet_Excel_Reader();
             $xls->setOutputEncoding('utf-8');
             $xls->read($files['tmp_name']);
-            
+
             //将文件内容遍历循环存储到数据库
             $data = array();
             if(!$xls->sheets[0]['cells'][1]){
@@ -61,9 +60,11 @@ class InvoiceController extends Base{
             }
         }
         $address = '北京市朝阳区通惠河北路郎家园六号院朗园Vintage2号楼A座6层';
-        $result = $this->invoice_mode->getList($page_no, $page_size, $use_hax_next, $kw);
-        $this->renderPagger($page_no, $result['total_nums'], '/invoice/showlist/page_no/{p}', $page_size);
+        $result = $this->invoice_mode->getList($page_no, 20, 1, $mobile, $order_id);
+        $this->renderPagger($page_no, $result['total_nums'], '/invoice/showlist/page_no/{p}', 20);
         $this->assign('data', $result);
+        $this->assign('mobile', $mobile);
+        $this->assign('order_id', $order_id);
         $this->assign('seller_address', $address);
         $this->assign('tax_rate', $this->tax_rate);
         $this->layout('invoice/list.phtml');

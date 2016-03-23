@@ -16,16 +16,26 @@ class InvoiceModel{
         $this->dbSlave = $this->getSlaveDb('storecp_invoice');
     }
     
-    public function getList($page_no, $page_size, $use_hax_next, $kw){
+    public function getList($page_no, $page_size, $use_hax_next, $mobile, $order_id){
+        $where = '1';
+        
+        if($mobile){
+            $where .= ' AND `buyer_phone` = :mobile';
+            $pdo_params[':mobile'] = $mobile;
+        }
+        if($order_id){
+            $where .= ' AND `order_id` = :order_id ';
+            $pdo_params[':order_id'] = $order_id;
+        }
         
         $start = ($page_no - 1) * $page_size;
         
         try {
-            $sql = 'SELECT * FROM `'.$this->tableName. '` LIMIT '. $start .','.$page_size;
+            $sql = 'SELECT * FROM `'.$this->tableName. '` WHERE '. $where .' ORDER BY id DESC LIMIT '. $start .','.$page_size ;
             $stmt = $this->dbSlave->prepare($sql);
-            $stmt->execute();
+            $stmt->execute($pdo_params);
             $data['data'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            $data['total_nums'] = $this->getCount();
+            $data['total_nums'] = $this->getCount($where,$pdo_params);
         } catch (Exception $ex) {
             echo $ex->getMessage();
         }
@@ -50,11 +60,11 @@ class InvoiceModel{
     /**
      * 获取总数
      */
-    public function getCount() {
+    public function getCount($where, $pdo_params) {
         try {
-            $sql = "SELECT count(*) as num FROM " . $this->tableName ;
+            $sql = "SELECT count(*) as num FROM " . $this->tableName . ' WHERE '. $where ;
             $stmt = $this->dbSlave->prepare($sql);
-            $stmt->execute();
+            $stmt->execute($pdo_params);
             $data = $stmt->fetch(PDO::FETCH_ASSOC);
             return $data['num'] ? : 0;
         } catch (Exception $ex) {
