@@ -61,5 +61,47 @@ class InvoiceModel{
             Output::jsonStr(Error::ERROR_DB_EXCEPTION, $ex->getMessage());
         }
     }
+    
+    /**
+     * 获取详情
+     */
+    public function getInfo($order_id){
+        $where = ' `order_id` =  :order_id';
+        $pdo_params[':order_id'] = $order_id;
+        try {
+            $sql = ' SELECT * FROM ' . $this->tableName. ' WHERE ' .$where;
+            $stmt = $this->dbSlave->prepare($sql);
+            $stmt->execute($pdo_params);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (Exception $ex) {
+            echo $ex->getMessage();
+        }
+    }
+    
+    /**
+     * 更新开票信息
+     */
+    public function update($order_id, $params){
+        if(!$order_id || !$params){
+            return array();
+        }
+        $f = '';
+        $array = array(':order_id' => $order_id);
+        foreach ($params as $key => $value) {
+            //不传递则跳过
+            if ($value === null) {
+                continue;
+            }
+            $f .= ",`" . $key . "` = :$key";
+            $array[':' . $key] = $value;
+        }
+        $sql = "UPDATE `" . $this->tableName . "` SET " . substr($f, 1) . " WHERE `order_id` = :order_id LIMIT 1";
+        try {
+            $stmt = $this->dbMaster->prepare($sql);
+            $stmt->execute($array);
+        } catch (Exception $ex) {
+            Output::jsonStr(Error::ERROR_DB_EXCEPTION, $ex->getMessage());
+        }
+    }
 }
 

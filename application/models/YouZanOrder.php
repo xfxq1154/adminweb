@@ -38,9 +38,11 @@ class YouZanOrderModel{
     /**
      * 格式化订单信息
      */
-    public function struct_order_data($order) {
+    public function struct_order_data($order, $fpsl) {
+        //格式化基本信息
         $o = $this->tidyOrderInfo($order);
-        $o['order_detail'] = $this->struct_orderdetail_batch($order['order_detail']);
+        //格式化订单详情
+        $o = $this->struct_orderdetail_batch($o, $fpsl);
         return $o;
     }
     
@@ -78,37 +80,45 @@ class YouZanOrderModel{
         $o['receiver_mobile'] = $order['y_receiver_mobile'];  //收货人的手机号码
         $o['created'] = $order['y_created'];  //交易创建时间
         $o['update_time'] = $order['y_update_time'];  //交易更新时间。当交易的：状态改变、备注更改、星标更改 等情况下都会刷新更新时间
+        $o['order_detail'] = $order['order_detail'];
         return $o;
     }
     
     /**
      * 批量格式化订单信息
      */
-    public function struct_orderdetail_batch($datas) {
+    public function struct_orderdetail_batch($datas, $fpsl) {
         if (empty($datas)) {
             return array();
         }
 
-        foreach ($datas as &$val) {
-            $val = $this->struct_orderdetail_data($val);
+        foreach ($datas['order_detail'] as &$val) {
+            $val = $this->struct_orderdetail_data($val, $fpsl);
+            $sum_se += $val['se'];
         }
+        $datas['hjse'] = $sum_se;
         return $datas;
     }
     
     /**
      * 格式化订单详情信息
      */
-    public function struct_orderdetail_data($order_detail) {
+    public function struct_orderdetail_data($order_detail, $fpsl) {
         if (empty($order_detail)) {
             return array();
         }
+        $payment = $order_detail['o_payment'];
+        
         $data['oid'] = intval($order_detail['o_oid']);  //交易明细编号。该编号并不唯一，只用于区分交易内的多条明细记录
         $data['outer_sku_id'] = $order_detail['o_outer_sku_id'];  //商家编码（商家为Sku设置的外部编号）
         $data['outer_item_id'] = intval($order_detail['o_outer_item_id']);  //商品货号（商家为商品设置的外部编号）
         $data['title'] = $order_detail['o_title'];  //商品标题
         $data['price'] = floatval($order_detail['o_price']);  //商品价格。精确到2位小数；单位：元
         $data['total_fee'] = floatval($order_detail['o_total_fee']);  //应付金额（商品价格乘以数量的总金额）
-        $data['payment'] = floatval($order_detail['o_payment']);  //实付金额。精确到2位小数，单位：元
+        $data['payment'] = $order_detail['o_payment'] ; //实付金额。精确到2位小数，单位：元
+        $data['xmje'] = $payment - round($payment - ($payment / (1 + $fpsl)),2); //项目金额 不含税价格
+        $data['sl'] = $fpsl;  //税率
+        $data['se'] = round($payment - ($payment / (1 + $fpsl)),2);  //税额
         $data['sku_unique_code'] = $order_detail['o_sku_unique_code'];  //Sku在系统中的唯一编号，可以在开发者的系统中用作 Sku 的唯一ID，但不能用于调用接口
         $data['state_str'] = $order_detail['o_state_str'];  //商品状态
         $data['item_refund_state'] = $order_detail['o_item_refund_state'];  //商品退款状态

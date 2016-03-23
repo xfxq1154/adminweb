@@ -15,6 +15,14 @@
                             <!--<button class="button" type="submit" name="sou" value="sou">搜索</button>-->
                             <input type="file" class="button" name="import" />
                             <button class="button bg-main" type="submit" id="import" name="import" value="import">导入数据</button>
+                        </div>&nbsp;
+                        <div class="form-button">
+                            <label>请选择发票税率:</label>&nbsp;
+                            <select class="input js-assign" name="fpsl" id="select" style="width: 50px;">
+                                <?php foreach ($tax_rate as $tax_val): ?>
+                                    <option value='<?php echo $tax_val?>'><?php echo $tax_val;?></option>
+                                <?php endforeach;?>
+                            </select>
                         </div>
                     </div>
                 </form>
@@ -22,6 +30,17 @@
         </div>
     </div>
 </div>
+
+<div style="position: absolute; left: 500px; top: 300px; background: red; display: none;" id="id_box">
+    
+    <input type="text" class="input" size="20" value="" placeholder="关键词" name="v1">
+    <input type="text" class="input" size="20" value="" placeholder="关键词" name="v2">
+    
+    <input class="button bg-main" type="submit" value="submit" id="submit"/>
+    
+    <button class="icon-close button bg-gray">close</button>
+</div>
+
 <div class="admin-main">
     <div class="panel dux-box">
         <div class="table-responsive">
@@ -30,7 +49,6 @@
                     <tr>
                         <th width="*">订单号</th>
                         <th width="*">发票台头</th>
-                        <th width="*">项目名称</th>
                         <th width="*">价税合计</th>
                         <th width="*">合计金额</th>
                         <th width="*">合计税额</th>
@@ -45,12 +63,11 @@
                             <tr>
                                 <td><?php echo $val['order_id']; ?></td>
                                 <td><?php echo $val['invoice_title']; ?></td>
-                                <td><?php echo $val['project_name']; ?></td>
                                 <td><?php echo $val['payment_fee']; ?></td>
                                 <td><?php echo $val['total_fee']; ?></td>
                                 <td><?php echo $val['total_tax']?></td>
                                 <td><?php echo $val['buyer_phone']; ?></td>
-                                <td><select class="input js-assign" name="fpsl" style="width: 50px;">
+                                <td><select class="input js-assign fpsl" name="fpsl" style="width: 50px;">
                                        <?php foreach ($tax_rate as $tax_val): ?>
                                         <option value='<?php echo $tax_val?>'><?php echo $tax_val;?></option>
                                         <?php endforeach;?>
@@ -64,7 +81,11 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <a class="button bg-blue button-small icon-pencil" href="/soap/index/order_id/<?php echo $val['order_id']; ?>" >开具发票</a>
+                                    <?php if($val['state'] == 2):?>
+                                        <a class="button bg-green button-small icon-eye-open" href="/soap/getinvoice/order_id/<?php echo $val['order_id'];?>" >查看发票</a>
+                                    <?php else:?>
+                                        <a class="button bg-blue button-small icon-pencil" href="javascript:;">开具发票</a>
+                                    <?php endif;?>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -83,5 +104,104 @@
     Do.ready('base', function () {
         //表单综合处理
         $('#form').duxFormPage();
+    });
+    
+    // 税率
+    $(function(){
+        $('#select').on('change', function(){
+            
+            var _that = $(this);
+            var iVal = $(this).val();
+            
+            var aSelect = $(".fpsl");
+            
+            $.each(aSelect, function (i, ele) {
+                           
+                var aP = $(ele).find('option');
+                
+                aP.map( function () {
+                    
+                    if ($(this).val() == iVal) {
+                        $(this).attr('selected', true);
+                    }
+                    
+                });
+            })
+        });
+    });
+    
+    $( function () {
+       
+       
+       var oData = {};
+       
+       // 弹出
+       $(".icon-pencil").on('click', function () {
+          
+            var oBox = $('#id_box');
+            var _that = $(this);
+            
+            var oTr = $(this).parent('td').parent('tr');
+            
+            oData = {
+                    
+                order: oTr.find('td').eq(0).text(),
+                type: oTr.find(':input[name="type"]').val(),
+                sl: oTr.find('.fpsl').val(),
+                address: oTr.find('input[name="xsf_dzdh"]').val()
+            };
+            
+            if (oData.type == 1) {
+                
+                $(oBox).show('fast');
+                
+                // 禁止 href
+                return false;
+            } else {
+                
+                postData(oData);
+                
+            }
+            
+       });
+       
+       // 关闭
+       $(".icon-close").on('click', function () {
+           
+           $('#id_box').hide();
+       });
+       
+       $("#submit").on('click', function () {
+           var v1 = $.trim($("input[name='v1']").val());
+           var v2 = $.trim($("input[name='v2']").val());
+           
+           if (v1 && v2) {
+               postData(oData);
+           } else {
+               alert('不能为空');
+           }
+           
+       });
+       
+       
+       function postData(data)
+       {
+           $.ajax({
+               type: "POST",
+               dataType: "JSON",
+               url: '/soap/index',
+               data: data
+           }).done( function (data) {
+               
+               console.log(data);
+               var msg = data.status == 2 ? 'success' : 'fail';
+               alert(msg);
+               window.location = '/invoice/showlist';
+               
+           }).fail( function (a) {
+               console.log(a + ' fail ');
+           });
+       }
+       
     });
 </script>

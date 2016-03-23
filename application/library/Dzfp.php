@@ -27,7 +27,7 @@ class Dzfp {
         }
         //*必填参数
         $kjxx_data = array(
-            'FPQQLSH'       => strtotime(date('Y-m-d H:i:s')),   //*发票请求流水号
+            'FPQQLSH'       => $order['invoice_no'],   //*发票请求流水号
             'KPLX'          => $order['type'],   //*开票类型 0 蓝字发票 1红字发票
             'XSF_NSRSBH'    => self::REQUEST_CODE,   //*销售方纳税人识别号
             'XSF_MC'        => $order['xsf_mc'],   //*销售方名称
@@ -42,13 +42,13 @@ class Dzfp {
             'FHR'           => '',   //复核人 
             'YFP_DM'        => $order['type'] == 1 ? $order['yfp_dm'] : '',   //原发票代码 红字发票时必须
             'YFP_HM'        => $order['type'] == 1 ? $order['yfp_hm'] : '',   //原发票号码 红字发票时必须
-            'JSHJ'          => $order['payment_fee'],   //*价税合计 单位元 (2位小数)
+            'JSHJ'          => $order['payment'],   //*价税合计 单位元 (2位小数)
             'HJJE'          => $order['hjje'],   //*合计金额 单位元 (2位小数)
             'HJSE'          => $order['hjse'],   //*合计税额 单位元 (2位小数)
             'BZ'            => '',   //备注
-            'DDRQ'          => $order['create_time'],   //*订单日期 同下
+            'DDRQ'          => $order['created'],   //*订单日期 同下
             'KPRQ'          => date('Y-m-d H:i:s'),   //*开票日期 yyyymmddhh24miss
-            'DDH'           => $order['order_id'],   //订单号
+            'DDH'           => $order['tid'],   //订单号
             'XFZ_YX'        => '',   //消费者邮箱
             'XFZ_SJH'       => $order['receiver_mobile']    //*消费者手机号
         );
@@ -62,7 +62,7 @@ class Dzfp {
         }
         
         $kjxxmx = $requestXML->addChild('KJXXMX');
-        $kjxxmx->addAttribute('COUNT', 2);
+        $kjxxmx->addAttribute('COUNT', $order['count']);
         
         //格式化订单商品详情
         $ks_info = $this->batch($detail);
@@ -73,7 +73,16 @@ class Dzfp {
             }
         }
         
-        return $this->doService('REQUEST_E_FAPIAO_KJ', $requestXML->asXML());
+        $result = $this->doService('REQUEST_E_FAPIAO_KJ', $requestXML->asXML());
+        if(!$result){
+            return FALSE;
+        }
+        $resxml = simplexml_load_string($result);
+        if($resxml->RESULT->CODE == 1){
+            $this->err_msg = $resxml->RESULT->DESC;
+            return FALSE;
+        }
+        return (array)$resxml->RESULT;
     }
     
     /**
@@ -169,7 +178,6 @@ class Dzfp {
             $this->err_msg = (string)$xmlobj->returnStateInfo->returnMessage;
             return FALSE;
         }
-        
         return $this->decrypt($xmlobj->data->content, $xmlobj->data->signature);
     }
     
@@ -181,33 +189,21 @@ class Dzfp {
         if(!$data){
             return FALSE;
         }
-        $kjxxmx = array(
-            'FPHXZ'     => '',   //*发票行性质 0正常行、1折扣行、2被折扣行
-            'HH'        => '',   //*行号 按商品明细排序 第一行1，第二行2 一次类推
-            'XMMC'      => '',   //*项目名称
-            'GGXH'      => '',   //计量单位
-            'DW'        => '',   //规格型号
-            'XMSL'      => '',   //项目数量
-            'XMDJ'      => '',   //项目单价 小数点后六位 不含税
-            'XMJE'      => '',   //*项目金额 不含税，单位元(2位小数)
-            'SL'        => '',   //*税率 6位小数例：1%为0.01
-            'SE'        => '',   //*税额 单位：元(2位小数)
-            'SN'        => ''    //商品SN号
-        );
         $i=1;
         $kj_data = array();
         foreach ($data as $key => $value){
-            $kj_data[$key]['FPHXZ'] = self::FPHXZ;
-            $kj_data[$key]['HH'] = $i++;
-            $kj_data[$key]['XMMC'] = $value['title'];
-            $kj_data[$key]['GGXH'] = '';
-            $kj_data[$key]['DW'] = '';
-            $kj_data[$key]['XMSL'] = '';
-            $kj_data[$key]['XMDJ'] = '';
-            $kj_data[$key]['XMJE'] = $value['pay_price'];
-            $kj_data[$key]['SL'] = $value['sl'];
-            $kj_data[$key]['SE'] = $value['se'];
-            $kj_data[$key]['SN'] = '';
+            $kj_data[$key]['FPHXZ'] = self::FPHXZ;  //*发票行性质 0正常行、1折扣行、2被折扣行
+            $kj_data[$key]['HH'] = $i;  //*行号 按商品明细排序 第一行1，第二行2 一次类推
+            $kj_data[$key]['XMMC'] = $value['title'];  //*项目名称
+            $kj_data[$key]['GGXH'] = '';  //计量单位
+            $kj_data[$key]['DW'] = ''; //规格型号
+            $kj_data[$key]['XMSL'] = ''; //项目数量
+            $kj_data[$key]['XMDJ'] = '';  //项目单价 小数点后六位 不含税
+            $kj_data[$key]['XMJE'] = $value['xmje'];  //*项目金额 不含税，单位元(2位小数)
+            $kj_data[$key]['SL'] = $value['sl'];  //*税率 6位小数例：1%为0.01
+            $kj_data[$key]['SE'] = $value['se'];  //*税额 单位：元(2位小数)
+            $kj_data[$key]['SN'] = '';  //商品SN号
+            $i++;
         }
         return $kj_data;
     }
