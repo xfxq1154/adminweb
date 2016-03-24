@@ -1,6 +1,8 @@
 <?php
 class SoapController extends Base{
     
+    use Trait_Api;
+    
     public $dzfp;
     public $youzan_order_model;
     public $youzan_order_detail;
@@ -8,9 +10,12 @@ class SoapController extends Base{
     
     const INVOICE_STATUS_SUCCESS = 2; //发票成功
     const INVOICE_STATUS_FAIL = 3;  //开票失败
+    
+    public $sms;
 
     public function init() {
         $this->initAdmin();
+        $this->sms = $this->getApi('notification');
         $this->dzfp = new Dzfp();
         $this->invoice_model = new InvoiceModel();
         $this->youzan_order_model = new YouZanOrderModel();
@@ -22,22 +27,22 @@ class SoapController extends Base{
      * 开具发票
      */
     public function indexAction(){
-        $this->checkRole();
+//        $this->checkRole();
         
         $order_id = $this->getRequest()->getPost('order_id');
         $type = intval($this->getRequest()->getPost('type'));
         $fpsl = $this->getRequest()->getPost('fpsl');
-        $xsf_mc = $this->getRequest()->getPost('xsf_mc','测试');
+        $xsf_mc = $this->getRequest()->getPost('xsf_mc');
         $xsf_dzdh = $this->getRequest()->getPost('address');
-        $kpr = $this->getRequest()->getPost('kpr','财务总监');
-        $yfp_hm = $this->getRequest()->getPost('yfp_hm', ' ');
-        $yfp_dm = $this->getRequest()->getPost('yfp_dm', ' ');
+        $kpr = $this->getRequest()->getPost('kpr');
+        $yfp_hm = $this->getRequest()->getPost('yfp_hm');
+        $yfp_dm = $this->getRequest()->getPost('yfp_dm');
         
         //查询订单详情
         $order = $this->getInfoById($order_id, $fpsl);
-        if($order['status'] !== 'TRADE_BUYER_SIGNED'){
-            Tools::output(array('msg' => '只有签收的商品才能开发票', 'status' => 3));
-        }
+//        if($order['status'] !== 'TRADE_BUYER_SIGNED'){
+//            Tools::output(array('msg' => '只有签收的商品才能开发票', 'status' => 3));
+//        }
         $invoice = $this->invoice_model->getInfo($order_id);
         $order['xsf_mc'] = $xsf_mc;
         $order['xsf_dzdh'] = $xsf_dzdh;
@@ -54,30 +59,42 @@ class SoapController extends Base{
         $result = $this->dzfp->fpkj($order, $order['order_detail']);
         if(!$result){
             Tools::output(array('msg' => $this->dzfp->getError(), 'status' => 3));
-        } else {
-            //将发票信息存到数据表
-            $params['invoice_type'] = $order['type'];
-            $params['qr_code'] = $result['EWM'];
-            $params['invoice_code'] = $result['FPDM'];
-            $params['invoice_number'] = $result['FPHM'];
-            $params['check_code'] = $result['JYM'];
-            $params['jqbh'] = $result['JQBH'];
-            $params['state'] = self::INVOICE_STATUS_SUCCESS;
-            $params['state_message'] = $result['DESC'];
-            $params['seller_name'] = $xsf_mc;
-            $params['seller_address'] = $xsf_dzdh;
-            $params['drawer'] = $kpr;
-            $params['payment_fee'] = $order['payment'];
-            $params['total_tax'] = $order['hjse'];
-            $params['tax_rate'] = $fpsl;
-            $params['jshj'] = $order['payment'];
-            $params['invoice_time'] = $result['KPRQ'];
-            $params['order_time'] = $order['created'];
-            $params['total_fee'] = $order['hjje'];
-            $params['invoice_no'] = $order['invoice_no'];
-            $params['original_invoice_code'] = $order['yfp_hm'];
-            $params['original_invoice_number'] = $order['yfp_dm'];
-        }
+        } 
+        //将发票信息存到数据表
+        $params['invoice_type'] = $order['type'];
+        $params['qr_code'] = $result['EWM'];
+        $params['invoice_code'] = $result['FPDM'];
+        $params['invoice_number'] = $result['FPHM'];
+        $params['check_code'] = $result['JYM'];
+        $params['jqbh'] = $result['JQBH'];
+        $params['state'] = self::INVOICE_STATUS_SUCCESS;
+        $params['state_message'] = $result['DESC'];
+        $params['seller_name'] = $xsf_mc;
+        $params['seller_address'] = $xsf_dzdh;
+        $params['drawer'] = $kpr;
+        $params['payment_fee'] = $order['payment'];
+        $params['total_tax'] = $order['hjse'];
+        $params['tax_rate'] = $fpsl;
+        $params['jshj'] = $order['payment'];
+        $params['invoice_time'] = $result['KPRQ'];
+        $params['order_time'] = $order['created'];
+        $params['total_fee'] = $order['hjje'];
+        $params['invoice_no'] = $order['invoice_no'];
+        $params['original_invoice_code'] = $order['yfp_hm'];
+        $params['original_invoice_number'] = $order['yfp_dm'];
+        
+        
+//        $invoice_info = $this->dzfp->getpdf($result['FPDM'], $result['FPHM'], $result['JYM']);
+//        if(!$invoice_info){
+//            echo $this->dzfp->getError();
+//            exit;
+//        }
+//        exit;
+//        $pdf = base64_decode($invoice_info);
+//        $oss_result = $this->invoice_model->ossUpload($pdf);
+        
+//        var_dump($oss_result);exit;
+        
         $this->invoice_model->update($order_id,$params);
         Tools::output(array('msg' => '电子发票开票成功', 'status' => 2));
     }
@@ -99,6 +116,9 @@ class SoapController extends Base{
             exit;
         }
         $pdf = base64_decode($result);
+        $oss_result = $this->invoice_model->ossUpload($pdf);
+        var_dump($oss_result);exit;
+        
         header("Content-Type: application/pdf");
         echo $pdf;
         exit;
@@ -117,7 +137,7 @@ class SoapController extends Base{
      * 查询有赞订单
      */
     public function getInfoById($order_id, $fpsl){
-        $this->checkRole();
+//        $this->checkRole();
         
         $o_rs = $this->youzan_order_model->getInfo($order_id);
         

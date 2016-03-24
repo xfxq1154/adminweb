@@ -11,12 +11,16 @@ class InvoiceModel{
     public $dbMaster;
     public $dbSlave;
     
+    const PDF_UPLOAD = 'oss/upload';
+    
+    private $error_log;
+
     public function __construct() {
         $this->dbMaster = $this->getMasterDb('storecp_invoice');
         $this->dbSlave = $this->getSlaveDb('storecp_invoice');
     }
     
-    public function getList($page_no, $page_size, $use_hax_next, $mobile, $order_id){
+    public function getList($page_no, $page_size, $use_hax_next, $mobile, $order_id, $status){
         $where = '1';
         
         if($mobile){
@@ -26,6 +30,10 @@ class InvoiceModel{
         if($order_id){
             $where .= ' AND `order_id` = :order_id ';
             $pdo_params[':order_id'] = $order_id;
+        }
+        if($status){
+            $where .= ' AND `state` = :status ';
+            $pdo_params[':status'] = $status;
         }
         
         $start = ($page_no - 1) * $page_size;
@@ -113,5 +121,18 @@ class InvoiceModel{
             Output::jsonStr(Error::ERROR_DB_EXCEPTION, $ex->getMessage());
         }
     }
+    
+    /**
+     * 上传发票到oss
+     */
+    public function ossUpload($file){
+        if(!$file){
+            return FALSE;
+        }
+        $params['file_content'] = $file;
+        $result = Imgapi::request(self::PDF_UPLOAD, $params, 'POST');
+        return $result;
+    }
+    
 }
 

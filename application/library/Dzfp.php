@@ -111,7 +111,8 @@ class Dzfp {
         if(!$FP_DM || !$FP_HM || $$JYM){
             return FALSE;
         }
-        $string = "<?xml version='1.0' encoding='utf-8'?><business ID='GETPDF'></business>";
+        
+        $string = "<?xml version='1.0' encoding='utf-8'?><BUSINESS ID='GETPDF'></BUSINESS>";
         $requestXML = simplexml_load_string($string);
         $REQUEST_COMMON_FPCX = $requestXML->addChild('REQUEST_COMMON_GETPDF');
         $REQUEST_COMMON_FPCX->addAttribute('class', 'REQUEST_COMMON_GETPDF');
@@ -166,7 +167,7 @@ class Dzfp {
         }
         $xmlstring = $xml->asXML();
         
-        ini_set('default_socket_timeout', 3);
+        ini_set('default_socket_timeout', 10);
         $client = new SoapClient(self::WSDL);
         $result = $client->doService(['xml' => $xmlstring]);
         $xmlobj = simplexml_load_string($result->return);

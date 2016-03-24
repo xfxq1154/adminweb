@@ -127,7 +127,7 @@ class Curl {
             case 'POST':
                 curl_setopt($ci, CURLOPT_POST, TRUE);
                 if ($params) {
-                    curl_setopt($ci, CURLOPT_POSTFIELDS, $params);
+                    curl_setopt($ci, CURLOPT_POSTFIELDS, http_build_query($params));
                 } else {
                     curl_setopt($ci, CURLOPT_POSTFIELDS, '');
                 }
@@ -147,14 +147,14 @@ class Curl {
             case 'PUT':
                 if ($params) {
                     curl_setopt($ci, CURLOPT_CUSTOMREQUEST, "PUT");
-                    curl_setopt($ci, CURLOPT_POSTFIELDS, $params);
+                    curl_setopt($ci, CURLOPT_POSTFIELDS, http_build_query($params));
                 }
                 break;
         }
         curl_setopt($ci, CURLOPT_URL, $url);
         curl_setopt($ci, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ci, CURLINFO_HEADER_OUT, TRUE);
-
+        
         $response = curl_exec($ci);
         $httpCode = curl_getinfo($ci, CURLINFO_HTTP_CODE);
         curl_close($ci);

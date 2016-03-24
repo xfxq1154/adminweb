@@ -6,40 +6,97 @@
             <div class="float-left">
                 <form method="GET" action="/invoice/showlist" enctype="multipart/form-data" id="form">
                     <div class="form-inline">
+                        <label><b>上传需要开票订单号:</b></label>
                         <div class="form-button">
-                            <input type="file" class="button" name="import" />
+                            <input type="file" class="button" name="import" style="width: 180px;"/>
                             <button class="button bg-main" type="submit" id="import" name="import" value="import">导入数据</button>
-                        </div>
+                        </div>&nbsp;
+                        <label><b>发票税率:</b></label>&nbsp;
+                        <select class="input js-assign" name="fpsl" id="select" style="width: 50px;">
+                            <?php foreach ($tax_rate as $tax_val): ?>
+                                <option value='<?php echo $tax_val?>'><?php echo $tax_val;?></option>
+                            <?php endforeach;?>
+                        </select>
                     </div>
                 </form>
             </div>
             <div class="float-left" style="margin-left: 10px;">
-                <form method="GET" action="/invoice/showlist">
-                    <div class="form-inline">
-                        <div class="form-group">
-                            <div class="form-button">
-                                <label>请选择发票税率:</label>&nbsp;
-                                <select class="input js-assign" name="fpsl" id="select" style="width: 50px;">
-                                    <?php foreach ($tax_rate as $tax_val): ?>
-                                        <option value='<?php echo $tax_val?>'><?php echo $tax_val;?></option>
-                                    <?php endforeach;?>
-                                </select>
-                            </div>
-                            <div class="field" style="margin-left: 5px;">
-                                <input type="text" class="input" name="mobile" size="20" value="<?=$mobile?>" placeholder="请填写手机号">
-                                <input type="text" class="input" name="order_id" size="20" value="<?=$order_id?>" placeholder="请填写订单号">
-                            </div>
-                        </div>
-                        <div class="form-button">
-                            <button class="button" type="submit">搜索</button>
-                        </div>
+                <div class="form-inline">
+                    <div class="form-button">
+                        <button class="button bg-dot" type="button" id="selectAll">选中全部</button>
+                        <button class="button bg-sub" type="button" id="unselectAll">取消全选</button>
+                        <button class="button bg-main kaifapiao" type="button" id="batch" value=1>批量开票</button>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
+    <div class="tools-function clearfix">
+        <div class="float-left">
+            <form method="GET" action="/invoice/showlist">
+                <div class="form-inline">
+                    <label><b>搜索相关订单:</b></label>
+                    <div class="form-group">
+                        <div class="field" style="margin-left: 5px;">
+                            <input type="text" class="input" name="mobile" size="20" value="<?=$mobile?>" placeholder="请填写手机号">
+                            <input type="text" class="input" name="order_id" size="20" value="<?=$order_id?>" placeholder="请填写订单号">
+                        </div>
+                        <div class="field">&nbsp;
+                            <select class="input js-assign" style="text-align: center" name="status">
+                                <option value=""><?php echo isset($status) ? $status : '全部状态'; ?></option>
+                                <option value="1">未开发票</option>
+                                <option value="2">开票成功</option>
+                                <option value="3">开票失败</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-button">
+                        <button class="button bg-mix" type="submit">搜索</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="tools-function clearfix">
+        <div class="float-left">
+            <div class="float-left">
+                <div class="form-inline">
+                    <label><b>设置开票信息:</b></label>
+                    <div class="form-group">
+                        <div class="field" style="margin-left: 5px;">
+                            <input type="text" class="input" name="address" style="width: 300px;" value="<?=$invoice_info['seller_address']?>" placeholder="请设置销售方地址电话">
+                            <input type="text" class="input" name="kpr" value="<?=$invoice_info['drawer']?>" placeholder="请设置开票人">
+                            <input type="text" class="input" name="xsf_mc" style="width: 200px;" value="<?=$invoice_info['seller_name']?>" placeholder="请设置销售方名称">
+                        </div>
+                    </div>
+                    <div class="form-button">
+                        <button class="button bg-red" type="submit" id="set">设置</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
 </div>
-
+<script>
+  $(function (){
+      $('#set').on('click', function(){
+          var xsf_mc = $(':input[name="xsf_mc"]').val();
+          var kpr = $(':input[name="kpr"]').val();
+          var address = $(':input[name="address"]').val();
+          
+          $.ajax({
+              type: 'POST',
+              dataType: 'JSON',
+              url: '/invoice/setinvoice',
+              data : {xsf_mc:xsf_mc,kpr:kpr,address:address}
+          }).done(function(data){
+              alert(data.msg);
+              window.location = '/invoice/showlist';
+          })
+      })
+  })
+</script>
 <div style="position: absolute; left: 400px; top: 300px; background: #2c7; display: none; width: 200px; height: 200px;" id="id_box">
     <h4 style="text-align: center;"><b>开具红字发票此项为必填项</b></h4>
     <br>
@@ -59,6 +116,7 @@
             <table id="table" class="table table-hover ">
                 <tbody>
                     <tr>
+                        <th width="*">选项</th>
                         <th width="*">订单号</th>
                         <th width="*">发票台头</th>
                         <th width="*">价税合计</th>
@@ -66,14 +124,14 @@
                         <th width="*">合计税额</th>
                         <th width="*">消费者手机号</th>
                         <th width="*">税率</th>
-                        <th width="*">销售方地址电话</th>
                         <th width="*">发票类型</th>
                         <th width="*">操作</th>
                     </tr>
                     <?php if ($data) : ?>
                         <?php foreach($data['data'] as $val) : ?>
-                            <tr>
-                                <td><?php echo $val['order_id']; ?></td>
+                            <tr id="list">
+                                <td><input type="checkbox" class="seleall" value="<?=$val['order_id']?>"></td>
+                                <td class="sall"><?php echo $val['order_id']; ?></td>
                                 <td><?php echo $val['invoice_title']; ?></td>
                                 <td><?php echo $val['payment_fee']; ?></td>
                                 <td><?php echo $val['total_fee']; ?></td>
@@ -85,18 +143,14 @@
                                         <?php endforeach;?>
                                     </select>
                                 </td>
-                                <td><input name="xsf_dzdh" type="text" class="input" value="<?php echo $seller_address;?>"></input></td>
-                                <td>
-                                    <select class="input js-assign" name="type" style="width: 70px">
-                                        <option value="0">蓝字发票</option>
-                                        <option value="1">红字发票</option>
-                                    </select>
-                                </td>
+                                <td><?php echo $val['state'] == 2 ? '<span class="tag bg-red">红字发票</span>' : '<span class="tag bg-blue">蓝字发票</span>';?></td>
                                 <td>
                                     <?php if($val['state'] == 2):?>
-                                    <a class="button bg-green button-small icon-eye-open" href="/soap/getinvoice/order_id/<?php echo $val['order_id'];?> " target="_blank" >查看发票</a>
+                                        <a class="button bg-green button-small icon-eye-open" href="/soap/getinvoice/order_id/<?php echo $val['order_id'];?> " target="_blank" >查看发票</a>
+                                        <a class="button bg-red button-small icon-pencil" href="javascript:;" style="margin-left: 5px;">补开红票</a>
+                                        <a class="button bg-yellow button-small icon-envelope" href="javascript:;" id="sendmessage" style="margin-left: 5px;">重发短信</a>
                                     <?php else:?>
-                                        <a class="button bg-blue button-small icon-pencil" href="javascript:;">开具发票</a>
+                                        <button class="button bg-blue button-small kaifapiao" value=2 style="">开具发票</button>
                                     <?php endif;?>
                                 </td>
                             </tr>
@@ -121,82 +175,116 @@
     // 税率
     $(function(){
         $('#select').on('change', function(){
-            
-            var _that = $(this);
             var iVal = $(this).val();
-            
             var aSelect = $(".fpsl");
-            
             $.each(aSelect, function (i, ele) {
-                           
                 var aP = $(ele).find('option');
-                
                 aP.map( function () {
-                    
                     if ($(this).val() == iVal) {
                         $(this).attr('selected', true);
                     }
-                    
                 });
             })
         });
     });
+    
+    //重新发送短信
+    $(function(){
+        $('#sendmessage').on('click', function(){
+            var oTr = $(this).parent('td').parent('tr');
+            var order_id = oTr.find('td').eq(1).text();
+            $.ajax({
+                type : 'GET',
+                dataType :'JSON',
+                url : '/invoice/repeatmessage',
+                data : {order_id:order_id}
+            }).done(function(data){
+                alert(data.msg);
+            })
+        });
+    })
     
     //开电子发票
     $( function () {
         
        var oData = {};
        
-       // 弹出
-       $(".icon-pencil").on('click', function () {
-          
+       $('.kaifapiao').on('click', function(){
+            var Val = $(this).val();
             var oBox = $('#id_box');
-            var _that = $(this);
             
             var oTr = $(this).parent('td').parent('tr');
             
-            oData = {
-                    
-                order_id: oTr.find('td').eq(0).text(),
-                type: oTr.find(':input[name="type"]').val(),
-                fpsl: oTr.find('.fpsl').val(),
-                address: oTr.find('input[name="xsf_dzdh"]').val()
-            };
+            oData.order_id = oTr.find('td').eq(1).text();
+            oData.type = 0;
+            oData.fpsl = oTr.find('.fpsl').val();
+            oData.address = $(':input[name="address"]').val();
+            oData.xsf_mc = $(':input[name="xsf_mc"]').val();
+            oData.kpr = $(':input[name="kpr"]').val();
             
-            if (oData.type == 1) {
-                
+            postData(oData);
+       });
+       
+       // 重新开票弹出层
+       $(".icon-pencil").on('click', function () {
+            var oBox = $('#id_box');
+            var oTr = $(this).parent('td').parent('tr');
+            oData.order_id = oTr.find('td').eq(1).text();
+            oData.type = oTr.find(':input[name="type"]').val();
+            oData.fpsl = oTr.find('.fpsl').val();
+            oData.address = oTr.find('input[name="xsf_dzdh"]').val();
+//            if (oData.type == 1) {
                 $(oBox).show('fast');
-                
                 // 禁止 href
                 return false;
-            } else {
-                
-                postData(oData);
-                
-            }
-            
+//            } else {
+//                postData(oData);
+//            }
        });
        
        // 关闭
        $(".icon-close").on('click', function () {
-           
            $('#id_box').hide();
        });
        
+       //弹出层提交
        $("#submit").on('click', function () {
            var v1 = $.trim($("input[name='v1']").val());
            var v2 = $.trim($("input[name='v2']").val());
-           oData = {
-               yfp_hm : v1,
-               yfp_dm : v2
-           };
+           
            if (v1 && v2) {
+               oData.yfp_hm = v1;
+               oData.yfp_dm = v2;
                postData(oData);
            } else {
                alert('原发票号码、代码不能为空');
            }
            
        });
+       
+       //全选
+       $('#selectAll').bind('click', function(){
+           $('.seleall').prop('checked', true);
+           
+       });
+       
+       //全选
+       $('#unselectAll').bind('click', function(){
+            $('.seleall').prop('checked', false);
+       });
+       
+       //批量开票
+//       $('#batch').on('click', function(e){
+//            var isc = " ";
+//            console.log(e.target.id);
+//            exit();
+//            $(".seleall").each(function(){
+//                
+//                if($(this).attr("checked")){
+//                    isc += $(this).val() + ",";
+//                }
+//            });
+//       })
        
        //ajax
        function postData(data)
@@ -207,6 +295,7 @@
                url: '/soap/index',
                data: data
            }).done( function (data) {
+               console.log(data);
                alert(data.msg);
                window.location = '/invoice/showlist';
                

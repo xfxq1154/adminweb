@@ -134,4 +134,6 @@ asset.js.url = ASSET_JS_URL
 asset.js.path = ASSET_JS_PATH
 asset.css.url = ASSET_CSS_URL
 asset.css.path = ASSET_CSS_PATH
+//短信接口
+api.notification.host = NOTIFICATION_API
 [common]

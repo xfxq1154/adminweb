@@ -31,3 +31,10 @@ define('SDATA_SOURCE_ID','WEB0001');
 define('UC_API','http://ucapi.dev.didatrip.com/');
 
 define('PAYMENT_HOST','http://pay2.dev.didatrip.com/');
+
+//短信接口
+define('NOTIFICATION_API','http://notification.dev.didatrip.com');
+
+//图片
+define('IMG_SOURCE_ID','ADMIN0001');
+define('IMG_API_HOST','http://img.yanbo.dev.com/');
