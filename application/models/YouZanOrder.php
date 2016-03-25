@@ -11,6 +11,7 @@ class YouZanOrderModel{
     public $dbSlave;
     
     public $tableName = 'y_youzan_trades';
+    public $tableName2 = 'y_youzan_order';
     
     public function __construct() {
         $this->dbMaster = $this->getMasterDb('youzan_order');
@@ -30,6 +31,34 @@ class YouZanOrderModel{
             $stmt = $this->dbSlave->prepare($sql);
             $stmt->execute($pdo_params);
             return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (Exception $ex) {
+            echo $ex->getMessage();
+        }
+    }
+    
+    /**
+     * 修改订单号
+     */
+    public function update($id,$oid){
+        try {
+            $sql = " UPDATE " .$this->tableName. " SET `y_tid` = '$oid' WHERE y_id = $id ";
+            $stmt = $this->dbMaster->prepare($sql);
+            $stmt->execute();
+        } catch (Exception $ex) {
+            echo $ex->getMessage();
+        }
+    }
+    
+    /**
+     * 获取订单
+     */
+    public function getlist(){
+        $where = " ta.`y_status` = 'TRADE_BUYER_SIGNED' " ;
+        try {
+            $sql = " SELECT * FROM ".$this->tableName. ' ta LEFT JOIN '.$this->tableName2.' tb ON ta.y_tid = tb.o_trades_id  WHERE '.$where .' LIMIT 10';
+            $stmt = $this->dbSlave->prepare($sql);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (Exception $ex) {
             echo $ex->getMessage();
         }

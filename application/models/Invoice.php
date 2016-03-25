@@ -12,6 +12,7 @@ class InvoiceModel{
     public $dbSlave;
     
     const PDF_UPLOAD = 'oss/upload';
+    const GET_URLSIGN = 'oss/urlsign';
     
     private $error_log;
 
@@ -20,7 +21,7 @@ class InvoiceModel{
         $this->dbSlave = $this->getSlaveDb('storecp_invoice');
     }
     
-    public function getList($page_no, $page_size, $use_hax_next, $mobile, $order_id, $status){
+    public function getList($page_no, $page_size, $use_hax_next, $mobile = '', $order_id = '', $status = ''){
         $where = '1';
         
         if($mobile){
@@ -83,9 +84,9 @@ class InvoiceModel{
     /**
      * 获取详情
      */
-    public function getInfo($order_id){
-        $where = ' `order_id` =  :order_id';
-        $pdo_params[':order_id'] = $order_id;
+    public function getInfo($id){
+        $where = ' `id` =  :id';
+        $pdo_params[':id'] = $id;
         try {
             $sql = ' SELECT * FROM ' . $this->tableName. ' WHERE ' .$where;
             $stmt = $this->dbSlave->prepare($sql);
@@ -99,12 +100,12 @@ class InvoiceModel{
     /**
      * 更新开票信息
      */
-    public function update($order_id, $params){
-        if(!$order_id || !$params){
+    public function update($id, $params){
+        if(!$id || !$params){
             return array();
         }
         $f = '';
-        $array = array(':order_id' => $order_id);
+        $array = array(':id' => $id);
         foreach ($params as $key => $value) {
             //不传递则跳过
             if ($value === null) {
@@ -113,13 +114,52 @@ class InvoiceModel{
             $f .= ",`" . $key . "` = :$key";
             $array[':' . $key] = $value;
         }
-        $sql = "UPDATE `" . $this->tableName . "` SET " . substr($f, 1) . " WHERE `order_id` = :order_id LIMIT 1";
+        $sql = "UPDATE `" . $this->tableName . "` SET " . substr($f, 1) . " WHERE `id` = :id LIMIT 1";
         try {
             $stmt = $this->dbMaster->prepare($sql);
             $stmt->execute($array);
         } catch (Exception $ex) {
             Output::jsonStr(Error::ERROR_DB_EXCEPTION, $ex->getMessage());
         }
+    }
+    
+    /**
+     * 修改多个税率
+     */
+    public function updateSl($ids, $fpsl){
+        if( !$ids || !$fpsl){
+            return FALSE;
+        }
+        
+        try {
+            $sql = ' UPDATE `'. $this->tableName. "` SET `tax_rate` = :fpsl WHERE `id` IN ($ids) " ;
+            $stmt = $this->dbMaster->prepare($sql);
+            $stmt->execute(array(':fpsl' => $fpsl));
+            return 1;
+        } catch (Exception $ex) {
+            echo $ex->getMessage();
+        }
+    }
+    
+    /**
+     * getALL
+     * @desc 查询状态等于未发短信的发票信息
+     */
+    public function getAll() {
+        $where = ' `state` = :state ';
+        $pdo_params[':state'] = 2;
+        $data = array();
+        $sql = "SELECT * FROM `".$this->tableName."` WHERE $where order by `id` desc";
+        try{
+            $stmt = $this->dbSlave->prepare($sql);
+            $stmt->execute($pdo_params);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }catch (Exception $ex) {
+            echo $ex;
+            return false;
+        }
+
+        return $data;
     }
     
     /**
@@ -131,6 +171,19 @@ class InvoiceModel{
         }
         $params['file_content'] = $file;
         $result = Imgapi::request(self::PDF_UPLOAD, $params, 'POST');
+        return $result;
+    }
+    
+    /**
+     * 获取发票链接
+     */
+    public function getInvoice($object){
+        if(!$object){
+            return FALSE;
+        }
+        $params['object'] = $object;
+        $params['timeout'] = 3600;
+        $result = Imgapi::request(self::GET_URLSIGN, $params, 'POST');
         return $result;
     }
     

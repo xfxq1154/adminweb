@@ -29,5 +29,18 @@ class YouZanOrderDetailModel{
             echo $ex->getMessage();
         }
     }
+    
+    /**
+     * 修改订单号
+     */
+    public function update($id,$oid){
+        try {
+            $sql = " UPDATE " .$this->tableName. " SET `o_trades_id` = '$oid' WHERE o_id = $id";
+            $stmt = $this->dbMaster->prepare($sql);
+            $stmt->execute();
+        } catch (Exception $ex) {
+            echo $ex->getMessage();
+        }
+    }
 }
 

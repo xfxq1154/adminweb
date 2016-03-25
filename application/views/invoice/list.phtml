@@ -1,62 +1,51 @@
 <div class="dux-tools">
-    <div class="bread-head">电子发票<span class="small">需要开发票订单列表</span></div>
-    <br>
+    <div class="bread-head">电子发票<span class="small">需要开发票订单列表</span></div><br>
+    <form method="GET" action="/invoice/showlist" id="form">
     <div class="tools-function clearfix">
         <div class="float-left">
-            <div class="float-left">
-                <form method="GET" action="/invoice/showlist" enctype="multipart/form-data" id="form">
-                    <div class="form-inline">
-                        <label><b>上传需要开票订单号:</b></label>
-                        <div class="form-button">
-                            <input type="file" class="button" name="import" style="width: 180px;"/>
-                            <button class="button bg-main" type="submit" id="import" name="import" value="import">导入数据</button>
-                        </div>&nbsp;
-                        <label><b>发票税率:</b></label>&nbsp;
-                        <select class="input js-assign" name="fpsl" id="select" style="width: 50px;">
-                            <?php foreach ($tax_rate as $tax_val): ?>
-                                <option value='<?php echo $tax_val?>'><?php echo $tax_val;?></option>
-                            <?php endforeach;?>
+            <div class="form-inline">
+                <label><b>上传需要开票订单号:</b></label>
+                <div class="form-button">
+                    <input type="text" class="input show_uo_imgs" id="files" name="file" placeholder="开票订单上传" readonly=""/>
+                    <a class="button bg-blue button-small " data="files" id="image_upload3" preview="image_preview3" href="javascript:;"><span class="icon-upload">上传</span></a>
+                </div>
+            </div>
+        </div>
+        <div class="float-left" style="margin-left: 10px;">
+            <div class="form-inline">
+                <div class="form-button">
+                    <button class="button bg-dot" type="button" id="selectAll">选中全部</button>
+                    <button class="button bg-sub" type="button" id="unselectAll">取消全选</button>
+                    <button class="button bg-main" type="button" id="batch" value=1>批量开票</button>
+                </div>
+            </div>
+        </div>
+    </div><br>
+    <div class="tools-function clearfix">
+        <div class="float-left">
+            <div class="form-inline">
+                <label><b>搜索相关订单:</b></label>
+                <div class="form-group">
+                    <div class="field" style="margin-left: 5px;">
+                        <input type="text" class="input" name="mobile" size="20" value="<?=$mobile?>" placeholder="请填写手机号">
+                        <input type="text" class="input" name="order_id" size="20" value="<?=$order_id?>" placeholder="请填写订单号">
+                    </div>
+                    <label style="margin-left: 5px;"><b>选择状态:</b></label>
+                    <div class="field">&nbsp;
+                        <select class="input js-assign" style="text-align: center" name="status">
+                            <option value=""><?php echo isset($status) ? $status : '全部状态'; ?></option>
+                            <option value="1">未开发票</option>
+                            <option value="2">开票成功</option>
+                            <option value="3">开票失败</option>
                         </select>
                     </div>
-                </form>
-            </div>
-            <div class="float-left" style="margin-left: 10px;">
-                <div class="form-inline">
-                    <div class="form-button">
-                        <button class="button bg-dot" type="button" id="selectAll">选中全部</button>
-                        <button class="button bg-sub" type="button" id="unselectAll">取消全选</button>
-                        <button class="button bg-main kaifapiao" type="button" id="batch" value=1>批量开票</button>
-                    </div>
+                </div>
+                <div class="form-button">
+                    <button class="button bg-mix" type="submit">搜索</button>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="tools-function clearfix">
-        <div class="float-left">
-            <form method="GET" action="/invoice/showlist">
-                <div class="form-inline">
-                    <label><b>搜索相关订单:</b></label>
-                    <div class="form-group">
-                        <div class="field" style="margin-left: 5px;">
-                            <input type="text" class="input" name="mobile" size="20" value="<?=$mobile?>" placeholder="请填写手机号">
-                            <input type="text" class="input" name="order_id" size="20" value="<?=$order_id?>" placeholder="请填写订单号">
-                        </div>
-                        <div class="field">&nbsp;
-                            <select class="input js-assign" style="text-align: center" name="status">
-                                <option value=""><?php echo isset($status) ? $status : '全部状态'; ?></option>
-                                <option value="1">未开发票</option>
-                                <option value="2">开票成功</option>
-                                <option value="3">开票失败</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-button">
-                        <button class="button bg-mix" type="submit">搜索</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
+    </div><br>
     <div class="tools-function clearfix">
         <div class="float-left">
             <div class="float-left">
@@ -76,7 +65,7 @@
             </div>
         </div>
     </div>
-    
+    </form>
 </div>
 <script>
   $(function (){
@@ -92,7 +81,7 @@
               data : {xsf_mc:xsf_mc,kpr:kpr,address:address}
           }).done(function(data){
               alert(data.msg);
-              window.location = '/invoice/showlist';
+              window.location.reload();
           })
       })
   })
@@ -114,9 +103,10 @@
     <div class="panel dux-box">
         <div class="table-responsive">
             <table id="table" class="table table-hover ">
-                <tbody>
+                <thead>
                     <tr>
                         <th width="*">选项</th>
+                        <th width="*">编号</th>
                         <th width="*">订单号</th>
                         <th width="*">发票台头</th>
                         <th width="*">价税合计</th>
@@ -127,28 +117,26 @@
                         <th width="*">发票类型</th>
                         <th width="*">操作</th>
                     </tr>
+                </thead>
+                <tbody>
                     <?php if ($data) : ?>
                         <?php foreach($data['data'] as $val) : ?>
                             <tr id="list">
-                                <td><input type="checkbox" class="seleall" value="<?=$val['order_id']?>"></td>
-                                <td class="sall"><?php echo $val['order_id']; ?></td>
-                                <td><?php echo $val['invoice_title']; ?></td>
+                                <td><input type="checkbox" class="checkAll" value="<?=$val['order_id']?>"></td>
+                                <td><span class="autoid"><?php echo $val['id']; ?></span></td>
+                                <td><?php echo $val['order_id']; ?></td>
+                                <td><span class="title"><?php echo $val['invoice_title'];?></span></td>
                                 <td><?php echo $val['payment_fee']; ?></td>
                                 <td><?php echo $val['total_fee']; ?></td>
                                 <td><?php echo $val['total_tax']?></td>
-                                <td><?php echo $val['buyer_phone']; ?></td>
-                                <td><select class="input js-assign fpsl" name="fpsl" style="width: 50px;">
-                                       <?php foreach ($tax_rate as $tax_val): ?>
-                                        <option value='<?php echo $tax_val?>'><?php echo $tax_val;?></option>
-                                        <?php endforeach;?>
-                                    </select>
-                                </td>
-                                <td><?php echo $val['state'] == 2 ? '<span class="tag bg-red">红字发票</span>' : '<span class="tag bg-blue">蓝字发票</span>';?></td>
+                                <td><input type="hidden" value="<?=$val['state']?>" class="hidd"><?php echo $val['buyer_phone']; ?></td>
+                                <td><span class="tax_rate"><?php echo $val['tax_rate']?></span></td>
+                                <td><span class="type"><?php echo $val['invoice_type'] == 1 ? '<span class="tag bg-red">红字发票</span>' : '<span class="tag bg-blue">蓝字发票</span>';?></span></td>
                                 <td>
-                                    <?php if($val['state'] == 2):?>
-                                        <a class="button bg-green button-small icon-eye-open" href="/soap/getinvoice/order_id/<?php echo $val['order_id'];?> " target="_blank" >查看发票</a>
+                                    <?php if($val['state'] == 2 || $val['state'] == 4):?>
+                                        <a class="button bg-green button-small icon-eye-open" href="<?php echo $val['invoice_url'];?>" target="_blank" >查看发票</a>
                                         <a class="button bg-red button-small icon-pencil" href="javascript:;" style="margin-left: 5px;">补开红票</a>
-                                        <a class="button bg-yellow button-small icon-envelope" href="javascript:;" id="sendmessage" style="margin-left: 5px;">重发短信</a>
+                                        <a class="button bg-yellow button-small icon-envelope sendmessage" href="javascript:;" style="margin-left: 5px;">重发短信</a>
                                     <?php else:?>
                                         <button class="button bg-blue button-small kaifapiao" value=2 style="">开具发票</button>
                                     <?php endif;?>
@@ -168,36 +156,78 @@
 </div>
 <script>
     Do.ready('base', function () {
-        //表单综合处理
-        $('#form').duxFormPage();
+        $('#form').duxForm();
+        $('#image_upload3').duxFileUpload({
+            uploadUrl: '/invoice/upload',
+            type: 'xls',
+            complete: function (data) {
+               $('.show_uo_imgs').val(data.code);
+            }
+        });
+        
     });
     
-    // 税率
-    $(function(){
-        $('#select').on('change', function(){
-            var iVal = $(this).val();
-            var aSelect = $(".fpsl");
-            $.each(aSelect, function (i, ele) {
-                var aP = $(ele).find('option');
-                aP.map( function () {
-                    if ($(this).val() == iVal) {
-                        $(this).attr('selected', true);
-                    }
-                });
+    //批量开票
+       $('#batch').on('click', function(){
+            var orders = [];
+            $(".checkAll").each(function(i){
+                console.log($(this).prop("checked"));
+                
+                if ($(this).prop("checked")) {
+                    var oTmp = {};
+                    oTmp.order = $('.checkAll').val();
+                    oTmp.sl = $('.tax_rate').eq(i).text();
+                    oTmp.title = $('.title').eq(i).text();
+                    oTmp.id = $('.autoid').eq(i).text();
+                    orders.push(oTmp);
+                }
+            });
+            
+            address = $(':input[name="address"]').val();
+            xsf_mc = $(':input[name="xsf_mc"]').val();
+            kpr = $(':input[name="kpr"]').val();
+            
+            $.ajax({
+                type: 'POST',
+                dataType: 'JSON',
+                url: '/soap/index',
+                data: {order_id:orders,type:0,kpr:kpr,xsf_mc:xsf_mc,address:address}
+            }).done(function (data){
+                alert(data.msg);
+                window.location.reload();
             })
-        });
-    });
+       })
+       
+       
+       
+    // 税率
+//    $(function(){
+//        $('#select').on('change', function(){
+//            var iVal = $(this).val();
+//            var aSelect = $(".fpsl");
+//            $.each(aSelect, function (i, ele) {
+//                var aP = $(ele).find('option');
+//                aP.map( function () {
+//                    if ($(this).val() == iVal) {
+//                        $(this).attr('selected', true);
+//                    }
+//                });
+//            })
+//        });
+//    });
     
     //重新发送短信
     $(function(){
-        $('#sendmessage').on('click', function(){
+        $('.sendmessage').on('click', function(){
             var oTr = $(this).parent('td').parent('tr');
-            var order_id = oTr.find('td').eq(1).text();
+            var order_id = oTr.find('td').eq(2).text();
+            var id = oTr.find('td').eq(1).text();
+            
             $.ajax({
                 type : 'GET',
                 dataType :'JSON',
                 url : '/invoice/repeatmessage',
-                data : {order_id:order_id}
+                data : {order_id:order_id,id:id}
             }).done(function(data){
                 alert(data.msg);
             })
@@ -210,17 +240,15 @@
        var oData = {};
        
        $('.kaifapiao').on('click', function(){
-            var Val = $(this).val();
-            var oBox = $('#id_box');
-            
             var oTr = $(this).parent('td').parent('tr');
-            
-            oData.order_id = oTr.find('td').eq(1).text();
+            oData.order_id = oTr.find('td').eq(2).text();
             oData.type = 0;
-            oData.fpsl = oTr.find('.fpsl').val();
             oData.address = $(':input[name="address"]').val();
             oData.xsf_mc = $(':input[name="xsf_mc"]').val();
             oData.kpr = $(':input[name="kpr"]').val();
+            oData.fpsl = oTr.find('td').eq(8).text();
+            oData.title = oTr.find('td').eq(3).text();
+            oData.id = oTr.find('td').eq(1).text();
             
             postData(oData);
        });
@@ -229,17 +257,17 @@
        $(".icon-pencil").on('click', function () {
             var oBox = $('#id_box');
             var oTr = $(this).parent('td').parent('tr');
-            oData.order_id = oTr.find('td').eq(1).text();
-            oData.type = oTr.find(':input[name="type"]').val();
-            oData.fpsl = oTr.find('.fpsl').val();
-            oData.address = oTr.find('input[name="xsf_dzdh"]').val();
-//            if (oData.type == 1) {
+            oData.order_id = oTr.find('td').eq(2).text();
+            oData.type = 1;
+            oData.fpsl = oTr.find('.tax_rate').text();
+            oData.address = $('input[name="address"]').val();
+            oData.id = oTr.find('td').eq(1).text();
+            oData.title = oTr.find('td').eq(3).text();
+            oData.kpr = $(':input[name="kpr"]').val();
+            oData.xsf_mc = $(':input[name="xsf_mc"]').val();
                 $(oBox).show('fast');
                 // 禁止 href
                 return false;
-//            } else {
-//                postData(oData);
-//            }
        });
        
        // 关闭
@@ -249,42 +277,32 @@
        
        //弹出层提交
        $("#submit").on('click', function () {
-           var v1 = $.trim($("input[name='v1']").val());
-           var v2 = $.trim($("input[name='v2']").val());
+            oData.yfp_hm = $.trim($("input[name='v1']").val());
+            oData.yfp_dm = $.trim($("input[name='v2']").val());
            
-           if (v1 && v2) {
-               oData.yfp_hm = v1;
-               oData.yfp_dm = v2;
+           if (oData.yfp_hm && oData.yfp_dm) {
                postData(oData);
            } else {
                alert('原发票号码、代码不能为空');
            }
-           
-       });
+       }); 
        
        //全选
        $('#selectAll').bind('click', function(){
-           $('.seleall').prop('checked', true);
-           
+            $(".type > span").each(function(i){
+                
+                var iHidd = $('#table > tbody').find('tr').eq(i).find('.hidd').val();
+                if ($(this).hasClass('bg-blue') &&  (iHidd == 1 || iHidd == 3)) {
+                    
+                    $('.checkAll').eq(i).prop('checked', true);
+                }
+            });
        });
        
        //全选
        $('#unselectAll').bind('click', function(){
-            $('.seleall').prop('checked', false);
+            $('.checkAll').prop('checked', false);
        });
-       
-       //批量开票
-//       $('#batch').on('click', function(e){
-//            var isc = " ";
-//            console.log(e.target.id);
-//            exit();
-//            $(".seleall").each(function(){
-//                
-//                if($(this).attr("checked")){
-//                    isc += $(this).val() + ",";
-//                }
-//            });
-//       })
        
        //ajax
        function postData(data)
@@ -295,10 +313,8 @@
                url: '/soap/index',
                data: data
            }).done( function (data) {
-               console.log(data);
                alert(data.msg);
-               window.location = '/invoice/showlist';
-               
+               window.location.reload();
            }).fail( function (a) {
                console.log(a + ' fail ');
            });

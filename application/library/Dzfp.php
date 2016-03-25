@@ -112,7 +112,7 @@ class Dzfp {
             return FALSE;
         }
         
-        $string = "<?xml version='1.0' encoding='utf-8'?><BUSINESS ID='GETPDF'></BUSINESS>";
+        $string = "<?xml version='1.0' encoding='utf-8'?><business ID='GETPDF'></business>";
         $requestXML = simplexml_load_string($string);
         $REQUEST_COMMON_FPCX = $requestXML->addChild('REQUEST_COMMON_GETPDF');
         $REQUEST_COMMON_FPCX->addAttribute('class', 'REQUEST_COMMON_GETPDF');
