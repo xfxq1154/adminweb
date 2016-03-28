@@ -13,6 +13,7 @@ class InvoiceModel{
     
     const PDF_UPLOAD = 'oss/upload';
     const GET_URLSIGN = 'oss/urlsign';
+    const DWZ_HOST = 'http://apis.baidu.com/3023/shorturl/shorten';
 
     public function __construct() {
         $this->dbMaster = $this->getMasterDb('storecp_invoice');
@@ -201,6 +202,16 @@ class InvoiceModel{
         $params['object'] = $object;
         $params['timeout'] = 3600;
         $result = Imgapi::request(self::GET_URLSIGN, $params, 'POST');
+        return $result;
+    }
+    
+    /**
+     * @desc 调用百度dwz
+     */
+    public function dwz($url){
+        $params['url_long'] = $url;
+        $headers = array('apikey:0d5cbc4c804d5850b913ff594aa0e6d4'); //此apikey 为个人调用，修改地址为http://apistore.baidu.com/apiworks/servicedetail/1466.html
+        $result = Curl::request(self::DWZ_HOST, $params, 'GET', TRUE, $headers);
         return $result;
     }
     

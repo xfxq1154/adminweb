@@ -14,7 +14,15 @@ class InvoiceController extends Base{
     public $status = [
         1 => '未开发票',
         2 => '开票成功',
-        3 => '开票失败'
+        3 => '开票失败',
+        4 => '已发短信'
+    ];
+    
+    public $state_name = [
+        1 => '<span class="tag bg-green">未开发票</span>',
+        2 => '<span class="tag bg-yellow">开票成功</span>',
+        3 => '<span class="tag bg-blue">开票失败</span>',
+        4 => '<span class="tag bg-bg-mix">已发短信</span>'
     ];
     
     public $host = ASSET_URL;
@@ -51,6 +59,7 @@ class InvoiceController extends Base{
         $this->assign('order_id', $order_id);
         $this->assign('invoice_info', $invoice_info);
         $this->assign('status', $this->status[$status]);
+        $this->assign('state_name', $this->state_name);
         $this->layout('invoice/list.phtml');
     }
     

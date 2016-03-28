@@ -181,6 +181,7 @@ class SoapController extends Base{
         foreach ($orderdata as $value){
             $order = $this->getInfoById($value['order'], $value['sl']);
             if($order['status'] !== 'TRADE_BUYER_SIGNED'){
+                $this->invoice_model->update($value['id'],array('state' => self::INVOICE_STATUS_FAIL, 'state_message' => '订单状态不符'));
                 continue;
             }
             $order['xsf_mc'] = $xsf_mc;
@@ -202,8 +203,8 @@ class SoapController extends Base{
             //更新到数据表
             $this->invoice_model->update($value['id'],$params);
         }
-        echo json_encode(array('msg' => '批量开票成功', 'status' => 3));
-        exit;
+        echo json_encode(array('msg' => '批量开票成功', 'status' => 3));exit;
+        
     }
     
     /**
