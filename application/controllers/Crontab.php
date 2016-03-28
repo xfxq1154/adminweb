@@ -30,7 +30,6 @@ class CrontabController extends Base{
                 continue;
             }
             $pdf = base64_decode($rs_pdf);
-            
             //将pdf文件上传到oss
             $rs_oss = $this->invoice_model->ossUpload($pdf);
             if(!$rs_oss){
@@ -38,9 +37,11 @@ class CrontabController extends Base{
             }
             //更新发票信息
             $this->invoice_model->update($value['id'], array('invoice_url' => $rs_oss['object'],'state' => 4));
-            
             //查询私密发票地址
             $invoice_path = $this->invoice_model->getInvoice($rs_oss['object']);
+            if(!$invoice_path){
+                continue;
+            }
             //将发票地址发送给用户
             $sms = new Sms();
             $message = '请在电脑端查看您的发票，地址:'.$invoice_path;

@@ -1,7 +1,7 @@
 <?php
 /**
  * @author why
- * @desc 发票模型
+ * @desc 电子发票
  */
 class InvoiceModel{
     
@@ -13,14 +13,22 @@ class InvoiceModel{
     
     const PDF_UPLOAD = 'oss/upload';
     const GET_URLSIGN = 'oss/urlsign';
-    
-    private $error_log;
 
     public function __construct() {
         $this->dbMaster = $this->getMasterDb('storecp_invoice');
         $this->dbSlave = $this->getSlaveDb('storecp_invoice');
     }
     
+    /**
+     * @desc 列表
+     * @param type $page_no
+     * @param type $page_size
+     * @param type $use_hax_next
+     * @param type $mobile
+     * @param type $order_id
+     * @param type $status
+     * @return array()
+     */
     public function getList($page_no, $page_size, $use_hax_next, $mobile = '', $order_id = '', $status = ''){
         $where = '1';
         
@@ -33,8 +41,14 @@ class InvoiceModel{
             $pdo_params[':order_id'] = $order_id;
         }
         if($status){
-            $where .= ' AND `state` = :status ';
-            $pdo_params[':status'] = $status;
+            if($status == 2){
+                $where .= ' AND `state` = :status OR `state` = :status2';
+                $pdo_params[':status'] = $status;
+                $pdo_params[':status2'] = 4;
+            } else {
+                $where .= ' AND `state` = :status ';
+                $pdo_params[':status'] = $status;
+            }
         }
         
         $start = ($page_no - 1) * $page_size;
@@ -55,6 +69,9 @@ class InvoiceModel{
         return $data;
     }
     
+    /**
+     *@desc 添加开票信息
+     */
     public function insert($params){
         try {
             $sql = ' INSERT INTO '. $this->tableName . ' SET ' . $this->makeSet($params);
@@ -67,7 +84,7 @@ class InvoiceModel{
     }
     
     /**
-     * 获取总数
+     *@desc 获取总数
      */
     public function getCount($where, $pdo_params) {
         try {
@@ -82,7 +99,7 @@ class InvoiceModel{
     }
     
     /**
-     * 获取详情
+     * @desc 获取详情
      */
     public function getInfo($id){
         $where = ' `id` =  :id';
@@ -98,11 +115,11 @@ class InvoiceModel{
     }
     
     /**
-     * 更新开票信息
+     * @desc 更新开票信息
      */
     public function update($id, $params){
         if(!$id || !$params){
-            return array();
+            return FALSE;
         }
         $f = '';
         $array = array(':id' => $id);
@@ -117,14 +134,14 @@ class InvoiceModel{
         $sql = "UPDATE `" . $this->tableName . "` SET " . substr($f, 1) . " WHERE `id` = :id LIMIT 1";
         try {
             $stmt = $this->dbMaster->prepare($sql);
-            $stmt->execute($array);
+            return $stmt->execute($array);
         } catch (Exception $ex) {
-            Output::jsonStr(Error::ERROR_DB_EXCEPTION, $ex->getMessage());
+            echo $ex->getMessage();
         }
     }
     
     /**
-     * 修改多个税率
+     * @desc 修改多个税率
      */
     public function updateSl($ids, $fpsl){
         if( !$ids || !$fpsl){
@@ -163,7 +180,7 @@ class InvoiceModel{
     }
     
     /**
-     * 上传发票到oss
+     * @desc 上传发票到oss
      */
     public function ossUpload($file){
         if(!$file){
@@ -175,7 +192,7 @@ class InvoiceModel{
     }
     
     /**
-     * 获取发票链接
+     * @desc 获取发票链接
      */
     public function getInvoice($object){
         if(!$object){

@@ -16,6 +16,8 @@ class InvoiceController extends Base{
         2 => '开票成功',
         3 => '开票失败'
     ];
+    
+    public $host = ASSET_URL;
 
     public function init() {
         $this->initAdmin();
@@ -42,6 +44,7 @@ class InvoiceController extends Base{
         }
         //查询开票信息
         $invoice_info = $this->invoice_data_model->getInfo();
+        $invoice_info['host'] = $this->host;
         $this->renderPagger($page_no, $result['total_nums'], '/invoice/showlist/page_no/{p}/status/'.$status, 20);
         $this->assign('data', $result);
         $this->assign('mobile', $mobile);
@@ -49,6 +52,72 @@ class InvoiceController extends Base{
         $this->assign('invoice_info', $invoice_info);
         $this->assign('status', $this->status[$status]);
         $this->layout('invoice/list.phtml');
+    }
+    
+    /**
+     * 发票预览列表
+     */
+    public function skuListAction(){
+        $page_no = $this->getRequest()->get('page_no', 1);
+        $mobile = $this->getRequest()->get('mobile');
+        $order_id = $this->getRequest()->get('order_id');
+        $status = $this->getRequest()->get('status');
+        $result = $this->invoice_mode->getList($page_no, 20, 1, $mobile, $order_id, $status);
+        $this->renderPagger($page_no, $result['total_nums'], '/invoice/skulist/page_no/{p}', 20);
+        $this->assign('data', $result);
+        $this->assign('info', array('mobile' => $mobile,'order_id' => $order_id));
+        $this->layout('invoice/skulist.phtml');
+    }
+    
+    /**
+     * 添加发票信息
+     */
+    public function addInvoiceAction(){
+        $this->checkRole();
+        
+        if ($this->getRequest()->isPost()){
+            $invoices = array();
+            $invoices['buyer_phone'] = $this->getRequest()->getPost('buyer_phone');
+            $invoices['order_id'] = $this->getRequest()->getPost('order_id');
+            $invoices['project_name'] = $this->getRequest()->getPost('name');
+            $invoices['barcode'] = $this->getRequest()->getPost('barcode');
+            $invoices['tax_rate'] = $this->getRequest()->getPost('fpsl');
+            $invoices['invoice_title'] = $this->getRequest()->getPost('title');
+            
+            $result = $this->invoice_mode->insert($invoices);
+            if(!$result){
+                Tools::output(array('info' => '添加失败', 'status' => 0));
+            }
+            Tools::output(array('info' => '添加成功', 'status' => 1));
+        }
+        $this->layout('invoice/add_invoice.phtml');
+    }
+    
+    /**
+     * 修改发票信息
+     */
+    public function editAction(){
+        $this->checkRole();
+        
+        $id = $this->getRequest()->get('id');
+        if($this->getRequest()->isPost()){
+            $params = array();
+            $params['project_name'] = $this->getRequest()->getPost('project_name');
+            $params['buyer_phone'] = $this->getRequest()->getPost('buyer_phone');
+            $params['invoice_title'] = $this->getRequest()->getPost('invoice_title');
+            $params['order_id'] = $this->getRequest()->getPost('order_id');
+            $params['barcode'] = $this->getRequest()->getPost('barcode');
+            $i_id = $this->getRequest()->getPost('i_id');
+            //更新
+            $result = $this->invoice_mode->update($i_id, $params);
+            if(!$result){
+                Tools::output(array('info' => '修改失败', 'status' => 0));
+            }
+            Tools::output(array('info' => '修改成功', 'status' => 1));
+        }
+        $i_info = $this->invoice_mode->getInfo($id);
+        $this->assign('data', $i_info);
+        $this->layout('invoice/edit.phtml');
     }
     
     /**
@@ -79,6 +148,8 @@ class InvoiceController extends Base{
      * 重新发送短信
      */
     public function repeatMessageAction(){
+        $this->checkRole();
+        
         $order_id = $this->getRequest()->get('order_id');
         $id = $this->getRequest()->get('id');
         if(!$order_id || !$id){
@@ -91,24 +162,13 @@ class InvoiceController extends Base{
             echo json_encode(array('msg' => '系统错误' ,'status' => 3));exit;
         }
         $phonenumber = $invoice_info['buyer_phone'];
-        $message = $invoice_info['invoice_url'];
+        $message = '请在电脑端查看您的发票，地址:' .$invoice_info['invoice_url'];
         $result = $sms->sendmsg($message, $phonenumber);
         
         if($result['status'] == 'ok'){
             echo json_encode(array('msg' => '短信发送成功', 'status' => 2));exit;
         }
         echo json_encode(array('msg' => '短信发送失败', 'status' => 3));exit;
-    }
-    
-    /**
-     * skulist
-     */
-    public function skuListAction(){
-        $page_no = $this->getRequest()->get('page_no', 1);
-        $result = $this->invoice_mode->getList($page_no, 20, 1);
-        $this->renderPagger($page_no, $result['total_nums'], '/invoice/skulist/page_no/{p}', 20);
-        $this->assign('data', $result);
-        $this->layout('invoice/skulist.phtml');
     }
     
     /**

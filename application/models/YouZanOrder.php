@@ -50,12 +50,12 @@ class YouZanOrderModel{
     }
     
     /**
-     * 获取订单
+     * 获取订单(测试)
      */
     public function getlist(){
         $where = " ta.`y_status` = 'TRADE_BUYER_SIGNED' " ;
         try {
-            $sql = " SELECT * FROM ".$this->tableName. ' ta LEFT JOIN '.$this->tableName2.' tb ON ta.y_tid = tb.o_trades_id  WHERE '.$where .' LIMIT 10';
+            $sql = " SELECT * FROM ".$this->tableName. ' ta LEFT JOIN '.$this->tableName2.' tb ON ta.y_tid = tb.o_trades_id  WHERE '.$where .' ORDER BY ta.y_id ASC  LIMIT 400,20';
             $stmt = $this->dbSlave->prepare($sql);
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -106,7 +106,7 @@ class YouZanOrderModel{
         $o['receiver_name'] = trim($order['y_receiver_name']);  //收货人的姓名
         $o['receiver_state'] = $order['y_receiver_state'];  //收货人的所在省份
         $o['receiver_address'] = $order['y_receiver_address'];  //收货人的详细地址
-        $o['receiver_mobile'] = $order['y_receiver_mobile'];  //收货人的手机号码
+//        $o['receiver_mobile'] = $order['y_receiver_mobile'];  //收货人的手机号码
         $o['created'] = $order['y_created'];  //交易创建时间
         $o['update_time'] = $order['y_update_time'];  //交易更新时间。当交易的：状态改变、备注更改、星标更改 等情况下都会刷新更新时间
         $o['order_detail'] = $order['order_detail'];

@@ -43,9 +43,9 @@ class Dzfp {
             'FHR'           => '',   //复核人 
             'YFP_DM'        => $order['type'] == 1 ? $order['yfp_dm'] : '',   //原发票代码 红字发票时必须
             'YFP_HM'        => $order['type'] == 1 ? $order['yfp_hm'] : '',   //原发票号码 红字发票时必须
-            'JSHJ'          => $order['payment'],   //*价税合计 单位元 (2位小数)
-            'HJJE'          => $order['hjje'],   //*合计金额 单位元 (2位小数)
-            'HJSE'          => $order['hjse'],   //*合计税额 单位元 (2位小数)
+            'JSHJ'          => $order['type'] == 1 ? -$order['payment'] : $order['payment'],   //*价税合计 单位元 (2位小数)
+            'HJJE'          => $order['type'] == 1 ? -$order['hjje'] : $order['hjje'],   //*合计金额 单位元 (2位小数)
+            'HJSE'          => $order['type'] == 1 ? -$order['hjse'] : $order['hjse'],   //*合计税额 单位元 (2位小数)
             'BZ'            => '',   //备注
             'DDRQ'          => $order['created'],   //*订单日期 同下
             'KPRQ'          => date('Y-m-d H:i:s'),   //*开票日期 yyyymmddhh24miss
@@ -66,7 +66,8 @@ class Dzfp {
         $kjxxmx->addAttribute('COUNT', $order['count']);
         
         //格式化订单商品详情
-        $ks_info = $this->batch($detail);
+        $ks_info = $this->batch($detail, $order['type']);
+        
         foreach ($ks_info as $value){
             $kjmx = $kjxxmx->addChild('KJMX');
             foreach ($value as $vk=>$vl){
@@ -183,7 +184,7 @@ class Dzfp {
      * foreach orderdetail
      * @return type
      */
-    public function batch($data){
+    public function batch($data, $type){
         if(!$data){
             return FALSE;
         }
@@ -197,9 +198,9 @@ class Dzfp {
             $kj_data[$key]['DW'] = ''; //规格型号
             $kj_data[$key]['XMSL'] = ''; //项目数量
             $kj_data[$key]['XMDJ'] = '';  //项目单价 小数点后六位 不含税
-            $kj_data[$key]['XMJE'] = $value['xmje'];  //*项目金额 不含税，单位元(2位小数)
+            $kj_data[$key]['XMJE'] = $type == 1 ? -$value['xmje'] : $value['xmje'];  //*项目金额 不含税，单位元(2位小数)
             $kj_data[$key]['SL'] = $value['sl'];  //*税率 6位小数例：1%为0.01
-            $kj_data[$key]['SE'] = $value['se'];  //*税额 单位：元(2位小数)
+            $kj_data[$key]['SE'] = $type == 1 ? -$value['se'] : $value['se'];  //*税额 单位：元(2位小数)
             $kj_data[$key]['SN'] = '';  //商品SN号
             $i++;
         }

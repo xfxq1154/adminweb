@@ -1,9 +1,30 @@
 <div class="dux-tools">
-    <div class="bread-head">电子发票<span class="small">sku列表</span>
+    <div class="bread-head">电子发票<span class="small">sku列表</span></div>
+    <div class="button-group float-right">
+        <a class="button button-small bg-dot icon-plus dropdown-toggle"> 录入 <span class="downward"></span></a>
+        <ul class="drop-menu pull-right">
+            <li><a href="/invoice/addinvoice">录入开票信息</a></li>
+        </ul>
+    </div>
 </div>
 <div class="table-tools clearfix ">
     <div class="float-left">
-        <form action="/invoice/skulist" method="POST" enctype="multipart/form-data" >
+        <form action="/invoice/skulist" method="GET" >
+            <div class="form-inline">
+                <div class="form-group" style="margin-left:10px;">
+                    <label><b>请输入搜索条件:</b></label>
+                    <div class="field" style="margin-left: 5px;">
+                        <input type="text" class="input" name="mobile" size="20" value="<?=$info['mobile']?>" placeholder="请填写手机号">
+                        <input type="text" class="input" name="order_id" size="20" value="<?=$info['order_id']?>" placeholder="请填写订单号">
+                    </div>
+                </div>
+                <div class="form-button" style="margin-left:20px;">
+                    <button class="button bg-main" type="submit">搜索</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="float-left" style="margin-left: 10px;">
         <div class="form-inline">
             <div class="form-group">
                 <div class="field">
@@ -20,10 +41,9 @@
                 </div>
             </div>
             <div class="form-button" style="margin-left:20px;">
-                <button class="button bg-gray set" type="submit">设置</button>
+                <button class="button bg-gray set">设置</button>
             </div>
         </div>
-        </form>
     </div>
 </div>
 <div class="admin-main">
@@ -38,6 +58,7 @@
                         <th width="*">发票台头</th>
                         <th width="*">税率</th>
                         <th width="*">购买人手机号</th>
+                        <th width="*">操作</th>
                     </tr>
                     <?php if ($data) : ?>
                         <?php foreach ($data['data'] as $val) : ?>
@@ -48,6 +69,9 @@
                                 <td><?=$val['invoice_title']?></td>
                                 <td><?=$val['tax_rate']?></td>
                                 <td><?=$val['buyer_phone']?></td>
+                                <td>
+                                    <a class="button bg-blue button-small icon-pencil" href="/invoice/edit/id/<?=$val['id']?>" title="修改"></a>
+                                </td>
                             </tr>
                         <?php endforeach; ?>
                     <?php endif; ?>
@@ -79,6 +103,10 @@
        $('.set').on('click', function(){
            var orders = '';
            var fpsl = $('#parent option:selected').val();
+           if (!$('.checkAll').prop('checked')){
+               alert('请先选择');
+               return false;
+           }
             $(".checkAll").each(function(){
                 if ($(this).prop("checked")) {
                     orders += $(this).val() + ","; 
