@@ -58,6 +58,7 @@ class InvoiceController extends Base{
      * 发票预览列表
      */
     public function skuListAction(){
+        $this->checkRole();
         $page_no = $this->getRequest()->get('page_no', 1);
         $mobile = $this->getRequest()->get('mobile');
         $order_id = $this->getRequest()->get('order_id');

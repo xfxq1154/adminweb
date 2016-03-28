@@ -46,7 +46,9 @@ class SoapController extends Base{
         if ($type == 1){
             $this->redInvoice($id);
         }
-        
+        if(!$order_id){
+            Tools::output(array('msg' => '提交参数有误', 'status' => 3));
+        }
         //查询订单详情
         $order = $this->getInfoById($order_id, $fpsl);
         if($order['status'] !== 'TRADE_BUYER_SIGNED'){
