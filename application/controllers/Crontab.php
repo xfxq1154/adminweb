@@ -50,7 +50,7 @@ class CrontabController extends Base{
                     continue;
                 }
                 //更新发票信息
-                $this->invoice_model->update($value['id'], array('invoice_url' => $dwz_url[0]['url_short'],'state' => 4));
+                $this->invoice_model->update($value['id'], array('invoice_url' => $dwz_url['urls'][0]['url_short'],'state' => 4));
                 //将发票地址发送给用户
                 $sms = new Sms();
                 $message = '请在电脑端查看您的发票，地址:'.$dwz_url[0]['url_short'];
@@ -61,3 +61,4 @@ class CrontabController extends Base{
     }
 }
 
+    

@@ -200,7 +200,7 @@ class InvoiceModel{
             return FALSE;
         }
         $params['object'] = $object;
-        $params['timeout'] = 3600;
+        $params['timeout'] = 432000;  //设置失效时间是5天
         $result = Imgapi::request(self::GET_URLSIGN, $params, 'POST');
         return $result;
     }
