@@ -1,4 +1,8 @@
 <?php
+/**
+ * @author why
+ * Class SoapController
+ */
 class SoapController extends Base{
     
     use Trait_Api;
