@@ -150,8 +150,8 @@ class SoapController extends Base{
      */
     public function test3Action(){
         $src = "'1234567891'";
-        $result = $this->dzfp->encryCfca($src);
-        $r2 = $this->dzfp->deEncryCfca($result['encrypt'], $result['sign']);
+        $result = $this->dzfp->encrypt($src);
+        $r2 = $this->dzfp->decrypt($result['encrypt'], $result['sign']);
         
         var_dump("原文:$src", $result,"解密结果:$r2");
         exit;
