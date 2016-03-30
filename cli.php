@@ -3,7 +3,7 @@ error_reporting(7);
 set_time_limit(0);
 define('ROOT_PATH', dirname(__FILE__));
 
-include dirname(ROOT_PATH) . '/configs/admincenter.config.php';
+include dirname(ROOT_PATH) . '/configs/storecp.config.php';
 $application = new Yaf_Application(ROOT_PATH . "/conf/application.ini");
 $request = new Yaf_Request_Simple();
 
