@@ -7,22 +7,30 @@
 class InvoiceController extends Base{
     
     use Trait_Layout,Trait_Pagger;
-    
+
+    /** @var  InvoiceModel*/
     public $invoice_mode;
+
+    /** @var SkuModel */
+    public $sku_model;
+
+    /** @var  InvoicedataModel */
     public $invoice_data_model;
     
     public $status = [
         1 => '未开发票',
         2 => '开票成功',
         3 => '开票失败',
-        4 => '已发短信'
+        4 => '已发短信',
+        5 => '开票中'
     ];
     
     public $state_name = [
         1 => '<span class="tag bg-green">未开发票</span>',
         2 => '<span class="tag bg-yellow">开票成功</span>',
         3 => '<span class="tag bg-blue">开票失败</span>',
-        4 => '<span class="tag bg-bg-mix">已发短信</span>'
+        4 => '<span class="tag bg-bg-mix">已发短信</span>',
+        5 => '<span class="tag bg-bg-blue">开票中</span>'
     ];
     
     public $host = ASSET_URL;
@@ -30,6 +38,7 @@ class InvoiceController extends Base{
     public function init() {
         $this->initAdmin();
         Yaf_Loader::import(ROOT_PATH . '/application/library/phpExcel/reader.php');
+        $this->sku_model = new SkuModel();
         $this->invoice_mode = new InvoiceModel();
         $this->invoice_data_model = new InvoicedataModel();
     }
@@ -43,40 +52,64 @@ class InvoiceController extends Base{
         $mobile = $this->getRequest()->get('mobile');
         $order_id = $this->getRequest()->get('order_id');
         $status = $this->getRequest()->get('status');
+        $group_id= $this->getRequest()->get('group');
         
-        $result = $this->invoice_mode->getList($page_no, 20, 1, $mobile, $order_id, $status);
+        $result = $this->invoice_mode->getList($page_no, 20, 1, $mobile, $order_id, $status, $group_id);
         foreach ($result['data'] as &$values){
             if($values['invoice_url']){
                 $values['invoice_url'] = $this->invoice_mode->getInvoice($values['invoice_url']);
             }
         }
+        //查询上传批次
+        $group = $this->invoice_mode->getBatchGroup();
+        $groups = array_filter($group);
         //查询开票信息
         $invoice_info = $this->invoice_data_model->getInfo();
         $invoice_info['host'] = $this->host;
-        $this->renderPagger($page_no, $result['total_nums'], '/invoice/showlist/page_no/{p}/status/'.$status, 20);
+        $this->renderPagger($page_no, $result['total_nums'], '/invoice/showlist/page_no/{p}?status/'.$status.'/group/'.$group_id, 20);
         $this->assign('data', $result);
         $this->assign('mobile', $mobile);
         $this->assign('order_id', $order_id);
         $this->assign('invoice_info', $invoice_info);
         $this->assign('status', $this->status[$status]);
         $this->assign('state_name', $this->state_name);
+        $this->assign('group', $groups);
+        $this->assign('group_val', $group_id);
         $this->layout('invoice/list.phtml');
     }
     
     /**
-     * 发票预览列表
+     * sku列表
      */
     public function skuListAction(){
         $this->checkRole();
         $page_no = $this->getRequest()->get('page_no', 1);
-        $mobile = $this->getRequest()->get('mobile');
-        $order_id = $this->getRequest()->get('order_id');
-        $status = $this->getRequest()->get('status');
-        $result = $this->invoice_mode->getList($page_no, 20, 1, $mobile, $order_id, $status);
+        $sku_id = $this->getRequest()->get('sku_id');
+        $result = $this->sku_model->getList($page_no, 20, 1, $sku_id);
         $this->renderPagger($page_no, $result['total_nums'], '/invoice/skulist/page_no/{p}', 20);
         $this->assign('data', $result);
-        $this->assign('info', array('mobile' => $mobile,'order_id' => $order_id));
         $this->layout('invoice/skulist.phtml');
+    }
+
+    /**
+     * @desc 添加sku 编码
+     */
+    public function addSkuAction(){
+        $this->checkRole();
+
+        if ($this->getRequest()->isPost()){
+            $skus = array();
+            $skus['sku_id'] = $this->getRequest()->getPost('sku_id');
+            $skus['product_name'] = $this->getRequest()->getPost('product_name');
+            $skus['tax_tare'] = $this->getRequest()->getPost('tax_tare');
+
+            $result = $this->sku_model->insert($skus);
+            if(!$result){
+                Tools::output(array('info' => '添加失败', 'status' => 0));
+            }
+            Tools::output(array('info' => '添加成功', 'status' => 1));
+        }
+        $this->layout('invoice/add_sku.phtml');
     }
     
     /**
@@ -89,9 +122,7 @@ class InvoiceController extends Base{
             $invoices = array();
             $invoices['buyer_phone'] = $this->getRequest()->getPost('buyer_phone');
             $invoices['order_id'] = $this->getRequest()->getPost('order_id');
-            $invoices['project_name'] = $this->getRequest()->getPost('name');
-            $invoices['barcode'] = $this->getRequest()->getPost('barcode');
-            $invoices['tax_rate'] = $this->getRequest()->getPost('fpsl');
+            $invoices['buyer_tax_id'] = $this->getRequest()->getPost('buyer_tax_id');
             $invoices['invoice_title'] = $this->getRequest()->getPost('title');
             
             $result = $this->invoice_mode->insert($invoices);
@@ -116,7 +147,7 @@ class InvoiceController extends Base{
             $params['buyer_phone'] = $this->getRequest()->getPost('buyer_phone');
             $params['invoice_title'] = $this->getRequest()->getPost('invoice_title');
             $params['order_id'] = $this->getRequest()->getPost('order_id');
-            $params['barcode'] = $this->getRequest()->getPost('barcode');
+            $params['buyer_tax_id'] = $this->getRequest()->getPost('buyer_tax_id');
             $i_id = $this->getRequest()->getPost('i_id');
             //更新
             $result = $this->invoice_mode->update($i_id, $params);
@@ -191,7 +222,7 @@ class InvoiceController extends Base{
         $ordersing = substr($orders,0, -1);
         
         //更新多个数据到数据表
-        $rs = $this->invoice_mode->updateSl($ordersing, $fpsl);
+        $rs = $this->sku_model->updateSl($ordersing, $fpsl);
         if(!$rs){
             echo json_encode(array('msg' => '修改失败'));exit;
         }
@@ -199,7 +230,7 @@ class InvoiceController extends Base{
     }
     
     /**
-     * 上传
+     * 订单上传
      */
     public function uploadAction(){
         $files = $this->getRequest()->getFiles('file');
@@ -228,11 +259,46 @@ class InvoiceController extends Base{
             foreach (Fileds::$invoice as $k => $v){
                 $data[$v] = $values[$k];
             }
+            $data['batch'] = strtotime(date('Ymd')); //将时间戳当做批次号码
             $this->invoice_mode->insert($data);
         }
         echo json_encode(array('info' => '上传成功', 'code' => 1));exit;
     }
-    
+
+    /**
+     *sku 编码上传
+     */
+    public function skuUploadAction(){
+        $files = $this->getRequest()->getFiles('file');
+
+        if(!$files){
+            Tools::output(array('info'=> '请先选择上传文件','status' => 0));
+        }
+        if($files['error']){
+            Tools::output(array('info'=> '上传失败','status' => 0));
+        }
+        if($files['size'] / 1024 > 1024){
+            Tools::output(array('info'=>'上传文件不得大于1MB','status' => 0));
+        }
+        $xls = new Spreadsheet_Excel_Reader();
+        $xls->setOutputEncoding('utf-8');
+        $xls->read($files['tmp_name']);
+
+        //将文件内容遍历循环存储到数据库
+        $data = array();
+        if(!$xls->sheets[0]['cells'][1]){
+            Tools::output(array('info'=> '系统错误','status' => 0));
+        }
+
+        unset($xls->sheets[0]['cells'][1]);
+        foreach ($xls->sheets[0]['cells'] as $values){
+            foreach (Fileds::$sku as $k => $v){
+                $data[$v] = $values[$k];
+            }
+            $this->sku_model->insert($data);
+        }
+        echo json_encode(array('info' => '上传成功', 'code' => 1));exit;
+    }
     
     /**
      * test

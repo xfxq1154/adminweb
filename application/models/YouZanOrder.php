@@ -67,11 +67,11 @@ class YouZanOrderModel{
     /**
      * 格式化订单信息
      */
-    public function struct_order_data($order, $fpsl) {
+    public function struct_order_data($order) {
         //格式化基本信息
         $o = $this->tidyOrderInfo($order);
         //格式化订单详情
-        $o = $this->struct_orderdetail_batch($o, $fpsl);
+        $o = $this->struct_orderdetail_batch($o);
         return $o;
     }
     
@@ -116,23 +116,21 @@ class YouZanOrderModel{
     /**
      * 批量格式化订单信息
      */
-    public function struct_orderdetail_batch($datas, $fpsl) {
+    public function struct_orderdetail_batch($datas) {
         if (empty($datas)) {
             return array();
         }
 
         foreach ($datas['order_detail'] as &$val) {
-            $val = $this->struct_orderdetail_data($val, $fpsl);
-            $sum_se += $val['se'];
+            $val = $this->struct_orderdetail_data($val);
         }
-        $datas['hjse'] = $sum_se;
         return $datas;
     }
     
     /**
      * 格式化订单详情信息
      */
-    public function struct_orderdetail_data($order_detail, $fpsl) {
+    public function struct_orderdetail_data($order_detail) {
         if (empty($order_detail)) {
             return array();
         }
@@ -145,9 +143,6 @@ class YouZanOrderModel{
         $data['price'] = floatval($order_detail['o_price']);  //商品价格。精确到2位小数；单位：元
         $data['total_fee'] = floatval($order_detail['o_total_fee']);  //应付金额（商品价格乘以数量的总金额）
         $data['payment'] = $order_detail['o_payment'] ; //实付金额。精确到2位小数，单位：元
-        $data['xmje'] = $payment - round($payment - ($payment / (1 + $fpsl)),2); //项目金额 不含税价格
-        $data['sl'] = $fpsl;  //税率
-        $data['se'] = round($payment - ($payment / (1 + $fpsl)),2);  //税额
         $data['sku_unique_code'] = $order_detail['o_sku_unique_code'];  //Sku在系统中的唯一编号，可以在开发者的系统中用作 Sku 的唯一ID，但不能用于调用接口
         $data['state_str'] = $order_detail['o_state_str'];  //商品状态
         $data['item_refund_state'] = $order_detail['o_item_refund_state'];  //商品退款状态

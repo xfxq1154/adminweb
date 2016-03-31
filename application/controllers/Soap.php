@@ -6,24 +6,24 @@
 class SoapController extends Base{
     
     use Trait_Api;
-    
+
+    /** @var  Dzfp */
     public $dzfp;
-    public $youzan_order_model;
-    public $youzan_order_detail;
+
+    /** @var InvoiceModel  */
     public $invoice_model;
-    
-    const INVOICE_STATUS_SUCCESS = 2; //发票成功
-    const INVOICE_STATUS_FAIL = 3;  //开票失败
-    
-    public $sms;
+
+    /** @var SkuModel */
+    public $sku_model;
+
+    /** @var 发票状态 */
+    const INVOICE_STATUS_LODING = 5; //待开发票
 
     public function init() {
         $this->initAdmin();
-        $this->sms = $this->getApi('notification');
         $this->dzfp = new Dzfp();
+        $this->sku_model = new SkuModel();
         $this->invoice_model = new InvoiceModel();
-        $this->youzan_order_model = new YouZanOrderModel();
-        $this->youzan_order_detail = new YouZanOrderDetailModel();
     }
     
     /**
@@ -31,101 +31,69 @@ class SoapController extends Base{
      */
     public function indexAction(){
         $this->checkRole();
-        
+
         $order_id = $this->getRequest()->getPost('order_id');
         $type = intval($this->getRequest()->getPost('type'));
-        $fpsl = $this->getRequest()->getPost('fpsl');
         $xsf_mc = $this->getRequest()->getPost('xsf_mc');
         $xsf_dzdh = $this->getRequest()->getPost('address');
         $kpr = $this->getRequest()->getPost('kpr');
-        $invoice_title = $this->getRequest()->getPost('title');
         $id = $this->getRequest()->getPost('id');
-        $phone = $this->getRequest()->getPost('phone');
         
         //判断用户是不是批量开发票
         if(is_array($order_id)){
-            $this->batch($order_id,$xsf_mc,$xsf_dzdh,$kpr);
+            $this->batch($order_id,$xsf_mc,$xsf_dzdh,$kpr,$type);
         }
-        
-        if ($type == 1){
-            $this->redInvoice($id);
+
+        if($type == 1){
+            $this->redInvoice($id,$xsf_mc, $xsf_dzdh, $kpr);
         }
-        if(!$order_id){
-            Tools::output(array('msg' => '提交参数有误', 'status' => 3));
-        }
-        //查询订单详情
-        $order = $this->getInfoById($order_id, $fpsl);
-        if($order['status'] !== 'TRADE_BUYER_SIGNED'){
-            Tools::output(array('msg' => '只有签收的商品才能开发票', 'status' => 3));
-        }
-        $order['xsf_mc'] = $xsf_mc;
-        $order['xsf_dzdh'] = $xsf_dzdh;
-        $order['kpr'] = $kpr;
-        $order['type'] = $type;
-        $order['hjje'] = $order['payment'] - $order['hjse'];
-        $order['invoice_title'] = $invoice_title;
-        $order['count'] = count($order['order_detail']);
-        $order['invoice_no'] = strtotime(date('Y-m-d H:i:s'));
-        $order['receiver_mobile'] = $phone;
-        
-        //开发票
-        $result = $this->dzfp->fpkj($order, $order['order_detail']);
-        if(!$result){
-            Tools::output(array('msg' => $this->dzfp->getError(), 'status' => 3));
-        }
-        $params = $this->setParameter($order, $result, $fpsl);
-        //将开票信息存储到数据表
-        $this->invoice_model->update($id,$params);
-        Tools::output(array('msg' => '电子发票开票成功', 'status' => 2));
+
+        //单个发票开具
+        $params = [
+            'seller_address' => $xsf_dzdh,
+            'seller_name' => $xsf_mc,
+            'drawer' => $kpr,
+            'state' => self::INVOICE_STATUS_LODING,
+            'invoice_type' => $type,
+        ];
+        $this->invoice_model->update($id, $params);
+        Tools::output(array('msg' => '开票申请已经提交,请稍后查看', 'status' => 2));
     }
-    
+
     /**
-     * 开具红票
+     * @desc 补开红字发票
+     * @param $id
+     * @param $xsf_mc
+     * @param $xsf_dzdh
+     * @param $kpr
      */
-    public function redInvoice($id){
+    public function redInvoice($id, $xsf_mc, $xsf_dzdh, $kpr){
         if(!$id){
-            echo json_encode(array('mag' => '系统错误'));exit;
+            echo json_encode(array('msg' => '参数缺失'));exit;
         }
         $invoice_info = $this->invoice_model->getInfo($id);
         if(!$invoice_info){
-            echo json_encode(array('mag' => '系统错误'));exit;
+            echo json_encode(array('msg' => '系统错误'));exit;
         }
-        //查询有赞订单详情
-        $order['order_detail'] = $this->youzan_order_detail->_getOrderDetail($invoice_info['order_id']);
-        //格式化订单详情
-        $order = $this->youzan_order_model->struct_orderdetail_batch($order, $invoice_info['tax_rate']);
-        
-        //reset 
-        $order['xsf_mc'] = $invoice_info['seller_name'];
-        $order['xsf_dzdh'] = $invoice_info['seller_address'];
-        $order['kpr'] = $invoice_info['drawer'];
-        $order['type'] = 1;
-        $order['count'] = count($order['order_detail']);
-        $order['hjje'] = $invoice_info['total_fee'];
-        $order['hjse'] = $invoice_info['total_tax'];
-        $order['payment'] = $invoice_info['payment_fee'];
-        $order['invoice_title'] = $invoice_info['invoice_title'];
-        $order['invoice_no'] = $invoice_info['invoice_no'];
-        $order['yfp_hm'] = $invoice_info['invoice_number'];
-        $order['yfp_dm'] = $invoice_info['invoice_code'];
-        $order['receiver_mobile'] = $invoice_info['buyer_phone'];
-        
-        //开具发票
-        $result = $this->dzfp->fpkj($order, $order['order_detail']);
-        if(!$result){
-            Tools::output(array('msg' => $this->dzfp->getError(), 'status' => 3));
+        if($invoice_info['invoice_type'] == 1){
+            echo json_encode(array('msg' => '已经开具的红票,无法重新开具'));exit;
         }
+
         $params = array(
             'original_invoice_code' => $invoice_info['invoice_number'],
             'original_invoice_number' => $invoice_info['invoice_code'],
-            'invoice_type' => 1
+            'invoice_type' => 1,
+            'state' => self::INVOICE_STATUS_LODING,
+            'seller_address' => $xsf_dzdh,
+            'seller_name' => $xsf_mc,
+            'drawer' => $kpr
             );
         $this->invoice_model->update($invoice_info['id'], $params);
-        Tools::output(array('msg' => '电子发票开票成功', 'status' => 2));
+        Tools::output(array('msg' => '开票申请已经提交,请稍后查看', 'status' => 2));
     }
-    
+
     /**
-     * 查看发票(请求API)
+     * @desc 查看发票(请求API)
      */
     public function getInvoiceAction(){
         $this->checkRole();
@@ -146,7 +114,7 @@ class SoapController extends Base{
     }
     
     /**
-     * ca
+     * 测试ca加密
      */
     public function test3Action(){
         $src = "'1234567891'";
@@ -156,88 +124,34 @@ class SoapController extends Base{
         var_dump("原文:$src", $result,"解密结果:$r2");
         exit;
     }
-    
+
     /**
-     * 查询有赞订单
+     * @desc 批量开具蓝字发票
+     * @param $orders
+     * @param $xsf_mc
+     * @param $xsf_dzdh
+     * @param $kpr
+     * @param $type
      */
-    public function getInfoById($order_id, $fpsl){
-        
-        $o_rs = $this->youzan_order_model->getInfo($order_id);
-        if($o_rs === FALSE){
-            return FALSE;
-        }
-        
-        $detail_info = $this->youzan_order_detail->_getOrderDetail($order_id);
-        if($detail_info == FALSE){
-            return FALSE;
-        }
-        $o_rs['order_detail'] = $detail_info;
-        $order_detail = $this->youzan_order_model->struct_order_data($o_rs, $fpsl);
-        return $order_detail;
-    }
-    
-    /**
-     * 批量开发票
-     */
-    public function batch($orders,$xsf_mc,$xsf_dzdh,$kpr){
+    public function batch($orders,$xsf_mc, $xsf_dzdh, $kpr, $type){
         //遍历批量开票信息
         $orderdata = array_filter($orders);
         foreach ($orderdata as $value){
-            $order = $this->getInfoById($value['order'], $value['sl']);
-            if($order['status'] !== 'TRADE_BUYER_SIGNED'){
-                $this->invoice_model->update($value['id'],array('state' => self::INVOICE_STATUS_FAIL, 'state_message' => '订单状态不符'));
+            $status = $this->invoice_model->getInfo($value['id']);
+            //判断这张发票是不是待开状态
+            if($status['state'] == 5){
                 continue;
             }
-            $order['xsf_mc'] = $xsf_mc;
-            $order['xsf_dzdh'] = $xsf_dzdh;
-            $order['kpr'] = $kpr;
-            $order['type'] = 0;
-            $order['hjje'] = $order['payment'] - $order['hjse'];
-            $order['invoice_title'] = $value['title'];
-            $order['count'] = count($order['order_detail']);
-            $order['invoice_no'] = strtotime(date('Y-m-d H:i:s'));
-            $order['receiver_mobile'] = $value['phone'];
-            //卡发票
-            $result = $this->dzfp->fpkj($order, $order['order_detail']);
-            if(!$result){
-                continue;
-            }
-            //设置参数
-            $params = $this->setParameter($order, $result, $value['sl']);
-            //更新到数据表
+            $params = [
+                'seller_address' => $xsf_dzdh,
+                'seller_name' => $xsf_mc,
+                'drawer' => $kpr,
+                'state' => self::INVOICE_STATUS_LODING,
+                'invoice_type' => $type
+            ];
             $this->invoice_model->update($value['id'],$params);
         }
-        echo json_encode(array('msg' => '批量开票成功', 'status' => 3));exit;
+        echo json_encode(array('msg' => '批量开票申请已经提交,请稍后查看', 'status' => 3));exit;
         
     }
-    
-    /**
-     *统一设置参数
-     */
-    public function setParameter(array $order, $result, $fpsl){
-        $params = array();
-        
-        $params['invoice_type'] = $order['type'];
-        $params['qr_code'] = $result['EWM'];
-        $params['invoice_code'] = $result['FPDM'];
-        $params['invoice_number'] = $result['FPHM'];
-        $params['check_code'] = $result['JYM'];
-        $params['jqbh'] = $result['JQBH'];
-        $params['state'] = self::INVOICE_STATUS_SUCCESS;
-        $params['state_message'] = $result['DESC'];
-        $params['seller_name'] = $order['xsf_mc'];
-        $params['seller_address'] = $order['xsf_dzdh'];
-        $params['drawer'] = $order['kpr'];
-        $params['payment_fee'] = $order['payment'];
-        $params['total_tax'] = $order['hjse'];
-        $params['tax_rate'] = $fpsl;
-        $params['jshj'] = $order['payment'];
-        $params['invoice_time'] = $result['KPRQ'];
-        $params['order_time'] = $order['created'];
-        $params['total_fee'] = $order['hjje'];
-        $params['invoice_no'] = $order['invoice_no'];
-        
-        return $params;
-    }
-   
 }
