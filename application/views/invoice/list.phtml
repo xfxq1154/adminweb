@@ -10,12 +10,19 @@
 <div class="tools-function clearfix">
     <div class="float-left">
         <div class="form-inline">
-            <label><b>上传需要开票订单号:</b></label>
+            <label><b>上传(有赞)开票订单号:</b></label>
             <div class="form-button">
-                <input type="text" class="input show_uo_imgs" id="files" name="file" placeholder="开票订单上传" readonly=""/>
+                <input type="text" class="input show_uo_imgs" id="files" name="file" placeholder="有赞订单" readonly=""/>
                 <a class="button bg-blue button-small " data="files" id="image_upload3" preview="image_preview3" href="javascript:;"><span class="icon-upload">上传</span></a>
             </div>
         </div>
+<!--        <div class="form-inline">-->
+<!--            <label><b>上传(天猫)开票订单号:</b></label>-->
+<!--            <div class="form-button">-->
+<!--                <input type="text" class="input show_uo_imgs2" id="files2" name="file2" placeholder="天猫订单" readonly=""/>-->
+<!--                <a class="button bg-blue button-small " data="files" id="image_upload3" preview="image_preview3" href="javascript:;"><span class="icon-upload">上传</span></a>-->
+<!--            </div>-->
+<!--        </div>-->
     </div>
     <div class="float-left" style="margin-left: 10px;">
         <div class="form-inline">
@@ -34,8 +41,9 @@
                 <label><b>搜索相关订单:</b></label>
                 <div class="form-group">
                     <div class="field" style="margin-left: 5px;">
-                        <input type="text" class="input" name="mobile" size="20" value="<?=$mobile?>" placeholder="请填写手机号">
-                        <input type="text" class="input" name="order_id" size="20" value="<?=$order_id?>" placeholder="请填写订单号">
+                        <input type="text" class="input" name="mobile" size="20" value="<?=$invoice_info['mobile']?>" placeholder="请填写手机号">
+                        <input type="text" class="input" name="order_id" size="20" value="<?=$invoice_info['order_id']?>" placeholder="请填写订单号">
+                        <input type="text" class="input" name="invoice_number" value="<?=$invoice_info['invoice_number']?>" placeholder="请填写发票号码">
                     </div>
                     <label style="margin-left: 5px;"><b>选择状态:</b></label>
                     <div class="field">&nbsp;

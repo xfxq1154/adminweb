@@ -29,7 +29,7 @@ class InvoiceModel{
      * @param string $status
      * @return mixed
      */
-    public function getList($page_no, $page_size, $use_hax_next, $mobile = '', $order_id = '', $status = '', $group){
+    public function getList($page_no, $page_size, $use_hax_next, $mobile = '', $order_id = '', $status = '', $group = '', $invoice_number){
         $where = '1';
 
         if($mobile){
@@ -54,6 +54,11 @@ class InvoiceModel{
         if($group){
             $where .= ' AND `batch` = :group';
             $pdo_params[':group'] = $group;
+        }
+
+        if($invoice_number){
+            $where .= ' AND `invoice_number` = :invoice_number';
+            $pdo_params[':invoice_number'] = $invoice_number;
         }
         
         $start = ($page_no - 1) * $page_size;

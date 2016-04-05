@@ -16,7 +16,8 @@ class Fileds{
     //电子发票sku
     public static $sku = [
         '1' => 'sku_id',
-        '2' => 'product_name'
+        '2' => 'product_name',
+        '3' => 'tax_tare'
     ];
     
 }
