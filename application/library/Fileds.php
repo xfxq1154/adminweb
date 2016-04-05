@@ -7,7 +7,7 @@ class Fileds{
     //电子发票
     public static $invoice = [
         '1' => 'order_id',
-        '2' => 'phone',
+        '2' => 'buyer_phone',
         '3' => 'project_name',
         '4' => 'invoice_title',
         '5' => 'buyer_tax_id'

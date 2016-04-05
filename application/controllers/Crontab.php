@@ -87,7 +87,6 @@ class CrontabController extends Base{
                     $this->invoice_model->update($value['id'], array('state_message' => '订单状态不符'));
                     continue;
                 }
-                
                 //遍历有赞订单详情获取sku_id
                 foreach ($order['order_detail'] as $o_val){
                     $sku_id = " '".$o_val['outer_sku_id']."',";
@@ -97,6 +96,7 @@ class CrontabController extends Base{
                 if(!$skus){
                     continue;
                 }
+
                 //将原有数据表的税率,合并到有赞订单中
                 $skuarr = array();
                 foreach ($skus as $sk_val){
@@ -117,7 +117,6 @@ class CrontabController extends Base{
                         continue;
                     }
                 }
-
                 $order['xsf_mc'] = $value['seller_name'];
                 $order['xsf_dzdh'] = $value['seller_address'];
                 $order['kpr'] = $value['drawer'];
@@ -125,9 +124,8 @@ class CrontabController extends Base{
                 $order['hjje'] = $order['payment'] - $order['hjse'];
                 $order['invoice_title'] = $value['invoice_title'];
                 $order['count'] = count($order['order_detail']);
-                $order['invoice_no'] = strtotime(date('Y-m-d H:i:s'));
+                $order['invoice_no'] = strtotime(date('Y-m-d H:i:s')).mt_rand(1000,9999);
                 $order['receiver_mobile'] = $value['buyer_phone'];
-
                 //开发票
                 $result = $this->dzfp->fpkj($order, $order['order_detail']);
                 if(!$result){

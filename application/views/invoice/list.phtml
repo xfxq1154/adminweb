@@ -156,7 +156,7 @@
                                 <td>
                                     <span class="state">
                                     <?php if($val['state'] == 2 || $val['state'] == 4):?>
-                                        <span class="bg-green"><a class="button bg-green button-small icon-eye-open" href="<?php echo $val['invoice_url'];?>" target="_blank" title="查看发票"></a></span>
+                                        <span class="bg-green"><a class="button bg-green button-small icon-eye-open" href="<?php echo urldecode($val['invoice_url']);?>" target="_blank" title="查看发票"></a></span>
                                         <a class="button bg-red button-small icon-pencil" href="javascript:;" style="margin-left: 5px;" title="补开红字发票"></a>
                                         <a class="button bg-yellow button-small icon-envelope sendmessage" href="javascript:;" style="margin-left: 5px;" title="重新发送短信"></a>
                                     <?php elseif ($val['state'] == 1):?>
@@ -195,11 +195,6 @@
             var orders = [],
                 flag = 1,
                 state = 1;
-           if (!$('.checkAll').prop('checked')){
-               alert('请先选择');
-               return;
-           }
-            
             $(".checkAll").each(function(i){
                 var _this = $(this);
                 if (_this.prop("checked")) {

@@ -55,11 +55,7 @@ class InvoiceController extends Base{
         $group_id= $this->getRequest()->get('group');
         
         $result = $this->invoice_mode->getList($page_no, 20, 1, $mobile, $order_id, $status, $group_id);
-        foreach ($result['data'] as &$values){
-            if($values['invoice_url']){
-                $values['invoice_url'] = $this->invoice_mode->getInvoice($values['invoice_url']);
-            }
-        }
+
         //查询上传批次
         $group = $this->invoice_mode->getBatchGroup();
         $groups = array_filter($group);

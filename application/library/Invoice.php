@@ -30,7 +30,6 @@ class Invoice
      * @return bool
      */
     public function getInfoById($order_id){
-
         $o_rs = $this->youzan_order_model->getInfo($order_id);
         if($o_rs === FALSE){
             return FALSE;

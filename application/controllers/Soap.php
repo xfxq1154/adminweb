@@ -38,6 +38,10 @@ class SoapController extends Base{
         $xsf_dzdh = $this->getRequest()->getPost('address');
         $kpr = $this->getRequest()->getPost('kpr');
         $id = $this->getRequest()->getPost('id');
+
+        if(!$order_id){
+            Tools::output(array('msg' => '请先选择订单', 'status' => 2));
+        }
         
         //判断用户是不是批量开发票
         if(is_array($order_id)){

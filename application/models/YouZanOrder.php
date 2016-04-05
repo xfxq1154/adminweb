@@ -55,7 +55,7 @@ class YouZanOrderModel{
     public function getlist(){
         $where = " ta.`y_status` = 'TRADE_BUYER_SIGNED' " ;
         try {
-            $sql = " SELECT * FROM ".$this->tableName. ' ta LEFT JOIN '.$this->tableName2.' tb ON ta.y_tid = tb.o_trades_id  WHERE '.$where .' ORDER BY ta.y_id ASC  LIMIT 400,20';
+            $sql = " SELECT * FROM ".$this->tableName. ' ta LEFT JOIN '.$this->tableName2.' tb ON ta.y_tid = tb.o_trades_id  WHERE '.$where .' ORDER BY ta.y_id ASC  LIMIT 800,30';
             $stmt = $this->dbSlave->prepare($sql);
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
