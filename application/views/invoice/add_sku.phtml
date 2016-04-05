@@ -1,50 +1,45 @@
 <div class="dux-tools">
     <div class="bread-head">电子发票<span class="small">录入开票信息</span>
         <div class="float-right">
-            <a class="button button-small bg-main icon-list" href="/invoice/skulist">发票订单列表</a>
+            <a class="button button-small bg-main icon-list" href="/invoice/skulist">sku列表</a>
         </div>
     </div>
 </div>
 <div class="admin-main">
-    <form method="post" class="form-x dux-form form-auto" id="form" action="/invoice/addinvoice" >
+    <form method="post" class="form-x dux-form form-auto" id="form" action="/invoice/addsku" >
         <div class="tab dux-tab">
             <div class="panel dux-box  active">
                 <div class="tab-body">
                     <div class="tab-panel active" id="tab-1">
                         <div class="form-group">
                             <div class="label">
-                                <label>订单号:</label>
+                                <label>sku编号/条形码:</label>
                             </div>
                             <div class="field">
-                                <input type="text" class="input" style="width:220px;" name="order_id"  datatype="s">
-                                <div class="input-note">请填写订单号</div>
+                                <input type="text" class="input" style="width:220px;" name="sku_id"  datatype="s">
+                                <div class="input-note">请填写sku编号/条形码</div>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="label">
-                                <label>购买人税号:</label>
+                                <label>商品名称:</label>
                             </div>
                             <div class="field">
-                                <input type="text" class="input" style="width:220px;" name="buyer_tax_id" >
-                                <div class="input-note">购买人税号税号/非必填项</div>
+                                <input type="text" class="input" style="width:220px;" name="product_name"  datatype="*">
+                                <div class="input-note">请填写商品名称</div>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="label">
-                                <label>发票台头:</label>
+                                <label>请选择税率:</label>
                             </div>
                             <div class="field">
-                                <input type="text" class="input" style="width:220px;" name="title" datatype="*">
-                                <div class="input-note">请填写发票台头</div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="label">
-                                <label>购买人手机号:</label>
-                            </div>
-                            <div class="field">
-                                <input type="text" class="input" style="width:220px;" name="buyer_phone" datatype="m" errormsg="请填写手机号" >
-                                <div class="input-note">请填写购买人手机号</div>
+                                <select class="input js-assign" name="tax_tare" datatype="*" id="parent">
+                                    <option value=0.00>0.00</option>
+                                    <option value=0.06>0.06</option>
+                                    <option value=0.17>0.17</option>
+                                </select>
+                                <div class="input-note">请选择税率</div>
                             </div>
                         </div>
                     </div>

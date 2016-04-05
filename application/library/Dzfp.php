@@ -82,10 +82,10 @@ class Dzfp {
         $resxml = simplexml_load_string($result);
         return (array)$resxml->RESULT;
     }
-    
+
     /**
-     * 发票请求流水号
-     * @param type $FPQQLSH
+     * @param $FPQQLSH
+     * @return array|bool
      */
     public function fpcx($FPQQLSH) {
         $string = "<?xml version='1.0' encoding='utf-8'?><BUSINESS ID='FPCX' comment='发票查询'></BUSINESS>";
@@ -129,11 +129,12 @@ class Dzfp {
         $resxml = simplexml_load_string($result);
         return $resxml->RESPONSE_COMMON_GETPDF->PDF_TYPE;
     }
-    
+
     /**
-     * 电子发票统一调用接口
-     * @param string $interfaceCode
-     * @param string $requestXML
+     * @desc 统一电子发票调用接口
+     * @param $interfaceCode
+     * @param $requestXML
+     * @return bool
      */
     private function doService($interfaceCode, $requestXML) {
         if(!$interfaceCode || !$requestXML){

@@ -19,20 +19,19 @@ class InvoiceModel{
         $this->dbMaster = $this->getMasterDb('storecp_invoice');
         $this->dbSlave = $this->getSlaveDb('storecp_invoice');
     }
-    
+
     /**
-     * @desc 列表
-     * @param type $page_no
-     * @param type $page_size
-     * @param type $use_hax_next
-     * @param type $mobile
-     * @param type $order_id
-     * @param type $status
-     * @return array()
+     * @param $page_no
+     * @param $page_size
+     * @param $use_hax_next
+     * @param string $mobile
+     * @param string $order_id
+     * @param string $status
+     * @return mixed
      */
-    public function getList($page_no, $page_size, $use_hax_next, $mobile = '', $order_id = '', $status = ''){
+    public function getList($page_no, $page_size, $use_hax_next, $mobile = '', $order_id = '', $status = '', $group = '', $invoice_number){
         $where = '1';
-        
+
         if($mobile){
             $where .= ' AND `buyer_phone` = :mobile';
             $pdo_params[':mobile'] = $mobile;
@@ -50,6 +49,16 @@ class InvoiceModel{
                 $where .= ' AND `state` = :status ';
                 $pdo_params[':status'] = $status;
             }
+        }
+
+        if($group){
+            $where .= ' AND `batch` = :group';
+            $pdo_params[':group'] = $group;
+        }
+
+        if($invoice_number){
+            $where .= ' AND `invoice_number` = :invoice_number';
+            $pdo_params[':invoice_number'] = $invoice_number;
         }
         
         $start = ($page_no - 1) * $page_size;
@@ -142,24 +151,6 @@ class InvoiceModel{
     }
     
     /**
-     * @desc 修改多个税率
-     */
-    public function updateSl($ids, $fpsl){
-        if( !$ids || !$fpsl){
-            return FALSE;
-        }
-        
-        try {
-            $sql = ' UPDATE `'. $this->tableName. "` SET `tax_rate` = :fpsl WHERE `id` IN ($ids) " ;
-            $stmt = $this->dbMaster->prepare($sql);
-            $stmt->execute(array(':fpsl' => $fpsl));
-            return 1;
-        } catch (Exception $ex) {
-            echo $ex->getMessage();
-        }
-    }
-    
-    /**
      * getALL
      * @desc 查询状态等于未发短信的发票信息
      */
@@ -191,9 +182,11 @@ class InvoiceModel{
         $result = Imgapi::request(self::PDF_UPLOAD, $params, 'POST');
         return $result;
     }
-    
+
     /**
-     * @desc 获取发票链接
+     *  @desc 获取发票链接
+     * @param $object
+     * @return array|bool
      */
     public function getInvoice($object){
         if(!$object){
@@ -204,9 +197,11 @@ class InvoiceModel{
         $result = Imgapi::request(self::GET_URLSIGN, $params, 'POST');
         return $result;
     }
-    
+
     /**
      * @desc 调用百度dwz
+     * @param $url
+     * @return array
      */
     public function dwz($url){
         $params['url_long'] = $url;
@@ -214,6 +209,37 @@ class InvoiceModel{
         $result = Curl::request(self::DWZ_HOST, $params, 'GET', TRUE, $headers);
         return $result;
     }
-    
+
+    /**
+     * 获取待开发票的订单
+     */
+    public function getPendingInvoice(){
+        $where = '`state` = :state OR `state` = :state1' ;
+        $pdo_params[':state'] = 5;
+        $pdo_params[':state1'] = 3;
+        try{
+            $sql = 'SELECT * FROM '.$this->tableName.' WHERE '.$where;
+            $stmt = $this->dbSlave->prepare($sql);
+            $stmt->execute($pdo_params);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }catch(PDOException $ex){
+            echo $ex->getMessage();
+        }
+    }
+
+    /**
+     * @desc 获取批次列表
+     * @return array
+     */
+    public function getBatchGroup(){
+        try{
+            $sql = " SELECT batch FROM ".$this->tableName. " WHERE batch != '' GROUP BY batch ORDER BY batch DESC";
+            $stmt = $this->dbSlave->prepare($sql);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }catch (PDOException $ex){
+            echo $ex->getMessage();
+        }
+    }
 }
 
