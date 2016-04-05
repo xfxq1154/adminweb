@@ -142,7 +142,7 @@
                                 <td><input type="checkbox" class="checkAll" value="<?=$val['order_id']?>"></td>
                                 <td><a href="<?=$invoice_info['host']?>/soap/getinvoice?id=<?=$val['id']?>" target="_blank"><span class="autoid"><?php echo $val['id']; ?></span></td>
                                 <td>
-                                    <a href="/invoice/edit/id/<?=$val['id']?>" title="修改订单信息"><?php echo $val['order_id']; ?></a>
+                                    <a href="<?php if($val['state'] == 2 || $val['state'] == 4){echo 'javascript:;';}else{echo '/invoice/edit/id/'.$val['id'];}?>" title="修改订单信息"><?php echo $val['order_id']; ?></a>
                                 </td>
                                 <td><span class="title"><?php echo $val['invoice_title'];?></span></td>
                                 <td><?php echo $val['payment_fee']; ?></td>
@@ -156,7 +156,7 @@
                                 <td>
                                     <span class="state">
                                     <?php if($val['state'] == 2 || $val['state'] == 4):?>
-                                        <span class="bg-green"><a class="button bg-green button-small icon-eye-open" href="<?php echo urldecode($val['invoice_url']);?>" target="_blank" title="查看发票"></a></span>
+                                        <span class="bg-green"><a class="button bg-green button-small icon-eye-open" href="<?php echo $val['invoice_url'];?>" target="_blank" title="查看发票"></a></span>
                                         <a class="button bg-red button-small icon-pencil" href="javascript:;" style="margin-left: 5px;" title="补开红字发票"></a>
                                         <a class="button bg-yellow button-small icon-envelope sendmessage" href="javascript:;" style="margin-left: 5px;" title="重新发送短信"></a>
                                     <?php elseif ($val['state'] == 1):?>

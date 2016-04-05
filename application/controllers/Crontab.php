@@ -28,7 +28,7 @@ class CrontabController extends Base{
     /**
      * @name getPdfSendMessage
      * @desc 获取发票pdf文件，并且发送短信给用户
-     * @frequency 每小时运行一次
+     * @frequency 每5分钟运行一次
      */
     public function getPdfSendMessageAction(){
         

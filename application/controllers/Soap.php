@@ -79,7 +79,7 @@ class SoapController extends Base{
         if(!$invoice_info){
             echo json_encode(array('msg' => '系统错误'));exit;
         }
-        if($invoice_info['invoice_type'] == 1){
+        if($invoice_info['state'] == 2){
             echo json_encode(array('msg' => '已经开具的红票,无法重新开具'));exit;
         }
 
