@@ -178,7 +178,7 @@ class Dzfp {
             $this->err_msg = (string)$xmlobj->returnStateInfo->returnMessage;
             return FALSE;
         }
-        return $this->decrypt($xmlobj->data->content, $xmlobj->data->signature);
+        return $this->decrypt((string)$xmlobj->data->content, (string)$xmlobj->data->signature);
     }
     
     /**
@@ -218,7 +218,6 @@ class Dzfp {
      * @return type
      */
     public function encrypt($src) {
-        
         if(self::ENVIRONMENT == 'develop'){
             $encrypt = base64_encode($src);
             $sign = '';
@@ -248,7 +247,6 @@ class Dzfp {
                 return FALSE;
             }
         }
-        
         return (string)$decrypt;
     }
 
@@ -268,9 +266,9 @@ class Dzfp {
         // Library path
         java_set_library_path($libDir);
         // Cert
-        $this->cerPath = $configDir.DIRECTORY_SEPARATOR."luojilab.cer";
+        $this->cerPath = $configDir.DIRECTORY_SEPARATOR."donggang.cer";
         $this->pfxPath = $configDir.DIRECTORY_SEPARATOR."luojilab.pfx";
-        $this->pfxPwd  = "1";
+        $this->pfxPwd  = "000000";
 
         // Test5 instance
         return new Java("Test5");
