@@ -5,9 +5,9 @@
  */
 class Dzfp {
     
-    const WSDL = 'http://111.202.226.70:8002/zxkp_base64/services/WKWebService?wsdl';
+    const WSDL = DZFP_HOST;
     const APPID = 'DZFP';
-    const REQUEST_CODE = '110104201110174';    #企业纳税人识别号
+    const REQUEST_CODE = TAXPAYER_NUMBER;    #企业纳税人识别号
     const ENVIRONMENT = ENVIRONMENT;    #运行环境
     
     const FPHXZ = 0; //发票行性质 0正常行 1折扣行 2被折扣行
