@@ -138,7 +138,7 @@ class YouZanOrderModel{
         
         $data['oid'] = intval($order_detail['o_oid']);  //交易明细编号。该编号并不唯一，只用于区分交易内的多条明细记录
         $data['outer_sku_id'] = $order_detail['o_outer_sku_id'];  //商家编码（商家为Sku设置的外部编号）
-        $data['outer_item_id'] = intval($order_detail['o_outer_item_id']);  //商品货号（商家为商品设置的外部编号）
+        $data['outer_item_id'] = $order_detail['o_outer_item_id'];  //商品货号（商家为商品设置的外部编号）
         $data['title'] = $order_detail['o_title'];  //商品标题
         $data['price'] = floatval($order_detail['o_price']);  //商品价格。精确到2位小数；单位：元
         $data['total_fee'] = floatval($order_detail['o_total_fee']);  //应付金额（商品价格乘以数量的总金额）
