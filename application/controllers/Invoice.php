@@ -123,6 +123,7 @@ class InvoiceController extends Base{
             $invoices['order_id'] = $this->getRequest()->getPost('order_id');
             $invoices['buyer_tax_id'] = $this->getRequest()->getPost('buyer_tax_id');
             $invoices['invoice_title'] = $this->getRequest()->getPost('title');
+            $invoices['batch'] = strtotime(date('Ymd'));
             
             $result = $this->invoice_mode->insert($invoices);
             if(!$result){
