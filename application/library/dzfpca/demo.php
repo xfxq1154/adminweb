@@ -16,8 +16,8 @@ require_once($javaDir.DIRECTORY_SEPARATOR."Java.inc");
 java_set_library_path(".".PATH_SEPARATOR.$libDir);
 
 // Cert
-$cerPath = $configDir.DIRECTORY_SEPARATOR."test.cer";
-$pfxPath = $configDir.DIRECTORY_SEPARATOR."test.pfx";
+$cerPath = $configDir.DIRECTORY_SEPARATOR."luojilab.cer";
+$pfxPath = $configDir.DIRECTORY_SEPARATOR."luojilab.pfx";
 $pfxPwd  = "1234";
 
 // Test5 instance
