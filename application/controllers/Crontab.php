@@ -79,6 +79,7 @@ class CrontabController extends Base{
         $result = $this->invoice_model->getPendingInvoice();
         $datas = array_filter($result);
         $youzan = new Invoice();
+        $sku_id = '';
         //遍历数组
         if ($datas) {
             foreach ($datas as $value){
@@ -89,8 +90,13 @@ class CrontabController extends Base{
                 }
                 //遍历有赞订单详情获取sku_id
                 foreach ($order['order_detail'] as $o_val){
-                    $sku_id = " '".$o_val['outer_sku_id']."',";
+                    $sku_id .= "'".$o_val['outer_sku_id']."',";
                 }
+                if(!$sku_id){
+                    $this->invoice_model->update($value['id'], array('state_message' => 'skuid不存在'));
+                    continue;
+                }
+
                 //根据有赞sku_id 查询sku表
                 $skus = $this->sku_model->getInfoBySkuId(substr($sku_id, 1, -1));
                 if(!$skus){
@@ -112,10 +118,8 @@ class CrontabController extends Base{
 
                 //判断发票类型 1 红票
                 if ($value['invoice_type'] == 1){
-                    $o_rs = $this->redInvoice($order, $value);
-                    if(!$o_rs){
-                        continue;
-                    }
+                    $this->redInvoice($order, $value);
+                    continue;
                 }
                 $order['xsf_mc'] = $value['seller_name'];
                 $order['xsf_dzdh'] = $value['seller_address'];
@@ -184,41 +188,41 @@ class CrontabController extends Base{
     {
         $orders = array_filter($order);
         $invoice_info = array_filter($invoice_info);
-        if ($orders && $invoice_info) {
-
-            $orders['xsf_mc'] = $invoice_info['seller_name'];
-            $orders['xsf_dzdh'] = $invoice_info['seller_address'];
-            $orders['kpr'] = $invoice_info['drawer'];
-            $orders['type'] = 1;
-            $orders['count'] = count($order['order_detail']);
-            $orders['hjje'] = $invoice_info['total_fee'];
-            $orders['hjse'] = $invoice_info['total_tax'];
-            $orders['payment'] = $invoice_info['payment_fee'];
-            $orders['invoice_title'] = $invoice_info['invoice_title'];
-            $orders['invoice_no'] = $invoice_info['invoice_no'];
-            $orders['yfp_hm'] = $invoice_info['invoice_number'];
-            $orders['yfp_dm'] = $invoice_info['invoice_code'];
-            $orders['receiver_mobile'] = $invoice_info['buyer_phone'];
-
-            $result = $this->dzfp->fpkj($orders, $orders['order_detail']);
-            if(!$result) {
-                $rs_data = [
-                    'state_message' => $this->dzfp->getError(),
-                    'state' => self::INVOICE_FAIL,
-                ];
-                $this->invoice_model->update($invoice_info['id'], $rs_data);
-                return false;
-            }
-            //更新信息到数据库
-            $params = array(
-                'original_invoice_code' => $invoice_info['invoice_number'],
-                'original_invoice_number' => $invoice_info['invoice_code'],
-                'invoice_type' => 1,
-                'state' => self::INVOICE_SUCCESS
-            );
-            $this->invoice_model->update($invoice_info['id'], $params);
+        if (!$orders && !$invoice_info) {
+            return false;
         }
-        return false;
+
+        $orders['xsf_mc'] = $invoice_info['seller_name'];
+        $orders['xsf_dzdh'] = $invoice_info['seller_address'];
+        $orders['kpr'] = $invoice_info['drawer'];
+        $orders['type'] = 1;
+        $orders['count'] = count($order['order_detail']);
+        $orders['hjje'] = $invoice_info['total_fee'];
+        $orders['hjse'] = $invoice_info['total_tax'];
+        $orders['payment'] = $invoice_info['payment_fee'];
+        $orders['invoice_title'] = $invoice_info['invoice_title'];
+        $orders['invoice_no'] = $invoice_info['invoice_no'];
+        $orders['yfp_hm'] = $invoice_info['invoice_number'];
+        $orders['yfp_dm'] = $invoice_info['invoice_code'];
+        $orders['receiver_mobile'] = $invoice_info['buyer_phone'];
+
+        $result = $this->dzfp->fpkj($orders, $orders['order_detail']);
+        if(!$result) {
+            $rs_data = [
+                'state_message' => $this->dzfp->getError(),
+                'state' => self::INVOICE_FAIL,
+            ];
+            $this->invoice_model->update($invoice_info['id'], $rs_data);
+            return false;
+        }
+        //更新信息到数据库
+        $params = array(
+            'original_invoice_code' => $invoice_info['invoice_number'],
+            'original_invoice_number' => $invoice_info['invoice_code'],
+            'invoice_type' => 1,
+            'state' => self::INVOICE_SUCCESS
+        );
+        $this->invoice_model->update($invoice_info['id'], $params);
     }
 }
 
