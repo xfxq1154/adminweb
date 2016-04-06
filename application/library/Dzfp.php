@@ -251,7 +251,10 @@ class Dzfp {
         
         return (string)$decrypt;
     }
-    
+
+    /**
+     * @return Java
+     */
     private function get_ca_client(){
         // Dir
         $here = ROOT_PATH.'/application/library/dzfpca';
@@ -265,8 +268,8 @@ class Dzfp {
         // Library path
         java_set_library_path($libDir);
         // Cert
-        $this->cerPath = $configDir.DIRECTORY_SEPARATOR."test.cer";
-        $this->pfxPath = $configDir.DIRECTORY_SEPARATOR."test.pfx";
+        $this->cerPath = $configDir.DIRECTORY_SEPARATOR."luojilab.cer";
+        $this->pfxPath = $configDir.DIRECTORY_SEPARATOR."luojilab.pfx";
         $this->pfxPwd  = "1";
 
         // Test5 instance
