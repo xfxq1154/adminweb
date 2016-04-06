@@ -88,10 +88,22 @@ class CrontabController extends Base{
                     $this->invoice_model->update($value['id'], array('state_message' => '订单状态不符'));
                     continue;
                 }
-                //遍历有赞订单详情获取sku_id
-                foreach ($order['order_detail'] as $o_val){
-                    $sku_id .= "'".$o_val['outer_sku_id']."',";
+
+                //取订单详情中,sku_id或item_id 不为空的数据
+                foreach ($order['order_detail']  as $o_val){
+                    if($o_val['outer_sku_id'] || $o_val['outer_item_id']) {
+                        if ($o_val['outer_sku_id']) {
+                            $sku_id .= "'" . $o_val['outer_sku_id'] . "',";
+                        } else {
+                            $sku_id .= "'" . $o_val['outer_item_id'] . "',";
+                        }
+                        $new_detail[] = $o_val;
+                    }
                 }
+
+                //销毁详情
+                unset($order['order_detail']);
+
                 if(!$sku_id){
                     $this->invoice_model->update($value['id'], array('state_message' => 'skuid不存在'));
                     continue;
@@ -107,14 +119,17 @@ class CrontabController extends Base{
                 foreach ($skus as $sk_val){
                     $skuarr[$sk_val['sku_id']] = $sk_val['tax_tare'];
                 }
+
                 //合并数据,并计算税额
-                foreach ($order['order_detail'] as &$d_val){
-                    $d_val['sl'] = $skuarr[$d_val['outer_sku_id']];
+                foreach ($new_detail as &$d_val){
+                    $d_val['sl'] = $d_val['outer_sku_id'] ? $skuarr[$d_val['outer_sku_id']] : $skuarr[$d_val['outer_item_id']];
                     $d_val['se'] = round($d_val['payment'] - ($d_val['payment'] / (1 + $d_val['sl'])),2); //税额 等于支付金额 减去支付金额除1+税率
                     $d_val['xmje'] = $d_val['payment'] - $d_val['se'];
                     $order['hjse'] += $d_val['se'];
                 }
 
+                //new order_detail
+                $order['new_detail'] =  $new_detail;
                 //判断发票类型 1 红票
                 if ($value['invoice_type'] == 1){
                     $this->redInvoice($order, $value);
@@ -126,11 +141,12 @@ class CrontabController extends Base{
                 $order['type'] = 0;
                 $order['hjje'] = $order['payment'] - $order['hjse'];
                 $order['invoice_title'] = $value['invoice_title'];
-                $order['count'] = count($order['order_detail']);
+                $order['count'] = count($order['new_detail']);
                 $order['invoice_no'] = strtotime(date('Y-m-d H:i:s')).mt_rand(1000,9999);
                 $order['receiver_mobile'] = $value['buyer_phone'];
+
                 //开发票
-                $result = $this->dzfp->fpkj($order, $order['order_detail']);
+                $result = $this->dzfp->fpkj($order, $order['new_detail']);
                 if(!$result){
                     $file_data = [
                         'state' => self::INVOICE_FAIL,
@@ -195,7 +211,7 @@ class CrontabController extends Base{
         $orders['xsf_dzdh'] = $invoice_info['seller_address'];
         $orders['kpr'] = $invoice_info['drawer'];
         $orders['type'] = 1;
-        $orders['count'] = count($order['order_detail']);
+        $orders['count'] = count($order['new_detail']);
         $orders['hjje'] = $invoice_info['total_fee'];
         $orders['hjse'] = $invoice_info['total_tax'];
         $orders['payment'] = $invoice_info['payment_fee'];
@@ -205,7 +221,7 @@ class CrontabController extends Base{
         $orders['yfp_dm'] = $invoice_info['invoice_code'];
         $orders['receiver_mobile'] = $invoice_info['buyer_phone'];
 
-        $result = $this->dzfp->fpkj($orders, $orders['order_detail']);
+        $result = $this->dzfp->fpkj($orders, $orders['new_detail']);
         if(!$result) {
             $rs_data = [
                 'state_message' => $this->dzfp->getError(),
