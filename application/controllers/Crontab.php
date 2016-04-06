@@ -96,9 +96,8 @@ class CrontabController extends Base{
                     $this->invoice_model->update($value['id'], array('state_message' => 'skuid不存在'));
                     continue;
                 }
-
                 //根据有赞sku_id 查询sku表
-                $skus = $this->sku_model->getInfoBySkuId(substr($sku_id, 1, -1));
+                $skus = $this->sku_model->getInfoBySkuId(substr($sku_id, 0, -1));
                 if(!$skus){
                     continue;
                 }
