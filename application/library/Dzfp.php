@@ -180,10 +180,11 @@ class Dzfp {
         }
         return $this->decrypt((string)$xmlobj->data->content, (string)$xmlobj->data->signature);
     }
-    
+
     /**
-     * foreach orderdetail
-     * @return type
+     * @param $data
+     * @param $type
+     * @return array|bool
      */
     public function batch($data, $type){
         if(!$data){

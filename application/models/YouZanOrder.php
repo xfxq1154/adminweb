@@ -86,7 +86,7 @@ class YouZanOrderModel{
         $o['id'] = $order['y_id']; //id
         $o['price'] = floatval($order['y_price']);  //商品价格。精确到2位小数；单位：元。当一个trade对应多个order的时候，值为第一个交易明细中的商品的价格
         $o['title'] = $order['y_title'];  //交易标题，以首个商品标题作为此标题的值
-        $o['type'] = $order['y_type'];  //交易类型。取值范围：FIXED （一口价）GIFT （送礼）BULK_PURCHASE（来自分销商的采购）PRESENT （赠品领取）COD （货到付款）QRCODE（扫码商家二维码直接支付的交易） 
+//        $o['type'] = $order['y_type'];  //交易类型。取值范围：FIXED （一口价）GIFT （送礼）BULK_PURCHASE（来自分销商的采购）PRESENT （赠品领取）COD （货到付款）QRCODE（扫码商家二维码直接支付的交易）
         $o['discount_fee'] = $order['y_discount_fee'];  //交易优惠金额（不包含交易明细中的优惠金额）。单位：元，精确到分
         $o['status'] = $order['y_status'];  //交易状态 TRADE_NO_CREATE_PAY(没有创建) WAIT_BUYER_PAY (待付款) WAIT_PAY_RETURN (等待支付确认) WAIT_SELLER_SEND_GOODS (买家已付款) WAIT_BUYER_CONFIRM_GOODS(待收货) TRADE_BUYER_SIGNED (已签收) TRADE_CLOSED (用户退款成功，交易关闭) TRADE_CLOSED_BY_USER (付款以前交易关闭）
         $o['refund_state'] = $order['y_refund_state'];  //退款状态
