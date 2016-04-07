@@ -134,7 +134,6 @@ class YouZanOrderModel{
         if (empty($order_detail)) {
             return array();
         }
-        $payment = $order_detail['o_payment'];
         
         $data['oid'] = intval($order_detail['o_oid']);  //交易明细编号。该编号并不唯一，只用于区分交易内的多条明细记录
         $data['outer_sku_id'] = $order_detail['o_outer_sku_id'];  //商家编码（商家为Sku设置的外部编号）
