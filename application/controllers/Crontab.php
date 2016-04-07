@@ -235,7 +235,8 @@ class CrontabController extends Base{
             'original_invoice_code' => $invoice_info['invoice_number'],
             'original_invoice_number' => $invoice_info['invoice_code'],
             'invoice_type' => 1,
-            'state' => self::INVOICE_SUCCESS
+            'state' => self::INVOICE_SUCCESS,
+            'state_message' => '红字发票开具成功'
         );
         $this->invoice_model->update($invoice_info['id'], $params);
     }
