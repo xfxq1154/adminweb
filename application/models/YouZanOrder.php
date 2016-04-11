@@ -73,7 +73,7 @@ class YouZanOrderModel{
      */
     public function struct_order_data($order) {
         //格式化基本信息
-        $o = $this->tidyOrderInfo($order);
+        $o = $this->tidyOrderInfo($order['trade']);
         //格式化订单详情
         $o = $this->struct_orderdetail_batch($o);
         return $o;
@@ -100,7 +100,7 @@ class YouZanOrderModel{
         $o['tid'] = $order['tid'];  //交易编号
         $o['created'] = $order['created'];  //交易创建时间
         $o['update_time'] = $order['update_time'];  //交易更新时间。当交易的：状态改变、备注更改、星标更改 等情况下都会刷新更新时间
-        $o['order_detail'] = $order['order_detail'];
+        $o['order_detail'] = $order['orders'];
         return $o;
     }
 
@@ -113,7 +113,6 @@ class YouZanOrderModel{
         if (empty($datas)) {
             return array();
         }
-
         foreach ($datas['order_detail'] as &$val) {
             $val = $this->struct_orderdetail_data($val);
         }

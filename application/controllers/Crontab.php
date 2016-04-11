@@ -270,7 +270,8 @@ class CrontabController extends Base{
             return false;
         }
 
-        return $this->youzan_order_model->struct_order_data($result);
+        $order = $this->youzan_order_model->struct_order_data($result['response']);
+        return $order;
     }
 
 }
