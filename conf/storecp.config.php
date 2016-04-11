@@ -42,3 +42,7 @@ define('IMG_API_HOST','http://img.yanbo.dev.com/');
 //电子发票
 define('DZFP_HOST', 'http://111.202.226.70:8002/zxkp_base64/services/WKWebService?wsdl');
 define('TAXPAYER_NUMBER', '110104201110174');
+
+//有赞
+define('KDT_APP_ID', 'f222469b08dcf5b3d7');
+define('KDT_APP_SECERT', '9ed217880ab4b394243cef42ec9b7c92');
