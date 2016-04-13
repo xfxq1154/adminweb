@@ -16,13 +16,25 @@ class CrontabController extends Base{
     /** @var SkuModel  */
     public $sku_model;
 
+    /** @var  KdtApiClient */
+    public $youzan_api;
+
+    /** @var  YouZanOrderModel */
+    public $youzan_order_model;
+
     const INVOICE_SUCCESS = 2;
     const INVOICE_FAIL = 3;
 
+    public $app_id = KDT_APP_ID;
+    public $app_secert = KDT_APP_SECERT;
+
     public function init(){
+        Yaf_Loader::import(ROOT_PATH . '/application/library/youzan/KdtApiClient.php');
         $this->invoice_model = new InvoiceModel();
         $this->dzfp = new Dzfp();
         $this->sku_model = new SkuModel();
+        $this->youzan_order_model = new YouZanOrderModel();
+        $this->youzan_api = new KdtApiClient($this->app_id, $this->app_secert);
     }
 
     /**
@@ -78,12 +90,14 @@ class CrontabController extends Base{
     public function createInvoiceAction(){
         $result = $this->invoice_model->getPendingInvoice();
         $datas = array_filter($result);
-        $youzan = new Invoice();
         $sku_id = '';
         //遍历数组
         if ($datas) {
             foreach ($datas as $value){
-                $order = $youzan->getInfoById($value['order_id']);
+                $order = $this->getYouzanOrderByTid($value['order_id']);
+                if(!$order){
+                    continue;
+                }
                 if ($order['status'] !== 'TRADE_BUYER_SIGNED'){
                     $this->invoice_model->update($value['id'], array('state_message' => '订单状态不符'));
                     continue;
@@ -240,6 +254,26 @@ class CrontabController extends Base{
         );
         $this->invoice_model->update($invoice_info['id'], $params);
     }
+
+    /**
+     * @desc 查询有赞订单
+     * @param $tid
+     * @return array|bool|mixed
+     */
+    public function getYouzanOrderByTid($tid){
+        $url = 'kdt.trade.get';
+        if(!$tid){
+            return false;
+        }
+        $result = $this->youzan_api->get($url, array('tid' => $tid));
+        if(!$result['response']){
+            return false;
+        }
+
+        $order = $this->youzan_order_model->struct_order_data($result['response']);
+        return $order;
+    }
+
 }
 
     
