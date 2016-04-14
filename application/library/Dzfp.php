@@ -268,7 +268,7 @@ class Dzfp {
         java_set_library_path($libDir);
         // Cert
         $this->cerPath = $configDir.DIRECTORY_SEPARATOR."donggang.cer";
-        $this->pfxPath = $configDir.DIRECTORY_SEPARATOR."luojilab.pfx";
+        $this->pfxPath = $configDir.DIRECTORY_SEPARATOR."ljsw.pfx";
         $this->pfxPwd  = "000000";
 
         // Test5 instance
