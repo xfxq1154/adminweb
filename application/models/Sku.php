@@ -15,6 +15,8 @@ class SkuModel{
     public $dbMaster;
     public $dbSlave;
 
+    public $err_sku;
+
     /**
      * SkuModel constructor
      */
@@ -51,8 +53,10 @@ class SkuModel{
             $stmt->execute();
             return $this->dbMaster->lastInsertId();
         } catch (Exception $exc) {
-            echo $exc->getMessage();
+            $this->err_sku .= '<tr><td>'.$params['sku_id'].'</td><td>编码重复</td>></tr>';
+            return false;
         }
+
     }
 
     /**
@@ -123,6 +127,16 @@ class SkuModel{
         } catch (Exception $ex) {
             echo $ex->getMessage();
         }
+    }
+
+    /**
+     * @return array
+     */
+    public function getError(){
+        if(isset($this->err_sku)){
+            return $this->err_sku;
+        }
+        return array();
     }
 
 }

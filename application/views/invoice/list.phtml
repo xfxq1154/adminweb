@@ -43,7 +43,6 @@
                     <div class="field" style="margin-left: 5px;">
                         <input type="text" class="input" name="mobile" size="20" value="<?=$invoice_info['mobile']?>" placeholder="请填写手机号">
                         <input type="text" class="input" name="order_id" size="20" value="<?=$invoice_info['order_id']?>" placeholder="请填写订单号">
-                        <input type="text" class="input" name="invoice_number" value="<?=$invoice_info['invoice_number']?>" placeholder="请填写发票号码">
                     </div>
                     <label style="margin-left: 5px;"><b>选择状态:</b></label>
                     <div class="field">&nbsp;
@@ -124,6 +123,13 @@
         <button class="icon-close button bg-gray" style="float:right">关闭</button>
     </div>
 </div>
+<div oncancel="" class="orderdiv" style="display: none">
+    <table class="table">
+        <caption>上传失败的订单号</caption>
+        <tbody class="orderval">
+        </tbody>
+    </table>
+</div>
 <!-- list -->
 <div class="admin-main">
     <div class="panel dux-box">
@@ -194,7 +200,9 @@
             uploadUrl: '/invoice/upload',
             type: 'xls',
             complete: function (data) {
-               $('.show_uo_imgs').val(data.code);
+                alert('上传成功,个别失败');
+                $('.orderdiv').css('display','block');
+                $('.orderval').append(data);
             }
         });
         
