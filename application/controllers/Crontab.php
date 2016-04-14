@@ -98,7 +98,9 @@ class CrontabController extends Base{
                 if(!$order){
                     continue;
                 }
+
                 if ($order['status'] !== 'TRADE_BUYER_SIGNED'){
+                    $this->invoice_model->update($value['id'], array('state_message' => '订单状态不符'));
                     $this->invoice_model->update($value['id'], array('state_message' => '订单状态不符'));
                     continue;
                 }
@@ -140,6 +142,7 @@ class CrontabController extends Base{
                     $d_val['se'] = round($d_val['payment'] - ($d_val['payment'] / (1 + $d_val['sl'])),2); //税额 等于支付金额 减去支付金额除1+税率
                     $d_val['xmje'] = $d_val['payment'] - $d_val['se'];
                     $order['hjse'] += $d_val['se'];
+                    $order['payment_fee'] += $d_val['payment'];
                 }
 
                 //new order_detail
@@ -153,12 +156,11 @@ class CrontabController extends Base{
                 $order['xsf_dzdh'] = $value['seller_address'];
                 $order['kpr'] = $value['drawer'];
                 $order['type'] = 0;
-                $order['hjje'] = $order['payment'] - $order['hjse'];
+                $order['hjje'] = $order['payment_fee'] - $order['hjse'];
                 $order['invoice_title'] = $value['invoice_title'];
                 $order['count'] = count($order['new_detail']);
                 $order['invoice_no'] = strtotime(date('Y-m-d H:i:s')).mt_rand(1000,9999);
                 $order['receiver_mobile'] = $value['buyer_phone'];
-
                 //开发票
                 $result = $this->dzfp->fpkj($order, $order['new_detail']);
                 if(!$result){
@@ -198,7 +200,7 @@ class CrontabController extends Base{
         $params['drawer'] = $order['kpr'];
         $params['payment_fee'] = $order['payment'];
         $params['total_tax'] = $order['hjse'];
-        $params['jshj'] = $order['payment'];
+        $params['jshj'] = $order['payment_fee'];
         $params['invoice_time'] = $result['KPRQ'];
         $params['order_time'] = $order['created'];
         $params['total_fee'] = $order['hjje'];
@@ -228,7 +230,7 @@ class CrontabController extends Base{
         $orders['count'] = count($order['new_detail']);
         $orders['hjje'] = $invoice_info['total_fee'];
         $orders['hjse'] = $invoice_info['total_tax'];
-        $orders['payment'] = $invoice_info['payment_fee'];
+        $orders['payment'] = $invoice_info['jshj'];
         $orders['invoice_title'] = $invoice_info['invoice_title'];
         $orders['invoice_no'] = $invoice_info['invoice_no'];
         $orders['yfp_hm'] = $invoice_info['invoice_number'];

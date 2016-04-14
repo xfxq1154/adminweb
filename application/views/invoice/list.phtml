@@ -153,7 +153,7 @@
                                     <a href="<?php if($val['state'] == 2 || $val['state'] == 4){echo 'javascript:;';}else{echo '/invoice/edit/id/'.$val['id'];}?>" title="修改订单信息"><?php echo $val['order_id']; ?></a>
                                 </td>
                                 <td><span class="title"><?php echo $val['invoice_title'];?></span></td>
-                                <td><?php echo $val['payment_fee']; ?></td>
+                                <td><?php echo $val['jshj']; ?></td>
                                 <td><?php echo $val['total_fee']; ?></td>
                                 <td>
                                     <input type="hidden" value="<?=$val['state']?>" class="hidd">
