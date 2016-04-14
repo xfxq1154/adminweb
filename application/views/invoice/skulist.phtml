@@ -54,6 +54,13 @@
         </div>
     </div>
 </div>
+<div oncancel="" class="skvdiv" style="display: none">
+    <table class="table">
+        <caption>上传失败的sku编码</caption>
+        <tbody class="skuval">
+        </tbody>
+    </table>
+</div>
 <div class="admin-main">
     <div class="panel dux-box">
         <div class="table-responsive">
@@ -91,7 +98,9 @@
                 uploadUrl: '/invoice/skuUpload',
                 type: 'xls',
                 complete: function (data) {
-                    $('.show_uo_imgs').val(data.code);
+                    alert('上传成功,个别失败');
+                    $('.skvdiv').css('display','block');
+                    $('.skuval').append(data);
                 }
             });
 

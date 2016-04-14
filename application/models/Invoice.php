@@ -10,6 +10,7 @@ class InvoiceModel{
     public $tableName = 'invoice';
     public $dbMaster;
     public $dbSlave;
+    public $err_order;
     
     const PDF_UPLOAD = 'oss/upload';
     const GET_URLSIGN = 'oss/urlsign';
@@ -27,9 +28,10 @@ class InvoiceModel{
      * @param string $mobile
      * @param string $order_id
      * @param string $status
+     * @param string $group
      * @return mixed
      */
-    public function getList($page_no, $page_size, $use_hax_next, $mobile = '', $order_id = '', $status = '', $group = '', $invoice_number){
+    public function getList($page_no, $page_size, $use_hax_next, $mobile = '', $order_id = '', $status = '', $group = ''){
         $where = '1';
 
         if($mobile){
@@ -89,7 +91,8 @@ class InvoiceModel{
             $stmt->execute();
             return $this->dbMaster->lastInsertId();
         } catch (Exception $exc) {
-            echo $exc->getMessage();
+            $this->err_order .= '<tr><td>'.$params['order_id'].'</td><td>订单重复</td>></tr>';
+            return false;
         }
     }
     
@@ -193,7 +196,7 @@ class InvoiceModel{
             return FALSE;
         }
         $params['object'] = $object;
-        $params['timeout'] = 432000;  //设置失效时间是5天
+        $params['timeout'] = 2592000;  //设置失效时间是30天
         $result = Imgapi::request(self::GET_URLSIGN, $params, 'POST');
         return $result;
     }
@@ -240,6 +243,17 @@ class InvoiceModel{
         }catch (PDOException $ex){
             echo $ex->getMessage();
         }
+    }
+
+    /**
+     * @return array
+     * @desc 获取错误
+     */
+    public function getError(){
+        if(isset($this->err_order)){
+            return $this->err_order;
+        }
+        return array();
     }
 }
 

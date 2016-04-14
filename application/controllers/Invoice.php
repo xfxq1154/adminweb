@@ -53,9 +53,8 @@ class InvoiceController extends Base{
         $order_id = $this->getRequest()->get('order_id');
         $status = $this->getRequest()->get('status');
         $group_id= $this->getRequest()->get('group');
-        $invoice_number =  $this->getRequest()->get('invoice_number');
         
-        $result = $this->invoice_mode->getList($page_no, 20, 1, $mobile, $order_id, $status, $group_id, $invoice_number);
+        $result = $this->invoice_mode->getList($page_no, 20, 1, $mobile, $order_id, $status, $group_id);
 
         //查询上传批次
         $group = $this->invoice_mode->getBatchGroup();
@@ -65,7 +64,6 @@ class InvoiceController extends Base{
         $invoice_info['host'] = $this->host;
         $invoice_info['mobile'] = $mobile;
         $invoice_info['order_id'] = $order_id;
-        $invoice_info['invoice_number'] = $invoice_number;
 
         $this->renderPagger($page_no, $result['total_nums'], '/invoice/showlist/page_no/{p}?status/'.$status.'/group/'.$group_id, 20);
         $this->assign('data', $result);
@@ -260,7 +258,13 @@ class InvoiceController extends Base{
                 $data[$v] = $values[$k];
             }
             $data['batch'] = strtotime(date('Ymd')); //将时间戳当做批次号码
-            $this->invoice_mode->insert($data);
+            $faliOrder = $this->invoice_mode->insert($data);
+            if(!$faliOrder){
+                continue;
+            }
+        }
+        if($this->invoice_mode->getError()){
+            echo json_encode(array('info' => '上传成功,个别失败', 'status' => 1, 'data' => $this->invoice_mode->getError()));exit;
         }
         echo json_encode(array('info' => '上传成功', 'code' => 1));exit;
     }
@@ -295,7 +299,13 @@ class InvoiceController extends Base{
             foreach (Fileds::$sku as $k => $v){
                 $data[$v] = $values[$k];
             }
-            $this->sku_model->insert($data);
+            $failSku = $this->sku_model->insert($data);
+            if(!$failSku){
+                continue;
+            }
+        }
+        if($this->sku_model->getError()){
+            echo json_encode(array('info' => '上传成功,个别失败', 'status' => 1, 'data' => $this->sku_model->getError()));exit;
         }
         echo json_encode(array('info' => '上传成功', 'code' => 1));exit;
     }
