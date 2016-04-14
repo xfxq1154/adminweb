@@ -169,6 +169,8 @@
                                         <a class="button bg-yellow button-small icon-envelope sendmessage" href="javascript:;" style="margin-left: 5px;" title="重新发送短信"></a>
                                     <?php elseif ($val['state'] == 1):?>
                                         <button class="button bg-blue button-small kaifapiao" value=2 style="">开具发票</button>
+                                    <?php elseif ($val['state'] == 3):?>
+                                        <span><?=$val['state_message']?></span>
                                    <?php endif;?>
                                     </span>
                                 </td>
