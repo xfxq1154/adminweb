@@ -336,27 +336,6 @@ class InvoiceController extends Base{
         }
         exit;
     }
-    
-    /**
-     * test
-     */
-    public function testAction(){
-        $you = new YouZanOrderModel();
-        $detail = new YouZanOrderDetailModel();
-        $youzan_order_list = $you->getlist();
-        foreach ($youzan_order_list as $value){
-            $invoices['project_name'] = $value['y_title'];
-            $invoices['order_id'] = substr($value['y_tid'], 0, -1);
-            $invoices['invoice_title'] = '测试开发票';
-            $invoices['buyer_phone'] = $value['y_receiver_mobile'];
-            //添加数据
-            $this->invoice_mode->insert($invoices);
-            //更改数据
-            $you->update($value['y_id'], substr($value['y_tid'], 0, -1));
-            //更新detail数据
-            $detail->update($value['o_id'],  substr($value['y_tid'], 0, -1));
-        }
-        exit;
-    }
+
 }
 
