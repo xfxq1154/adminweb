@@ -166,6 +166,8 @@ class InvoiceController extends Base{
         $xsf_mc = $this->getRequest()->getPost('xsf_mc');
         $kpr = $this->getRequest()->getPost('kpr');
         $address = $this->getRequest()->getPost('address');
+        $payee = $this->getRequest()->getPost('payee');
+        $review = $this->getRequest()->getPost('review');
         
         if (!$xsf_mc || !$kpr){
             echo json_encode(array('msg' => '必传参数缺失', 'status' => 0));
@@ -173,9 +175,10 @@ class InvoiceController extends Base{
         $params = [
             'seller_address' => $address,
             'drawer' => $kpr,
-            'seller_name' => $xsf_mc
+            'seller_name' => $xsf_mc,
+            'payee' => $payee,
+            'review' => $review
         ];
-        
         $insertId = $this->invoice_data_model->insert($params);
         if(!$insertId){
             echo json_encode(array('msg' => '添加失败', 'status' => 3));exit;

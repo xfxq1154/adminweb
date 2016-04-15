@@ -37,6 +37,8 @@ class SoapController extends Base{
         $xsf_mc = $this->getRequest()->getPost('xsf_mc');
         $xsf_dzdh = $this->getRequest()->getPost('address');
         $kpr = $this->getRequest()->getPost('kpr');
+        $payee = $this->getRequest()->getPost('payee');
+        $review = $this->getRequest()->getPost('review');
         $id = $this->getRequest()->getPost('id');
 
         if(!$order_id){
@@ -45,11 +47,11 @@ class SoapController extends Base{
         
         //判断用户是不是批量开发票
         if(is_array($order_id)){
-            $this->batch($order_id,$xsf_mc,$xsf_dzdh,$kpr,$type);
+            $this->batch($order_id,$xsf_mc,$xsf_dzdh,$kpr,$type, $payee, $review);
         }
 
         if($type == 1){
-            $this->redInvoice($id,$xsf_mc, $xsf_dzdh, $kpr);
+            $this->redInvoice($id,$xsf_mc, $xsf_dzdh, $kpr, $payee, $review);
         }
 
         //单个发票开具
@@ -58,7 +60,9 @@ class SoapController extends Base{
             'seller_name' => $xsf_mc,
             'drawer' => $kpr,
             'state' => self::INVOICE_STATUS_LODING,
-            'invoice_type' => $type,
+            'review' => $review,
+            'payee' => $payee,
+            'invoice_type' => $type
         ];
         $this->invoice_model->update($id, $params);
         Tools::output(array('msg' => '开票申请已经提交,请稍后查看', 'status' => 2));
@@ -70,8 +74,10 @@ class SoapController extends Base{
      * @param $xsf_mc
      * @param $xsf_dzdh
      * @param $kpr
+     * @param $payee
+     * @param $review
      */
-    public function redInvoice($id, $xsf_mc, $xsf_dzdh, $kpr){
+    public function redInvoice($id, $xsf_mc, $xsf_dzdh, $kpr, $payee = '', $review = ''){
         if(!$id){
             echo json_encode(array('msg' => '参数缺失'));exit;
         }
@@ -90,7 +96,9 @@ class SoapController extends Base{
             'state' => self::INVOICE_STATUS_LODING,
             'seller_address' => $xsf_dzdh,
             'seller_name' => $xsf_mc,
-            'drawer' => $kpr
+            'drawer' => $kpr,
+            'payee' => $payee,
+            'review' => $review
             );
         $this->invoice_model->update($invoice_info['id'], $params);
         Tools::output(array('msg' => '开票申请已经提交,请稍后查看', 'status' => 2));
@@ -130,14 +138,16 @@ class SoapController extends Base{
     }
 
     /**
-     * @desc 批量开具蓝字发票
+     * @desc 批量开票
      * @param $orders
      * @param $xsf_mc
      * @param $xsf_dzdh
      * @param $kpr
      * @param $type
+     * @param string $payee
+     * @param string $review
      */
-    public function batch($orders,$xsf_mc, $xsf_dzdh, $kpr, $type){
+    public function batch($orders,$xsf_mc, $xsf_dzdh, $kpr, $type,$payee = '', $review = ''){
         //遍历批量开票信息
         $orderdata = array_filter($orders);
         foreach ($orderdata as $value){
@@ -151,7 +161,9 @@ class SoapController extends Base{
                 'seller_name' => $xsf_mc,
                 'drawer' => $kpr,
                 'state' => self::INVOICE_STATUS_LODING,
-                'invoice_type' => $type
+                'invoice_type' => $type,
+                'payee' => $payee,
+                'review' => $review
             ];
             $this->invoice_model->update($value['id'],$params);
         }
