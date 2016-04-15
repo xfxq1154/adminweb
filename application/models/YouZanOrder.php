@@ -35,21 +35,6 @@ class YouZanOrderModel{
             echo $ex->getMessage();
         }
     }
-
-    /**
-     * @desc 修改订单号
-     * @param $id
-     * @param $oid
-     */
-//    public function update($id,$oid){
-//        try {
-//            $sql = " UPDATE " .$this->tableName. " SET `y_tid` = '$oid' WHERE y_id = $id ";
-//            $stmt = $this->dbMaster->prepare($sql);
-//            $stmt->execute();
-//        } catch (Exception $ex) {
-//            echo $ex->getMessage();
-//        }
-//    }
     
     /**
      * 获取订单(测试)

@@ -75,7 +75,7 @@ class CrontabController extends Base{
                 $this->invoice_model->update($value['id'], array('invoice_url' => $dwz_url['urls'][0]['url_short'],'state' => 4));
                 //将发票地址发送给用户
                 $sms = new Sms();
-                $message = '请在电脑端查看您的发票，地址:'.$dwz_url['urls'][0]['url_short'];
+                $message = '您好，您在罗辑思维所购产品的电子发票地址为:'.$dwz_url['urls'][0]['url_short'].'地址有效期为30天，请尽快在电脑端查看。';
                 $sms->sendmsg($message, $value['buyer_phone']);
             }
         }
@@ -99,7 +99,8 @@ class CrontabController extends Base{
                     $this->invoice_model->update($value['id'], array('state_message' => '订单查询失败'));
                     continue;
                 }
-
+                
+                //判断订单状态是否符合开票要求
                 if ($order['status'] !== 'TRADE_BUYER_SIGNED'){
                     $this->invoice_model->update($value['id'], array('state_message' => '订单状态不符'));
                     continue;
