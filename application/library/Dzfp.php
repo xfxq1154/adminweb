@@ -39,8 +39,8 @@ class Dzfp {
             'GMF_DZDH'      => '',   //购买方地址
             'GMF_YHZH'      => '',   //购买方银行账号
             'KPR'           => $order['kpr'],   //*开票人
-            'SKR'           => '',   //收款人
-            'FHR'           => '',   //复核人 
+            'SKR'           => isset($order['payee']) ? $order['payee'] : '',   //收款人
+            'FHR'           => isset($order['review']) ? $order['review'] : '',   //复核人
             'YFP_DM'        => $order['type'] == 1 ? $order['yfp_dm'] : '',   //原发票代码 红字发票时必须
             'YFP_HM'        => $order['type'] == 1 ? $order['yfp_hm'] : '',   //原发票号码 红字发票时必须
             'JSHJ'          => $order['type'] == 1 ? -$order['payment_fee'] : $order['payment_fee'],   //*价税合计 单位元 (2位小数)

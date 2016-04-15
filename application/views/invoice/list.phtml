@@ -80,8 +80,10 @@
                 <div class="form-group">
                     <div class="field" style="margin-left: 5px;">
                         <input type="text" class="input" name="address" style="width: 300px;" value="<?=$invoice_info['seller_address']?>" placeholder="请设置销售方地址电话">
-                        <input type="text" class="input" name="kpr" value="<?=$invoice_info['drawer']?>" placeholder="请设置开票人">
+                        <input type="text" class="input" name="kpr" style="width: 80px;" value="<?=$invoice_info['drawer']?>" placeholder="请设置开票人">
                         <input type="text" class="input" name="xsf_mc" style="width: 200px;" value="<?=$invoice_info['seller_name']?>" placeholder="请设置销售方名称">
+                        <input type="text" class="input" name="payee" style="width: 80px;" value="<?=$invoice_info['payee']?>" placeholder="收款人">
+                        <input type="text" class="input" name="review" style="width: 80px;" value="<?=$invoice_info['review']?>" placeholder="复核">
                     </div>
                 </div>
                 <div class="form-button">
@@ -97,12 +99,14 @@
           var xsf_mc = $(':input[name="xsf_mc"]').val();
           var kpr = $(':input[name="kpr"]').val();
           var address = $(':input[name="address"]').val();
+          var payee = $(':input[name="payee"]').val();
+          var review = $(':input[name="review"]').val();
           
           $.ajax({
               type: 'POST',
               dataType: 'JSON',
               url: '/invoice/setinvoice',
-              data : {xsf_mc:xsf_mc,kpr:kpr,address:address}
+              data : {xsf_mc:xsf_mc,kpr:kpr,address:address,payee:payee,review:review}
           }).done(function(data){
               alert(data.msg);
               window.location.reload();
@@ -238,13 +242,15 @@
             var address = $(':input[name="address"]').val();
             var xsf_mc = $(':input[name="xsf_mc"]').val();
             var kpr = $(':input[name="kpr"]').val();
+            var payee = $(':input[name="payee"]').val();
+            var review = $(':input[name="review"]').val();
             
             if(flag && state){
                 $.ajax({
                     type: 'POST',
                     dataType: 'JSON',
                     url: '/soap/index',
-                    data: {order_id:orders,type:0,kpr:kpr,xsf_mc:xsf_mc,address:address}
+                    data: {order_id:orders,type:0,kpr:kpr,xsf_mc:xsf_mc,address:address,payee:payee,review:review}
                 }).done(function (data){
                     alert(data.msg);
                     window.location.reload();
@@ -282,6 +288,8 @@
             oData.xsf_mc = $(':input[name="xsf_mc"]').val();
             oData.kpr = $(':input[name="kpr"]').val();
             oData.id = oTr.find('td').eq(1).text();
+            oData.payee = $(':input[name="payee"]').val();
+            oData.review = $(':input[name="review"]').val();
             
             postData(oData);
        });

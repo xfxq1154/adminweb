@@ -96,11 +96,11 @@ class CrontabController extends Base{
             foreach ($datas as $value){
                 $order = $this->getYouzanOrderByTid($value['order_id']);
                 if(!$order){
+                    $this->invoice_model->update($value['id'], array('state_message' => '订单查询失败'));
                     continue;
                 }
 
                 if ($order['status'] !== 'TRADE_BUYER_SIGNED'){
-                    $this->invoice_model->update($value['id'], array('state_message' => '订单状态不符'));
                     $this->invoice_model->update($value['id'], array('state_message' => '订单状态不符'));
                     continue;
                 }
@@ -161,6 +161,9 @@ class CrontabController extends Base{
                 $order['count'] = count($order['new_detail']);
                 $order['invoice_no'] = strtotime(date('Y-m-d H:i:s')).mt_rand(1000,9999);
                 $order['receiver_mobile'] = $value['buyer_phone'];
+                $order['payee'] = $value['payee'];
+                $order['review'] = $value['review'];
+
                 //开发票
                 $result = $this->dzfp->fpkj($order, $order['new_detail']);
                 if(!$result){
