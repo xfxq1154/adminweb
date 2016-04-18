@@ -85,7 +85,7 @@ class CrontabController extends Base{
     /**
      * @name createInvoice
      * @desc 开具电子发票
-     * @frequency 每5分钟运行一次
+     * @frequency 每10分钟运行一次
      */
     public function createInvoiceAction(){
         $result = $this->invoice_model->getPendingInvoice();
@@ -101,20 +101,24 @@ class CrontabController extends Base{
                 }
                 
                 //判断订单状态是否符合开票要求
-                if ($order['status'] !== 'TRADE_BUYER_SIGNED'){
-                    $this->invoice_model->update($value['id'], array('state_message' => '订单状态不符'));
-                    continue;
-                }
+//                if ($order['status'] !== 'TRADE_BUYER_SIGNED'){
+//                    $this->invoice_model->update($value['id'], array('state_message' => '订单状态不符'));
+//                    continue;
+//                }
 
                 //取订单详情中,sku_id或item_id 不为空的数据
                 foreach ($order['order_detail']  as $o_val){
-                    if($o_val['outer_sku_id'] || $o_val['outer_item_id']) {
-                        if ($o_val['outer_sku_id']) {
-                            $sku_id .= "'" . $o_val['outer_sku_id'] . "',";
-                        } else {
-                            $sku_id .= "'" . $o_val['outer_item_id'] . "',";
+                    //只有没发生过退款的sku才能开具发票 item_refund_state不存在 说明没发生退款
+                    if(isset($o_val['item_refund_state'])){
+                        if ($o_val['outer_sku_id'] || $o_val['outer_item_id']) {
+                            if ($o_val['outer_sku_id']) {
+                                $sku_id .= "'" . $o_val['outer_sku_id'] . "',";
+                            } else {
+                                $sku_id .= "'" . $o_val['outer_item_id'] . "',";
+                            }
+                            $order['sum_price'] += $o_val['payment'];
+                            $new_detail[] = $o_val;
                         }
-                        $new_detail[] = $o_val;
                     }
                 }
 
@@ -125,6 +129,7 @@ class CrontabController extends Base{
                     $this->invoice_model->update($value['id'], array('state_message' => 'skuid不存在'));
                     continue;
                 }
+
                 //根据有赞sku_id 查询sku表
                 $skus = $this->sku_model->getInfoBySkuId(substr($sku_id, 0, -1));
                 if(!$skus){
@@ -137,13 +142,34 @@ class CrontabController extends Base{
                     $skuarr[$sk_val['sku_id']] = $sk_val['tax_tare'];
                 }
 
-                //合并数据,并计算税额
-                foreach ($new_detail as &$d_val){
-                    $d_val['sl'] = $d_val['outer_sku_id'] ? $skuarr[$d_val['outer_sku_id']] : $skuarr[$d_val['outer_item_id']];
-                    $d_val['se'] = round($d_val['payment'] - ($d_val['payment'] / (1 + $d_val['sl'])),2); //税额 等于支付金额 减去支付金额除1+税率
-                    $d_val['xmje'] = $d_val['payment'] - $d_val['se'];
-                    $order['hjse'] += $d_val['se'];
-                    $order['payment_fee'] += $d_val['payment'];
+                //合并数据,并计算税额/如果有改订单有优惠劵则均摊优惠劵金额
+                if($order['discount_fee']){
+                    //支付金额
+                    $total_fee = $order['sum_price'];
+                    //优惠劵金额
+                    $discount = $order['discount_fee'];
+                    foreach ($new_detail as &$d_val){
+                        $payment = $d_val['payment'];
+                        //优惠劵的平摊计算公式为: (sku商品支付金额 / 订单支付总金额) * 优惠劵金额 = 平摊金额
+                        $mean_price = (round($payment / $total_fee, 6) * $discount);
+                        //sku商品支付金额 - 平摊金额 = 平摊后的支付金额
+                        $discount_payment = round($payment - $mean_price, 2);
+                        //组合数据
+                        $d_val['payment'] = $discount_payment;
+                        $d_val['sl'] = $d_val['outer_sku_id'] ? $skuarr[$d_val['outer_sku_id']] : $skuarr[$d_val['outer_item_id']];
+                        $d_val['se'] = round($discount_payment - ($discount_payment / (1 + $d_val['sl'])),2); //税额 等于支付金额 减去支付金额除1+税率
+                        $d_val['xmje'] = $discount_payment - $d_val['se'];
+                        $order['hjse'] += $d_val['se'];
+                        $order['payment_fee'] += $discount_payment;
+                    }
+                } else {
+                    foreach ($new_detail as &$d_val){
+                        $d_val['sl'] = $d_val['outer_sku_id'] ? $skuarr[$d_val['outer_sku_id']] : $skuarr[$d_val['outer_item_id']];
+                        $d_val['se'] = round($d_val['payment'] - ($d_val['payment'] / (1 + $d_val['sl'])),2); //税额 等于支付金额 减去支付金额除1+税率
+                        $d_val['xmje'] = $d_val['payment'] - $d_val['se'];
+                        $order['hjse'] += $d_val['se'];
+                        $order['payment_fee'] += $d_val['payment'];
+                    }
                 }
 
                 //new order_detail
@@ -153,6 +179,7 @@ class CrontabController extends Base{
                     $this->redInvoice($order, $value);
                     continue;
                 }
+
                 $order['xsf_mc'] = $value['seller_name'];
                 $order['xsf_dzdh'] = $value['seller_address'];
                 $order['kpr'] = $value['drawer'];
@@ -281,5 +308,3 @@ class CrontabController extends Base{
     }
 
 }
-
-    

@@ -16,6 +16,13 @@ class InvoiceController extends Base{
 
     /** @var  InvoicedataModel */
     public $invoice_data_model;
+
+
+    /** @var  KdtApiClient */
+    public $youzan_api;
+
+    public $app_id = KDT_APP_ID;
+    public $app_secert = KDT_APP_SECERT;
     
     public $status = [
         1 => '未开发票',
@@ -38,9 +45,11 @@ class InvoiceController extends Base{
     public function init() {
         $this->initAdmin();
         Yaf_Loader::import(ROOT_PATH . '/application/library/phpExcel/reader.php');
+        Yaf_Loader::import(ROOT_PATH . '/application/library/youzan/KdtApiClient.php');
         $this->sku_model = new SkuModel();
         $this->invoice_mode = new InvoiceModel();
         $this->invoice_data_model = new InvoicedataModel();
+        $this->youzan_api = new KdtApiClient($this->app_id, $this->app_secert);
     }
     
     /**
@@ -335,6 +344,14 @@ class InvoiceController extends Base{
             $export->outPut($data);
         }
         exit;
+    }
+    
+    public function checkPriceAction(){
+        $order = $this->getRequest()->get('order');
+        $url = 'kdt.trade.get';
+        $result = $this->youzan_api->get($url, array('tid' => $order));
+        echo "<pre>";
+        print_r($result);exit;
     }
 
 }
