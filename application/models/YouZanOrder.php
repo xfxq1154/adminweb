@@ -113,18 +113,18 @@ class YouZanOrderModel{
         if (empty($order_detail)) {
             return array();
         }
-        
-        $data['oid'] = intval($order_detail['oid']);  //交易明细编号。该编号并不唯一，只用于区分交易内的多条明细记录
-        $data['outer_sku_id'] = $order_detail['outer_sku_id'];  //商家编码（商家为Sku设置的外部编号）
-        $data['outer_item_id'] = $order_detail['outer_item_id'];  //商品货号（商家为商品设置的外部编号）
-        $data['title'] = $order_detail['title'];  //商品标题
-        $data['price'] = floatval($order_detail['price']);  //商品价格。精确到2位小数；单位：元
-        $data['total_fee'] = floatval($order_detail['total_fee']);  //应付金额（商品价格乘以数量的总金额）
-        $data['payment'] = $order_detail['payment'] ; //实付金额。精确到2位小数，单位：元
-        $data['sku_unique_code'] = $order_detail['sku_unique_code'];  //Sku在系统中的唯一编号，可以在开发者的系统中用作 Sku 的唯一ID，但不能用于调用接口
-        $data['item_refund_state'] = $order_detail['item_refund_state'];  //商品退款状态
-        $data['trades_id'] = $order_detail['trades_id'];  //交易明细编号
-        $data['youzan_trades_id'] = $order_detail['youzan_trades_id'];  //youzan_trades 表id
+        if($order_detail['state_str'] == '已发货' || $order_detail['state_str'] == '待发货'){
+            $data['oid'] = intval($order_detail['oid']);  //交易明细编号。该编号并不唯一，只用于区分交易内的多条明细记录
+            $data['outer_sku_id'] = $order_detail['outer_sku_id'];  //商家编码（商家为Sku设置的外部编号）
+            $data['outer_item_id'] = $order_detail['outer_item_id'];  //商品货号（商家为商品设置的外部编号）
+            $data['title'] = $order_detail['title'];  //商品标题
+            $data['price'] = floatval($order_detail['price']);  //商品价格。精确到2位小数；单位：元
+            $data['total_fee'] = floatval($order_detail['total_fee']);  //应付金额（商品价格乘以数量的总金额）
+            $data['payment'] = $order_detail['payment'] ; //实付金额。精确到2位小数，单位：元
+            $data['sku_unique_code'] = $order_detail['sku_unique_code'];  //Sku在系统中的唯一编号，可以在开发者的系统中用作 Sku 的唯一ID，但不能用于调用接口
+            $data['trades_id'] = $order_detail['trades_id'];  //交易明细编号
+            $data['item_refund_state'] = $order_detail['state_str'];  //商品退款状态
+        }
         return $data;
     }
 }
