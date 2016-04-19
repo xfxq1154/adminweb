@@ -265,6 +265,11 @@ class InvoiceController extends Base{
         }
         
         unset($xls->sheets[0]['cells'][1]);
+
+        //判断是否是sku文件
+        if(count($xls->sheets[0]['cells'][2]) < 4){
+            Tools::output(array('info'=>'上传文件的内容不匹配','status' => 0));
+        }
         foreach ($xls->sheets[0]['cells'] as $values){
             foreach (Fileds::$invoice as $k => $v){
                 $data[$v] = $values[$k];
@@ -307,6 +312,10 @@ class InvoiceController extends Base{
         }
 
         unset($xls->sheets[0]['cells'][1]);
+        //判断是否是sku文件
+        if(count($xls->sheets[0]['cells'][2]) > 3){
+            Tools::output(array('info'=>'上传文件的内容不匹配','status' => 0));
+        }
         foreach ($xls->sheets[0]['cells'] as $values){
             foreach (Fileds::$sku as $k => $v){
                 $data[$v] = $values[$k];
