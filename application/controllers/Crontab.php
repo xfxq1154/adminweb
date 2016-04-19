@@ -96,15 +96,15 @@ class CrontabController extends Base{
             foreach ($datas as $value){
                 $order = $this->getYouzanOrderByTid($value['order_id']);
                 if(!$order){
-                    $this->invoice_model->update($value['id'], array('state_message' => '订单查询失败'));
+                    $this->invoice_model->update($value['id'], array('state_message' => '订单查询失败', 'state' => 3));
                     continue;
                 }
                 
                 //判断订单状态是否符合开票要求
-//                if ($order['status'] !== 'TRADE_BUYER_SIGNED'){
-//                    $this->invoice_model->update($value['id'], array('state_message' => '订单状态不符'));
-//                    continue;
-//                }
+                if ($order['status'] !== 'TRADE_BUYER_SIGNED'){
+                    $this->invoice_model->update($value['id'], array('state_message' => '订单状态不符', 'state' => 3));
+                    continue;
+                }
 
                 //取订单详情中,sku_id或item_id 不为空的数据
                 foreach ($order['order_detail']  as $o_val){
@@ -126,13 +126,17 @@ class CrontabController extends Base{
                 unset($order['order_detail']);
 
                 if(!$sku_id){
-                    $this->invoice_model->update($value['id'], array('state_message' => 'skuid不存在'));
+                    $this->invoice_model->update($value['id'], array('state_message' => 'skuid不存在','state' => 3));
                     continue;
                 }
 
                 //根据有赞sku_id 查询sku表
                 $skus = $this->sku_model->getInfoBySkuId(substr($sku_id, 0, -1));
-                if(!$skus){
+
+                //用于计算sku数量/sku总数不等于查询出的sku数量则说明该订单中有sku没有匹配到税率,跳出循环
+                $sku_array = explode(',', substr($sku_id, 0, -1));
+                if(count($sku_array) !== count($skus)){
+                    $this->invoice_model->update($value['id'], array('state_message' => '个别sku税率未匹配成功', 'state' => 3));
                     continue;
                 }
 
@@ -141,9 +145,8 @@ class CrontabController extends Base{
                 foreach ($skus as $sk_val){
                     $skuarr[$sk_val['sku_id']] = $sk_val['tax_tare'];
                 }
-
                 //合并数据,并计算税额/如果有改订单有优惠劵则均摊优惠劵金额
-                if($order['discount_fee']){
+                if($order['discount_fee'] !== '0.00'){
                     //支付金额
                     $total_fee = $order['sum_price'];
                     //优惠劵金额
@@ -157,8 +160,13 @@ class CrontabController extends Base{
                         //组合数据
                         $d_val['payment'] = $discount_payment;
                         $d_val['sl'] = $d_val['outer_sku_id'] ? $skuarr[$d_val['outer_sku_id']] : $skuarr[$d_val['outer_item_id']];
+                        //平摊后的支付总价  / 数量 = 平摊商品单价
+                        $discount_price = round($discount_payment / $d_val['num'], 6);
+                        //商品单价 减去税额
+                        $spdj = $discount_price - round($discount_price - ($discount_price / (1 + $d_val['sl'])),6);
                         $d_val['se'] = round($discount_payment - ($discount_payment / (1 + $d_val['sl'])),2); //税额 等于支付金额 减去支付金额除1+税率
                         $d_val['xmje'] = $discount_payment - $d_val['se'];
+                        $d_val['price'] = $spdj;
                         $order['hjse'] += $d_val['se'];
                         $order['payment_fee'] += $discount_payment;
                     }
@@ -167,11 +175,11 @@ class CrontabController extends Base{
                         $d_val['sl'] = $d_val['outer_sku_id'] ? $skuarr[$d_val['outer_sku_id']] : $skuarr[$d_val['outer_item_id']];
                         $d_val['se'] = round($d_val['payment'] - ($d_val['payment'] / (1 + $d_val['sl'])),2); //税额 等于支付金额 减去支付金额除1+税率
                         $d_val['xmje'] = $d_val['payment'] - $d_val['se'];
+                        $d_val['price'] = $d_val['price'] - round($d_val['price'] - ($d_val['price'] / (1 + $d_val['sl'])),6); //商品单价 减去税额
                         $order['hjse'] += $d_val['se'];
                         $order['payment_fee'] += $d_val['payment'];
                     }
                 }
-
                 //new order_detail
                 $order['new_detail'] =  $new_detail;
                 //判断发票类型 1 红票

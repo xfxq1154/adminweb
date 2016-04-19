@@ -217,9 +217,8 @@ class InvoiceModel{
      * 获取待开发票的订单
      */
     public function getPendingInvoice(){
-        $where = '`state` = :state OR `state` = :state1' ;
+        $where = '`state` = :state ' ;
         $pdo_params[':state'] = 5;
-        $pdo_params[':state1'] = 3;
         try{
             $sql = 'SELECT * FROM '.$this->tableName.' WHERE '.$where;
             $stmt = $this->dbSlave->prepare($sql);
