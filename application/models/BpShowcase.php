@@ -85,7 +85,7 @@ class BpShowcaseModel {
         $url = PAYMENT_HOST.self::PAYMENT_SELLER_ACCOUNT;
         $params['merchant_id'] = $showcase_id;
         $params['channels'] = 'WECHAT,JDPAY';
-        $params['sys_code'] = 'PLATFORM';
+        $params['system_en'] = 'PLATFORM';
         $params['merchant_name'] = $showcase_name;
         $result = Curl::request($url, $params, 'post');
         return $result;
