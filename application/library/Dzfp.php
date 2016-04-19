@@ -198,8 +198,8 @@ class Dzfp {
             $kj_data[$key]['XMMC'] = $value['title'];  //*项目名称
             $kj_data[$key]['GGXH'] = '';  //计量单位
             $kj_data[$key]['DW'] = ''; //规格型号
-            $kj_data[$key]['XMSL'] = ''; //项目数量
-            $kj_data[$key]['XMDJ'] = '';  //项目单价 小数点后六位 不含税
+            $kj_data[$key]['XMSL'] = $value['num'];; //项目数量
+            $kj_data[$key]['XMDJ'] = $type == 1 ? -$value['price']: $value['price'];  //项目单价 小数点后六位 不含税
             $kj_data[$key]['XMJE'] = $type == 1 ? -$value['xmje'] : $value['xmje'];  //*项目金额 不含税，单位元(2位小数)
             $kj_data[$key]['SL'] = $value['sl'];  //*税率 6位小数例：1%为0.01
             $kj_data[$key]['SE'] = $type == 1 ? -$value['se'] : $value['se'];  //*税额 单位：元(2位小数)
