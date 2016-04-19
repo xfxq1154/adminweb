@@ -17,7 +17,7 @@ class BpShowcaseModel {
     const SHOWCASE_PASS = 'showcase/pass';
     const SHOWCASE_UNPASS = 'showcase/unpass';
     const SHOWCASE_CREATE = 'showcase/create';
-    const PAYMENT_SELLER_ACCOUNT = 'api/accounts/';
+    const PAYMENT_SELLER_ACCOUNT = 'api/shared_merchant/';
     
     const CLERK_ADDCLERK = 'clerk/create';
     
@@ -74,15 +74,19 @@ class BpShowcaseModel {
         }
         return $result;
     }
-    
+
     /**
-     * 通知支付平台
+     * @param $showcase_id
+     * @param $showcase_name
+     * @return array
+     * @desc 通知支付平台
      */
-    public function createPaymentSellerAccount($showcase_id){
+    public function createPaymentSellerAccount($showcase_id, $showcase_name){
         $url = PAYMENT_HOST.self::PAYMENT_SELLER_ACCOUNT;
-        $params['seller_id'] = $showcase_id;
+        $params['merchant_id'] = $showcase_id;
         $params['channels'] = 'WECHAT,JDPAY';
         $params['sys_code'] = 'PLATFORM';
+        $params['merchant_name'] = $showcase_name;
         $result = Curl::request($url, $params, 'post');
         return $result;
     }

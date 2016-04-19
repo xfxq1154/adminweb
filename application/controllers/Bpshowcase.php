@@ -122,7 +122,7 @@ class BpShowcaseController extends Base {
                 Tools::output(array('info'=>$msg,'status'=>1));
             }
             //通知支付平台
-            $auccount_status = $this->showcase->createPaymentSellerAccount($resule);
+            $auccount_status = $this->showcase->createPaymentSellerAccount($resule, $data['name']);
             //添加到管理员表
             $clerk_date['user_id'] = $data['user_id'];
             $clerk_date['group_id'] = self::ADMIN;
