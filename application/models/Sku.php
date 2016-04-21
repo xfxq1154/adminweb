@@ -30,6 +30,7 @@ class SkuModel{
     /**
      * @param $sku_id
      * @return array
+     * @desc 根据多个skuid 查询编码
      */
     public function getInfoBySkuId($sku_id){
         try{

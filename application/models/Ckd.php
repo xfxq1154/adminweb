@@ -50,7 +50,7 @@ class CkdModel
      */
     public function getMoney($skuid){
         try{
-            $sql = ' SELECT payment,kind_sku_id FROM `'.$this->tableName."` WHERE `kind_sku_id` IN ($skuid) ";
+            $sql = ' SELECT kind_sku_id,payment FROM `'.$this->tableName."` WHERE `kind_sku_id` IN ($skuid) ";
             $stmt = $this->dbSlave->prepare($sql);
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
