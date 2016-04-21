@@ -29,9 +29,10 @@ class InvoiceModel{
      * @param string $order_id
      * @param string $status
      * @param string $group
+     * @param int $sType
      * @return mixed
      */
-    public function getList($page_no, $page_size, $use_hax_next, $mobile = '', $order_id = '', $status = '', $group = ''){
+    public function getList($page_no, $page_size, $use_hax_next, $mobile = '', $order_id = '', $status = '', $group = '', $sType = 1){
         $where = '1';
 
         if($mobile){
@@ -58,9 +59,9 @@ class InvoiceModel{
             $pdo_params[':group'] = $group;
         }
 
-        if($invoice_number){
-            $where .= ' AND `invoice_number` = :invoice_number';
-            $pdo_params[':invoice_number'] = $invoice_number;
+        if($sType){
+            $where .= ' AND `sku_type` = :sku_type';
+            $pdo_params[':sku_type'] = $sType;
         }
         
         $start = ($page_no - 1) * $page_size;
@@ -218,7 +219,9 @@ class InvoiceModel{
      */
     public function getPendingInvoice(){
         $where = '`state` = :state ' ;
+        $where .= 'AND `sku_type` = :type ' ;
         $pdo_params[':state'] = 5;
+        $pdo_params[':type'] = 1;
         try{
             $sql = 'SELECT * FROM '.$this->tableName.' WHERE '.$where;
             $stmt = $this->dbSlave->prepare($sql);
@@ -241,6 +244,25 @@ class InvoiceModel{
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         }catch (PDOException $ex){
             echo $ex->getMessage();
+        }
+    }
+
+    /**
+     * @desc 获取组合订单
+     */
+    public function getCkdInvoice(){
+        $where = ' `sku_type` = :type ';
+        $where .= ' AND `state` = :state ';
+        $pdo_params[':state'] = 5;
+        $pdo_params[':type'] = 2;
+        try{
+            $sql = ' SELECT * FROM '.$this->tableName.' WHERE '.$where;
+            $stmt = $this->dbMaster->prepare($sql);
+            $stmt->execute($pdo_params);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }catch (PDOException $ex){
+            echo $ex->getMessage();
+            return false;
         }
     }
 

@@ -17,9 +17,11 @@ class InvoiceController extends Base{
     /** @var  InvoicedataModel */
     public $invoice_data_model;
 
-
     /** @var  KdtApiClient */
     public $youzan_api;
+
+    /** @var  CkdModel */
+    public $ckd;
 
     public $app_id = KDT_APP_ID;
     public $app_secert = KDT_APP_SECERT;
@@ -46,6 +48,7 @@ class InvoiceController extends Base{
         $this->initAdmin();
         Yaf_Loader::import(ROOT_PATH . '/application/library/phpExcel/reader.php');
         Yaf_Loader::import(ROOT_PATH . '/application/library/youzan/KdtApiClient.php');
+        $this->ckd = new CkdModel();
         $this->sku_model = new SkuModel();
         $this->invoice_mode = new InvoiceModel();
         $this->invoice_data_model = new InvoicedataModel();
@@ -61,9 +64,10 @@ class InvoiceController extends Base{
         $mobile = $this->getRequest()->get('mobile');
         $order_id = $this->getRequest()->get('order_id');
         $status = $this->getRequest()->get('status');
-        $group_id= $this->getRequest()->get('group');
+        $group_id = $this->getRequest()->get('group');
+        $sku_type = $this->getRequest()->get('stype');
         
-        $result = $this->invoice_mode->getList($page_no, 20, 1, $mobile, $order_id, $status, $group_id);
+        $result = $this->invoice_mode->getList($page_no, 20, 1, $mobile, $order_id, $status, $group_id, $sku_type);
 
         //查询上传批次
         $group = $this->invoice_mode->getBatchGroup();
@@ -73,8 +77,9 @@ class InvoiceController extends Base{
         $invoice_info['host'] = $this->host;
         $invoice_info['mobile'] = $mobile;
         $invoice_info['order_id'] = $order_id;
+        $invoice_info['stype'] = $sku_type;
 
-        $this->renderPagger($page_no, $result['total_nums'], '/invoice/showlist/page_no/{p}?status/'.$status.'/group/'.$group_id, 20);
+        $this->renderPagger($page_no, $result['total_nums'], '/invoice/showlist/page_no/{p}?status/'.$status.'/group/'.$group_id.'/stype/'.$sku_type, 20);
         $this->assign('data', $result);
         $this->assign('invoice_info', $invoice_info);
         $this->assign('status', $this->status[$status]);
@@ -95,6 +100,29 @@ class InvoiceController extends Base{
         $this->renderPagger($page_no, $result['total_nums'], '/invoice/skulist/page_no/{p}', 20);
         $this->assign('data', $result);
         $this->layout('invoice/skulist.phtml');
+    }
+
+    /**
+     * @desc 组合sku列表
+     */
+    public function ckdAction(){
+        $this->checkRole();
+        if($_POST){
+            $id = $_POST['id'];
+            $money = $_POST['money'];
+
+            $result = $this->ckd->update($id, $money);
+            if(!$result){
+                echo json_encode(array('code' => 0));exit;
+            }
+            echo json_encode(array('code' => 1));exit;
+        }
+        $page_no = $this->getRequest()->get('page_no', 1);
+        $sku_id = $this->getRequest()->get('sku_id');
+        $result = $this->ckd->getList($page_no, 20, 1, $sku_id);
+        $this->renderPagger($page_no, $result['total_nums'], '/invoice/ckd/page_no/{p}', 20);
+        $this->assign('data', $result);
+        $this->layout('invoice/ckd.phtml');
     }
 
     /**
@@ -332,29 +360,61 @@ class InvoiceController extends Base{
     }
 
     /**
-     * @desc 下载样例
-     * @param $type
+     * @desc 组合商品上传
      */
-    public function exportAction($type = 1){
-        if($type == 1){
-             $data = array(
-                    0 => array(
-                        '1' => 'sku_id',
-                        '2' => 'product_name',
-                        '3' => 'tax_tare'
-                    ),
-                    1 => array(
-                        '1' => 'LJATS14120001FKDTZ',
-                        '2' => '死磕侠',
-                        '3' => 0.06
-                    )
-                );
-            $export = new Export();
-            $export->outPut($data);
+    public function ckdUploadAction(){
+        $files = $this->getRequest()->getFiles('file');
+
+        if(!$files){
+            Tools::output(array('info'=> '请先选择上传文件','status' => 0));
         }
-        exit;
+        if($files['error']){
+            Tools::output(array('info'=> '上传失败','status' => 0));
+        }
+        if($files['size'] / 1024 > 1024){
+            Tools::output(array('info'=>'上传文件不得大于1MB','status' => 0));
+        }
+        $xls = new Spreadsheet_Excel_Reader();
+        $xls->setOutputEncoding('utf-8');
+        $xls->read($files['tmp_name']);
+
+        if(!$xls->sheets[0]['cells'][1]){
+            Tools::output(array('info'=> '系统错误','status' => 0));
+        }
+
+        unset($xls->sheets[0]['cells'][1]);
+        //判断是否是sku文件
+        if(count($xls->sheets[0]['cells'][2]) > 2){
+            Tools::output(array('info'=>'上传文件的内容不匹配','status' => 0));
+        }
+        //将文件内容遍历循环存储到数据库
+        foreach ($xls->sheets[0]['cells'] as $values){
+            $sku_id = '';
+            $sku_arr = explode(',', $values[1]);
+            $parent_sku = $sku_arr[0];
+            unset($sku_arr[0]);
+
+            //获取sku串
+            foreach ($sku_arr as $val){
+                $sku_id .= '\''.$val.'\',';
+            }
+            $skus = $this->sku_model->getInfoBySkuId(substr($sku_id, 0, -1));
+
+            foreach ($skus as $k => $val){
+                $params['kind_sku_id'] = $val['sku_id'];
+                $params['title'] = $val['product_name'];
+                $params['tax_rate'] = $val['tax_tare'];
+                $params['parent_sku_id'] = $parent_sku;
+
+                $this->ckd->insert($params);
+            }
+        }
+        echo json_encode(array('info' => '上传成功', 'code' => 1));exit;
     }
-    
+
+    /**
+     * @desc 查询订单
+     */
     public function checkPriceAction(){
         $order = $this->getRequest()->get('order');
         $url = 'kdt.trade.get';

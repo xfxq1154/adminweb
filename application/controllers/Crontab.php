@@ -22,6 +22,11 @@ class CrontabController extends Base{
     /** @var  YouZanOrderModel */
     public $youzan_order_model;
 
+    /** @var  CkdModel */
+    public $ckd;
+
+    public $errorMsg;
+
     const INVOICE_SUCCESS = 2;
     const INVOICE_FAIL = 3;
 
@@ -31,6 +36,7 @@ class CrontabController extends Base{
     public function init(){
         Yaf_Loader::import(ROOT_PATH . '/application/library/youzan/KdtApiClient.php');
         $this->invoice_model = new InvoiceModel();
+        $this->ckd = new CkdModel();
         $this->dzfp = new Dzfp();
         $this->sku_model = new SkuModel();
         $this->youzan_order_model = new YouZanOrderModel();
@@ -200,6 +206,7 @@ class CrontabController extends Base{
                 $order['payee'] = $value['payee'];
                 $order['review'] = $value['review'];
 
+                print_r($order);exit;
                 //开发票
                 $result = $this->dzfp->fpkj($order, $order['new_detail']);
                 if(!$result){
@@ -313,6 +320,235 @@ class CrontabController extends Base{
 
         $order = $this->youzan_order_model->struct_order_data($result['response']);
         return $order;
+    }
+
+    /**
+     * @desc 组合商品开票
+     */
+    public function createCkdInvoiceAction(){
+        $result = $this->invoice_model->getCkdInvoice();
+        $datas = array_filter($result);
+        $sku_id = '';
+        $sku_iid = '';
+        if($datas){
+            foreach ($datas as $value){
+                $order = $this->getYouzanOrderByTid($value['order_id']);
+                if(!$order){
+                    $this->invoice_model->update($value['id'], array('state_message' => '订单查询失败', 'state' => 3));
+                    continue;
+                }
+
+                //判断订单状态是否符合开票要求
+//                if ($order['status'] !== 'TRADE_BUYER_SIGNED'){
+//                    $this->invoice_model->update($value['id'], array('state_message' => '订单状态不符', 'state' => 3));
+//                    continue;
+//                }
+
+                //取订单详情中,sku_id或item_id 不为空的数据
+                foreach ($order['order_detail']  as $o_val){
+                    //只有没发生过退款的sku才能开具发票 item_refund_state不存在 说明没发生退款
+                    if(isset($o_val['item_refund_state'])){
+                        if ($o_val['outer_sku_id'] || $o_val['outer_item_id']) {
+                            if ($o_val['outer_sku_id']) {
+                                $sku_id .= "'" . $o_val['outer_sku_id'] . "',";
+                                $sku_iid .= $o_val['outer_sku_id'] .',';
+                            } else {
+                                $sku_id .= "'" . $o_val['outer_item_id'] . "',";
+                                $sku_iid .= $o_val['outer_item_id'] .',';
+                            }
+                            $order['sum_price'] += $o_val['payment'];
+                            $new_detail[] = $o_val;
+                        }
+                    }
+                }
+
+
+                unset($order['order_detail']);
+                if(!$sku_id){
+                    continue;
+                }
+                //根据有赞sku_id 查询sku表
+                $skus = $this->sku_model->getInfoBySkuId(substr($sku_id, 0, -1));
+                //如果skus 为空则说明这个订单只有一个组合商品,则根据组合商品skuid查询
+                if(empty($skus)){
+                    $kind_order = $this->getCkdSku($sku_id,$order);
+                    if(!$kind_order){
+                        $this->invoice_model->update($value['id'], ['state_message' => $this->getError(), 'state' => 3]);
+                        continue;
+                    }
+                    //组合数据
+                    $kind_order['xsf_mc'] = $value['seller_name'];
+                    $kind_order['xsf_dzdh'] = $value['seller_address'];
+                    $kind_order['kpr'] = $value['drawer'];
+                    $kind_order['type'] = 0;
+                    $kind_order['hjje'] = $kind_order['payment_fee'] - $kind_order['hjse'];
+                    $kind_order['invoice_title'] = $value['invoice_title'];
+                    $kind_order['invoice_no'] = strtotime(date('Y-m-d H:i:s')).mt_rand(1000,9999);
+                    $kind_order['receiver_mobile'] = $value['buyer_phone'];
+                    $kind_order['payee'] = $value['payee'];
+                    $kind_order['review'] = $value['review'];
+
+                    //开票
+                    $result = $this->dzfp->fpkj($kind_order,$kind_order['new_detail']);
+                    if(!$result){
+                        $file_data = [
+                            'state' => self::INVOICE_FAIL,
+                            'state_message' => $this->dzfp->getError()
+                        ];
+                        $this->invoice_model->update($value['id'], $file_data);
+                        continue;
+                    }
+                    $params = $this->setParameter($kind_order, $result);
+                    $this->invoice_model->update($value['id'], $params);
+                    continue;
+
+                }
+                //不为空说明这订单是组合+单个商品订单
+                $skuarr = array();
+                foreach ($skus as $skv){
+                    $sku_array2[] = $skv['sku_id'];
+                    $skuarr[$skv['sku_id']] = $skv['tax_tare'];
+                }
+
+                $sku_array = explode(',', substr($sku_iid, 0, -1));
+                //对比两个sku取出不不等的值
+                $ckd_sku = array_diff($sku_array,$sku_array2);
+
+                foreach ($new_detail as $key => &$d_val){
+                    $d_val['sl'] = $d_val['outer_sku_id'] ? $skuarr[$d_val['outer_sku_id']] : $skuarr[$d_val['outer_item_id']];
+                    $d_val['se'] = round($d_val['payment'] - ($d_val['payment'] / (1 + $d_val['sl'])),2); //税额 等于支付金额 减去支付金额除1+税率
+                    $d_val['xmje'] = $d_val['payment'] - $d_val['se'];
+                    $d_val['price'] = $d_val['price'] - round($d_val['price'] - ($d_val['price'] / (1 + $d_val['sl'])),6); //商品单价 减去税额
+                    $order['hjse'] += $d_val['se'];
+                    $order['payment_fee'] += $d_val['payment'];
+                    if(empty($d_val['sl'])){
+                        unset($new_detail[$key]);
+                    }
+                }
+
+                //根据不等的值查询组合sku表
+                if ($ckd_sku){
+                    $kind_order2 = $this->mergeSku($ckd_sku,$order,$new_detail);
+                    if(!$kind_order2){
+                        $this->invoice_model->update($value['id'], ['state_message' => $this->getError(), 'state' => 3]);
+                        continue;
+                    }
+                    //组合数据
+                    if($value['invoice_type'] == 1){
+                        $kind_order2['yfp_dm'] = $value['invoice_code'];
+                        $kind_order2['yfp_hm'] = $value['invoice_number'];
+                        $params['original_invoice_code'] = $value['invoice_number'];
+                        $params['original_invoice_number'] = $value['invoice_code'];
+                        $params['state_message'] = '红字发票开具成功';
+                    }
+                    $kind_order2['xsf_mc'] = $value['seller_name'];
+                    $kind_order2['xsf_dzdh'] = $value['seller_address'];
+                    $kind_order2['kpr'] = $value['drawer'];
+                    $kind_order2['type'] = $value['invoice_type'] == 0 ? 0 : 1; // 0 蓝字发票 1红字发票
+                    $kind_order2['hjje'] = $kind_order2['payment_fee'] - $kind_order2['hjse'];
+                    $kind_order2['invoice_title'] = $value['invoice_title'];
+                    $kind_order2['invoice_no'] = strtotime(date('Y-m-d H:i:s')).mt_rand(1000,9999);
+                    $kind_order2['receiver_mobile'] = $value['buyer_phone'];
+                    $kind_order2['payee'] = $value['payee'];
+                    $kind_order2['review'] = $value['review'];
+
+                    //开发票
+                    $result = $this->dzfp->fpkj($kind_order2, $kind_order2['new_detail']);
+                    if(!$result){
+                        $file_data = [
+                            'state' => self::INVOICE_FAIL,
+                            'state_message' => $this->dzfp->getError()
+                        ];
+                        $this->invoice_model->update($value['id'], $file_data);
+                        continue;
+                    }
+                    $params = $this->setParameter($kind_order2, $result);
+                    $this->invoice_model->update($value['id'], $params);
+                    continue;
+                }
+            }
+        }
+        exit;
+    }
+
+    /**
+     * @param $ckd_sku
+     * @param $order
+     * @param $new_detail
+     * @return array|bool
+     * @desc 遍历获取
+     */
+    public function mergeSku($ckd_sku, $order, $new_detail){
+        $ckd_sku_id = '';
+        foreach ($ckd_sku as $ckd_val){
+            $ckd_sku_id .= '\''.$ckd_val.'\',';
+            $ckd_data = $this->getCkdSku($ckd_sku_id, $order, $new_detail);
+        }
+        return $ckd_data;
+    }
+
+    /**
+     * @param $sku_id
+     * @param $order
+     * @param $new_detail
+     * @return array|bool
+     * @desc 查询组合商品父级sku编码
+     */
+    public function getCkdSku($sku_id, $order,$new_detail){
+        if(!$sku_id){
+            return false;
+        }
+
+        $ckd_sku_id_str = '';
+        $ckdSkus = $this->ckd->getInfoBySkuId(substr($sku_id, 0, -1));
+        if(!$ckdSkus){
+            $this->errorMsg = '未查询到组合商品编码';
+            return false;
+        }
+
+        //拿到子级sku编码
+        foreach ($ckdSkus as $ckdval){
+            $ckd_sku_id_str .= '\''.$ckdval['kind_sku_id'].'\',';
+        }
+        //根据编码查询
+        $ckd_data = $this->sku_model->getInfoBySkuId(substr($ckd_sku_id_str, 0, -1));
+        if(!$ckd_data){
+            $this->errorMsg = '未查询到sku编码';
+            return false;
+        }
+
+        //获取已经设置好的金额
+        $money = $this->ckd->getMoney(substr($ckd_sku_id_str, 0, -1));
+        $sku_money = [];
+        foreach ($money as $val){
+            $sku_money[$val['kind_sku_id']] = $val['payment'];
+        }
+
+        //对应sku合并对应金额
+        foreach ($ckd_data as &$cval){
+            $cval['title'] = $cval['product_name'];
+            $cval['sl'] = $cval['tax_tare'];
+            $cval['payment'] = $sku_money[$cval['sku_id']];
+            $cval['se'] = round($cval['payment'] - ($cval['payment'] / (1 + $cval['tax_tare'])),2); //税额 等于支付金额 减去支付金额除1+税率
+            $cval['xmje'] = $cval['payment'] - $cval['se'];
+            $cval['num'] = 1;
+            $cval['price'] = $cval['payment'] - $cval['se'];
+            $order['hjse'] += $cval['se'];
+            $order['payment_fee'] += $cval['payment'];
+        }
+        $dataAll = array_merge($ckd_data, $new_detail);
+        $order['count'] = count($dataAll);
+        $order['new_detail'] = $dataAll;
+
+        return $order;
+    }
+
+    /**
+     * @return mixed
+     * @desc 获取错误
+     */
+    public function getError(){
+        return $this->errorMsg;
     }
 
 }
