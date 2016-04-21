@@ -3,14 +3,15 @@
 /**
  * Created by PhpStorm.
  * User: wanghaiyang
- * Date: 16/3/30
- * Time: 下午7:53
+ * Date: 16/4/19
+ * Time: 下午7:47
+ * @desc 组合sku
  */
-class SkuModel{
-
+class CkdModel
+{
     use Trait_DB;
 
-    public $tableName = 'sku';
+    public $tableName = 'ckd';
 
     public $dbMaster;
     public $dbSlave;
@@ -30,16 +31,32 @@ class SkuModel{
     /**
      * @param $sku_id
      * @return array
-     * @desc 根据多个skuid 查询编码
      */
     public function getInfoBySkuId($sku_id){
         try{
-            $sql = ' SELECT * FROM `'.$this->tableName."` WHERE `sku_id` IN ($sku_id) ";
+            $sql = ' SELECT * FROM `'.$this->tableName."` WHERE `parent_sku_id` IN ($sku_id) ";
             $stmt = $this->dbSlave->prepare($sql);
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         }catch (PDOException $ex){
             echo $ex->getMessage();
+        }
+    }
+
+    /**
+     * @param $skuid
+     * @return array|bool
+     * @desc 根据指定skuid 获取金额
+     */
+    public function getMoney($skuid){
+        try{
+            $sql = ' SELECT kind_sku_id,payment FROM `'.$this->tableName."` WHERE `kind_sku_id` IN ($skuid) ";
+            $stmt = $this->dbSlave->prepare($sql);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }catch (PDOException $ex){
+            echo $ex->getMessage();
+            return false;
         }
     }
 
@@ -67,11 +84,11 @@ class SkuModel{
      * @param $sku_id
      * @return mixed
      */
-    public function getList($page_no, $page_size, $use_hax_next, $sku_id){
+    public function getList($page_no, $page_size, $use_hax_next, $sku_id = ''){
         $where = '1';
 
         if($sku_id){
-            $where .= ' AND `sku_id` = :sku_id';
+            $where .= ' AND `kind_sku_id` = :sku_id';
             $pdo_params[':sku_id'] = $sku_id;
         }
 
@@ -111,22 +128,23 @@ class SkuModel{
     }
 
     /**
-     * @param $ids
-     * @param $fpsl
+     * @param $id
+     * @param $money
      * @return bool|int
      */
-    public function updateSl($ids, $fpsl){
-        if( !$ids || !$fpsl){
+    public function update($id, $money){
+        if( !$id || !$money){
             return FALSE;
         }
 
         try {
-            $sql = ' UPDATE `'. $this->tableName. "` SET `tax_tare` = :fpsl WHERE `id` IN ($ids) " ;
+            $sql = ' UPDATE `'. $this->tableName. "` SET `payment` = :payment WHERE `id` = :id " ;
             $stmt = $this->dbMaster->prepare($sql);
-            $stmt->execute(array(':fpsl' => $fpsl));
+            $stmt->execute(array(':payment' => $money,':id' => $id));
             return 1;
         } catch (Exception $ex) {
             echo $ex->getMessage();
+            return false;
         }
     }
 

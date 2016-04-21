@@ -64,6 +64,13 @@
                             <?php endif; ?>
                         </select>
                     </div>
+                    <div class="field">&nbsp;
+                        <select class="input js-assign" style="text-align: center" name="stype">
+                            <option value="<?=$invoice_info['stype']?>"><?php echo $invoice_info['stype'] == 1 ? '单个商品' : '组合商品';?></option>
+                            <option value="1">单个商品</option>
+                            <option value="2">组合商品</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="form-button">
                     <button class="button bg-mix" type="submit">搜索</button>

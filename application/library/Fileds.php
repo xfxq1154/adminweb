@@ -10,7 +10,8 @@ class Fileds{
         '2' => 'buyer_phone',
         '3' => 'project_name',
         '4' => 'invoice_title',
-        '5' => 'buyer_tax_id'
+        '5' => 'buyer_tax_id',
+        '6' => 'sku_type'
     ];
 
     //电子发票sku
