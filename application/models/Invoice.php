@@ -221,7 +221,7 @@ class InvoiceModel{
         $where = '`state` = :state ' ;
         $where .= 'AND `sku_type` = :type ' ;
         $pdo_params[':state'] = 5;
-        $pdo_params[':type'] = 1;
+        $pdo_params[':type'] = 0;
         try{
             $sql = 'SELECT * FROM '.$this->tableName.' WHERE '.$where;
             $stmt = $this->dbSlave->prepare($sql);
@@ -254,7 +254,7 @@ class InvoiceModel{
         $where = ' `sku_type` = :type ';
         $where .= ' AND `state` = :state ';
         $pdo_params[':state'] = 5;
-        $pdo_params[':type'] = 2;
+        $pdo_params[':type'] = 1;
         try{
             $sql = ' SELECT * FROM '.$this->tableName.' WHERE '.$where;
             $stmt = $this->dbMaster->prepare($sql);
