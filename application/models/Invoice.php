@@ -67,7 +67,7 @@ class InvoiceModel{
         $start = ($page_no - 1) * $page_size;
         
         try {
-            $sql = 'SELECT * FROM `'.$this->tableName. '` WHERE '. $where .' ORDER BY id DESC LIMIT '. $start .','.$page_size ;
+            $sql = 'SELECT * FROM `'.$this->tableName. '` WHERE '. $where .' ORDER BY id ASC LIMIT '. $start .','.$page_size ;
             $stmt = $this->dbSlave->prepare($sql);
             $stmt->execute($pdo_params);
             $data['data'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -223,7 +223,7 @@ class InvoiceModel{
         $pdo_params[':state'] = 5;
         $pdo_params[':type'] = 0;
         try{
-            $sql = 'SELECT * FROM '.$this->tableName.' WHERE '.$where;
+            $sql = 'SELECT * FROM '.$this->tableName.' WHERE '.$where. 'LIMIT 300';
             $stmt = $this->dbSlave->prepare($sql);
             $stmt->execute($pdo_params);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -256,7 +256,7 @@ class InvoiceModel{
         $pdo_params[':state'] = 5;
         $pdo_params[':type'] = 1;
         try{
-            $sql = ' SELECT * FROM '.$this->tableName.' WHERE '.$where;
+            $sql = ' SELECT * FROM '.$this->tableName.' WHERE '.$where.' LIMIT 300';
             $stmt = $this->dbMaster->prepare($sql);
             $stmt->execute($pdo_params);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
