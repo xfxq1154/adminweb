@@ -50,7 +50,6 @@ class CrontabController extends Base{
      */
     public function getPdfSendMessageAction(){
         $datas = $this->invoice_model->getAll();
-        $datas = $this->invoice_model->getAll();
         //过滤空数组
         $invoice_data = array_filter($datas);
         if(!$invoice_data){
@@ -241,7 +240,7 @@ class CrontabController extends Base{
     public function treatingSku($order, $skuRate, $type = 0){
         //合并数据,并计算税额/如果有改订单有优惠劵则均摊优惠劵金额
         if($order['discount_fee'] !== '0.00'){
-            //支付金额
+            //最终支付总金额
             $total_fee = $order['sum_price'];
             //优惠劵金额
             $discount = $order['discount_fee'];
@@ -256,11 +255,10 @@ class CrontabController extends Base{
                 $d_val['sl'] = $type == 0 ? ($d_val['outer_sku_id'] ? $skuRate[$d_val['outer_sku_id']] : $skuRate[$d_val['outer_item_id']]) :$d_val['sl'];
                 //平摊后的支付总价  / 数量 = 平摊商品单价
                 $discount_price = round($discount_payment / $d_val['num'], 6);
-                //商品单价 减去税额
-                $spdj = $discount_price - round($discount_price - ($discount_price / (1 + $d_val['sl'])),6);
-                $d_val['se'] = round($discount_payment - ($discount_payment / (1 + $d_val['sl'])),2); //税额 等于支付金额 减去支付金额除1+税率
+                $d_val['se'] = round($discount_payment - ($discount_payment / (1 + $d_val['sl'])),2);
                 $d_val['xmje'] = $discount_payment - $d_val['se'];
-                $d_val['price'] = $spdj;
+                //商品单价 = 商品单价 - 商品单价的税额
+                $d_val['price'] = $discount_price - round($discount_price - ($discount_price / (1 + $d_val['sl'])),6);
                 $order['hjse'] += $d_val['se'];
                 $order['payment_fee'] += $discount_payment;
             }
@@ -272,7 +270,10 @@ class CrontabController extends Base{
                 if($type){
                     $d_val['price'] = $d_val['payment'] - $d_val['se'];
                 }else{
-                    $d_val['price'] = $d_val['price'] - round($d_val['price'] - ($d_val['price'] / (1 + $d_val['sl'])),6); //商品单价 减去税额
+                    //sku支付总价 / 数量 = 商品单价
+                    $price = round($d_val['payment'] / $d_val['num'], 4);
+                    //商品单价 = 商品单价 - 商品单价的税额
+                    $d_val['price'] = $price - round($price - ($price / (1 + $d_val['sl'])),6); //商品单价 减去税额
                 }
                 $order['hjse'] += $d_val['se'];
                 $order['payment_fee'] += $d_val['payment'];
