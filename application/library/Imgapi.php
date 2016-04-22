@@ -10,7 +10,7 @@ class Imgapi {
     static private $_host = IMG_API_HOST;
     static private $_sourceid = IMG_SOURCE_ID; 
     static private $_last_error = NULL;
-    static private $_timeout = 5; //接口超时时间 单位s秒 建议不超过5s
+    static private $_timeout = 15; //接口超时时间 单位s秒 建议不超过5s
 
     public static function request($uri, $params = array(), $requestMethod = 'GET', $jsonDecode = true, $headers = array()) {
         $url = self::$_host . $uri;

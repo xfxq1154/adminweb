@@ -242,7 +242,7 @@ class InvoiceController extends Base{
         //将pdf文件上传到oss
         $rs_oss = $this->invoice_mode->ossUpload($pdf);
         if(!$rs_oss){
-            echo json_encode(array('msg' => '系统错误' ,'status' => 3));exit;
+            echo json_encode(array('msg' => 'upload系统错误' ,'status' => 3));exit;
         }
         //查询私密发票地址
         $invoice_path = $this->invoice_mode->getInvoice($rs_oss['object']);
@@ -320,7 +320,7 @@ class InvoiceController extends Base{
         }
         foreach ($xls->sheets[0]['cells'] as $values){
             foreach (Fileds::$invoice as $k => $v){
-                $data[$v] = $values[$k];
+                $data[$v] = trim($values[$k]);
             }
             $data['batch'] = strtotime(date('Ymd')); //将时间戳当做批次号码
             $faliOrder = $this->invoice_mode->insert($data);
