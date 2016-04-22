@@ -272,7 +272,7 @@
             var order_id = oTr.find('td').eq(2).text();
             var id = oTr.find('td').eq(1).text();
             $.ajax({
-                type : 'GET',
+                type : 'POST',
                 dataType :'JSON',
                 url : '/invoice/repeatmessage',
                 data : {order_id:order_id,id:id}

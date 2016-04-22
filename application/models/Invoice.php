@@ -161,9 +161,8 @@ class InvoiceModel{
     public function getAll() {
         $where = ' `state` = :state ';
         $pdo_params[':state'] = 2;
-        $data = array();
-        $sql = "SELECT * FROM `".$this->tableName."` WHERE $where order by `id` desc";
         try{
+            $sql = "SELECT * FROM `".$this->tableName."` WHERE $where order by `id` desc";
             $stmt = $this->dbSlave->prepare($sql);
             $stmt->execute($pdo_params);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -171,10 +170,8 @@ class InvoiceModel{
             echo $ex;
             return false;
         }
-
-        return $data;
     }
-    
+
     /**
      * @desc 上传发票到oss
      */
