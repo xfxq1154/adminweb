@@ -320,7 +320,7 @@ class InvoiceController extends Base{
         }
         foreach ($xls->sheets[0]['cells'] as $values){
             foreach (Fileds::$invoice as $k => $v){
-                $data[$v] = $values[$k];
+                $data[$v] = trim($values[$k]);
             }
             $data['batch'] = strtotime(date('Ymd')); //将时间戳当做批次号码
             $faliOrder = $this->invoice_mode->insert($data);
