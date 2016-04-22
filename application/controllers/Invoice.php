@@ -23,6 +23,9 @@ class InvoiceController extends Base{
     /** @var  CkdModel */
     public $ckd;
 
+    /** @var Dzfp */
+    public $dzfp;
+
     public $app_id = KDT_APP_ID;
     public $app_secert = KDT_APP_SECERT;
     
@@ -48,6 +51,7 @@ class InvoiceController extends Base{
         $this->initAdmin();
         Yaf_Loader::import(ROOT_PATH . '/application/library/phpExcel/reader.php');
         Yaf_Loader::import(ROOT_PATH . '/application/library/youzan/KdtApiClient.php');
+        $this->dzfp = new Dzfp();
         $this->ckd = new CkdModel();
         $this->sku_model = new SkuModel();
         $this->invoice_mode = new InvoiceModel();
@@ -228,22 +232,35 @@ class InvoiceController extends Base{
      */
     public function repeatMessageAction(){
         $this->checkRole();
-        
-        $order_id = $this->getRequest()->get('order_id');
-        $id = $this->getRequest()->get('id');
-        if(!$order_id || !$id){
-            echo json_encode(array('msg' => '必传参数缺失' ,'status' => 3));exit;
+        $order_id = $this->getRequest()->getPost('id');
+        $value = $this->invoice_mode->getInfo($order_id);
+        $rs_pdf = $this->dzfp->getpdf($value['invoice_code'], $value['invoice_number'], $value['check_code']);
+        if(!$rs_pdf){
+            echo json_encode(array('msg' => 'PDF文件获取失败' ,'status' => 3));exit;
         }
-        $sms = new Sms();
-        $invoice_info = $this->invoice_mode->getInfo($id);
-        
-        if(!$invoice_info){
+        $pdf = base64_decode($rs_pdf);
+        //将pdf文件上传到oss
+        $rs_oss = $this->invoice_mode->ossUpload($pdf);
+        if(!$rs_oss){
             echo json_encode(array('msg' => '系统错误' ,'status' => 3));exit;
         }
-        $phonenumber = $invoice_info['buyer_phone'];
-        $message = '请在电脑端查看您的发票，地址:' .$invoice_info['invoice_url'];
-        $result = $sms->sendmsg($message, $phonenumber);
-        
+        //查询私密发票地址
+        $invoice_path = $this->invoice_mode->getInvoice($rs_oss['object']);
+        if(!$invoice_path){
+            echo json_encode(array('msg' => '发票获取失败' ,'status' => 3));exit;
+        }
+
+        //生成短网址
+        $dwz_url = $this->invoice_mode->dwz($invoice_path);
+        if($dwz_url['errNum']){
+            echo json_encode(array('msg' => '系统错误' ,'status' => 3));exit;
+        }
+        //更新发票信息
+        $this->invoice_mode->update($value['id'], array('invoice_url' => $dwz_url['urls'][0]['url_short'],'state' => 4));
+        //将发票地址发送给用户
+        $sms = new Sms();
+        $message = '您好，您在罗辑思维所购产品的电子发票地址为:'.$dwz_url['urls'][0]['url_short'].'。地址有效期为30天，请尽快在电脑端查看';
+        $result = $sms->sendmsg($message, $value['buyer_phone']);
         if($result['status'] == 'ok'){
             echo json_encode(array('msg' => '短信发送成功', 'status' => 2));exit;
         }

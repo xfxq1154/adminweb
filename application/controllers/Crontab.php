@@ -49,41 +49,42 @@ class CrontabController extends Base{
      * @frequency 每5分钟运行一次
      */
     public function getPdfSendMessageAction(){
-        
+        $datas = $this->invoice_model->getAll();
         $datas = $this->invoice_model->getAll();
         //过滤空数组
         $invoice_data = array_filter($datas);
-        if($invoice_data){
-            foreach ($datas as $value){
-                //获取发票pdf文件
-                $rs_pdf = $this->dzfp->getpdf($value['invoice_code'], $value['invoice_number'], $value['check_code']);
-                if(!$rs_pdf){
-                    continue;
-                }
-                $pdf = base64_decode($rs_pdf);
-                //将pdf文件上传到oss
-                $rs_oss = $this->invoice_model->ossUpload($pdf);
-                if(!$rs_oss){
-                    continue;
-                }
-                //查询私密发票地址
-                $invoice_path = $this->invoice_model->getInvoice($rs_oss['object']);
-                if(!$invoice_path){
-                    continue;
-                }
-                
-                //生成短网址
-                $dwz_url = $this->invoice_model->dwz($invoice_path);
-                if($dwz_url['errNum']){
-                    continue;
-                }
-                //更新发票信息
-                $this->invoice_model->update($value['id'], array('invoice_url' => $dwz_url['urls'][0]['url_short'],'state' => 4));
-                //将发票地址发送给用户
-                $sms = new Sms();
-                $message = '您好，您在罗辑思维所购产品的电子发票地址为:'.$dwz_url['urls'][0]['url_short'].'地址有效期为30天，请尽快在电脑端查看。';
-                $sms->sendmsg($message, $value['buyer_phone']);
+        if(!$invoice_data){
+            exit;
+        }
+        foreach ($datas as $value){
+            //获取发票pdf文件
+            $rs_pdf = $this->dzfp->getpdf($value['invoice_code'], $value['invoice_number'], $value['check_code']);
+            if(!$rs_pdf){
+                continue;
             }
+            $pdf = base64_decode($rs_pdf);
+            //将pdf文件上传到oss
+            $rs_oss = $this->invoice_model->ossUpload($pdf);
+            if(!$rs_oss){
+                continue;
+            }
+            //查询私密发票地址
+            $invoice_path = $this->invoice_model->getInvoice($rs_oss['object']);
+            if(!$invoice_path){
+                continue;
+            }
+
+            //生成短网址
+            $dwz_url = $this->invoice_model->dwz($invoice_path);
+            if($dwz_url['errNum']){
+                continue;
+            }
+            //更新发票信息
+            $this->invoice_model->update($value['id'], array('invoice_url' => $dwz_url['urls'][0]['url_short'],'state' => 4));
+            //将发票地址发送给用户
+            $sms = new Sms();
+            $message = '您好，您在罗辑思维所购产品的电子发票地址为:'.$dwz_url['urls'][0]['url_short'].'。地址有效期为30天，请尽快在电脑端查看。';
+            $sms->sendmsg($message, $value['buyer_phone']);
         }
         exit;
     }
