@@ -120,10 +120,6 @@
        $('.set').on('click', function(){
            var orders = '';
            var fpsl = $('#parent option:selected').val();
-           if (!$('.checkAll').prop('checked')){
-               alert('请先选择');
-               return false;
-           }
             $(".checkAll").each(function(){
                 if ($(this).prop("checked")) {
                     orders += $(this).val() + ","; 

@@ -256,6 +256,9 @@ class InvoiceController extends Base{
     public function updateSlAction(){
         $orders = $this->getRequest()->getPost('orderlist');
         $fpsl = $this->getRequest()->getPost('sl');
+        if(!$orders){
+            Tools::output(array('msg' => '请先勾选编码', 'status' => 2));
+        }
          //截取最后一个符号
         $ordersing = substr($orders,0, -1);
         
