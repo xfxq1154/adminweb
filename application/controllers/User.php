@@ -265,7 +265,7 @@ class UserController extends Base {
                 echo json_encode(['info' => '密码不得少于9位数', 'status' => 0]);
                 exit;
             }
-            $pattern = '/[0-9a-zA-Z_]{10,}$/';
+            $pattern = '/[0-9a-zA-Z_]{9,}$/';
             if(!preg_match($pattern, $pw)){
                 echo json_encode(['info' => '密码必须包含字母、数字、下划线', 'status' => 0]);
                 exit;
