@@ -1,0 +1,42 @@
+<div class="dux-tools clearfix">
+    <div class="bread-head">电子发票<span class="small">查看订单sku</span></div>
+</div>
+<div class="table-tools clearfix ">
+    <div class="float-left">
+        <form action="/invoice/checkprice" method="POST" >
+            <div class="form-inline">
+                <div class="form-group" style="margin-left:10px;">
+                    <label><b>请输入搜索条件:</b></label>
+                    <div class="field" style="margin-left: 5px;">
+                        <input type="text" class="input" name="order" size="20" value="<?=$info['sku_id']?>" placeholder="填写sku编码">
+                    </div>
+                </div>
+                <div class="form-button" style="margin-left:20px;">
+                    <button class="button bg-main" type="submit">搜索</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="admin-main">
+    <div class="panel dux-box">
+        <div class="table-responsive">
+            <table id="table" class="table table-hover ">
+                <tbody>
+                    <tr>
+                        <th width="*">sku编号</th>
+                        <th width="*">商品名称</th>
+                    </tr>
+                    <?php if ($data) : ?>
+                        <?php foreach ($data as $val) : ?>
+                            <tr>
+                                <td><?=$val['sku_id']?></td>
+                                <td><?=$val['sku_name']?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

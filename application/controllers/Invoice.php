@@ -83,7 +83,7 @@ class InvoiceController extends Base{
         $invoice_info['order_id'] = $order_id;
         $invoice_info['stype'] = $sku_type;
 
-        $this->renderPagger($page_no, $result['total_nums'], '/invoice/showlist/page_no/{p}?status/'.$status.'/group/'.$group_id.'/stype/'.$sku_type, 20);
+        $this->renderPagger($page_no, $result['total_nums'], '/invoice/showlist/page_no/{p}?status='.$status.'&group='.$group_id.'&stype='.$sku_type, 20);
         $this->assign('data', $result);
         $this->assign('invoice_info', $invoice_info);
         $this->assign('status', $this->status[$status]);
@@ -436,11 +436,21 @@ class InvoiceController extends Base{
      * @desc 查询订单
      */
     public function checkPriceAction(){
-        $order = $this->getRequest()->get('order');
-        $url = 'kdt.trade.get';
-        $result = $this->youzan_api->get($url, array('tid' => $order));
-        echo "<pre>";
-        print_r($result);exit;
+        if($_POST){
+            $order = $this->getRequest()->getPost('order');
+            if(!$order){
+                echo json_encode(array('info' => '上传成功', 'code' => 1));exit;
+            }
+            $url = 'kdt.trade.get';
+            $skuList = array();
+            $result = $this->youzan_api->get($url, array('tid' => $order));
+            foreach ($result['response']['trade']['orders'] as $key=> $item) {
+                $skuList[$key]['sku_id'] = $item['outer_sku_id'] ? $item['outer_sku_id'] : $item['outer_item_id'];
+                $skuList[$key]['sku_name'] = $item['title'];
+            }
+            $this->assign('data', $skuList);
+        }
+        $this->layout('invoice/get_order.phtml');
     }
 
 }
