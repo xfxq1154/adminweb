@@ -547,4 +547,12 @@ class CrontabController extends Base{
         return $this->errorMsg;
     }
 
+    /**
+     * @desc 数据统计
+     * @return mixed
+     */
+    public function dataAction(){
+        $this->invoice_model->getAll();
+    }
+
 }

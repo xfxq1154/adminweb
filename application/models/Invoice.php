@@ -264,6 +264,23 @@ class InvoiceModel{
     }
 
     /**
+     * @return array|bool
+     * @desc 查询开票成功的订单
+     */
+    public function getSuccessInvoice()
+    {
+        try{
+            $sql = 'SELECT * FROM '.$this->tableName.' WHERE `state` = :state LIMIT 300';
+            $stmt = $this->dbMaster->prepare($sql);
+            $stmt->execute([':state' => 2]);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }catch(PDOException $ex){
+            echo $ex->getMessage();
+            return false;
+        }
+    }
+
+    /**
      * @return array
      * @desc 获取错误
      */
