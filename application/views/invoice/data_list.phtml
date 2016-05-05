@@ -1,0 +1,49 @@
+<script language="JavaScript" type="text/javascript" src="<?=ASSET_URL?>/static/js/calendar/WdatePicker.js"></script>
+<div class="dux-tools clearfix">
+    <div class="bread-head">电子发票<span class="small">数据统计</span></div>
+</div>
+<div class="table-tools clearfix ">
+    <div class="float-left">
+        <form action="/invoice/dataList" method="POST" >
+            <div class="form-inline">
+                <div class="form-group" style="margin-left:10px;">
+                    <label><b>请选择月份:</b></label>
+                    <div class="field">
+                        <input type="text" class="input datebtn" style="width:180px;" name="time" value="<?=$time;?>" onfocus="WdatePicker({startDate:'Y-M',dateFmt:'yyyy-MM'})" style="cursor:pointer;" size="60" >
+                    </div>
+                </div>
+                <div class="form-button" style="margin-left:20px;">
+                    <button class="button bg-main" type="submit">搜索</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="admin-main">
+    <div class="panel dux-box">
+        <div class="table-responsive">
+            <table id="table" class="table table-hover ">
+                <tbody>
+                <tr>
+                    <th width="*">编号</th>
+                    <th width="*">合计税额</th>
+                    <th width="*">合计金额</th>
+                    <th width="*">发票类型</th>
+                    <th width="*">税率</th>
+                </tr>
+                <?php if ($list) : ?>
+                    <?php foreach ($list as $val) : ?>
+                        <tr>
+                            <td><?=$val['id']?></td>
+                            <td><?=$val['taxe']?></td>
+                            <td><?=$val['fee']?></td>
+                            <td><?php echo $val['type'] == 1 ? '<span class="tag bg-blue">蓝字发票</span>' : '<sapn class="tag bg-red">红字发票</sapn>'; ?></td>
+                            <td><?=$val['tax']?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

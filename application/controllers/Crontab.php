@@ -10,6 +10,11 @@ class CrontabController extends Base{
      */
     public $invoice_model;
 
+    /**
+     * @var InvoicedataModel;
+     */
+    public $invoice_data_model;
+
     /** @var Dzfp */
     public $dzfp;
 
@@ -36,6 +41,7 @@ class CrontabController extends Base{
     public function init(){
         Yaf_Loader::import(ROOT_PATH . '/application/library/youzan/KdtApiClient.php');
         $this->invoice_model = new InvoiceModel();
+        $this->invoice_data_model = new InvoicedataModel();
         $this->ckd = new CkdModel();
         $this->dzfp = new Dzfp();
         $this->sku_model = new SkuModel();
@@ -72,18 +78,20 @@ class CrontabController extends Base{
             if(!$invoice_path){
                 continue;
             }
-
             //生成短网址
             $dwz_url = $this->invoice_model->dwz($invoice_path);
             if($dwz_url['errNum']){
                 continue;
             }
-            //更新发票信息
-            $this->invoice_model->update($value['id'], array('invoice_url' => $dwz_url['urls'][0]['url_short'],'state' => 4));
             //将发票地址发送给用户
             $sms = new Sms();
             $message = '您好，您在罗辑思维所购产品的电子发票地址为:'.$dwz_url['urls'][0]['url_short'].'。地址有效期为30天，请尽快在电脑端查看。';
-            $sms->sendmsg($message, $value['buyer_phone']);
+            $status = $sms->sendmsg($message, $value['buyer_phone']);
+            if($status['status'] == 'ok'){
+                $this->invoice_model->update($value['id'], array('invoice_url' => $dwz_url['urls'][0]['url_short'],'state' => 4));
+            }else{
+                $this->invoice_model->update($value['id'], array('invoice_url' => $dwz_url['urls'][0]['url_short'],'state' => 6));
+            }
         }
         exit;
     }
@@ -110,27 +118,52 @@ class CrontabController extends Base{
             }
             $order = $this->batchOrderDetail($order);
             $sku_id = implode(',', $order['skus']);
-
             $skus = $this->sku_model->getInfoBySkuId($sku_id);
-            $count = $this->contrastSku($order['skus'], $skus, $value['id']);
-            if(!$count){
-                continue;
-            }
+            //1.1.3版本中删除此校验,如果有sku匹配不成功,则只开具匹配成功的
+//            $count = $this->contrastSku($order['skus'], $skus, $value['id']);
             //将原有数据表的税率,合并到有赞订单中
             $skuarr = array();
             foreach ($skus as $sk_val){
                 $skuarr[$sk_val['sku_id']] = $sk_val['tax_tare'];
             }
             $orders = $this->treatingSku($order, $skuarr);
+            //判断是否有空的sl,如果有将该sku删除掉
+            foreach ($orders['new_detail'] as $detailVal){
+                if($detailVal['sl'] == null){
+                    unset($detailVal);
+                }
+                $detail[] = $detailVal;
+            }
+            $orders['new_detail'] = array_filter($detail);
+            $wasOver = $this->regroupSku($orders);
+
             //判断发票类型 1 红票
             if ($value['invoice_type'] == 1){
-                $this->redInvoice($orders, $value);
+                $this->redInvoice($wasOver, $value);
                 continue;
             }
-            $this->invoice($orders, $value);
+            $this->invoice($wasOver, $value);
             continue;
         }
         exit;
+    }
+
+    /**
+     * @param $order
+     * @return mixed
+     * @desc 重新计算删除个别sku后的合计税额,合计金额
+     */
+    public function regroupSku($order){
+        $hjse = '';
+        $payment_fee = '';
+        foreach ($order['new_detail'] as &$d_val){
+            $hjse += $d_val['se'];
+            $payment_fee += $d_val['payment'];
+        }
+        $order['hjse'] = $hjse;
+        $order['payment_fee'] = $payment_fee;
+
+        return $order;
     }
 
     /**
@@ -552,7 +585,139 @@ class CrontabController extends Base{
      * @return mixed
      */
     public function dataAction(){
-        $this->invoice_model->getAll();
+        $time = date('Y-m-d', time());
+        $invoices = $this->invoice_model->getSuccessInvoice($time);
+        if(!$invoices){
+            exit;
+        }
+
+        //遍历查询订单
+        foreach ($invoices as $value){
+            $order = $this->getYouzanOrderByTid($value['order_id']);
+            $order = $this->batchOrderDetail($order);
+            $sku_id = implode(',', $order['skus']);
+
+            $skus = $this->sku_model->getInfoBySkuId($sku_id);
+
+            $skuarr = array();
+            foreach ($skus as $sk_val){
+                $skuarr[$sk_val['sku_id']] = $sk_val['tax_tare'];
+            }
+            $orders = $this->treatingSku($order, $skuarr);
+            //判断发票类型
+            $type = $value['invoice_type'] == 1 ? 1 : 0;
+            $sumData[] = $this->countSkuPayment($orders, $type);
+        }
+        //重新遍历数组
+        foreach ($sumData as $sVal){
+            foreach ($sVal as $sk => $val){
+                $dataArray[] = $val;
+            }
+        }
+        $iData = $this->fetchData($dataArray);
+        if(!$iData){
+            exit;
+        }
+        //存入数据表
+        foreach ($iData as $iValue){
+            $this->invoice_data_model->insertData($iValue);
+        }
+        exit;
+    }
+
+    /**
+     * @param $order
+     * @param $type
+     * @return array|mixed
+     */
+    public function countSkuPayment($order, $type)
+    {
+        $sumData = $this->batch($order, $type);
+        if(!$sumData){
+            return false;
+        }
+        return $sumData;
+    }
+
+    /**
+     * @param $order
+     * @param $type
+     * @return mixed
+     * @desc 组合税率
+     */
+    public function batch($order, $type){
+        foreach ($order['new_detail'] as $key => $val){
+            if($val['sl'] == '0.00'){
+                $params[$key]['sl'] = 1;
+                $params[$key]['se'] += $val['se'] ? $val['se'] : 0;
+                $params[$key]['payment'] += $val['xmje'] ? $val['xmje'] : 0;
+                $params[$key]['type'] = $type == 1 ? 2 : 1;
+            }elseif ($val['sl'] == '0.06'){
+                $params[$key]['sl'] = 2;
+                $params[$key]['se'] += $val['se'] ? $val['se'] : 0;
+                $params[$key]['payment'] += $val['xmje'] ? $val['xmje'] : 0;
+                $params[$key]['type'] = $type == 1 ? 2 : 1;
+            }else{
+                $params[$key]['sl'] = 3;
+                $params[$key]['se'] += $val['se'] ? $val['se'] : 0;
+                $params[$key]['payment'] += $val['xmje'] ? $val['xmje'] : 0;
+                $params[$key]['type'] = $type == 1 ? 2 : 1;
+            }
+        }
+        return $params;
+    }
+
+    /**
+     * @param $dataArray
+     * @return array
+     * @desc 根据发票税率,类型重新组合数据 sl: 1=0.00,2=0.06, 3=0.17 type: 1=蓝票 2=红票
+     */
+    public function fetchData($dataArray){
+        $dataAll = array(array());
+        foreach ($dataArray as $dVal){
+            switch ($dVal['sl']){
+                case 1:
+                    if($dVal['type'] == 2){
+                        $dataAll[1]['tax'] = '0.00';
+                        $dataAll[1]['se'] += $dVal['se'];
+                        $dataAll[1]['payment'] += $dVal['payment'];
+                        $dataAll[1]['type'] = 2;
+                    }else{
+                        $dataAll[2]['tax'] = '0.00';
+                        $dataAll[2]['se'] += $dVal['se'];
+                        $dataAll[2]['payment'] += $dVal['payment'];
+                        $dataAll[2]['type'] = 1;
+                    }
+                    break;
+                case 2:
+                    if($dVal['type'] == 2){
+                        $dataAll[3]['tax'] = '0.06';
+                        $dataAll[3]['se'] += $dVal['se'];
+                        $dataAll[3]['payment'] += $dVal['payment'];
+                        $dataAll[3]['type'] = 2;
+                    }else{
+                        $dataAll[4]['tax'] = '0.06';
+                        $dataAll[4]['se'] += $dVal['se'];
+                        $dataAll[4]['payment'] += $dVal['payment'];
+                        $dataAll[4]['type'] = 1;
+                    }
+                    break;
+                case 3:
+                    if($dVal['type'] == 3){
+                        $dataAll[5]['tax'] = '0.17';
+                        $dataAll[5]['se'] += $dVal['se'];
+                        $dataAll[5]['payment'] += $dVal['payment'];
+                        $dataAll[5]['type'] = 2;
+                    }else{
+                        $dataAll[6]['tax'] = '0.17';
+                        $dataAll[6]['se'] += $dVal['se'];
+                        $dataAll[6]['payment'] += $dVal['payment'];
+                        $dataAll[6]['type'] = 1;
+                    }
+                    break;
+            }
+        }
+        return array_filter($dataAll);
     }
 
 }
