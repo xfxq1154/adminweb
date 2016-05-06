@@ -111,6 +111,7 @@ class InvoiceController extends Base{
      * @desc 删除发票订单
      */
     public function deleteAction(){
+        $this->checkRole();
         $id = json_decode($this->getRequest()->get('data'),1)['id'];
         $result = $this->invoice_mode->delete($id);
         if(!$result){
@@ -123,6 +124,7 @@ class InvoiceController extends Base{
      * @desc 删除sku编码
      */
     public function deleteSkuAction(){
+        $this->checkRole();
         $id = json_decode($this->getRequest()->get('data'),1)['id'];
         $result = $this->sku_model->delete($id);
         if(!$result){
@@ -160,6 +162,7 @@ class InvoiceController extends Base{
      * @desc 数据统计
      */
     public function dataListAction(){
+        $this->checkRole();
         $stime = $this->getRequest()->get('time');
         if($stime){
             $time = date('Y-m', strtotime($stime));
@@ -247,6 +250,8 @@ class InvoiceController extends Base{
      * @desc 修改手机号
      */
     public function updatePhoneAction(){
+        $this->checkRole();
+
         $id = $this->getRequest()->get('id');
         if($this->getRequest()->isPost()){
             $params = array();
