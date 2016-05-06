@@ -71,8 +71,9 @@ class InvoiceController extends Base{
         $status = $this->getRequest()->get('status');
         $group_id = $this->getRequest()->get('group');
         $sku_type = $this->getRequest()->get('stype');
+        $time = $this->getRequest()->get('time');
         
-        $result = $this->invoice_mode->getList($page_no, 20, 1, $mobile, $order_id, $status, $group_id, $sku_type);
+        $result = $this->invoice_mode->getList($page_no, 20, 1, $mobile, $order_id, $status, $group_id, $sku_type, $time);
 
         //查询上传批次
         $group = $this->invoice_mode->getBatchGroup();
@@ -83,8 +84,9 @@ class InvoiceController extends Base{
         $invoice_info['mobile'] = $mobile;
         $invoice_info['order_id'] = $order_id;
         $invoice_info['stype'] = $sku_type;
+        $invoice_info['time'] = $time;
 
-        $this->renderPagger($page_no, $result['total_nums'], '/invoice/showlist/page_no/{p}?status='.$status.'&group='.$group_id.'&stype='.$sku_type, 20);
+        $this->renderPagger($page_no, $result['total_nums'], '/invoice/showlist/page_no/{p}?status='.$status.'&group='.$group_id.'&stype='.$sku_type.'&time='.$time, 20);
         $this->assign('data', $result);
         $this->assign('invoice_info', $invoice_info);
         $this->assign('status', $this->status[$status]);

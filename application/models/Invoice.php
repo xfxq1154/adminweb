@@ -30,9 +30,10 @@ class InvoiceModel{
      * @param string $status
      * @param string $group
      * @param int $sType
+     * @param string $time
      * @return mixed
      */
-    public function getList($page_no, $page_size, $use_hax_next, $mobile = '', $order_id = '', $status = '', $group = '', $sType = 1){
+    public function getList($page_no, $page_size, $use_hax_next, $mobile = '', $order_id = '', $status = '', $group = '', $sType = 1, $time){
         $where = '1';
 
         if($mobile){
@@ -62,6 +63,10 @@ class InvoiceModel{
         if($sType){
             $where .= ' AND `sku_type` = :sku_type';
             $pdo_params[':sku_type'] = $sType;
+        }
+
+        if($time){
+            $where .= " AND `update_time` LIKE '%$time%'";
         }
         
         $start = ($page_no - 1) * $page_size;
