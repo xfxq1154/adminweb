@@ -596,10 +596,10 @@ class CrontabController extends Base{
         foreach ($invoices as $value){
             $order = $this->getYouzanOrderByTid($value['order_id']);
             $order = $this->batchOrderDetail($order);
-            $sku_id = implode(',', $order['skus']);
-            if(!$sku_id){
+            if(!$order['skus']){
                 continue;
             }
+            $sku_id = implode(',', $order['skus']);
             $skus = $this->sku_model->getInfoBySkuId($sku_id);
 
             $skuarr = array();
@@ -611,6 +611,7 @@ class CrontabController extends Base{
             $type = $value['invoice_type'] == 1 ? 1 : 0;
             $sumData[] = $this->countSkuPayment($orders, $type);
         }
+
         //重新遍历数组
         foreach ($sumData as $sVal){
             foreach ($sVal as $sk => $val){
