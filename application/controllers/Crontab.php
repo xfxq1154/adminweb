@@ -597,7 +597,9 @@ class CrontabController extends Base{
             $order = $this->getYouzanOrderByTid($value['order_id']);
             $order = $this->batchOrderDetail($order);
             $sku_id = implode(',', $order['skus']);
-
+            if(!$sku_id){
+                continue;
+            }
             $skus = $this->sku_model->getInfoBySkuId($sku_id);
 
             $skuarr = array();
