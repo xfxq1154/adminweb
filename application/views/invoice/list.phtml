@@ -16,13 +16,6 @@
                 <a class="button bg-blue button-small " data="files" id="image_upload3" preview="image_preview3" href="javascript:;"><span class="icon-upload">上传</span></a>
             </div>
         </div>
-<!--        <div class="form-inline">-->
-<!--            <label><b>上传(天猫)开票订单号:</b></label>-->
-<!--            <div class="form-button">-->
-<!--                <input type="text" class="input show_uo_imgs2" id="files2" name="file2" placeholder="天猫订单" readonly=""/>-->
-<!--                <a class="button bg-blue button-small " data="files" id="image_upload3" preview="image_preview3" href="javascript:;"><span class="icon-upload">上传</span></a>-->
-<!--            </div>-->
-<!--        </div>-->
     </div>
     <div class="float-left" style="margin-left: 10px;">
         <div class="form-inline">
@@ -187,8 +180,13 @@
                                     <?php elseif ($val['state'] == 1):?>
                                         <button class="button bg-blue button-small kaifapiao" value=2 style="">开具发票</button>
                                     <?php elseif ($val['state'] == 3):?>
+                                        <button class="button bg-red button-small icon-trash-o js-del" href="javascript:;" url="/invoice/delete" data='{"id":<?php echo $val['id']; ?>}' title="删除"></button>
                                         <span><?=$val['state_message']?></span>
-                                   <?php endif;?>
+                                    <?php endif;?>
+                                    <?php if($val['state'] == 6):?>
+                                        <a class="button bg-blue button-small " href="/invoice/updatephone/id/<?php echo $val['id']; ?>&edi=1" title="修改">修改</a>
+                                        <span>短信发送失败</span>
+                                    <?php endif;?>
                                     </span>
                                 </td>
                             </tr>

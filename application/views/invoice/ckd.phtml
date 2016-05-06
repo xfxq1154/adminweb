@@ -1,10 +1,6 @@
 <div class="dux-tools clearfix">
     <div class="bread-head">电子发票<span class="small">sku列表</span></div>
     <div class="button-group float-right">
-<!--        <a class="button button-small bg-dot icon-plus dropdown-toggle"> 录入 <span class="downward"></span></a>-->
-<!--        <ul class="drop-menu pull-right">-->
-<!--            <li><a href="/invoice/addsku">录入SKU信息</a></li>-->
-<!--        </ul>-->
     </div>
 </div>
 <div class="table-tools clearfix ">
@@ -23,7 +19,10 @@
                 <div class="form-group" style="margin-left:10px;">
                     <label><b>请输入搜索条件:</b></label>
                     <div class="field" style="margin-left: 5px;">
-                        <input type="text" class="input" name="sku_id" size="20" value="<?=$info['sku_id']?>" placeholder="填写sku编码">
+                        <input type="text" class="input" name="p_sku_id" size="20" value="<?=$skus['p_sku_id']?>" placeholder="填写父级sku编码">
+                    </div>
+                    <div class="field" style="margin-left: 5px;">
+                        <input type="text" class="input" name="sku_id" size="20" value="<?=$skus['sku_id']?>" placeholder="填写子级sku编码">
                     </div>
                 </div>
                 <div class="form-button" style="margin-left:20px;">

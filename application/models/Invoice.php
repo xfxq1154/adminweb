@@ -264,6 +264,56 @@ class InvoiceModel{
     }
 
     /**
+     * @param $time
+     * @return array|bool
+     * @desc 查询开票成功并且发送短信的的订单
+     */
+    public function getSuccessInvoice($time)
+    {
+        try{
+            $sql = 'SELECT * FROM '.$this->tableName." WHERE `state` = :state AND update_time LIKE '%$time%'";
+            $stmt = $this->dbMaster->prepare($sql);
+            $stmt->execute([':state' => 4]);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }catch(PDOException $ex){
+            echo $ex->getMessage();
+            return false;
+        }
+    }
+
+    /**
+     * @return array|bool
+     * @desc 临时方法,用于统计历史数据
+     */
+    public function getInvoiceByState(){
+        try{
+            $sql = 'SELECT id, order_id, invoice_type FROM '.$this->tableName." WHERE `state` = :state ";
+            $stmt = $this->dbMaster->prepare($sql);
+            $stmt->execute([':state' => 4]);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }catch(PDOException $ex){
+            echo $ex->getMessage();
+            return false;
+        }
+    }
+
+    /**
+     * @param $id
+     * @return bool
+     * @desc 删除订单
+     */
+    public function delete($id){
+        try{
+            $sql = ' DELETE FROM '.$this->tableName.' WHERE `id` = :id LIMIT 1';
+            $stmt = $this->dbMaster->prepare($sql);
+            return $stmt->execute([':id' => $id]);
+        }catch (PDOException $ex){
+            echo $ex->getMessage();
+            return false;
+        }
+    }
+
+    /**
      * @return array
      * @desc 获取错误
      */

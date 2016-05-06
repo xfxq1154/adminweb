@@ -82,14 +82,19 @@ class CkdModel
      * @param $page_size
      * @param $use_hax_next
      * @param $sku_id
+     * @param $pid
      * @return mixed
      */
-    public function getList($page_no, $page_size, $use_hax_next, $sku_id = ''){
+    public function getList($page_no, $page_size, $use_hax_next, $sku_id = '', $pid = ''){
         $where = '1';
 
         if($sku_id){
             $where .= ' AND `kind_sku_id` = :sku_id';
             $pdo_params[':sku_id'] = $sku_id;
+        }
+        if($pid){
+            $where .= ' AND `parent_sku_id` = :pid';
+            $pdo_params[':pid'] = $pid;
         }
 
         $start = ($page_no - 1) * $page_size;

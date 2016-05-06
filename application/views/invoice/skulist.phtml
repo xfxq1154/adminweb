@@ -71,6 +71,7 @@
                         <th width="*">sku编号</th>
                         <th width="*">商品类型</th>
                         <th width="*">税率</th>
+                        <th width="*">操作</th>
                     </tr>
                     <?php if ($data) : ?>
                         <?php foreach ($data['data'] as $val) : ?>
@@ -79,6 +80,9 @@
                                 <td><?=$val['sku_id']?></td>
                                 <td><?=$val['product_name']?></td>
                                 <td><?=$val['tax_tare']?></td>
+                                <td>
+                                    <button class="button bg-red button-small icon-trash-o js-del" href="javascript:;" url="/invoice/deletesku" data='{"id":<?php echo $val['id']; ?>}' title="删除"></button>
+                                </td>
                             </tr>
                         <?php endforeach; ?>
                     <?php endif; ?>

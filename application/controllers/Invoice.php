@@ -42,7 +42,8 @@ class InvoiceController extends Base{
         2 => '<span class="tag bg-yellow">开票成功</span>',
         3 => '<span class="tag bg-blue">开票失败</span>',
         4 => '<span class="tag bg-bg-mix">已发短信</span>',
-        5 => '<span class="tag bg-bg-blue">开票中</span>'
+        5 => '<span class="tag bg-bg-blue">开票中</span>',
+        6 => '<span class="tag bg-yellow">开票成功</span>'
     ];
     
     public $host = ASSET_URL;
@@ -107,6 +108,30 @@ class InvoiceController extends Base{
     }
 
     /**
+     * @desc 删除发票订单
+     */
+    public function deleteAction(){
+        $id = json_decode($this->getRequest()->get('data'),1)['id'];
+        $result = $this->invoice_mode->delete($id);
+        if(!$result){
+            echo json_encode(['info' => '删除失败', 'status' => 0]);exit;
+        }
+        echo json_encode(['info' => '删除成功', 'status' => 1]);exit;
+    }
+
+    /**
+     * @desc 删除sku编码
+     */
+    public function deleteSkuAction(){
+        $id = json_decode($this->getRequest()->get('data'),1)['id'];
+        $result = $this->sku_model->delete($id);
+        if(!$result){
+            echo json_encode(['info' => '删除失败', 'status' => 0]);exit;
+        }
+        echo json_encode(['info' => '删除成功', 'status' => 1]);exit;
+    }
+
+    /**
      * @desc 组合sku列表
      */
     public function ckdAction(){
@@ -122,11 +147,29 @@ class InvoiceController extends Base{
             echo json_encode(array('code' => 1));exit;
         }
         $page_no = $this->getRequest()->get('page_no', 1);
-        $sku_id = $this->getRequest()->get('sku_id');
-        $result = $this->ckd->getList($page_no, 20, 1, $sku_id);
-        $this->renderPagger($page_no, $result['total_nums'], '/invoice/ckd/page_no/{p}', 20);
+        $sku_id = trim($this->getRequest()->get('sku_id'));
+        $pid = trim($this->getRequest()->get('p_sku_id'));
+        $result = $this->ckd->getList($page_no, 20, 1, $sku_id, $pid);
+        $this->renderPagger($page_no, $result['total_nums'], '/invoice/ckd/page_no/{p}?pid='.$pid.'&sid='.$sku_id, 20);
+        $this->assign('skus', array('sku_id' => $sku_id, 'p_sku_id' => $pid));
         $this->assign('data', $result);
         $this->layout('invoice/ckd.phtml');
+    }
+
+    /**
+     * @desc 数据统计
+     */
+    public function dataListAction(){
+        $stime = $this->getRequest()->get('time');
+        if($stime){
+            $time = date('Y-m', strtotime($stime));
+        }else{
+            $time = date('Y-m', time());
+        }
+        $data = $this->invoice_data_model->getData($time);
+        $this->assign('time', $time);
+        $this->assign('list', $data);
+        $this->layout('invoice/data_list.phtml');
     }
 
     /**
@@ -198,6 +241,28 @@ class InvoiceController extends Base{
         $i_info = $this->invoice_mode->getInfo($id);
         $this->assign('data', $i_info);
         $this->layout('invoice/edit.phtml');
+    }
+
+    /**
+     * @desc 修改手机号
+     */
+    public function updatePhoneAction(){
+        $id = $this->getRequest()->get('id');
+        if($this->getRequest()->isPost()){
+            $params = array();
+            $params['buyer_phone'] = $this->getRequest()->getPost('buyer_phone');
+            $params['state'] = 2;
+            $i_id = $this->getRequest()->getPost('i_id');
+            //更新
+            $result = $this->invoice_mode->update($i_id, $params);
+            if(!$result){
+                Tools::output(array('info' => '修改失败', 'status' => 0));
+            }
+            Tools::output(array('info' => '修改成功', 'status' => 1));
+        }
+        $i_info = $this->invoice_mode->getInfo($id);
+        $this->assign('data', $i_info);
+        $this->layout('invoice/upphone.phtml');
     }
     
     /**

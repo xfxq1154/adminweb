@@ -131,6 +131,22 @@ class SkuModel{
     }
 
     /**
+     * @param $id
+     * @return bool
+     * @desc 删除sku编码
+     */
+    public function delete($id){
+        try{
+            $sql = ' DELETE FROM '.$this->tableName.' WHERE `id` = :id LIMIT 1 ';
+            $stmt = $this->dbMaster->prepare($sql);
+            return $stmt->execute([':id' => $id]);
+        }catch (PDOException $ex){
+            echo $ex->getMessage();
+            return false;
+        }
+    }
+
+    /**
      * @return array
      */
     public function getError(){
