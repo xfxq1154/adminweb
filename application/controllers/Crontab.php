@@ -586,7 +586,8 @@ class CrontabController extends Base{
      */
     public function dataAction(){
         $time = date('Y-m-d', time());
-        $invoices = $this->invoice_model->getSuccessInvoice($time);
+//        $invoices = $this->invoice_model->getSuccessInvoice($time);
+        $invoices = $this->invoice_model->getInvoiceByState();
         if(!$invoices){
             exit;
         }

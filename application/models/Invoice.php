@@ -282,6 +282,22 @@ class InvoiceModel{
     }
 
     /**
+     * @return array|bool
+     * @desc 临时方法,用于统计历史数据
+     */
+    public function getInvoiceByState(){
+        try{
+            $sql = 'SELECT id, order_id, invoice_type FROM '.$this->tableName." WHERE `state` = :state ";
+            $stmt = $this->dbMaster->prepare($sql);
+            $stmt->execute([':state' => 4]);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }catch(PDOException $ex){
+            echo $ex->getMessage();
+            return false;
+        }
+    }
+
+    /**
      * @param $id
      * @return bool
      * @desc 删除订单

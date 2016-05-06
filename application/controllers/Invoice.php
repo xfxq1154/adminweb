@@ -147,9 +147,11 @@ class InvoiceController extends Base{
             echo json_encode(array('code' => 1));exit;
         }
         $page_no = $this->getRequest()->get('page_no', 1);
-        $sku_id = $this->getRequest()->get('sku_id');
-        $result = $this->ckd->getList($page_no, 20, 1, $sku_id);
-        $this->renderPagger($page_no, $result['total_nums'], '/invoice/ckd/page_no/{p}', 20);
+        $sku_id = trim($this->getRequest()->get('sku_id'));
+        $pid = trim($this->getRequest()->get('p_sku_id'));
+        $result = $this->ckd->getList($page_no, 20, 1, $sku_id, $pid);
+        $this->renderPagger($page_no, $result['total_nums'], '/invoice/ckd/page_no/{p}?pid='.$pid.'&sid='.$sku_id, 20);
+        $this->assign('skus', array('sku_id' => $sku_id, 'p_sku_id' => $pid));
         $this->assign('data', $result);
         $this->layout('invoice/ckd.phtml');
     }
