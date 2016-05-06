@@ -1,3 +1,4 @@
+<script language="JavaScript" type="text/javascript" src="<?=ASSET_URL?>/static/js/calendar/WdatePicker.js"></script>
 <div class="dux-tools clearfix">
     <div class="bread-head">电子发票<span class="small">需要开发票订单列表</span></div>
     <div class="button-group float-right">
@@ -36,6 +37,9 @@
                     <div class="field" style="margin-left: 5px;">
                         <input type="text" class="input" name="mobile" size="20" value="<?=$invoice_info['mobile']?>" placeholder="请填写手机号">
                         <input type="text" class="input" name="order_id" size="20" value="<?=$invoice_info['order_id']?>" placeholder="请填写订单号">
+                    </div>&nbsp;&nbsp;
+                    <div class="field">
+                        <input type="text" class="input datebtn" style="width:100px;" name="time" value="<?=$invoice_info['time'];?>" onfocus="WdatePicker({startDate:'Y-M',dateFmt:'yyyy-MM'})" style="cursor:pointer;" size="60" placeholder="选择日期" >
                     </div>
                     <label style="margin-left: 5px;"><b>选择状态:</b></label>
                     <div class="field">&nbsp;
@@ -150,6 +154,7 @@
                         <th width="*">手机号</th>
                         <th style="width: 80px;">类型</th>
                         <th style="width: 80px;">状态</th>
+                        <th style="*">开票日期</th>
                         <th width="140">操作</th>
                     </tr>
                 </thead>
@@ -171,6 +176,7 @@
                                 </td>
                                 <td><span class="type"><?php echo $val['invoice_type'] == 1 ? '<span class="tag bg-red">红字发票</span>' : '<span class="tag bg-blue">蓝字发票</span>';?></span></td>
                                 <td><?php echo $state_name[$val['state']]?></td>
+                                <td><?php echo date('Y-m-d', strtotime($val['update_time']))?></td>
                                 <td>
                                     <span class="state">
                                     <?php if($val['state'] == 2 || $val['state'] == 4):?>
