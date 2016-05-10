@@ -327,15 +327,17 @@ class InvoiceController extends Base{
         if($dwz_url['errNum']){
             echo json_encode(array('msg' => '系统错误' ,'status' => 3));exit;
         }
-        //更新发票信息
-        $this->invoice_mode->update($value['id'], array('invoice_url' => $dwz_url['urls'][0]['url_short'],'state' => 4));
+
         //将发票地址发送给用户
         $sms = new Sms();
         $message = '您好，您在罗辑思维所购产品的电子发票地址为:'.$dwz_url['urls'][0]['url_short'].'。地址有效期为30天，请尽快在电脑端查看';
         $result = $sms->sendmsg($message, $value['buyer_phone']);
         if($result['status'] == 'ok'){
+            //更新发票信息
+            $this->invoice_mode->update($value['id'], array('invoice_url' => $dwz_url['urls'][0]['url_short'],'state' => 4));
             echo json_encode(array('msg' => '短信发送成功', 'status' => 2));exit;
         }
+        $this->invoice_mode->update($value['id'], array('invoice_url' => $dwz_url['urls'][0]['url_short'],'state' => 6));
         echo json_encode(array('msg' => '短信发送失败', 'status' => 3));exit;
     }
     
@@ -523,6 +525,26 @@ class InvoiceController extends Base{
             $this->assign('data', $skuList);
         }
         $this->layout('invoice/get_order.phtml');
+    }
+
+    public function getTestTableAction(){
+        $tlist = $this->invoice_mode->getI();
+//        $tlist = $this->invoice_mode->getT();
+        $orders = '';
+        foreach ( $tlist as $val ){
+            $res = $this->invoice_mode->getT($val['FP_HM']);
+            if(!$res){
+                $orders .= $val['FP_HM'].',';
+            }
+        }
+        $numbers = explode(',', $orders);
+        $numbers = array_filter($numbers);
+        foreach ($numbers as $nv){
+            $orderss[] = $this->invoice_mode->getts($nv);
+        }
+        echo "<pre>";
+        print_r($orderss);exit;
+        exit;
     }
 
 }
