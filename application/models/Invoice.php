@@ -328,5 +328,41 @@ class InvoiceModel{
         }
         return array();
     }
+
+    public function getI(){
+        try{
+            $sql = "SELECT FP_HM FROM `test1` ";
+            $stmt = $this->dbMaster->prepare($sql);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }catch(PDOException $ex){
+            echo $ex->getMessage();
+            return false;
+        }
+    }
+
+    public function getT($number){
+        try{
+            $sql = "SELECT invoice_number FROM `wuyue` where invoice_number = $number";
+            $stmt = $this->dbMaster->prepare($sql);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }catch(PDOException $ex){
+            echo $ex->getMessage();
+            return false;
+        }
+    }
+
+    public function getts($number){
+        try{
+            $sql = "SELECT FP_HM,FP_DM,JYM FROM `test2` where FP_HM = $number ";
+            $stmt = $this->dbMaster->prepare($sql);
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        }catch(PDOException $ex){
+            echo $ex->getMessage();
+            return false;
+        }
+    }
 }
 

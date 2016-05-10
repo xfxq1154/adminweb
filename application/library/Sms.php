@@ -22,7 +22,7 @@ class Sms{
     public function sendmsg($message, $phonenumber){
         $api = self::SMS_API;
         $params = array(
-            'sys_code' => 3,//系统编码, 3 生活作风 4 得到
+            'sys_code' => 6,//系统编码, 3 生活作风 4 得到 6罗辑思维
             'message_content' => $message,
             'phone_num' => $phonenumber,
         );
