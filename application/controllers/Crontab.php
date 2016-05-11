@@ -412,34 +412,34 @@ class CrontabController extends Base{
         $orders['yfp_dm'] = $invoice_info['invoice_code'];
         $orders['receiver_mobile'] = $invoice_info['buyer_phone'];
 
-        print_r($orders);
-//        $result = $this->dzfp->fpkj($orders, $orders['new_detail']);
-//        if(!$result) {
-//            $rs_data = [
-//                'state_message' => $this->dzfp->getError(),
-//                'state' => self::INVOICE_FAIL,
-//            ];
-//            if($type == 1){
-//                $this->invoice_model->update($invoice_info['id'], $rs_data);
-//                return false;
-//            }else{
-//                $this->invoice_model->updateDirtyData($invoice_info['id'], $rs_data);
-//                return false;
-//            }
-//        }
-//        //更新信息到数据库
-//        $params = array(
-//            'original_invoice_code' => $invoice_info['invoice_number'],
-//            'original_invoice_number' => $invoice_info['invoice_code'],
-//            'invoice_type' => 1,
-//            'state' => self::RED_INVOICE_SUCCESS,
-//            'state_message' => '红字发票开具成功'
-//        );
-//        if($type == 1){
-//            $this->invoice_model->update($invoice_info['id'], $params);
-//        }else{
-//            $this->invoice_model->updateDirtyData($invoice_info['id'], $params);
-//        }
+//        print_r($orders);
+        $result = $this->dzfp->fpkj($orders, $orders['new_detail']);
+        if(!$result) {
+            $rs_data = [
+                'state_message' => $this->dzfp->getError(),
+                'state' => self::INVOICE_FAIL,
+            ];
+            if($type == 1){
+                $this->invoice_model->update($invoice_info['id'], $rs_data);
+                return false;
+            }else{
+                $this->invoice_model->updateDirtyData($invoice_info['id'], $rs_data);
+                return false;
+            }
+        }
+        //更新信息到数据库
+        $params = array(
+            'original_invoice_code' => $invoice_info['invoice_number'],
+            'original_invoice_number' => $invoice_info['invoice_code'],
+            'invoice_type' => 1,
+            'state' => self::RED_INVOICE_SUCCESS,
+            'state_message' => '红字发票开具成功'
+        );
+        if($type == 1){
+            $this->invoice_model->update($invoice_info['id'], $params);
+        }else{
+            $this->invoice_model->updateDirtyData($invoice_info['id'], $params);
+        }
     }
 
     /**
