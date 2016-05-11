@@ -335,7 +335,7 @@ class InvoiceModel{
      */
     public function dirtyData(){
         try{
-            $sql = " SELECT * FROM `dirty_data` WHERE `state` = 1 ";
+            $sql = " SELECT * FROM `dirty_data` WHERE `state` != 2 ";
             $stmt = $this->dbMaster->prepare($sql);
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
