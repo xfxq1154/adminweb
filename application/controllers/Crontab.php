@@ -723,4 +723,30 @@ class CrontabController extends Base{
         return array_filter($dataAll);
     }
 
+    /**
+     * @explain 历史数据开红票冲掉
+     */
+    public function repairDirtyDataAction()
+    {
+        $datas = $this->invoice_model->dirtyData();
+        $invoices = array_filter($datas);
+        if(!$invoices){
+            exit;
+        }
+        foreach ($invoices as $value){
+            $order = $this->getYouzanOrderByTid($value['order_id']);
+            if(!$order){
+                continue;
+            }
+            $order = $this->batchOrderDetail($order);
+            $sku_id = implode(',', $order['skus']);
+
+            $skus = $this->sku_model->getInfoBySkuId($sku_id);
+            if(empty($skus)){
+                $this->oneGroupProduct($sku_id, $order, $value);
+                continue;
+            }
+        }
+    }
+
 }

@@ -526,26 +526,6 @@ class InvoiceController extends Base{
         }
         $this->layout('invoice/get_order.phtml');
     }
-
-    public function getTestTableAction(){
-        $tlist = $this->invoice_mode->getI();
-//        $tlist = $this->invoice_mode->getT();
-        $orders = '';
-        foreach ( $tlist as $val ){
-            $res = $this->invoice_mode->getT($val['FP_HM']);
-            if(!$res){
-                $orders .= $val['FP_HM'].',';
-            }
-        }
-        $numbers = explode(',', $orders);
-        $numbers = array_filter($numbers);
-        foreach ($numbers as $nv){
-            $orderss[] = $this->invoice_mode->getts($nv);
-        }
-        echo "<pre>";
-        print_r($orderss);exit;
-        exit;
-    }
-
+    
 }
 
