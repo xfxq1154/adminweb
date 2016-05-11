@@ -344,5 +344,35 @@ class InvoiceModel{
             return false;
         }
     }
+
+    /**
+     * @param $id
+     * @param $params
+     * @return bool
+     * @explain 修改历史数据信息
+     */
+    public function updateDirtyData($id, $params)
+    {
+        if(!$id || !$params){
+            return FALSE;
+        }
+        $f = '';
+        $array = array(':id' => $id);
+        foreach ($params as $key => $value) {
+            //不传递则跳过
+            if ($value === null) {
+                continue;
+            }
+            $f .= ",`" . $key . "` = :$key";
+            $array[':' . $key] = $value;
+        }
+        $sql = "UPDATE `dirty_data` SET " . substr($f, 1) . " WHERE `id` = :id LIMIT 1";
+        try {
+            $stmt = $this->dbMaster->prepare($sql);
+            return $stmt->execute($array);
+        } catch (Exception $ex) {
+            echo $ex->getMessage();
+        }
+    }
 }
 

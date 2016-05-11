@@ -34,6 +34,7 @@ class CrontabController extends Base{
 
     const INVOICE_SUCCESS = 2;
     const INVOICE_FAIL = 3;
+    const RED_INVOICE_SUCCESS = 4;
 
     public $app_id = KDT_APP_ID;
     public $app_secert = KDT_APP_SECERT;
@@ -386,9 +387,10 @@ class CrontabController extends Base{
      * @desc 开具红票
      * @param array $order
      * @param array $invoice_info
+     * @param int $type 1 正常红票 2脏数据红票冲印
      * @return bool
      */
-    public function redInvoice(array $order, array $invoice_info)
+    public function redInvoice(array $order, array $invoice_info, $type = 1)
     {
         $orders = array_filter($order);
         $invoice_info = array_filter($invoice_info);
@@ -416,18 +418,27 @@ class CrontabController extends Base{
                 'state_message' => $this->dzfp->getError(),
                 'state' => self::INVOICE_FAIL,
             ];
-            $this->invoice_model->update($invoice_info['id'], $rs_data);
-            return false;
+            if($type == 1){
+                $this->invoice_model->update($invoice_info['id'], $rs_data);
+                return false;
+            }else{
+                $this->invoice_model->updateDirtyData($invoice_info['id'], $rs_data);
+                return false;
+            }
         }
         //更新信息到数据库
         $params = array(
             'original_invoice_code' => $invoice_info['invoice_number'],
             'original_invoice_number' => $invoice_info['invoice_code'],
             'invoice_type' => 1,
-            'state' => self::INVOICE_SUCCESS,
+            'state' => self::RED_INVOICE_SUCCESS,
             'state_message' => '红字发票开具成功'
         );
-        $this->invoice_model->update($invoice_info['id'], $params);
+        if($type == 1){
+            $this->invoice_model->update($invoice_info['id'], $params);
+        }else{
+            $this->invoice_model->updateDirtyData($invoice_info['id'], $params);
+        }
     }
 
     /**
@@ -747,7 +758,7 @@ class CrontabController extends Base{
                 $skuarr[$sk_val['sku_id']] = $sk_val['tax_tare'];
             }
             $orders = $this->treatingSku($order, $skuarr);
-            $this->redInvoice($orders, $value);
+            $this->redInvoice($orders, $value, 2);
             continue;
         }
         exit;
