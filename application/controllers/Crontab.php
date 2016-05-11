@@ -405,40 +405,41 @@ class CrontabController extends Base{
         $orders['count'] = count($order['new_detail']);
         $orders['hjje'] = $invoice_info['total_fee'];
         $orders['hjse'] = $invoice_info['total_tax'];
-        $orders['payment_fee'] = $invoice_info['jshj'];
+        $orders['payment_fee'] = $invoice_info['total_fee'];
         $orders['invoice_title'] = $invoice_info['invoice_title'];
         $orders['invoice_no'] = strtotime(date('Y-m-d H:i:s')).mt_rand(1000,9999);;
         $orders['yfp_hm'] = $invoice_info['invoice_number'];
         $orders['yfp_dm'] = $invoice_info['invoice_code'];
         $orders['receiver_mobile'] = $invoice_info['buyer_phone'];
 
-        $result = $this->dzfp->fpkj($orders, $orders['new_detail']);
-        if(!$result) {
-            $rs_data = [
-                'state_message' => $this->dzfp->getError(),
-                'state' => self::INVOICE_FAIL,
-            ];
-            if($type == 1){
-                $this->invoice_model->update($invoice_info['id'], $rs_data);
-                return false;
-            }else{
-                $this->invoice_model->updateDirtyData($invoice_info['id'], $rs_data);
-                return false;
-            }
-        }
-        //更新信息到数据库
-        $params = array(
-            'original_invoice_code' => $invoice_info['invoice_number'],
-            'original_invoice_number' => $invoice_info['invoice_code'],
-            'invoice_type' => 1,
-            'state' => self::RED_INVOICE_SUCCESS,
-            'state_message' => '红字发票开具成功'
-        );
-        if($type == 1){
-            $this->invoice_model->update($invoice_info['id'], $params);
-        }else{
-            $this->invoice_model->updateDirtyData($invoice_info['id'], $params);
-        }
+        print_r($orders);
+//        $result = $this->dzfp->fpkj($orders, $orders['new_detail']);
+//        if(!$result) {
+//            $rs_data = [
+//                'state_message' => $this->dzfp->getError(),
+//                'state' => self::INVOICE_FAIL,
+//            ];
+//            if($type == 1){
+//                $this->invoice_model->update($invoice_info['id'], $rs_data);
+//                return false;
+//            }else{
+//                $this->invoice_model->updateDirtyData($invoice_info['id'], $rs_data);
+//                return false;
+//            }
+//        }
+//        //更新信息到数据库
+//        $params = array(
+//            'original_invoice_code' => $invoice_info['invoice_number'],
+//            'original_invoice_number' => $invoice_info['invoice_code'],
+//            'invoice_type' => 1,
+//            'state' => self::RED_INVOICE_SUCCESS,
+//            'state_message' => '红字发票开具成功'
+//        );
+//        if($type == 1){
+//            $this->invoice_model->update($invoice_info['id'], $params);
+//        }else{
+//            $this->invoice_model->updateDirtyData($invoice_info['id'], $params);
+//        }
     }
 
     /**
