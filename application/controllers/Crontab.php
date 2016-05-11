@@ -395,7 +395,7 @@ class CrontabController extends Base{
         if (!$orders || !$invoice_info) {
             return false;
         }
-
+        
         $orders['xsf_mc'] = $invoice_info['seller_name'];
         $orders['xsf_dzdh'] = $invoice_info['seller_address'];
         $orders['kpr'] = $invoice_info['drawer'];
@@ -405,7 +405,7 @@ class CrontabController extends Base{
         $orders['hjse'] = $invoice_info['total_tax'];
         $orders['payment'] = $invoice_info['jshj'];
         $orders['invoice_title'] = $invoice_info['invoice_title'];
-        $orders['invoice_no'] = $invoice_info['invoice_no'];
+        $orders['invoice_no'] = strtotime(date('Y-m-d H:i:s')).mt_rand(1000,9999);;
         $orders['yfp_hm'] = $invoice_info['invoice_number'];
         $orders['yfp_dm'] = $invoice_info['invoice_code'];
         $orders['receiver_mobile'] = $invoice_info['buyer_phone'];
@@ -470,7 +470,7 @@ class CrontabController extends Base{
             $sku_id = implode(',', $order['skus']);
             $skus = $this->sku_model->getInfoBySkuId($sku_id);
             if(empty($skus)){
-                $this->oneGroupProduct($sku_id, $order, $value);
+                $this->GroupProduct($sku_id, $order, $value);
                 continue;
             }
             //不为空说明这订单是组合+单个商品订单
@@ -723,4 +723,33 @@ class CrontabController extends Base{
         return array_filter($dataAll);
     }
 
+    /**
+     * @explain 历史数据开红票冲掉
+     */
+    public function repairDirtyDataAction()
+    {
+        $datas = $this->invoice_model->dirtyData();
+        $invoices = array_filter($datas);
+        if(!$invoices){
+            exit;
+        }
+        foreach ($invoices as $value){
+            $order = $this->getYouzanOrderByTid($value['order_id']);
+            if(!$order){
+                continue;
+            }
+            $order = $this->batchOrderDetail($order);
+            $sku_id = implode(',', $order['skus']);
+            $skus = $this->sku_model->getInfoBySkuId($sku_id);
+
+            $skuarr = array();
+            foreach ($skus as $sk_val){
+                $skuarr[$sk_val['sku_id']] = $sk_val['tax_tare'];
+            }
+            $orders = $this->treatingSku($order, $skuarr);
+            $this->redInvoice($orders, $value);
+            continue;
+        }
+        exit;
+    }
 }
