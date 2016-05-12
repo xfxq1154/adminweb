@@ -412,7 +412,10 @@ class CrontabController extends Base{
         $orders['yfp_dm'] = $invoice_info['invoice_code'];
         $orders['receiver_mobile'] = $invoice_info['buyer_phone'];
 
+<<<<<<< HEAD
 //        print_r($orders);
+=======
+>>>>>>> develop
         $result = $this->dzfp->fpkj($orders, $orders['new_detail']);
         if(!$result) {
             $rs_data = [
