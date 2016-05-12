@@ -768,7 +768,7 @@ class CrontabController extends Base{
                     'num' => 1,
                     'sl'=> 0.06,
                     'se' => 2.55,
-                    'xmje' => 45.00,
+                    'xmje' => 42.45,
                 ],
                 1 => [
                     'outer_sku_id' => 'LJATS15100580KNXS1',
@@ -779,7 +779,7 @@ class CrontabController extends Base{
                     'num' => 1,
                     'sl'=> 0.06,
                     'se' => 3.28,
-                    'xmje' => 58.00
+                    'xmje' => 54.72
                 ],
 
             ];
