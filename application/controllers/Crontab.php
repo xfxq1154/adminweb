@@ -780,6 +780,17 @@ class CrontabController extends Base{
                     'sl'=> 0.00,
                     'se' => 0,
                     'xmje' => 58.00
+                ],
+                2 => [
+                    'outer_sku_id' => 'LJATS16010024BSJPY',
+                    'title' => '把时间当做朋友：升级你的操作系统',
+                    'price' => 69.00,
+                    'total_fee' => 69.00,
+                    'payment' => 69.00,
+                    'num' => 1,
+                    'sl'=> 0.00,
+                    'se' => 0,
+                    'xmje' => 69.00
                 ]
 
             ];
