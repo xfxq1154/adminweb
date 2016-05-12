@@ -762,36 +762,26 @@ class CrontabController extends Base{
                 0 => [
                     'outer_sku_id' => 'LJATS15080372JHL01',
                     'title' => '《一本书读懂进化论》 上帝想告诉我们什么？',
-                    'price' => 45.00,
+                    'price' => 42.45,
                     'total_fee' => 45.00,
                     'payment' => 45.00,
                     'num' => 1,
-                    'sl'=> 0.00,
-                    'se' => 0,
+                    'sl'=> 0.06,
+                    'se' => 2.55,
                     'xmje' => 45.00,
                 ],
                 1 => [
                     'outer_sku_id' => 'LJATS15100580KNXS1',
                     'title' => '会讲故事有多重要：《双重赔偿》+《邮差总按两遍铃》',
-                    'price' => 58.00,
+                    'price' => 54.72,
                     'total_fee' => 58.00,
                     'payment' => 58.00,
                     'num' => 1,
-                    'sl'=> 0.00,
-                    'se' => 0,
+                    'sl'=> 0.06,
+                    'se' => 3.28,
                     'xmje' => 58.00
                 ],
-                3 => [
-                    'outer_sku_id' => 'LJATS1604027KCSJ1',
-                    'title' => '把时间当做朋友：升级你的操作系统',
-                    'price' => 69.00,
-                    'total_fee' => 69.00,
-                    'payment' => 69.00,
-                    'num' => 1,
-                    'sl'=> 0.00,
-                    'se' => 0,
-                    'xmje' => 69.00
-                ]
+
             ];
 //            $detals = array_merge($orders['new_detail'], $skusdata);
             $orders['new_detail'] = $skusdata;
