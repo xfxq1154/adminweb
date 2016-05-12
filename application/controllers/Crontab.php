@@ -780,99 +780,10 @@ class CrontabController extends Base{
                     'sl'=> 0.00,
                     'se' => 0,
                     'xmje' => 58.00
-                ],
-                2 => [
-                    'outer_sku_id' => 'LJATS16010024BSJPY',
-                    'title' => '把时间当做朋友：升级你的操作系统',
-                    'price' => 69.00,
-                    'total_fee' => 69.00,
-                    'payment' => 69.00,
-                    'num' => 1,
-                    'sl'=> 0.00,
-                    'se' => 0,
-                    'xmje' => 69.00
-                ],
-                3 => [
-                    'outer_sku_id' => 'LJATS15030044ZYDCB',
-                    'title' => '《正义的成本》 经济学思维，现代人的刚需',
-                    'price' => 85,
-                    'total_fee' => 85,
-                    'payment' => 85.00,
-                    'num' => 1,
-                    'sl'=> 0.00,
-                    'se' => 0,
-                    'xmje' => 85.00,
-                ],
-                4 => [
-                    'outer_sku_id' => 'LJATS15070254SYRKJ',
-                    'title' => '《少有人看见的美》  一本何止是美的书',
-                    'price' => 48,
-                    'total_fee' => 48,
-                    'payment' => 48.00,
-                    'num' => 1,
-                    'sl'=> 0.00,
-                    'se' => 0,
-                    'xmje' => 48.00,
-                ],
-                5 => [
-                    'outer_sku_id' => 'LJATS15110649WJ001',
-                    'title' => '《顽疾》：局中人如何破网',
-                    'price' => 45,
-                    'total_fee' => 45,
-                    'payment' => 45.00,
-                    'num' => 1,
-                    'sl'=> 0.00,
-                    'se' => 0,
-                    'xmje' => 45.00,
-                ],
-                6 => [
-                    'outer_sku_id' => 'LJATS15070292JJXTS',
-                    'title' => '《经济学通识》 给我一双慧眼吧',
-                    'price' => 58,
-                    'total_fee' => 58,
-                    'payment' => 58.00,
-                    'num' => 1,
-                    'sl'=> 0.00,
-                    'se' => 0,
-                    'xmje' => 58.00,
-                ],
-                7 => [
-                    'outer_sku_id' => 'LJATS15040085QS001',
-                    'title' => '《秦殇》 谁杀死了秦帝国？',
-                    'price' => 52,
-                    'total_fee' => 52,
-                    'payment' => 52.00,
-                    'num' => 1,
-                    'sl'=> 0.00,
-                    'se' => 0,
-                    'xmje' => 52.00,
-                ],
-                8 => [
-                    'outer_sku_id' => 'LJATS16020061XSK00',
-                    'title' => '《小说课》：让他们去讲道理，我们来说故事',
-                    'price' => 76,
-                    'total_fee' => 76,
-                    'payment' => 76.00,
-                    'num' => 1,
-                    'sl'=> 0.00,
-                    'se' => 0,
-                    'xmje' => 76.00,
-                ],
-                9 => [
-                    'outer_sku_id' => 'LJATS16010044QTTL0',
-                    'title' => '最强大脑训练：《推理的迷宫》＋《囚徒的困境》',
-                    'price' => 99,
-                    'total_fee' => 99,
-                    'payment' => 99.00,
-                    'num' => 1,
-                    'sl'=> 0.00,
-                    'se' => 0,
-                    'xmje' => 99.00,
                 ]
-
             ];
-            $detals = array_merge($orders['new_detail'], $skusdata);
-            $orders['new_detail'] = $detals;
+//            $detals = array_merge($orders['new_detail'], $skusdata);
+            $orders['new_detail'] = $skusdata;
             $this->redInvoice($orders, $value, 2);
             continue;
         }
