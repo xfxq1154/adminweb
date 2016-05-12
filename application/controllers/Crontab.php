@@ -757,34 +757,6 @@ class CrontabController extends Base{
                 $skuarr[$sk_val['sku_id']] = $sk_val['tax_tare'];
             }
             $orders = $this->treatingSku($order, $skuarr);
-
-            $skusdata = [
-                0 => [
-                    'outer_sku_id' => 'LJATS15080372JHL01',
-                    'title' => '《一本书读懂进化论》 上帝想告诉我们什么？',
-                    'price' => 45.00,
-                    'total_fee' => 45.00,
-                    'payment' => 45.00,
-                    'num' => 1,
-                    'sl'=> 0.00,
-                    'se' => 0,
-                    'xmje' => 45.00,
-                ],
-                1 => [
-                    'outer_sku_id' => 'LJATS15100580KNXS1',
-                    'title' => '会讲故事有多重要：《双重赔偿》+《邮差总按两遍铃》',
-                    'price' => 58.00,
-                    'total_fee' => 58.00,
-                    'payment' => 58.00,
-                    'num' => 1,
-                    'sl'=> 0.00,
-                    'se' => 0,
-                    'xmje' => 58.00
-                ]
-
-            ];
-            $detals = array_merge($orders['new_detail'], $skusdata);
-            $orders['new_detail'] = $detals;
             $this->redInvoice($orders, $value, 2);
             continue;
         }
