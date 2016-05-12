@@ -281,14 +281,14 @@ class CrontabController extends Base{
             foreach ($order['new_detail'] as &$d_val){
                 $payment = $d_val['payment'];
                 //优惠劵的平摊计算公式为: (sku商品支付金额 / 订单支付总金额) * 优惠劵金额 = 平摊金额
-                $mean_price = (round($payment / $total_fee, 2) * $discount);
+                $mean_price = (round($payment / $total_fee, 6) * $discount);
                 //sku商品支付金额 - 平摊金额 = 平摊后的支付金额
                 $discount_payment = round($payment - $mean_price, 2);
                 //组合数据
                 $d_val['payment'] = $discount_payment;
                 $d_val['sl'] = $type == 0 ? ($d_val['outer_sku_id'] ? $skuRate[$d_val['outer_sku_id']] : $skuRate[$d_val['outer_item_id']]) :$d_val['sl'];
                 //平摊后的支付总价  / 数量 = 平摊商品单价
-                $discount_price = round($discount_payment / $d_val['num'], 2);
+                $discount_price = round($discount_payment / $d_val['num'], 6);
                 $d_val['se'] = round($discount_payment - ($discount_payment / (1 + $d_val['sl'])),2);
                 $d_val['xmje'] = $discount_payment - $d_val['se'];
                 //商品单价 = 商品单价 - 商品单价的税额
