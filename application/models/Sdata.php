@@ -9,6 +9,8 @@ class SdataModel {
     use Trait_Api;
 
     const ORDER_DETAIL = 'result/order_detail';
+    const PAGEDATA_VIEWS = 'pagedata/views';
+    const PAGEDATA_RANKLIST = 'pagedata/ranklist';
 
 
     public function getList($params) {
@@ -16,7 +18,47 @@ class SdataModel {
         return $this->format_order_datas_batch($result);
     }
 
-    
+    public function ranklist($params) {
+        $result = Sdata::request(self::PAGEDATA_RANKLIST, $params);
+        return $this->format_pages_batch($result);
+    }
+
+    public function views($params) {
+        return Sdata::request(self::PAGEDATA_VIEWS, $params);
+    }
+
+
+    /**
+     * 格式化
+     */
+    public function format_pages_struct($data) {
+        if (empty($data)) {
+            return array();
+        }
+        $format_data = array(
+            'showcase_id'  =>   $data['showcase_id'],
+            'page_id'      =>   $data['page_id'],
+            'total_pv'     =>   intval($data['total_pv']),
+            'total_uv'     =>   intval($data['total_uv']),
+            'share_pv'     =>   intval($data['share_pv']),
+            'share_uv'     =>   intval($data['share_uv']),
+            'avg_stay'     =>   doubleval($data['avg_stay']),
+        );
+
+        return $format_data;
+    }
+
+    public function format_pages_batch($datas) {
+        if (empty($datas)) {
+            return array();
+        }
+        foreach ($datas as &$data){
+            $data = $this->format_pages_struct($data);
+        }
+
+        return $datas;
+    }
+
 
     /**
      * 格式化物流信息

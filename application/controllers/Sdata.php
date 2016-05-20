@@ -10,13 +10,133 @@ class SdataController extends Base{
     use Trait_Api,
         Trait_Pagger,
         Trait_Layout;
-    
+
+    /**
+     * @var SdataModel
+     */
     public $sdata; 
     public $date;
     
     public function init(){
         $this->initAdmin();
+
         $this->sdata = new SdataModel();
+    }
+
+    public function productAction(){
+        $this->checkRole();
+
+        $showcase_id = $this->getRequest()->get('showcase_id');
+        $start_created = $this->getRequest()->get('start_time');
+        $end_created = $this->getRequest()->get('end_time');
+        if(!$start_created || !$end_created){
+            $start_created = date('Y-m-d 00:00:00', strtotime('-7 day'));
+            $end_created = date('Y-m-d 00:00:00', strtotime('today'));
+        }
+        $params['showcase_id'] = $showcase_id;
+        $params['type'] = 2;
+        $params['orderby'] = 'total_pv';
+        $params['start_created'] = $start_created;
+        $params['end_created'] = $end_created;
+        $params['page_size'] = 10;
+
+        $productTop10 = $this->sdata->ranklist($params);
+        if ($productTop10){
+            $total_pv = 0;
+            foreach ($productTop10 as $product){
+                $toppv[] = $product['total_pv'];
+                $topuv[] = $product['total_uv'];
+
+                $total_pv += $product['total_pv'];
+            }
+
+            $this->assign('top10', $productTop10);
+            $this->assign('total_pv', $total_pv);
+            $this->assign('toppv', implode(',', $toppv));
+            $this->assign('topuv', implode(',', $topuv));
+        }
+
+        $this->layout('sdata/product.phtml');
+    }
+
+    public function pagedataAction(){
+        $this->checkRole();
+
+        $showcase_id = $this->getRequest()->get('showcase_id');
+        $start_created = $this->getRequest()->get('start_time');
+        $end_created = $this->getRequest()->get('end_time');
+        if(!$start_created || !$end_created){
+            $start_created = date('Y-m-d',strtotime('-7 day'));
+            $end_created = date('Y-m-d',strtotime('today'));
+        }
+        $params['showcase_id'] = $showcase_id;
+        $params['orderby'] = 'total_pv';
+        $params['start_created'] = $start_created;
+        $params['end_created'] = $end_created;
+        $params['page_size'] = 10;
+
+        $productTop10 = $this->sdata->ranklist($params);
+        if ($productTop10){
+            $total_pv = 0;
+            foreach ($productTop10 as $product){
+                $toppv[] = $product['total_pv'];
+                $topuv[] = $product['total_uv'];
+
+                $total_pv += $product['total_pv'];
+            }
+            
+            $this->assign('top10', $productTop10);
+            $this->assign('total_pv', $total_pv);
+            $this->assign('toppv', implode(',', $toppv));
+            $this->assign('topuv', implode(',', $topuv));
+        }
+
+        $this->layout('sdata/pagedata.phtml');
+    }
+
+    public function pvperdayAction(){
+        $this->checkRole();
+
+        $showcase_id = $this->getRequest()->get('showcase_id');
+        $start_created = $this->getRequest()->get('start_time');
+        $end_created = $this->getRequest()->get('end_time');
+        if(!$start_created || !$end_created){
+            $start_created = date('Y-m-d',strtotime('-7 day'));
+            $end_created = date('Y-m-d',strtotime('today'));
+        }
+        $params['showcase_id'] = $showcase_id;
+        $params['start_created'] = $start_created;
+        $params['end_created'] = $end_created;
+
+        $result = $this->sdata->views($params);
+        if ($result){
+            foreach ($result as $val){
+                $key = '"'.date('m-d',strtotime($val['date'])).'"';
+                $data[$key] = $val;
+            }
+            $dates = $this->_get_time_string($start_created, $end_created);
+            foreach ($dates as $val){
+                if(isset($data[$val])){
+                    $total_pv[] = $data[$val]['total_pv'];
+                    $total_uv[] = $data[$val]['total_uv'];
+                    $share_pv[] = $data[$val]['share_pv'];
+                    $share_uv[] = $data[$val]['share_uv'];
+                } else {
+                    $total_pv[] = 0;
+                    $total_uv[] = 0;
+                    $share_pv[] = 0;
+                    $share_uv[] = 0;
+                }
+            }
+            $this->assign('dates', implode(',', $dates));
+            $this->assign('total_pv', implode(',', $total_pv));
+            $this->assign('total_uv', implode(',', $total_uv));
+            $this->assign('share_pv', implode(',', $share_pv));
+            $this->assign('share_uv', implode(',', $share_uv));
+            $this->assign('view_list', $result);
+        }
+
+        $this->layout('sdata/pvperday.phtml');
     }
     
     public function orderAction(){
@@ -98,8 +218,7 @@ class SdataController extends Base{
     }
     
     public function _get_time_string($start_created, $end_created) {
-        
-        $start  = strtotime($start_created);  
+        $start  = strtotime($start_created);
         $stop   = strtotime($end_created);  
         $extend = ($stop-$start)/86400;
         for ($i = 0; $i < $extend; $i++) {
@@ -107,6 +226,5 @@ class SdataController extends Base{
         }
         return $date;
     }
-    
 }
 
