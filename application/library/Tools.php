@@ -282,4 +282,15 @@ class Tools
         return $result;
     }
 
+    /**
+     * 转化日期时间
+     * @param string $src 初始时间
+     * @param string $format 格式化 默认：Y-m-d H:i:s
+     * @param string $to 要增减的时间 默认：+23小时59分59秒
+     * @return string
+     */
+    static function format_date($src, $format = 'Y-m-d H:i:s', $to = '+1 day') {
+        return date($format, strtotime($to, strtotime($src)));
+    }
+
 }
