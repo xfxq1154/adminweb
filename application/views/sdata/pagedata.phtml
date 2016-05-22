@@ -45,7 +45,7 @@
                             <div class="txt dashboard-head radius-small bg-red  icon-user"></div>
                         </div>
                         <div class="media-body text-center">
-                            <h2><strong><?=$overview['total_uv']?></strong></h2>
+                            <h2><strong><?=($overview['total_uv'])?:0?></strong></h2>
                             浏览UV
                         </div>
                     </div>
@@ -61,7 +61,7 @@
                             <div class="txt dashboard-head radius-small bg-blue icon-key"></div>
                         </div>
                         <div class="media-body text-center">
-                            <h2><strong><?=$overview['total_pv']?></strong></h2>
+                            <h2><strong><?=($overview['total_pv'])?:0?></strong></h2>
                             浏览PV
                         </div>
                     </div>
@@ -77,7 +77,7 @@
                             <div class="txt dashboard-head radius-small bg-green icon-share"></div>
                         </div>
                         <div class="media-body text-center">
-                            <h2><strong><?=$overview['share_pv']?></strong></h2>
+                            <h2><strong><?=($overview['share_pv'])?:0?></strong></h2>
                             外部分享
                         </div>
                     </div>
@@ -312,7 +312,7 @@
                 {
                     name:'浏览PV',
                     type:'bar',
-                    data:[<?=implode(',', $toppv)?>],
+                    data:[<?=($toppv)?implode(',', $toppv):''?>],
                     markPoint : {
                         data : [
                             {type : 'max', name: '最大值'},

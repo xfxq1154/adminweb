@@ -91,7 +91,7 @@
                 {
                     name:'浏览PV',
                     type:'bar',
-                    data:[<?=$toppv?>],
+                    data:[<?=($toppv)?implode(',', $toppv):''?>],
                     markPoint : {
                         data : [
                             {type : 'max', name: '最大值'},
@@ -107,7 +107,7 @@
                 {
                     name:'浏览UV',
                     type:'bar',
-                    data:[<?=$topuv?>],
+                    data:[<?=($topuv)?implode(',', $topuv):''?>],
                     markPoint : {
                         data : [
                             {type : 'max', name: '最大值'},
