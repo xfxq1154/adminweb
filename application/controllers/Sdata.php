@@ -94,6 +94,28 @@ class SdataController extends Base{
         $this->layout('sdata/pagedata.phtml');
     }
 
+    private function pvperday($showcase_id, $start_created, $end_created){
+        //获取数据
+        $params['showcase_id'] = $showcase_id;
+        $params['start_created'] = $start_created;
+        $params['end_created'] = $end_created;
+        $total_list = $this->sdata->views($params);
+        $params['type'] = 2;
+        $foods_list = $this->sdata->views($params);
+        foreach ($foods_list as $item){
+            $key = $item['date'];
+            $format_foods_list[$key]['goods_pv'] = $item['total_pv'];
+            $format_foods_list[$key]['goods_uv'] = $item['total_uv'];
+        }
+
+        foreach ($total_list as &$item){
+            $key = $item['date'];
+            $item['goods_pv'] = isset($format_foods_list[$key]) ? $format_foods_list[$key]['goods_pv'] : 0;
+            $item['goods_uv'] = isset($format_foods_list[$key]) ? $format_foods_list[$key]['goods_uv'] : 0;
+        }
+        return $total_list;
+    }
+
     public function pvperdayAction(){
         $this->checkRole();
 
@@ -104,38 +126,29 @@ class SdataController extends Base{
             $start_created = date('Y-m-d',strtotime('-7 day'));
             $end_created = date('Y-m-d',strtotime('today'));
         }
-        $params['showcase_id'] = $showcase_id;
-        $params['start_created'] = $start_created;
-        $params['end_created'] = $end_created;
 
-        $result = $this->sdata->views($params);
-        if ($result){
-            foreach ($result as $val){
+        $format_data = $this->pvperday($showcase_id, $start_created, $end_created);
+        if ($format_data){
+            foreach ($format_data as $val){
                 $key = '"'.date('m-d',strtotime($val['date'])).'"';
-                $data[$key] = $val;
+                $chart_data[$key] = $val;
             }
-            $dates = $this->_get_time_string($start_created, $end_created);
-            foreach ($dates as $val){
-                if(isset($data[$val])){
-                    $total_pv[] = $data[$val]['total_pv'];
-                    $total_uv[] = $data[$val]['total_uv'];
-                    $share_pv[] = $data[$val]['share_pv'];
-                    $share_uv[] = $data[$val]['share_uv'];
-                } else {
-                    $total_pv[] = 0;
-                    $total_uv[] = 0;
-                    $share_pv[] = 0;
-                    $share_uv[] = 0;
-                }
-            }
-            $this->assign('dates', implode(',', $dates));
-            $this->assign('total_pv', implode(',', $total_pv));
-            $this->assign('total_uv', implode(',', $total_uv));
-            $this->assign('share_pv', implode(',', $share_pv));
-            $this->assign('share_uv', implode(',', $share_uv));
-            $this->assign('view_list', $result);
         }
 
+        //生成图表所需数据
+        $dates = $this->_get_time_string($start_created, $end_created);
+        foreach ($dates as $val){
+            $total_pv[] = (isset($chart_data[$val])) ? $chart_data[$val]['total_pv'] : 0;
+            $total_uv[] = (isset($chart_data[$val])) ? $chart_data[$val]['total_uv'] : 0;
+            $goods_pv[] = (isset($chart_data[$val])) ? $chart_data[$val]['goods_pv'] : 0;
+            $goods_uv[] = (isset($chart_data[$val])) ? $chart_data[$val]['goods_uv'] : 0;
+        }
+        $this->assign('dates', $dates);
+        $this->assign('total_pv', $total_pv);
+        $this->assign('total_uv', $total_uv);
+        $this->assign('goods_pv', $goods_pv);
+        $this->assign('goods_uv', $goods_uv);
+        $this->assign('view_list', $format_data);
         $this->layout('sdata/pvperday.phtml');
     }
     
