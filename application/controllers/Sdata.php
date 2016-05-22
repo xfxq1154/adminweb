@@ -52,12 +52,12 @@ class SdataController extends Base{
 
                 $total_pv += $product['total_pv'];
             }
-
-            $this->assign('top10', $productTop10);
-            $this->assign('total_pv', $total_pv);
-            $this->assign('toppv', implode(',', $toppv));
-            $this->assign('topuv', implode(',', $topuv));
         }
+
+        $this->assign('top10', $productTop10);
+        $this->assign('total_pv', $total_pv);
+        $this->assign('toppv', $toppv);
+        $this->assign('topuv', $topuv);
 
         $this->_display('sdata/product.phtml');
     }

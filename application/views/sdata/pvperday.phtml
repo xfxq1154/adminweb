@@ -103,22 +103,22 @@
                 {
                     name:'浏览PV',
                     type:'line',
-                    data:[<?=implode(',', $total_pv)?>]
+                    data:[<?=($total_pv)?implode(',', $total_pv):''?>]
                 },
                 {
                     name:'浏览UV',
                     type:'line',
-                    data:[<?=implode(',', $total_uv)?>]
+                    data:[<?=($total_uv)?implode(',', $total_uv):''?>]
                 },
                 {
                     name:'到店PV',
                     type:'line',
-                    data:[<?=implode(',', $goods_pv)?>]
+                    data:[<?=($goods_pv)?implode(',', $goods_pv):''?>]
                 },
                 {
                     name:'到店UV',
                     type:'line',
-                    data:[<?=implode(',', $goods_uv)?>]
+                    data:[<?=($goods_uv)?implode(',', $goods_uv):''?>]
                 }
             ]
         };
