@@ -9,6 +9,7 @@ class SdataModel {
     use Trait_Api;
 
     const ORDER_DETAIL = 'result/order_detail';
+    const PAGEDATA_OVERVIEW = 'pagedata/overview';
     const PAGEDATA_VIEWS = 'pagedata/views';
     const PAGEDATA_RANKLIST = 'pagedata/ranklist';
 
@@ -16,6 +17,10 @@ class SdataModel {
     public function getList($params) {
         $result = Sdata::request(self::ORDER_DETAIL, $params);
         return $this->format_order_datas_batch($result);
+    }
+
+    public function overview($params) {
+        return Sdata::request(self::PAGEDATA_OVERVIEW, $params);
     }
 
     public function ranklist($params) {
