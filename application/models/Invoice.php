@@ -374,5 +374,21 @@ class InvoiceModel{
             echo $ex->getMessage();
         }
     }
+
+    /**
+     * @return array|bool
+     */
+    public function getFailRed()
+    {
+        try{
+            $sql = "SELECT * FROM `invoice` WHERE `create_time` LIKE '%2016-05-23%' AND `order_id` = 'E20160427120235027566012' ";
+            $stmt = $this->dbMaster->prepare($sql);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }catch (PDOException $ex){
+            echo $ex->getMessage();
+            return false;
+        }
+    }
 }
 

@@ -182,4 +182,13 @@ abstract class Base extends Yaf_Controller_Abstract {
         }
     }
 
+    /**
+     * @param $data
+     */
+    public function print_d($data)
+    {
+        echo "<pre>";
+        print_r($data);
+    }
+
 }
