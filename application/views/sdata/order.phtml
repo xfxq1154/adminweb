@@ -180,7 +180,7 @@
                                             <div class="txt dashboard-head radius-small bg-blue  icon-user-md"></div>
                                         </div>
                                         <div class="media-body text-center">
-                                            <h2><strong><?=($order_peo)?round($paied_peo/$total_pv, 2):'0.00' ?>%</strong></h2>
+                                            <h2><strong><?=($total_pv)?round($paied_peo/$total_pv, 2):'0.00' ?>%</strong></h2>
                                             全店转化率
                                         </div>
                                     </div>
@@ -196,7 +196,7 @@
                                             <div class="txt dashboard-head radius-small bg-green  icon-sort-by-order"></div>
                                         </div>
                                         <div class="media-body text-center">
-                                            <h2><strong><?=($order_peo)?round($order_peo/$total_pv, 2):'0.00' ?>%</strong></h2>
+                                            <h2><strong><?=($total_pv)?round($order_peo/$total_pv, 2):'0.00' ?>%</strong></h2>
                                             下单转化率
                                         </div>
                                     </div>
