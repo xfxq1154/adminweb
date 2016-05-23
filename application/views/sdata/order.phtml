@@ -32,106 +32,200 @@
 
 
 <div class="admin-main">
-    
-    <div class="line-big">
-        <div class="xm2">
-            <div class="panel dux-box dux-dashboard">
-                <div class="clearfix">
-                    <div class="media media-x ">
-                        <div class="float-left">
-                            <div class="txt dashboard-head radius-small bg-red  icon-user"></div>
+    <div class="panel dux-box">
+        <div class="panel-head">订单概况</div>
+        <div class="panel-body">
+            <div class="line-big">
+                <div class="xm10">
+                    <div class="line-big">
+                        <div class="xm3">
+                            <div class="panel dux-box dux-dashboard">
+                                <div class="clearfix">
+                                    <div class="media media-x ">
+                                        <div class="float-left">
+                                            <div class="txt dashboard-head radius-small bg-red  icon-group"></div>
+                                        </div>
+                                        <div class="media-body text-center">
+                                            <h2><strong><?=$total_pv?></strong></h2>
+                                            访客数
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
                         </div>
-                        <div class="media-body text-center">
-                            <h2><strong><?=$order_people?></strong></h2>
-                            下单人数
+                    </div>
+                    <div class="line-big">
+                        <div class="xm3">
+                            <div class="panel dux-box dux-dashboard">
+                                <div class="clearfix">
+                                    <div class="media media-x ">
+                                        <div class="float-left">
+                                            <div class="txt dashboard-head radius-small bg-green icon-certificate"></div>
+                                        </div>
+                                        <div class="media-body text-center">
+                                            <h2><strong><?=$order_peo?></strong></h2>
+                                            下单人数
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                        </div>
+                        <div class="xm3">
+                            <div class="panel dux-box dux-dashboard">
+                                <div class="clearfix">
+                                    <div class="media media-x ">
+                                        <div class="float-left">
+                                            <div class="txt dashboard-head radius-small bg-yellow icon-coffee"></div>
+                                        </div>
+                                        <div class="media-body text-center">
+                                            <h2><strong><?=$order_num?></strong></h2>
+                                            下单笔数
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="xm3">
+                            <div class="panel dux-box dux-dashboard">
+                                <div class="clearfix">
+                                    <div class="media media-x ">
+                                        <div class="float-left">
+                                            <div class="txt dashboard-head radius-small bg-yellow icon-money"></div>
+                                        </div>
+                                        <div class="media-body text-center">
+                                            <h2><strong><?=$order_sum?></strong></h2>
+                                            下单金额
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                        </div>
+                    </div>
+                    <div class="line-big">
+                        <div class="xm3">
+                            <div class="panel dux-box dux-dashboard">
+                                <div class="clearfix">
+                                    <div class="media media-x ">
+                                        <div class="float-left">
+                                            <div class="txt dashboard-head radius-small bg-green icon-user"></div>
+                                        </div>
+                                        <div class="media-body text-center">
+                                            <h2><strong><?=$paied_peo?></strong></h2>
+                                            付款人数
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                        </div>
+                        <div class="xm3">
+                            <div class="panel dux-box dux-dashboard">
+                                <div class="clearfix">
+                                    <div class="media media-x ">
+                                        <div class="float-left">
+                                            <div class="txt dashboard-head radius-small bg-yellow icon-plus"></div>
+                                        </div>
+                                        <div class="media-body text-center">
+                                            <h2><strong><?=$paied_num?></strong></h2>
+                                            付款笔数
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="xm3">
+                            <div class="panel dux-box dux-dashboard">
+                                <div class="clearfix">
+                                    <div class="media media-x ">
+                                        <div class="float-left">
+                                            <div class="txt dashboard-head radius-small bg-yellow icon-tags"></div>
+                                        </div>
+                                        <div class="media-body text-center">
+                                            <h2><strong><?=$paied_sum?></strong></h2>
+                                            付款金额
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                        </div>
+                        <div class="xm3">
+                            <div class="panel dux-box dux-dashboard">
+                                <div class="clearfix">
+                                    <div class="media media-x ">
+                                        <div class="float-left">
+                                            <div class="txt dashboard-head radius-small bg-blue icon-key"></div>
+                                        </div>
+                                        <div class="media-body text-center">
+                                            <h2><strong><?=$paied_people_avg?></strong></h2>
+                                            客单价
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                        </div>
+                    </div>
+                </div>
+                <div class="xm2">
+                    <div class="line-big">
+                        <div class="xm12">
+                            <div class="panel dux-box dux-dashboard">
+                                <div class="clearfix">
+                                    <div class="media media-x ">
+                                        <div class="float-left">
+                                            <div class="txt dashboard-head radius-small bg-blue  icon-user-md"></div>
+                                        </div>
+                                        <div class="media-body text-center">
+                                            <h2><strong><?=($total_pv)?round($paied_peo/$total_pv, 2):'0.00' ?>%</strong></h2>
+                                            全店转化率
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                        </div>
+                        <div class="xm12">
+                            <div class="panel dux-box dux-dashboard">
+                                <div class="clearfix">
+                                    <div class="media media-x ">
+                                        <div class="float-left">
+                                            <div class="txt dashboard-head radius-small bg-green  icon-sort-by-order"></div>
+                                        </div>
+                                        <div class="media-body text-center">
+                                            <h2><strong><?=($total_pv)?round($order_peo/$total_pv, 2):'0.00' ?>%</strong></h2>
+                                            下单转化率
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                        </div>
+                        <div class="xm12">
+                            <div class="panel dux-box dux-dashboard">
+                                <div class="clearfix">
+                                    <div class="media media-x ">
+                                        <div class="float-left">
+                                            <div class="txt dashboard-head radius-small bg-red  icon-money"></div>
+                                        </div>
+                                        <div class="media-body text-center">
+                                            <h2><strong><?=($order_peo)?round($paied_peo/$order_peo, 2):'0.00' ?>%</strong></h2>
+                                            付款转化率
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
                         </div>
                     </div>
                 </div>
             </div>
-            <br>
-        </div>
-        <div class="xm2">
-            <div class="panel dux-box dux-dashboard">
-                <div class="clearfix">
-                    <div class="media media-x ">
-                        <div class="float-left">
-                            <div class="txt dashboard-head radius-small bg-blue icon-key"></div>
-                        </div>
-                        <div class="media-body text-center">
-                            <h2><strong><?=$paied_people?></strong></h2>
-                            付款人数
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <br>
-        </div>
-        <div class="xm2">
-            <div class="panel dux-box dux-dashboard">
-                <div class="clearfix">
-                    <div class="media media-x ">
-                        <div class="float-left">
-                            <div class="txt dashboard-head radius-small bg-green icon-comments"></div>
-                        </div>
-                        <div class="media-body text-center">
-                            <h2><strong><?=$paied_num?></strong></h2>
-                            付款笔数
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <br>
-        </div>
-<!--        <div class="xm2">
-            <div class="panel dux-box dux-dashboard">
-                <div class="clearfix">
-                    <div class="media media-x ">
-                        <div class="float-left">
-                            <div class="txt dashboard-head radius-small bg-yellow icon-comments"></div>
-                        </div>
-                        <div class="media-body text-center">
-                            <h2><strong>0</strong></h2>
-                            商品销量
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <br>
-        </div>-->
-        <div class="xm3">
-            <div class="panel dux-box dux-dashboard">
-                <div class="clearfix">
-                    <div class="media media-x ">
-                        <div class="float-left">
-                            <div class="txt dashboard-head radius-small bg-yellow icon-comments"></div>
-                        </div>
-                        <div class="media-body text-center">
-                            <h2><strong><?=$paied_sum?></strong></h2>
-                            付款金额
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <br>
-        </div>
-        <div class="xm3">
-            <div class="panel dux-box dux-dashboard">
-                <div class="clearfix">
-                    <div class="media media-x ">
-                        <div class="float-left">
-                            <div class="txt dashboard-head radius-small bg-yellow icon-comments"></div>
-                        </div>
-                        <div class="media-body text-center">
-                            <h2><strong><?=$paied_people_sum?></strong></h2>
-                            客单价
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <br>
         </div>
     </div>
-    
+    <br>
     <div class="panel dux-box">
         <div class="panel-head">交易趋势</div>
         <!-- 为ECharts准备一个具备大小（宽高）的Dom -->

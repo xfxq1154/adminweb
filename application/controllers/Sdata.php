@@ -137,65 +137,71 @@ class SdataController extends Base{
         $this->assign('view_list', $format_data);
         $this->_display('sdata/pvperday.phtml');
     }
-    
+
     public function orderAction(){
 
         $params['showcase_id'] = $this->showcase_id;
         $params['start_created'] = $this->start_created;
         $params['end_created'] = Tools::format_date($this->end_created);
-        
+
+        $res = $this->sdata->overview($params);
+        $total_pv = ($res['total_pv']) ? : 0;
+
         $result = $this->sdata->getList($params);
-        $order_people = 0;
-        $paied_people = 0;
-        $paied_num_total = 0;
-        $paied_sum_total = 0;
         foreach ($result as $val){
             $key = '"'.date('m-d',strtotime($val['date'])).'"';
-            $data[$key] = $val;
-            
-            $order_people += $val['order_people'];  //付款人数
-            $paied_people += $val['paied_people'];  //付款人数
-            $paied_num_total += $val['paied_num'];     //付款笔数
-            $paied_sum_total += $val['paied_sum'];  //付款金额
-        }
-        $paied_people_sum = 0;
-        if($paied_people > 0){
-            $paied_people_sum = round($paied_sum_total / $paied_people, 2);  //客单价
+            $chart_data[$key] = $val;
         }
 
-        $this->assign('order_people', $order_people);
-        $this->assign('paied_people', $paied_people);
-        $this->assign('paied_num', $paied_num_total);
-        $this->assign('paied_sum', $paied_sum_total);
-        $this->assign('paied_people_sum', $paied_people_sum);
-        
+        $order_peo = [];
+        $order_num = [];
+        $order_sum = [];
+        $paied_peo = [];
+        $paied_num = [];
+        $paied_sum = [];
         $dates = $this->_get_time_string();
-        $order_num_string = '';
-        $paied_num_string = '';
-        $paied_sum_string = '';
         if($dates){
             foreach ($dates as $val){
-                if(isset($data[$val])){
-                    $order_num[] = $data[$val]['order_num'];  //下单笔数
-                    $paied_num[] = $data[$val]['paied_num'];  //付款笔数
-                    $paied_num_wx[] = $data[$val]['paied_num_wx'];  //微信付款笔数
-                    $paied_num_jd[] = $data[$val]['paied_num_jd'];  //京东付款笔数
-                    $paied_sum[] = $data[$val]['paied_sum'];  //付款金额
+                if(isset($chart_data[$val])){
+                    $order_peo[] = $chart_data[$val]['order_people'];     //下单人数
+                    $order_num[] = $chart_data[$val]['order_num'];        //下单笔数
+                    $order_sum[] = $chart_data[$val]['order_sum'];        //下单金额
+                    $paied_peo[] = $chart_data[$val]['paied_people'];     //付款人数
+                    $paied_num[] = $chart_data[$val]['paied_num'];        //付款笔数
+                    $paied_sum[] = $chart_data[$val]['paied_sum'];        //付款金额
+                    $paied_num_wx[] = $chart_data[$val]['paied_num_wx'];  //微信付款笔数
+                    $paied_num_jd[] = $chart_data[$val]['paied_num_jd'];  //京东付款笔数
                 } else {
                     $order_num[] = 0;  //下单笔数
                     $paied_num[] = 0;  //付款笔数
+                    $paied_sum[] = 0;  //付款金额
                     $paied_num_wx[] = 0;  //微信付款笔数
                     $paied_num_jd[] = 0;  //京东付款笔数
-                    $paied_sum[] = 0;  //付款金额
                 }
             }
-
             $order_num_string = implode(',', $order_num);
             $paied_num_string = implode(',', $paied_num);
             $paied_sum_string = implode(',', $paied_sum);
 
-            $this->assign('dates', implode(',', $dates));
+
         }
+        $order_peo_total = array_sum($order_peo);
+        $order_num_total = array_sum($order_num);
+        $order_sum_total = array_sum($order_sum);
+        $paied_peo_total = array_sum($paied_peo);
+        $paied_num_total = array_sum($paied_num);
+        $paied_sum_total = array_sum($paied_sum);
+        $paied_people_avg = ($paied_peo_total) ? round($paied_sum_total / $paied_peo_total, 2) : 0;  //客单价
+
+        $this->assign('dates', implode(',', $dates));
+        $this->assign('total_pv', $total_pv); //下单人数
+        $this->assign('order_peo', $order_peo_total); //下单人数
+        $this->assign('order_num', $order_num_total); //下单笔数
+        $this->assign('order_sum', $order_sum_total); //下单金额
+        $this->assign('paied_peo', $paied_peo_total); //付款人数
+        $this->assign('paied_num', $paied_num_total); //付款笔数
+        $this->assign('paied_sum', $paied_sum_total); //付款金额
+        $this->assign('paied_people_avg', $paied_people_avg);
         
         $this->assign('paied_num_wx', array_sum($paied_num_wx));
         $this->assign('paied_num_jd', array_sum($paied_num_jd));
