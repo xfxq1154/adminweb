@@ -145,7 +145,7 @@ class SdataController extends Base{
         $params['end_created'] = Tools::format_date($this->end_created);
 
         $res = $this->sdata->overview($params);
-        $total_pv = ($res) ? $res['total_pv'] : 0;
+        $total_pv = ($res['total_pv']) ? : 0;
 
         $result = $this->sdata->getList($params);
         foreach ($result as $val){
