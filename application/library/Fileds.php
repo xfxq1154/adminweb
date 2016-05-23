@@ -20,5 +20,17 @@ class Fileds{
         '2' => 'product_name',
         '3' => 'tax_tare'
     ];
+
+    public static $order = [
+
+        'E20160427120235027566012' => [
+            'title' => '《光荣与梦想》 传世经典  镇店之宝',
+            'total_fee' => '6559.17',
+            'sl' => '0.00',
+            'se' => '20.83',
+            'xmje' => '6559.17',
+            'price' => '6559.17'
+        ]
+    ];
     
 }
