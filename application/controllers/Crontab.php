@@ -778,7 +778,7 @@ class CrontabController extends Base{
             if(!$order) {
                 continue;
             }
-            $value['new_detail'][] = $order;
+            $value['new_detail'] = $order;
             $params['xsf_mc'] = $value['seller_name'];
             $params['xsf_dzdh'] = $value['seller_address'];
             $params['kpr'] = $value['drawer'];
@@ -792,8 +792,8 @@ class CrontabController extends Base{
             $params['yfp_hm'] = $value['invoice_number'];
             $params['yfp_dm'] = $value['invoice_code'];
             $params['receiver_mobile'] = $value['buyer_phone'];
-            $params['new_detail'][] = $order;
-
+            $params['new_detail'] = $order;
+            
             $result = $this->dzfp->fpkj($params, $params['new_detail']);
             if(!$result) {
                 $rs_data = [
