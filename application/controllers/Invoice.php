@@ -526,6 +526,13 @@ class InvoiceController extends Base{
         }
         $this->layout('invoice/get_order.phtml');
     }
-    
+
+    public function stateAction()
+    {
+        $id = $this->getRequest()->get('id');
+        $sta = $this->getRequest()->get('sta');
+        $this->invoice_mode->update($id, array('state' => $sta));
+        exit;
+    }
 }
 

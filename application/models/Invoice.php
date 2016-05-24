@@ -381,7 +381,8 @@ class InvoiceModel{
     public function getFailRed()
     {
         try{
-            $sql = "SELECT * FROM `invoice` WHERE `create_time` LIKE '%2016-05-23%' AND `order_id` = 'E20160427120235027566012' ";
+//            $sql = "SELECT * FROM `invoice` WHERE `create_time` LIKE '%2016-05-23%' AND `order_id` IN ('E20160426131553078073911', 'E20160426131730078044957') ";
+            $sql = "select * from invoice where update_time like '%2016-05-24 11%' and state = 3";
             $stmt = $this->dbMaster->prepare($sql);
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
