@@ -129,6 +129,7 @@ class CrontabController extends Base{
             }
             $orders = $this->treatingSku($order, $skuarr);
             //判断是否有空的sl,如果有将该sku删除掉
+            $detail = array();
             foreach ($orders['new_detail'] as $detailVal){
                 if($detailVal['sl'] == null){
                     unset($detailVal);
