@@ -51,7 +51,7 @@
                         <?php foreach ($top10 as $key => $item) : ?>
                         <tr>
                             <td><?=$key+1?></td>
-                            <td><a><?=$item['page_id']?></a></td>
+                            <td><a><?=$item['page_title']?></a></td>
                             <td><?=number_format(($item['total_pv'] / $total_pv) * 100, 2) ?>%</td>
                         </tr>
                         <?php endforeach; ?>

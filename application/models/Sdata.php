@@ -48,6 +48,7 @@ class SdataModel {
         $format_data = array(
             'showcase_id'  =>   $data['showcase_id'],
             'page_id'      =>   $data['page_id'],
+            'page_title'   =>   $data['page_title'],
             'total_pv'     =>   intval($data['total_pv']),
             'total_uv'     =>   intval($data['total_uv']),
             'share_pv'     =>   intval($data['share_pv']),
