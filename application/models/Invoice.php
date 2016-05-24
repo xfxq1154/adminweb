@@ -225,7 +225,7 @@ class InvoiceModel{
         $pdo_params[':state'] = 5;
         $pdo_params[':type'] = 0;
         try{
-            $sql = 'SELECT * FROM '.$this->tableName.' WHERE '.$where. 'LIMIT 300';
+            $sql = 'SELECT * FROM '.$this->tableName.' WHERE '.$where. 'LIMIT 30';
             $stmt = $this->dbSlave->prepare($sql);
             $stmt->execute($pdo_params);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
