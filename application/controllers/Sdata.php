@@ -36,13 +36,26 @@ class SdataController extends Base{
     }
 
     public function productAction(){
+
+        $params['showcase_id'] = $this->showcase_id;
+        $params['orderby'] = 'total_pay';
+        $params['start_created'] = $this->start_created;
+        $params['end_created'] = Tools::format_date($this->end_created);
+        $params['page_size'] = 10;
+        $sell_top10 = $this->sdata->skulist($params);
+        if ($sell_top10){
+            foreach ($sell_top10['skulist'] as $item){
+                $ordertop[] = $item['total_order'];
+                $paytop[] = $item['total_pay'];
+            }
+        }
+
         $params['showcase_id'] = $this->showcase_id;
         $params['type'] = 2;
         $params['orderby'] = 'total_pv';
         $params['start_created'] = $this->start_created;
         $params['end_created'] = Tools::format_date($this->end_created);
         $params['page_size'] = 10;
-
         $productTop10 = $this->sdata->ranklist($params);
         if ($productTop10){
             $total_pv = 0;
@@ -58,6 +71,10 @@ class SdataController extends Base{
         $this->assign('total_pv', $total_pv);
         $this->assign('toppv', $toppv);
         $this->assign('topuv', $topuv);
+
+        $this->assign('sell_top10', $sell_top10['skulist']);
+        $this->assign('ordertop', $ordertop);
+        $this->assign('paytop', $paytop);
 
         $this->_display('sdata/product.phtml');
     }
