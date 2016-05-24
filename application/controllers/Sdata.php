@@ -145,7 +145,7 @@ class SdataController extends Base{
         $params['end_created'] = Tools::format_date($this->end_created);
 
         $res = $this->sdata->overview($params);
-        $total_pv = ($res['total_pv']) ? : 0;
+        $total_uv = ($res['total_uv']) ? : 0;
 
         $result = $this->sdata->getList($params);
         foreach ($result as $val){
@@ -194,7 +194,7 @@ class SdataController extends Base{
         $paied_people_avg = ($paied_peo_total) ? round($paied_sum_total / $paied_peo_total, 2) : 0;  //客单价
 
         $this->assign('dates', implode(',', $dates));
-        $this->assign('total_pv', $total_pv); //下单人数
+        $this->assign('total_uv', $total_uv); //访客数
         $this->assign('order_peo', $order_peo_total); //下单人数
         $this->assign('order_num', $order_num_total); //下单笔数
         $this->assign('order_sum', $order_sum_total); //下单金额
