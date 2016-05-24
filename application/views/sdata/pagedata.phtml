@@ -168,7 +168,7 @@
                         <?php foreach ($top10 as $key => $item) : ?>
                             <tr>
                                 <td align="center"><?=$key+1?></td>
-                                <td><a><?=$item['page_id']?></a></td>
+                                <td><a><?=$item['page_title']?></a></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
@@ -190,7 +190,7 @@
                 </tr>
                 <?php foreach ($top10 as $key => $item) : ?>
                     <tr>
-                        <td><a><?=$item['page_id']?></a></td>
+                        <td><a><?=$item['page_title']?></a></td>
                         <td><?=$item['total_uv']?> / <?=$item['total_pv']?></td>
                         <td><?=$item['share_uv']?> / <?=$item['share_pv']?></td>
                         <td><?=$item['avg_stay']?></td>
