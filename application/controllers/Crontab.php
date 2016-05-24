@@ -778,6 +778,7 @@ class CrontabController extends Base{
             if(!$order) {
                 continue;
             }
+
             $value['new_detail'] = $order;
             $params['xsf_mc'] = $value['seller_name'];
             $params['xsf_dzdh'] = $value['seller_address'];
@@ -793,7 +794,7 @@ class CrontabController extends Base{
             $params['yfp_dm'] = $value['invoice_code'];
             $params['receiver_mobile'] = $value['buyer_phone'];
             $params['new_detail'] = $order;
-            
+
             $result = $this->dzfp->fpkj($params, $params['new_detail']);
             if(!$result) {
                 $rs_data = [
@@ -811,7 +812,7 @@ class CrontabController extends Base{
                 'state' => self::RED_INVOICE_SUCCESS,
                 'state_message' => '红字发票开具成功'
             );
-            $this->invoice_model->update($value['id'], $param);exit;
+            $this->invoice_model->update($value['id'], $param);
             continue;
         }
         exit;
