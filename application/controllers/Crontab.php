@@ -138,7 +138,6 @@ class CrontabController extends Base{
             }
             $orders['new_detail'] = array_filter($detail);
             $wasOver = $this->regroupSku($orders);
-
             //判断发票类型 1 红票
             if ($value['invoice_type'] == 1){
                 $this->redInvoice($wasOver, $value);
@@ -404,9 +403,9 @@ class CrontabController extends Base{
         $orders['kpr'] = $invoice_info['drawer'];
         $orders['type'] = 1;
         $orders['count'] = count($order['new_detail']);
-        $orders['hjje'] = $invoice_info['total_fee'];
-        $orders['hjse'] = $invoice_info['total_tax'];
-        $orders['payment_fee'] = $invoice_info['jshj'];
+        $orders['hjje'] = $order['payment_fee'];
+        $orders['hjse'] = $order['hjse'];
+        $orders['payment_fee'] = $order['hjse'] + $order['payment_fee'];
         $orders['invoice_title'] = $invoice_info['invoice_title'];
         $orders['invoice_no'] = strtotime(date('Y-m-d H:i:s')).mt_rand(1000,9999);;
         $orders['yfp_hm'] = $invoice_info['invoice_number'];
