@@ -407,7 +407,7 @@ class CrontabController extends Base{
         $orders['hjse'] = $order['hjse'];
         $orders['payment_fee'] = $order['hjse'] + $order['payment_fee'];
         $orders['invoice_title'] = $invoice_info['invoice_title'];
-        $orders['invoice_no'] = strtotime(date('Y-m-d H:i:s')).mt_rand(1000,9999);;
+        $orders['invoice_no'] = strtotime(date('Y-m-d H:i:s')).mt_rand(1000,9999);
         $orders['yfp_hm'] = $invoice_info['invoice_number'];
         $orders['yfp_dm'] = $invoice_info['invoice_code'];
         $orders['receiver_mobile'] = $invoice_info['buyer_phone'];
