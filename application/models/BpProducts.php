@@ -44,7 +44,7 @@ class BpProductsModel {
      */
 
     public function tidy($product) {
-        $alias = $product['alias'];
+        $alias = $product['product_alias'];
         $p['product_id'] = $product['product_id'];
         $p['showcase_id'] = $product['showcase_id'];
         $p['outer_id'] = $product['outer_id'];
