@@ -22,11 +22,7 @@ class BpProductsModel {
         '1' => '上架',
         '2' => '下架',
     );
-    private $_error = null;
-
-    public function __construct() {
-        
-    }
+    private $views;
 
     public function getList($params) {
         $result = $this->request(self::PRODUCT_LIST, $params);
@@ -34,9 +30,6 @@ class BpProductsModel {
     }
 
     public function getInfoById($product_id) {
-        if (!$product_id) {
-            //return false;
-        }
         $params['product_id'] = $product_id;
         $result = $this->request(self::PRODUCT_DETAIL, $params);
         return $this->format_order_struct($result);
@@ -46,23 +39,19 @@ class BpProductsModel {
         return $this->request(self::PRODUCT_UPDATE, $params, "POST");
     }
 
-//    public function delete($product_id,$showcase_id) {
-//        $params['product_id'] = $product_id;
-//        $params['showcase_id'] = $showcase_id;
-//        return $this->request(self::PRODUCT_DELETE, $params, "POST");
-//    }
-
     /*
      * 格式化数据
      */
 
     public function tidy($product) {
+        $alias = $product['product_alias'];
         $p['product_id'] = $product['product_id'];
         $p['showcase_id'] = $product['showcase_id'];
         $p['outer_id'] = $product['outer_id'];
         $p['title'] = $product['title'];
         $p['intro'] = $product['intro'];
-        $p['description'] = $product['description'];
+        $p['pv']    = isset($this->views[$alias]['pv']) ? $this->views[$alias]['pv'] : 0;
+        $p['uv']    = isset($this->views[$alias]['uv']) ? $this->views[$alias]['uv'] : 0;
         $p['sold_num'] = $product['sold_num'];
         $p['quantity'] = $product['quantity'];
         $p['price'] = $product['price'];
@@ -100,10 +89,26 @@ class BpProductsModel {
         if (empty($datas)) {
             return array();
         }
+        $this->_set_views($datas['products']);
+
         foreach ($datas['products'] as &$data) {
             $data = $this->tidy($data);
         }
         return $datas;
+    }
+
+    /**
+     * 批量设置页面浏览信息
+     */
+    public function _set_views($products){
+        $pageids = [];
+        foreach ($products as &$product){
+            $pageids[] = $product['product_alias'];
+        }
+        $pageids = implode(',', $pageids);
+
+        $datasum_model = new DatasumModel();
+        $this->views = $datasum_model->pageview_bacth($datasum_model::PAGE_TYPE_PRODUCT, $pageids);
     }
 
     private function request($uri, $params = array(), $requestMethod = 'GET', $jsonDecode = true, $headers = array(), $timeout = 10) {
