@@ -103,7 +103,7 @@ class BpProductsModel {
     public function _set_views($products){
         $pageids = [];
         foreach ($products as &$product){
-            $pageids[] = $product['alias'];
+            $pageids[] = $product['product_alias'];
         }
         $pageids = implode(',', $pageids);
 
