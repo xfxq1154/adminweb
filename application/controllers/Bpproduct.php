@@ -10,11 +10,15 @@ class BpProductController extends Base {
     use Trait_Layout,
         Trait_Pagger;
 
-    public $product;
+    /**
+     * @var BpProductsModel
+     */
+    public $product_model;
 
     public function init() {
         $this->initAdmin();
-        $this->product = new BpProductsModel();
+
+        $this->product_model = new BpProductsModel();
     }
 
     function indexAction() {
@@ -36,7 +40,7 @@ class BpProductController extends Base {
             'showcase_id' => $showcase_id
         ];
         
-        $productsList = $this->product->getList($product_list);
+        $productsList = $this->product_model->getList($product_list);
         $list = $productsList['products'];
         $count = $productsList['total_nums'];
         
@@ -47,44 +51,11 @@ class BpProductController extends Base {
         $this->layout("platform/product.phtml");
     }
 
-//    function editAction() {
-//        $this->checkRole();
-//
-//        if (!$this->getrequest()->isPost()) {
-//            $product_id = $this->getrequest()->get('id');
-//            $product = $this->product->getInfoById($product_id);
-//
-//            $this->assign("product", $product);
-//            $this->layout('platform/product_edit.phtml');
-//        } else {
-//
-//            $params = $this->getrequest()->getPost();
-//
-//            $result = $this->product->update($params);
-//            $msg = ($result === "") ? "修改成功" : "修改失败";
-//            $status = ($result === "") ? 1 : 0;
-//            echo json_encode(['info' => $msg, 'status' => $status]);
-//            exit;
-//        }
-//    }
-
-    function deleteAction() {
-        $this->checkRole();
-
-//        $product_id = json_decode($this->getRequest()->getPost('data'), true)['id'];
-//        $showcase_id = json_decode($this->getRequest()->getPost('data'), true)['sid'];
-//        $result = $this->product->delete($product_id,$showcase_id);
-        $msg = ($result === "") ? "删除成功" : "删除失败";
-        $status = ($result === "") ? 1 : 0;
-        echo json_encode(['info' => $msg, 'status' => $status]);
-        exit;
-    }
-
     function infoAction() {
         $this->checkRole();
 
         $product_id = $this->getrequest()->get('id');
-        $info = $this->product->getInfoById($product_id);
+        $info = $this->product_model->getInfoById($product_id);
 
         $this->assign("pinfo", $info);
         $this->layout("platform/product_info.phtml");

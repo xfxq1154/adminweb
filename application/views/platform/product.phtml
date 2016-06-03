@@ -19,9 +19,6 @@
                         <input type="text" class="input" id="keyword" name="pname" size="20" value="<?=$pname?>" placeholder="商品名">
                     </div>&nbsp;
                     <div class="field">
-                        <input type="text" class="input" id="keyword" name="product_id" size="20" value="<?=$product?>" placeholder="商品ID">
-                    </div>&nbsp;
-                    <div class="field">
                         <input type="text" class="input" id="keyword" name="showcase_id" size="20" value="<?=$showcase_id?>" placeholder="店铺ID">
                     </div>
                 </div>
@@ -44,6 +41,7 @@
                         <th width="*">价格</th>
                         <th width="*">类型</th>
                         <th width="100">状态</th>
+                        <th width="100">访问</th>
                         <th width="*">修改时间</th>
                         <th width="*">发布时间</th>
                     </tr>
@@ -56,12 +54,9 @@
                                 <td><?php echo $val['price']; ?></td>
                                 <td><?php echo $val['type_name'] ? :'--'; ?></td>
                                 <td><span class="tag bg-<?=$val['onsell'] == 1 ? 'green':'red'; ?>"><?=$val['onsell_name'] ? :'--'; ?></span></td>
+                                <td><?=$val['uv'].' / '.$val['pv']; ?></td>
                                 <td><?php echo $val['update_time']; ?></td>
                                 <td><?php echo $val['create_time']; ?></td>
-<!--                                <td>
-                                    <a class="button bg-blue button-small icon-pencil" href="/bpproduct/edit/id/<?php echo $val['product_id']; ?>" title="编辑"></a>
-                                    <a class="button bg-red button-small icon-trash-o js-del" href="javascript:;" url="/bpproduct/delete" data='{"id":<?php echo $val['product_id']; ?>}' title="删除"></a>
-                                </td>-->
                             </tr>
                         <?php endforeach; ?>
                     <?php endif; ?>
