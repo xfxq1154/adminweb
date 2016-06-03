@@ -44,7 +44,7 @@ class BpProductController extends Base {
         $list = $productsList['products'];
         $count = $productsList['total_nums'];
         
-        $this->renderPagger($p, $count, "/bpproduct/index/p/{p}?t={$pname}&t={$t}&showcase_id={$showcase_id}", $page_size);
+        $this->renderPagger($p, $count, "/bpproduct/index/p/{p}?pname={$pname}&type={$t}&showcase_id={$showcase_id}", $page_size);
         $this->assign('pname', $pname);
         $this->assign("list", $list);
         $this->assign('showcase_id', $showcase_id);
