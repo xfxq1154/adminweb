@@ -26,24 +26,65 @@
                 <tbody>
                 <tr>
                     <th width="*">编号</th>
-                    <th width="*">合计税额</th>
-                    <th width="*">合计金额</th>
-                    <th width="*">发票类型</th>
                     <th width="*">税率</th>
+                    <th width="*">税额</th>
+                    <th width="*">金额</th>
+                    <th width="*">发票类型</th>
+                    <th width="*">创建时间</th>
                 </tr>
                 <?php if ($list) : ?>
-                    <?php foreach ($list as $val) : ?>
+                    <?php foreach ($list['list'] as $val) : ?>
                         <tr>
                             <td><?=$val['id']?></td>
-                            <td><?=$val['taxe']?></td>
-                            <td><?=$val['fee']?></td>
-                            <td><?php echo $val['type'] == 1 ? '<span class="tag bg-blue">蓝字发票</span>' : '<sapn class="tag bg-red">红字发票</sapn>'; ?></td>
                             <td><?=$val['tax']?></td>
+                            <td><?=$val['se']?></td>
+                            <td><?=$val['payment']?></td>
+                            <td><?php echo $val['type'] == 1 ? '<span class="tag bg-blue">蓝字发票</span>' : '<sapn class="tag bg-red">红字发票</sapn>'; ?></td>
+                            <td><?=$val['createtime']?></td>
                         </tr>
                     <?php endforeach; ?>
                 <?php endif; ?>
                 </tbody>
             </table>
+            <hr>
+            <table class="table table-hover">
+                <tr>
+                    <th width="*">0-0红票合计金额</th>
+                    <th width="*">0-0红票合计税额</th>
+                    <th width="*">0-6红票合计金额</th>
+                    <th width="*">0-6红票合计税额</th>
+                    <th width="*">1-7红票合计金额</th>
+                    <th width="*">1-7红票合计税额</th>
+                </tr>
+                <tr>
+                    <td><?=$list['red_inv_one_pay']?></td>
+                    <td><?=$list['red_inv_one_se']?></td>
+                    <td><?=$list['red_inv_two_pay']?></td>
+                    <td><?=$list['red_inv_two_pay']?></td>
+                    <td><?=$list['red_inv_thr_pay']?></td>
+                    <td><?=$list['red_inv_thr_pay']?></td>
+                </tr>
+            </table>
+            <hr>
+            <table class="table table-hover">
+                <tr>
+                    <th width="*">0-0蓝票合计金额</th>
+                    <th width="*">0-0蓝票合计税额</th>
+                    <th width="*">0-6蓝票合计金额</th>
+                    <th width="*">0-6蓝票合计税额</th>
+                    <th width="*">1-7蓝票合计金额</th>
+                    <th width="*">1-7蓝票合计税额</th>
+                </tr>
+                <tr>
+                    <td><?=$list['blue_inv_one_pay']?></td>
+                    <td><?=$list['blue_inv_one_se']?></td>
+                    <td><?=$list['blue_inv_two_pay']?></td>
+                    <td><?=$list['blue_inv_two_pay']?></td>
+                    <td><?=$list['blue_inv_thr_pay']?></td>
+                    <td><?=$list['blue_inv_thr_pay']?></td>
+                </tr>
+            </table>
+
         </div>
     </div>
 </div>

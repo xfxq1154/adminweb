@@ -171,7 +171,39 @@ class InvoiceController extends Base{
         }else{
             $time = date('Y-m', time());
         }
-        $data = $this->invoice_data_model->getData($time);
+        $data['list'] = $this->invoice_data_model->getData($time);
+        //计算总和
+        foreach ($data['list'] as $val) {
+            if ($val['type'] == 1) {
+                if ($val['tax'] == 0.00) {
+                    $data['blue_inv_one_sl'] = $val['tax'];
+                    $data['blue_inv_one_se'] += $val['se'];
+                    $data['blue_inv_one_pay'] += $val['payment'];
+                } else if ($val['tax'] == 0.06) {
+                    $data['blue_inv_two_sl'] = $val['tax'];
+                    $data['blue_inv_two_se'] += $val['se'];
+                    $data['blue_inv_two_pay'] += $val['payment'];
+                } else {
+                    $data['blue_inv_thr_sl'] = $val['tax'];
+                    $data['blue_inv_thr_se'] += $val['se'];
+                    $data['blue_inv_thr_pay'] += $val['payment'];
+                }
+            } else{
+                if ($val['tax'] == 0.00) {
+                    $data['red_inv_one_sl'] = $val['tax'];
+                    $data['red_inv_one_se'] += $val['se'];
+                    $data['red_inv_one_pay'] += $val['payment'];
+                } else if ($val['tax'] == 0.06) {
+                    $data['red_inv_two_sl'] = $val['tax'];
+                    $data['red_inv_two_se'] += $val['se'];
+                    $data['red_inv_two_pay'] += $val['payment'];
+                } else {
+                    $data['red_inv_thr_sl'] = $val['tax'];
+                    $data['red_inv_thr_se'] += $val['se'];
+                    $data['red_inv_thr_pay'] += $val['payment'];
+                }
+            }
+        }
         $this->assign('time', $time);
         $this->assign('list', $data);
         $this->layout('invoice/data_list.phtml');
