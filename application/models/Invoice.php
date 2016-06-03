@@ -276,9 +276,9 @@ class InvoiceModel{
     public function getSuccessInvoice($time)
     {
         try{
-            $sql = 'SELECT * FROM '.$this->tableName." WHERE `state` = :state AND update_time LIKE '%$time%'";
+            $sql = 'SELECT * FROM '.$this->tableName." WHERE `state` = :state AND `cronta_sta` = :sta AND update_time LIKE '%$time%' ";
             $stmt = $this->dbMaster->prepare($sql);
-            $stmt->execute([':state' => 4]);
+            $stmt->execute([':state' => 4, ':sta' => 1]);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         }catch(PDOException $ex){
             echo $ex->getMessage();

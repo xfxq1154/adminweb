@@ -611,7 +611,7 @@ class CrontabController extends Base{
     }
 
     /**
-     * @desc 数据统计
+     * @desc 数据统计 获取当天的开票数据
      * @return mixed
      */
     public function dataAction(){
@@ -621,136 +621,36 @@ class CrontabController extends Base{
             exit;
         }
 
-        //遍历查询订单
-        foreach ($invoices as $value){
-            $order = $this->getYouzanOrderByTid($value['order_id']);
-            $order = $this->batchOrderDetail($order);
-            if(!$order['skus']){
-                continue;
+        $count_one_data = [];
+        $count_two_data = [];
+        $count_thr_data = [];
+        foreach ($invoices as $val) {
+            if ($val['one_tax'] !== '0.00') {
+                $count_one_data['se'] = '0.00';
+                $count_one_data['tax'] = '0.00';
+                $count_one_data['payment'] = $val['one_tax'];
+                $count_one_data['type'] = $val['invoice_type'] == 0 ? 1 : 2;
+                $this->invoice_data_model->insertData($count_one_data);
             }
-            $sku_id = implode(',', $order['skus']);
-            $skus = $this->sku_model->getInfoBySkuId($sku_id);
-
-            $skuarr = array();
-            foreach ($skus as $sk_val){
-                $skuarr[$sk_val['sku_id']] = $sk_val['tax_tare'];
+            if ($val['two_tax'] !== '0.00') {
+                $sl = 0.06;
+                $count_two_data['se'] = $val['two_tax'] * $sl;
+                $count_two_data['tax'] = $sl;
+                $count_two_data['payment'] = $val['two_tax'];
+                $count_two_data['type'] = $val['invoice_type'] == 0 ? 1 : 2;
+                $this->invoice_data_model->insertData($count_two_data);
             }
-            $orders = $this->treatingSku($order, $skuarr);
-            //判断发票类型
-            $type = $value['invoice_type'] == 1 ? 1 : 0;
-            $sumData[] = $this->countSkuPayment($orders, $type);
-        }
-
-        //重新遍历数组
-        foreach ($sumData as $sVal){
-            foreach ($sVal as $sk => $val){
-                $dataArray[] = $val;
+            if ($val['three_tax'] !== '0.00') {
+                $slq = 0.17;
+                $count_thr_data['se'] = $val['three_tax'] * $slq;
+                $count_thr_data['tax'] = $slq;
+                $count_thr_data['payment'] = $val['three_tax'];
+                $count_thr_data['type'] = $val['invoice_type'] == 0 ? 1 : 2;
+                $this->invoice_data_model->insertData($count_thr_data);
             }
-        }
-        $iData = $this->fetchData($dataArray);
-        if(!$iData){
-            exit;
-        }
-        //存入数据表
-        foreach ($iData as $iValue){
-            $this->invoice_data_model->insertData($iValue);
+            $this->invoice_model->update($val['id'], ['cronta_sta' => 2]);
         }
         exit;
-    }
-
-    /**
-     * @param $order
-     * @param $type
-     * @return array|mixed
-     */
-    public function countSkuPayment($order, $type)
-    {
-        $sumData = $this->batch($order, $type);
-        if(!$sumData){
-            return false;
-        }
-        return $sumData;
-    }
-
-    /**
-     * @param $order
-     * @param $type
-     * @return mixed
-     * @desc 组合税率
-     */
-    public function batch($order, $type){
-        foreach ($order['new_detail'] as $key => $val){
-            if($val['sl'] == '0.00'){
-                $params[$key]['sl'] = 1;
-                $params[$key]['se'] += $val['se'] ? $val['se'] : 0;
-                $params[$key]['payment'] += $val['xmje'] ? $val['xmje'] : 0;
-                $params[$key]['type'] = $type == 1 ? 2 : 1;
-            }elseif ($val['sl'] == '0.06'){
-                $params[$key]['sl'] = 2;
-                $params[$key]['se'] += $val['se'] ? $val['se'] : 0;
-                $params[$key]['payment'] += $val['xmje'] ? $val['xmje'] : 0;
-                $params[$key]['type'] = $type == 1 ? 2 : 1;
-            }else{
-                $params[$key]['sl'] = 3;
-                $params[$key]['se'] += $val['se'] ? $val['se'] : 0;
-                $params[$key]['payment'] += $val['xmje'] ? $val['xmje'] : 0;
-                $params[$key]['type'] = $type == 1 ? 2 : 1;
-            }
-        }
-        return $params;
-    }
-
-    /**
-     * @param $dataArray
-     * @return array
-     * @desc 根据发票税率,类型重新组合数据 sl: 1=0.00,2=0.06, 3=0.17 type: 1=蓝票 2=红票
-     */
-    public function fetchData($dataArray){
-        $dataAll = array(array());
-        foreach ($dataArray as $dVal){
-            switch ($dVal['sl']){
-                case 1:
-                    if($dVal['type'] == 2){
-                        $dataAll[1]['tax'] = '0.00';
-                        $dataAll[1]['se'] += $dVal['se'];
-                        $dataAll[1]['payment'] += $dVal['payment'];
-                        $dataAll[1]['type'] = 2;
-                    }else{
-                        $dataAll[2]['tax'] = '0.00';
-                        $dataAll[2]['se'] += $dVal['se'];
-                        $dataAll[2]['payment'] += $dVal['payment'];
-                        $dataAll[2]['type'] = 1;
-                    }
-                    break;
-                case 2:
-                    if($dVal['type'] == 2){
-                        $dataAll[3]['tax'] = '0.06';
-                        $dataAll[3]['se'] += $dVal['se'];
-                        $dataAll[3]['payment'] += $dVal['payment'];
-                        $dataAll[3]['type'] = 2;
-                    }else{
-                        $dataAll[4]['tax'] = '0.06';
-                        $dataAll[4]['se'] += $dVal['se'];
-                        $dataAll[4]['payment'] += $dVal['payment'];
-                        $dataAll[4]['type'] = 1;
-                    }
-                    break;
-                case 3:
-                    if($dVal['type'] == 3){
-                        $dataAll[5]['tax'] = '0.17';
-                        $dataAll[5]['se'] += $dVal['se'];
-                        $dataAll[5]['payment'] += $dVal['payment'];
-                        $dataAll[5]['type'] = 2;
-                    }else{
-                        $dataAll[6]['tax'] = '0.17';
-                        $dataAll[6]['se'] += $dVal['se'];
-                        $dataAll[6]['payment'] += $dVal['payment'];
-                        $dataAll[6]['type'] = 1;
-                    }
-                    break;
-            }
-        }
-        return array_filter($dataAll);
     }
 
     /**

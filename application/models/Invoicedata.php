@@ -49,7 +49,7 @@ class InvoicedataModel{
      */
     public function getData($time){
         try {
-            $sql = 'SELECT id, sum(se) as taxe, sum(payment) as fee, `type`, tax FROM '.$this->tableNameData." WHERE createtime LIKE '%$time%' GROUP BY tax,`type`";
+            $sql = 'SELECT * FROM '.$this->tableNameData." WHERE createtime LIKE '%$time%'";
             $stmt = $this->dbMaster->prepare($sql);
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
