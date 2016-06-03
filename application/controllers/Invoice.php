@@ -334,10 +334,10 @@ class InvoiceController extends Base{
         $result = $sms->sendmsg($message, $value['buyer_phone']);
         if($result['status'] == 'ok'){
             //更新发票信息
-            $this->invoice_mode->update($value['id'], array('invoice_url' => $dwz_url['urls'][0]['url_short'],'state' => 4));
+//            $this->invoice_mode->update($value['id'], array('invoice_url' => $dwz_url['urls'][0]['url_short'],'state' => 4));
             echo json_encode(array('msg' => '短信发送成功', 'status' => 2));exit;
         }
-        $this->invoice_mode->update($value['id'], array('invoice_url' => $dwz_url['urls'][0]['url_short'],'state' => 6));
+//        $this->invoice_mode->update($value['id'], array('invoice_url' => $dwz_url['urls'][0]['url_short'],'state' => 6));
         echo json_encode(array('msg' => '短信发送失败', 'status' => 3));exit;
     }
     
@@ -345,6 +345,7 @@ class InvoiceController extends Base{
      * 更新税率
      */
     public function updateSlAction(){
+        $this->checkRole();
         $orders = $this->getRequest()->getPost('orderlist');
         $fpsl = $this->getRequest()->getPost('sl');
         if(!$orders){
@@ -365,6 +366,7 @@ class InvoiceController extends Base{
      * 订单上传
      */
     public function uploadAction(){
+        $this->checkRole();
         $files = $this->getRequest()->getFiles('file');
         
         if(!$files){
@@ -412,6 +414,7 @@ class InvoiceController extends Base{
      *sku 编码上传
      */
     public function skuUploadAction(){
+        $this->checkRole();
         $files = $this->getRequest()->getFiles('file');
 
         if(!$files){
@@ -457,6 +460,7 @@ class InvoiceController extends Base{
      * @desc 组合商品上传
      */
     public function ckdUploadAction(){
+        $this->checkRole();
         $files = $this->getRequest()->getFiles('file');
 
         if(!$files){

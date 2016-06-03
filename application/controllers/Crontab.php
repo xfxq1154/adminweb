@@ -157,12 +157,26 @@ class CrontabController extends Base{
     public function regroupSku($order){
         $hjse = '';
         $payment_fee = '';
+        $one_tax = 0.00;    //税率为0.00的金额
+        $two_tax = 0.00;    //税率为0.06的金额
+        $three_tax = 0.00;    //税率为0.17的金额
         foreach ($order['new_detail'] as &$d_val){
             $hjse += $d_val['se'];
             $payment_fee += $d_val['payment'];
+
+            if ($d_val['sl'] == 0.00) {
+                $one_tax += $d_val['payment'];
+            } elseif ($d_val['sl'] == 0.06) {
+                $two_tax += $d_val['payment'];
+            } else {
+                $three_tax += $d_val['payment'];
+            }
         }
         $order['hjse'] = $hjse;
         $order['payment_fee'] = $payment_fee;
+        $order['one_tax'] = $one_tax;
+        $order['two_tax'] = $two_tax;
+        $order['three_tax'] = $three_tax;
 
         return $order;
     }
@@ -379,6 +393,9 @@ class CrontabController extends Base{
         $params['order_time'] = $order['created'];
         $params['total_fee'] = $order['hjje'];
         $params['invoice_no'] = $order['invoice_no'];
+        $params['one_tax'] = $order['one_tax'];
+        $params['two_tax'] = $order['two_tax'];
+        $params['three_tax'] = $order['three_tax'];
 
         return $params;
     }
@@ -576,11 +593,13 @@ class CrontabController extends Base{
             $this->invoice_model->update($invoice['id'], ['state_message' => $this->getError(), 'state' => 3]);
             return false;
         }
+
+        $wasOver = $this->regroupSku($kind_order);
         if ($invoice['invoice_type'] == 1){
-            $this->redInvoice($kind_order, $invoice);
+            $this->redInvoice($wasOver, $invoice);
             return false;
         }
-        $this->invoice($kind_order, $invoice);
+        $this->invoice($wasOver, $invoice);
     }
 
     /**
@@ -763,58 +782,4 @@ class CrontabController extends Base{
         exit;
     }
 
-    /**
-     * @explain
-     */
-    public function cosmopolitanAction()
-    {
-        $orders = $this->invoice_model->getFailRed();
-        if(!$orders) {
-            exit;
-        }
-        $params = array();
-        foreach ($orders as $value){
-            $order = Fileds::$order[$value['order_id']];
-            if(!$order) {
-                continue;
-            }
-
-            $value['new_detail'] = $order;
-            $params['xsf_mc'] = $value['seller_name'];
-            $params['xsf_dzdh'] = $value['seller_address'];
-            $params['kpr'] = $value['drawer'];
-            $params['type'] = 1;
-            $params['count'] = count($value['new_detail']);
-            $params['hjje'] = $value['total_fee'];
-            $params['hjse'] = $value['total_tax'];
-            $params['payment_fee'] = $value['jshj'];
-            $params['invoice_title'] = $value['invoice_title'];
-            $params['invoice_no'] = strtotime(date('Y-m-d H:i:s')).mt_rand(1000,9999);;
-            $params['yfp_hm'] = $value['invoice_number'];
-            $params['yfp_dm'] = $value['invoice_code'];
-            $params['receiver_mobile'] = $value['buyer_phone'];
-            $params['new_detail'] = $order;
-
-            $result = $this->dzfp->fpkj($params, $params['new_detail']);
-            if(!$result) {
-                $rs_data = [
-                    'state_message' => $this->dzfp->getError(),
-                    'state' => self::INVOICE_FAIL,
-                ];
-                $this->invoice_model->update($value['id'], $rs_data);
-                continue;
-            }
-            //更新信息到数据库
-            $param = array(
-                'original_invoice_code' => $value['invoice_number'],
-                'original_invoice_number' => $value['invoice_code'],
-                'invoice_type' => 1,
-                'state' => self::RED_INVOICE_SUCCESS,
-                'state_message' => '红字发票开具成功'
-            );
-            $this->invoice_model->update($value['id'], $param);
-            continue;
-        }
-        exit;
-    }
 }
