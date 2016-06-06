@@ -40,12 +40,11 @@ class BpOrderController extends Base {
             'mobile' => $mobile,
             'order_id' => $order_id,
             'status' => $state,
-            'showcase_id' => $showcase_id
-            
+            'showcase_id' => $showcase_id,
         ];
         $orderList = $this->order->getList($order_list);
         
-        $showlist = $this->showcase->getList(array('page_no'=>1,'page_size'=>100));
+        $showlist = $this->showcase->getList(array('page_no'=>1,'page_size'=>100, 'block'=>0));
         $idlist = [];
         $showcase = [];
         foreach ($showlist['showcases'] as $key=>$val){
