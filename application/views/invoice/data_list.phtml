@@ -25,7 +25,6 @@
             <table id="table" class="table table-hover ">
                 <tbody>
                 <tr>
-                    <th width="*">编号</th>
                     <th width="*">税率</th>
                     <th width="*">税额</th>
                     <th width="*">金额</th>
@@ -35,12 +34,11 @@
                 <?php if ($list) : ?>
                     <?php foreach ($list['list'] as $val) : ?>
                         <tr>
-                            <td><?=$val['id']?></td>
                             <td><?=$val['tax']?></td>
                             <td><?=$val['se']?></td>
                             <td><?=$val['payment']?></td>
                             <td><?php echo $val['type'] == 1 ? '<span class="tag bg-blue">蓝字发票</span>' : '<sapn class="tag bg-red">红字发票</sapn>'; ?></td>
-                            <td><?=$val['createtime']?></td>
+                            <td><?=$val['updatetime']?></td>
                         </tr>
                     <?php endforeach; ?>
                 <?php endif; ?>

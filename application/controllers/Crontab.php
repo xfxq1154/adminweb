@@ -629,6 +629,7 @@ class CrontabController extends Base{
                 $count_one_data['se'] = '0.00';
                 $count_one_data['tax'] = '0.00';
                 $count_one_data['payment'] = $val['one_tax'];
+                $count_one_data['updatetime'] = date('Y-m-d', time());
                 $count_one_data['type'] = $val['invoice_type'] == 0 ? 1 : 2;
                 $this->invoice_data_model->insertData($count_one_data);
             }
@@ -637,6 +638,7 @@ class CrontabController extends Base{
                 $count_two_data['se'] = $val['two_tax'] * $sl;
                 $count_two_data['tax'] = $sl;
                 $count_two_data['payment'] = $val['two_tax'];
+                $count_two_data['updatetime'] = date('Y-m-d', time());
                 $count_two_data['type'] = $val['invoice_type'] == 0 ? 1 : 2;
                 $this->invoice_data_model->insertData($count_two_data);
             }
@@ -645,6 +647,7 @@ class CrontabController extends Base{
                 $count_thr_data['se'] = $val['three_tax'] * $slq;
                 $count_thr_data['tax'] = $slq;
                 $count_thr_data['payment'] = $val['three_tax'];
+                $count_thr_data['updatetime'] = date('Y-m-d', time());
                 $count_thr_data['type'] = $val['invoice_type'] == 0 ? 1 : 2;
                 $this->invoice_data_model->insertData($count_thr_data);
             }
