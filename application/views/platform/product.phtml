@@ -4,9 +4,7 @@
         <div class="float-left">
             <a class="button button-small bg-main" href="/bpproduct/index?type=">全部</a>
             <a class="button button-small bg-green" href="/bpproduct/index?type=0">实物商品</a>
-            <a class="button button-small bg-green" href="/bpproduct/index?type=1">卡卷</a>
-            <a class="button button-small bg-green" href="/bpproduct/index?type=2">会员</a>
-            <a class="button button-small bg-green" href="/bpproduct/index?type=3">第三方商品</a>
+            <a class="button button-small bg-green" href="/bpproduct/index?type=1">虚拟商品</a>
         </div>
     </div>
 </div>
@@ -19,7 +17,14 @@
                         <input type="text" class="input" id="keyword" name="pname" size="20" value="<?=$pname?>" placeholder="商品名">
                     </div>&nbsp;
                     <div class="field">
-                        <input type="text" class="input" id="keyword" name="showcase_id" size="20" value="<?=$showcase_id?>" placeholder="店铺ID">
+                        <select class="input js-assign" target="#tpl" name="showcase_id" datatype="*" id="parent">
+                            <option value="<?=$showcase?>"><?php echo isset($showcase_id) ? $name[$showcase_id] : '请选择店铺';?></option>
+                            <?php if ($idlist) : ?>
+                                <?php foreach ($idlist as $key => $value) : ?>
+                                    <option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </select>
                     </div>
                 </div>
                 <div class="form-button">
@@ -37,8 +42,10 @@
                     <tr>
                         <th width="*">ID</th>
                         <th width="*">店铺ID</th>
-                        <th width="*">标题</th>
+                        <th width="*">店铺名称</th>
+                        <th width="*">商品名称</th>
                         <th width="*">价格</th>
+                        <th width="*">销售量</th>
                         <th width="*">类型</th>
                         <th width="100">状态</th>
                         <th width="*">访问(uv/pv)</th>
@@ -50,8 +57,10 @@
                             <tr>
                                 <td><?php echo $val['product_id']; ?></td>
                                 <td><?php echo $val['showcase_id']; ?></td>
+                                <td><?php echo $name[$val['showcase_id']]; ?></td>
                                 <td><a href="/bpproduct/info?id=<?php echo $val['product_id']; ?>"><?php echo $val['title']; ?><a><?=$val['presell'] ? '<span class="tag bg-red">预售<span>':''; ?></td>
                                 <td><?php echo $val['price']; ?></td>
+                                <td><?php echo $val['sold_num']; ?></td>
                                 <td><?php echo $val['type_name'] ? :'--'; ?></td>
                                 <td><span class="tag bg-<?=$val['onsell'] == 1 ? 'green':'red'; ?>"><?=$val['onsell_name'] ? :'--'; ?></span></td>
                                 <td><?=$val['uv'].' / '.$val['pv']; ?></td>
