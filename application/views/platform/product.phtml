@@ -45,6 +45,7 @@
                         <th width="*">店铺名称</th>
                         <th width="*">商品名称</th>
                         <th width="*">价格</th>
+                        <th width="*">销售量</th>
                         <th width="*">类型</th>
                         <th width="100">状态</th>
                         <th width="*">访问(uv/pv)</th>
@@ -59,6 +60,7 @@
                                 <td><?php echo $name[$val['showcase_id']]; ?></td>
                                 <td><a href="/bpproduct/info?id=<?php echo $val['product_id']; ?>"><?php echo $val['title']; ?><a><?=$val['presell'] ? '<span class="tag bg-red">预售<span>':''; ?></td>
                                 <td><?php echo $val['price']; ?></td>
+                                <td><?php echo $val['sold_num']; ?></td>
                                 <td><?php echo $val['type_name'] ? :'--'; ?></td>
                                 <td><span class="tag bg-<?=$val['onsell'] == 1 ? 'green':'red'; ?>"><?=$val['onsell_name'] ? :'--'; ?></span></td>
                                 <td><?=$val['uv'].' / '.$val['pv']; ?></td>
