@@ -28,11 +28,13 @@ class BpOrderController extends Base {
         $showcase_id = $this->getRequest()->get('showcase');
         $status      = $this->getRequest()->get('order_status');
         $outer_tid   = $this->getRequest()->get('outer_tid'); //外部交易编号
+        $spm         = $this->getRequest()->get('spm'); //外部交易编号
         
         $state     = $status ? $status : '';
         $mobile    = $number ? $number : '';
         $order_id  = $order_no ? $order_no : '';
         $outer_tid = $outer_tid ? $outer_tid : '';
+        $spm       = $spm ? $spm : '';
 
         $page_size = 20;
         $order_list = [
@@ -42,10 +44,11 @@ class BpOrderController extends Base {
             'order_id'    => $order_id,
             'status'      => $state,
             'showcase_id' => $showcase_id,
-            'outer_tid'   => $outer_tid
+            'outer_tid'   => $outer_tid,
+            'spm'         => $spm,
         ];
+
         $orderList = $this->order->getList($order_list);
-        
         $showlist = $this->showcase->getList(array('page_no'=>1,'page_size'=>100, 'block'=>0));
         $idlist = [];
         $showcase = [];
@@ -55,9 +58,11 @@ class BpOrderController extends Base {
             $showcase[$val['showcase_id']] = $val['name'];
         }
         
-        $this->renderPagger($p ,$orderList['total_nums'] , "/BpOrder/index/p/{p}?number={$mobile}&order_no={$order_id}&order_status={$state}&showcase={$showcase_id}", $page_size);
+        $this->renderPagger($p ,$orderList['total_nums'] , "/BpOrder/index/p/{p}?number={$mobile}&order_no={$order_id}&order_status={$state}&showcase={$showcase_id}&outer_tid={$outer_tid}&spm={$spm}", $page_size);
         $this->assign('mobile', $mobile);
         $this->assign('order_no', $order_id);
+        $this->assign('spm', $spm);
+        $this->assign('outer_tid', $outer_tid);
         $this->assign('showcase', $showcase_id);
         $this->assign("list", $orderList['orders']);
         $this->assign('idlist', $idlist);
