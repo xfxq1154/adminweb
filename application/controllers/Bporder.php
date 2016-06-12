@@ -22,25 +22,27 @@ class BpOrderController extends Base {
 
     function indexAction() {
         $this->checkRole();
-        $p = (int) $this->getRequest()->get('p' ,1);
-        $number = $this->getRequest()->get('number');
-        $order_no = $this->getRequest()->get('order_no');
+        $p           = (int)$this->getRequest()->get('p', 1);
+        $number      = $this->getRequest()->get('number');
+        $order_no    = $this->getRequest()->get('order_no');
         $showcase_id = $this->getRequest()->get('showcase');
-        $status = $this->getRequest()->get('order_status');
+        $status      = $this->getRequest()->get('order_status');
+        $outer_tid   = $this->getRequest()->get('outer_tid'); //外部交易编号
         
-        
-        $state = $status ? $status : '';
-        $mobile = $number ? $number : '';
-        $order_id = $order_no ? $order_no : '';
-        
+        $state     = $status ? $status : '';
+        $mobile    = $number ? $number : '';
+        $order_id  = $order_no ? $order_no : '';
+        $outer_tid = $outer_tid ? $outer_tid : '';
+
         $page_size = 20;
         $order_list = [
-            'page_no'=> $p,
-            'page_size'=> $page_size,
-            'mobile' => $mobile,
-            'order_id' => $order_id,
-            'status' => $state,
+            'page_no'     => $p,
+            'page_size'   => $page_size,
+            'mobile'      => $mobile,
+            'order_id'    => $order_id,
+            'status'      => $state,
             'showcase_id' => $showcase_id,
+            'outer_tid'   => $outer_tid
         ];
         $orderList = $this->order->getList($order_list);
         
@@ -108,5 +110,6 @@ class BpOrderController extends Base {
         $this->assign("oinfo", $info);
         $this->layout("platform/order_info.phtml");
     }
+
 
 }
