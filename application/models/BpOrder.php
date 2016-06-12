@@ -84,6 +84,7 @@ class BpOrderModel {
         $o['create_time'] = $order['create_time'];
         $o['update_time'] = $order['update_time'];
         $o['order_detail'] = $order['order_detail'];
+        $o['spm'] = $order['spm'];
         return $o;
     }
 
