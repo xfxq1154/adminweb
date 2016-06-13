@@ -16,7 +16,12 @@
                         结束时间：<input type="text" id="d4322" class="input datebtn" style="width:220px;" id="datetime" name="end_time"  value="<?=$end_time?>" onfocus="WdatePicker({maxDate:'<?=date('Y-m-d',strtotime('-1 day'))?>',minDate:'#F{$dp.$D(\'d4321\',{d:+0})}'})" style="cursor:pointer;" size="60" datatype="*" placeholder="" autocomplete="off">
                     </div>&nbsp;
                     <div class="field">
-                        <input type="text" class="input" id="keyword" name="showcase_id" size="20" value="<?=$showcase_id?>" placeholder="请输入店铺ID">
+                        <select class="input js-assign" target="#tpl" name="showcase_id" datatype="*" id="parent">
+                            <option value="">请选择店铺</option>
+                            <?php foreach ($showcase_list as $showcase) : ?>
+                                <option value="<?=$showcase['showcase_id']?>" <?=($showcase_id == $showcase['showcase_id']) ? 'selected': ''?>><?php echo $showcase['name']; ?></option>
+                            <?php endforeach; ?>
+                        </select>
                     </div>
                 </div>
                 <div class="form-button">
