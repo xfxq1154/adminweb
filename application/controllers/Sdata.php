@@ -14,18 +14,24 @@ class SdataController extends Base{
     /**
      * @var SdataModel
      */
-    public $sdata; 
+    public $sdata;
+    /**
+     * @var BpShowcaseModel
+     */
+    public $showcase_model;
     public $date;
 
     private $showcase_id;
     private $start_created;
     private $end_created;
+    private $showcase_list;
     
     public function init(){
         $this->initAdmin();
         $this->checkRole();
 
         $this->sdata = new SdataModel();
+        $this->showcase_model = new BpShowcaseModel();
 
         $default_start = date('Y-m-d', strtotime('-7 day'));
         $default_end = date('Y-m-d', strtotime('-1 day'));
@@ -33,6 +39,8 @@ class SdataController extends Base{
         $this->start_created = $this->input_get_param('start_time', $default_start);
         $this->end_created = $this->input_get_param('end_time', $default_end);
         $this->showcase_id = $this->input_get_param('showcase_id');
+
+        $this->showcase_list = $this->showcase_model->getList(array('page_no'=>1,'page_size'=>100, 'block'=>0));
     }
 
     public function productAction(){
@@ -240,6 +248,7 @@ class SdataController extends Base{
     }
 
     private function _display($layout){
+        $this->assign('showcase_list', $this->showcase_list['showcases']);
         $this->assign('showcase_id', $this->showcase_id);
         $this->assign('start_time', $this->start_created);
         $this->assign('end_time', $this->end_created);
