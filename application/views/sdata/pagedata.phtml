@@ -114,7 +114,8 @@
                             <div class="txt dashboard-head radius-small bg-yellow icon-time"></div>
                         </div>
                         <div class="media-body text-center">
-                            <h2><strong><?=number_format($overview['avg_stay'], 2)?></strong></h2>
+<!--                            <h2><strong>--><?//=number_format($overview['avg_stay'], 2)?><!--</strong></h2>-->
+                            <h2 style="color: #c3c3c3;">暂无</h2>
                             平均停留时间
                         </div>
                     </div>
@@ -130,7 +131,7 @@
                             <div class="txt dashboard-head radius-small bg-yellow icon-sitemap"></div>
                         </div>
                         <div class="media-body text-center">
-                            <h2 style="color: #c3c3c3;"><?=暂无?></h2>
+                            <h2 style="color: #c3c3c3;">暂无</h2>
                             平均访问深度
                         </div>
                     </div>
@@ -198,7 +199,8 @@
                         <td><a><?=$item['page_title']?></a></td>
                         <td><?=$item['total_uv']?> / <?=$item['total_pv']?></td>
                         <td><?=$item['share_uv']?> / <?=$item['share_pv']?></td>
-                        <td><?=$item['avg_stay']?></td>
+<!--                        <td>--><?//=$item['avg_stay']?><!--</td>-->
+                        <td>暂无</td>
                         <td>暂无</td>
                     </tr>
                 <?php endforeach; ?>
