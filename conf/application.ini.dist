@@ -1,6 +1,6 @@
 [product]
 ;支持直接写PHP中的已定义常量
-application.directory=ROOT_PATH "/application/" 
+application.directory=ROOT_PATH "/application/"
 application.dispatcher.catchException = TRUE
 application.library = ROOT_PATH "/framework/library"
 
@@ -8,9 +8,11 @@ redis.master.host = redis.master.host
 redis.master.port = 6379
 redis.slave.host = redis.slave.host
 redis.slave.port = 6379
+;redis.slave.passwd = xxxx
 
 redis.audio.host = redis.master.host
 redis.audio.port = 6379
+;redis.slave.passwd = xxxx
 
 
 ;数据库
@@ -70,7 +72,7 @@ database.master_operate.dbname = 2046
 database.master_operate.host = 127.0.0.1
 database.master_operate.port = 3306
 database.master_operate.username = root
-database.master_operate.password = 1qaz@WSX 
+database.master_operate.password = 1qaz@WSX
 
 database.slave_operate.driver = mysql
 database.slave_operate.dbname = 2046
