@@ -1,0 +1,67 @@
+<div class="dux-tools">
+    <div class="bread-head">店铺管理<span class="small">操作记录</span></div>
+</div>
+<div class="table-tools clearfix ">
+    <div class="float-left">
+        <form method="GET" action="/bpshowcase/" >
+            <div class="form-inline">
+                <div class="form-group">
+                    <div class="field">
+                        <input type="text" class="input" id="keyword" name="kw" size="20" value="<?=$kw?>" placeholder="店铺名称">
+                    </div>&nbsp;
+                    <div class="field">
+                        <input type="text" class="input" id="keyword" name="nickname" size="20" value="<?=$nickname?>" placeholder="店主昵称">
+                    </div>&nbsp;
+                    <div class="field">
+                        <input type="text" class="input" id="keyword" name="showcase_id" size="20" value="<?=$id?>" placeholder="店铺ID">
+                    </div>
+                </div>
+                <div class="form-button">
+                    <button class="button" type="submit">搜索</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="admin-main">
+    <div class="panel dux-box">
+        <div class="table-responsive">
+            <table id="table" class="table table-hover ">
+                <tbody>
+                    <tr>
+                        <th width="*">店铺ID</th>
+                        <th width="*">店铺名称</th>
+                        <th width="*">店主昵称</th>
+                        <th width="*">企业认证状态</th>
+                        <th width="*">冻结</th>
+                        <th width="*">创建时间</th>
+                        <th width="*">数据</th>
+                    </tr>
+                    <?php if ($list) : ?>
+                        <?php foreach ($list as $val) : ?>
+                            <tr>
+                                <td><?php echo $val['showcase_id']; ?></td>
+                                <td><a href="/bpshowcase/info?id=<?=$val['showcase_id']?>"><?php echo $val['name']; ?></a></td>
+                                <td><?php echo $val['nickname'] ? : '--'; ?></td>
+                                <td><a href="/bpshowcase/auditing?showcase_id=<?=$val['showcase_id']?>"><?php echo $val['status_com_name'] ?></a></td>
+                                <td><?php echo $val['block'] == 1 ? "<span class=\"tag bg-red\">是</span>" : "<span class=\"tag bg-green\">否</span>";?></td>
+                                <td><?php echo $val['ctime']; ?></td>
+                                <td><a href="/bpproduct/index?showcase_id=<?=$val['showcase_id']?>">商品</a> | <a href="/bporder/index/?showcase=<?=$val['showcase_id']?>">订单</a> | <a href="/sdata/order?showcase_id=<?=$val['showcase_id']?>">订单统计</a></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <?php if($pagger):?>
+        <div class="panel dux-box panel-foot clearfix" style="margin-top:20px;border-radius: 4px;">
+            <?=$pagger?>
+        </div>
+    <?php endif;?>
+    <script>
+        Do.ready('base', function () {
+        $('#table').duxTable();
+        });
+    </script>
+</div>
