@@ -1,7 +1,6 @@
 <?php
 /**
  * Redis工厂类
- * @author ellis
  */
 class RedisFactory {
 
@@ -10,14 +9,22 @@ class RedisFactory {
     public static function factory($name) {
 
         if (!isset(self::$store[$name])) {
- 
+
             $c = Application::app()->getConfig()->redis->$name;
 
             if (empty($c)) {
                 return null;
             }
-            $instance = new Redis();          
-            $instance->connect($c->host, $c->port );           
+            $instance = new Redis();
+
+            if ($instance->connect($c->host, $c->port) == false) {
+                return null;
+            }
+
+            if (isset($c->passwd) && $instance->auth($c->passwd) === false ) {
+                return null;
+            }
+
             self::$store[$name] = $instance;
         }
         return self::$store[$name];
