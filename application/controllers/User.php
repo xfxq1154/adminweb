@@ -262,12 +262,11 @@ class UserController extends Base {
                 exit;
             }
             if(strlen($pw) < 9){
-                echo json_encode(['info' => '密码不得少于9位数', 'status' => 0]);
+                echo json_encode(['info' => '密码不得少于9位,建议包含特殊字符', 'status' => 0]);
                 exit;
             }
-            $pattern = '/[0-9a-zA-Z_]{9,}$/';
-            if(!preg_match($pattern, $pw)){
-                echo json_encode(['info' => '密码必须包含字母、数字、下划线', 'status' => 0]);
+            if(preg_match("/^[\d]+$/", $pw) || preg_match("/^[a-zA-Z]+$/", $pw)){
+                echo json_encode(['info' => '密码必须包含字母、数字', 'status' => 0]);
                 exit;
             }
             return md5($pw);

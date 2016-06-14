@@ -134,13 +134,13 @@
         $('#form').duxFormPage();
     });
     
-    //    //生成随机密码
+    //生成随机密码
     $(document).ready(function(){
         $('#pass').click(function(){
-            var len = 7;
-            var str = 'QWER34TY9U678456IOPAsdfSDFGH5JKLZXCVqwertyuioBNMpaghjklzxcvbnm120_';
+            var len = 9;
+            var str = 'abcdefghijklmnopqrstuvwxyz0123456789*&^%$#?';
             var maxPos = str.length;
-            var pwd = '_1';
+            var pwd = '';
             for (i = 0; i <= len; i++){
                 pwd += str.charAt(Math.floor(Math.random() * maxPos));
             }
