@@ -10,63 +10,39 @@ class OplogsController extends Base {
     use Trait_Layout,
         Trait_Pagger;
 
-    public $showcase;
+    /**
+     * @var BpShowcaseModel
+     */
+    public $showcase_model;
 
-    const ADMIN = '0'; //店长
+    /**
+     * @var BpOplogsModel
+     */
+    public $oplogs_model;
 
     public function init() {
         $this->initAdmin();
         $this->checkRole();
-        $this->showcase = new BpShowcaseModel();
+        $this->showcase_model = new BpShowcaseModel();
+        $this->oplogs_model = new BpOplogsModel();
+
     }
 
     /**
      * 操作记录列表
      */
-    public function indexAction() {
-        $t = (int) $this->getRequest()->get('t');
-        $p = (int) $this->getRequest()->getParam('p', 1);
-        $block = $this->getRequest()->get('block');
-        $kw = $this->getRequest()->get('kw');
-        $nickname = $this->getRequest()->get('nickname');
-        $showcase_id = $this->getRequest()->get('showcase_id');
+    public function showlistAction() {
+        $showcase_list = $this->showcase_model->getList(array('page_no'=>1,'page_size'=>100, 'block'=>0));
+        $page_no = (int) $this->getRequest()->getParam('page_no', 1);
+        $showcase_id = $this->getRequest()->get('showcase_id', 10008);
         $size = 20;
 
-        $params = array();
+        $oplogs_list = $this->oplogs_model->getlist($showcase_id, $page_no, $size);
 
-        switch ($t) {
-            case 1:
-                $params['status_person'] = 1;
-                break;
-            case 2:
-                $params['status_com'] = 1;
-                break;
-            case 3:
-                $params['status_com'] = 3;
-                break;
-            case 11:
-                $params['block'] = 1;
-                break;
-        }
-        $params['page_no'] = $p;
-        $params['page_size'] = $size;
-        $params['block'] = $block > 0 ? $block : '0';
-        $params['kw'] = $kw;
-        $params['nickname'] = $nickname;
-        $params['showcase_id'] = $showcase_id;
-
-        $showcasesList = $this->showcase->getList($params);
-        $showlist = $this->showcase->getList(array('page_no'=>$p,'page_size'=>$size));
-        $idlist = array();
-        foreach ($showlist['showcases'] as $val){
-            $idlist[] = $val['showcase_id'];
-        }
-        $this->assign("list", $showcasesList['showcases']);
-        $this->assign('kw', $kw);
-        $this->assign('nickname', $nickname);
-        $this->assign('id', $showcase_id);
-        $this->assign('idlist', $idlist);
-        $this->renderPagger($p, $showcasesList['total_nums'], '/bpshowcase/index/p/{p}/t/'.$t, $size);
+        $this->assign('showcase_id', $showcase_id);
+        $this->assign('showcase_list', $showcase_list['showcases']);
+        $this->assign("list", $oplogs_list['oplogs']);
+        $this->renderPagger($page_no, $oplogs_list['total_nums'], "/bpshowcase/showlist/page_no/{page_no}", $size);
         $this->layout("platform/oplogs.phtml");
     }
 }
