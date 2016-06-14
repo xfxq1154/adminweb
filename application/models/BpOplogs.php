@@ -16,8 +16,13 @@ class BpOplogsModel {
     /**
      * 日志列表
      */
-    public function getlist($showcase_id, $page_no, $page_size) {
+    public function getlist($showcase_id, $sourceid, $title, $nickname, $start_time, $end_time, $page_no, $page_size) {
         $params['showcase_id'] = $showcase_id;
+        $params['source_id'] = $sourceid;
+        $params['title'] = $title;
+        $params['nickname'] = $nickname;
+        $params['start_time'] = $start_time;
+        $params['end_time'] = $end_time;
         $params['page_no'] = $page_no;
         $params['page_size'] = $page_size;
         $result = Sapi::request(self::OPLOGS_GETLIST, $params);
@@ -28,6 +33,8 @@ class BpOplogsModel {
      * 格式化数据
      */
     public function tidy($showcase) {
+        $output = json_decode($showcase['output'], 1);
+
         $s['opid'] = $showcase['id'];
         $s['showcase_id'] = $showcase['showcase_id'];
         $s['user_id'] = $showcase['user_id'];
@@ -35,7 +42,7 @@ class BpOplogsModel {
         $s['title'] = $showcase['title'];
         $s['uri'] = $showcase['uri'];
         $s['input'] = $showcase['input'];
-        $s['output'] = $showcase['output'];
+        $s['result'] = ($output) ? $output['status_msg'] : htmlspecialchars($showcase['output']);
         $s['source_id'] = $showcase['source_id'];
         $s['optime'] = $showcase['optime'];
         return $s;
