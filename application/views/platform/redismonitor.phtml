@@ -1,0 +1,272 @@
+<div class="dux-tools">
+    <div class="bread-head">系统<span class="small">redis监控</span></div>
+</div>
+<div class="admin-main">
+    <div class="panel dux-box">
+        <div class="panel-head">redis概况</div>
+        <div class="panel-body">
+            <div class="line-big">
+                <div class="xm10">
+                    <div class="line-big">
+                        <div class="xm3">
+                            <div class="panel dux-box dux-dashboard">
+                                <div class="clearfix">
+                                    <div class="media media-x ">
+                                        <div class="float-left">
+                                            <div class="txt dashboard-head radius-small bg-yellow icon-user"></div>
+                                        </div>
+                                        <div class="media-body text-center">
+                                            <h2><strong><?=$used_memory_human?></strong></h2>
+                                            占用内存
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                        </div>
+                        <div class="xm3">
+                            <div class="panel dux-box dux-dashboard">
+                                <div class="clearfix">
+                                    <div class="media media-x ">
+                                        <div class="float-left">
+                                            <div class="txt dashboard-head radius-small bg-yellow icon-reorder"></div>
+                                        </div>
+                                        <div class="media-body text-center">
+                                            <h2><strong><?=$used_memory_peak?></strong></h2>
+                                            占用内存峰值
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="xm3">
+                            <div class="panel dux-box dux-dashboard">
+                                <div class="clearfix">
+                                    <div class="media media-x ">
+                                        <div class="float-left">
+                                            <div class="txt dashboard-head radius-small bg-yellow icon-money"></div>
+                                        </div>
+                                        <div class="media-body text-center">
+                                            <h2><strong><?=$uptime_in_days?></strong></h2>
+                                            持续运行天数
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                        </div>
+                        <div class="xm3">
+                            <div class="panel dux-box dux-dashboard">
+                                <div class="clearfix">
+                                    <div class="media media-x ">
+                                        <div class="float-left">
+                                            <div class="txt dashboard-head radius-small bg-yellow  icon-group"></div>
+                                        </div>
+                                        <div class="media-body text-center">
+                                            <h2><strong><?=$connected_clients?></strong></h2>
+                                            已连接客户端的数量
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                        </div>
+                    </div>
+                    <div class="line-big">
+                        <div class="xm3">
+                            <div class="panel dux-box dux-dashboard">
+                                <div class="clearfix">
+                                    <div class="media media-x ">
+                                        <div class="float-left">
+                                            <div class="txt dashboard-head radius-small bg-green icon-user"></div>
+                                        </div>
+                                        <div class="media-body text-center">
+                                            <h2><strong><?=$redis_info['instantaneous_ops_per_sec']?></strong></h2>
+                                            每秒钟执行的命令数量
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                        </div>
+                        <div class="xm3">
+                            <div class="panel dux-box dux-dashboard">
+                                <div class="clearfix">
+                                    <div class="media media-x ">
+                                        <div class="float-left">
+                                            <div class="txt dashboard-head radius-small bg-green icon-reorder"></div>
+                                        </div>
+                                        <div class="media-body text-center">
+                                            <h2><strong><?=$redis_info['used_cpu_sys']?></strong></h2>
+                                            服务器耗费的系统CPU
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="xm3">
+                            <div class="panel dux-box dux-dashboard">
+                                <div class="clearfix">
+                                    <div class="media media-x ">
+                                        <div class="float-left">
+                                            <div class="txt dashboard-head radius-small bg-green icon-shopping-cart"></div>
+                                        </div>
+                                        <div class="media-body text-center">
+                                            <h3><strong><?=$redis_info['used_cpu_user']?></strong></h3>
+                                            服务器耗费的用户CPU
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                        </div>
+                        <div class="xm3">
+                            <div class="panel dux-box dux-dashboard">
+                                <div class="clearfix">
+                                    <div class="media media-x ">
+                                        <div class="float-left">
+                                            <div class="txt dashboard-head radius-small bg-green icon-money"></div>
+                                        </div>
+                                        <div class="media-body text-center">
+                                            <h3><?=$redis_info['rejected_connections']?></h3>
+                                            因为最大客户端数量限制拒绝连接数
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                        </div>
+                    </div>
+                    <div class="line-big">
+                        <div class="xm3">
+                            <div class="panel dux-box dux-dashboard">
+                                <div class="clearfix">
+                                    <div class="media media-x ">
+                                        <div class="float-left">
+                                            <div class="txt dashboard-head radius-small bg-blue  icon-bar-chart"></div>
+                                        </div>
+                                        <div class="media-body text-center">
+                                            <h2><strong><?=$redis_info['expired_keys']?></strong></h2>
+                                            过期而被自动删除KEY
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="xm3">
+                            <div class="panel dux-box dux-dashboard">
+                                <div class="clearfix">
+                                    <div class="media media-x ">
+                                        <div class="float-left">
+                                            <div class="txt dashboard-head radius-small bg-blue  icon-bar-chart"></div>
+                                        </div>
+                                        <div class="media-body text-center">
+                                            <h2><strong><?=$redis_info['evicted_keys']?></strong></h2>
+                                            最大内存容量限制而被驱逐
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                        </div>
+                        <div class="xm3">
+                            <div class="panel dux-box dux-dashboard">
+                                <div class="clearfix">
+                                    <div class="media media-x ">
+                                        <div class="float-left">
+                                            <div class="txt dashboard-head radius-small bg-blue  icon-bar-chart"></div>
+                                        </div>
+                                        <div class="media-body text-center">
+                                            <h3><strong><?=$keyspace_hits_percentage?>%</strong></h3>
+                                            命中率
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                        </div>
+                        <div class="xm3">
+                            <div class="panel dux-box dux-dashboard">
+                                <div class="clearfix">
+                                    <div class="media media-x ">
+                                        <div class="float-left">
+                                            <div class="txt dashboard-head radius-small bg-blue  icon-bar-chart"></div>
+                                        </div>
+                                        <div class="media-body text-center">
+                                            <h2><strong><?=$redis_info['keyspace_misses']?></strong></h2>
+                                            查找键失败的次数
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+
+    <div class="admin-main">
+        <div class="panel dux-box">
+            <div class="table-responsive">
+                <table id="table" class="table table-hover ">
+                    <tbody>
+                    <tr>
+                        <th width="200px">数据库</th>
+                        <th width="*">内容</th>
+                        <th width="*">备注</th>
+                    </tr>
+                            <tr>
+                                <td>db0</td>
+                                <td><?=$db0?></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>db1</td>
+                                <td><?=$db1?></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>db2</td>
+                                <td><?=$db2?></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>db3</td>
+                                <td><?=$db3?></td>
+                                <td></td>
+                            </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="admin-main">
+        <div class="panel dux-box">
+            <div class="table-responsive">
+                <table id="table" class="table table-hover ">
+                    <tbody>
+                    <tr>
+                        <th width="200px">队列</th>
+                        <th width="*">内容</th>
+                    </tr>
+                    <tr>
+                        <td>store:task:main</td>
+                        <td><?=$list_store_main?></td>
+                    </tr>
+                    <tr>
+                        <td>store:task:logs</td>
+                        <td><?=$list_store_logs?></td>
+                    </tr>
+                    <tr>
+                        <td>store:task:sh5logs</td>
+                        <td><?=$list_store_sh5logs?></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
