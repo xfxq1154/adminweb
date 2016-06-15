@@ -1,3 +1,4 @@
+<script language="JavaScript" type="text/javascript" src="<?=ASSET_URL?>/static/js/calendar/WdatePicker.js"></script>
 <div class="dux-tools">
     <div class="bread-head">店铺管理<span class="small">操作记录</span></div>
 </div>
@@ -5,14 +6,36 @@
     <div class="float-left">
         <form method="GET" action="" >
             <div class="form-inline">
-                <select class="input js-assign" target="#tpl" name="showcase_id" datatype="*" id="parent">
-                    <option value="">请选择店铺</option>
-                    <?php foreach ($showcase_list as $showcase) : ?>
-                        <option value="<?=$showcase['showcase_id']?>" <?=($showcase_id == $showcase['showcase_id']) ? 'selected': ''?>><?php echo $showcase['name']; ?></option>
-                    <?php endforeach; ?>
-                </select>
-                <div class="form-button">
-                    <button class="button" type="submit">搜索</button>
+                <div class="form-group">
+                    <div class="field">
+                        <select class="input js-assign" target="#tpl" name="showcase_id" datatype="*" id="parent">
+                            <option value="">请选择店铺</option>
+                            <?php foreach ($showcase_list as $showcase) : ?>
+                                <option value="<?=$showcase['showcase_id']?>" <?=($showcase_id == $showcase['showcase_id']) ? 'selected': ''?>><?php echo $showcase['name']; ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>&nbsp;
+                    <div class="field">
+                        <input type="text" class="input" id="keyword" name="sourceid" size="20" value="<?=$params['sourceid']?>" placeholder="操作来源">
+                    </div>&nbsp;
+                    <div class="field">
+                        <input type="text" class="input" id="keyword" name="title" size="20" value="<?=$params['title']?>" placeholder="操作标记">
+                    </div>&nbsp;
+                    <div class="field">
+                        <input type="text" class="input" id="keyword" name="uri" size="20" value="<?=$params['uri']?>" placeholder="接口名称">
+                    </div>&nbsp;
+                    <div class="field">
+                        <input type="text" class="input" id="keyword" name="nickname" size="20" value="<?=$params['nickname']?>" placeholder="操作人">
+                    </div>&nbsp;
+                    <div class="field">
+                        <input type="text" id="d4321" class="input datebtn" style="width:220px;" id="datetime" name="start_time" value="<?=$params['start_time']?>" onfocus="WdatePicker({startDate:'<?=date('Y-m-d',strtotime('-7 day'))?>',maxDate:'#F{$dp.$D(\'d4322\',{d:+0})}'})" style="cursor:pointer;" size="30" datatype="*" placeholder="开始时间" autocomplete="off">
+                    </div>&nbsp;
+                    <div class="field">
+                        <input type="text" id="d4322" class="input datebtn" style="width:220px;" id="datetime" name="end_time"  value="<?=$params['end_time']?>" onfocus="WdatePicker({maxDate:'<?=date('Y-m-d',strtotime('today'))?>',minDate:'#F{$dp.$D(\'d4321\',{d:+0})}'})" style="cursor:pointer;" size="30" datatype="*" placeholder="结束时间" autocomplete="off">
+                    </div>&nbsp;
+                    <div class="form-button">
+                        <button class="button" type="submit">搜索</button>
+                    </div>
                 </div>
             </div>
         </form>
@@ -22,24 +45,30 @@
     <div class="panel dux-box">
         <div class="table-responsive">
             <table id="table" class="table table-hover ">
+                <style>
+                    table{width:30em;table-layout:fixed;}
+                    td{width:100%;word-break:keep-all;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+                </style>
                 <tbody>
                     <tr>
-                        <th width="*">ID</th>
-                        <th width="*">操作标记</th>
-                        <th width="*">操作来源</th>
-                        <th width="*">接口名称</th>
-                        <th width="*">操作结果</th>
-                        <th width="*">操作人</th>
-                        <th width="*">操作时间</th>
+                        <th width="50">ID</th>
+                        <th width="80">操作来源</th>
+                        <th width="150">操作标记</th>
+                        <th width="180">接口名称</th>
+                        <th width="*">输入参数</th>
+                        <th width="150">操作结果</th>
+                        <th width="150">操作人</th>
+                        <th width="160">操作时间</th>
                     </tr>
                     <?php if ($list) : ?>
                         <?php foreach ($list as $key => $val) : ?>
                             <tr>
                                 <td><?=$key+1?></td>
-                                <td><?=$val['title']?></td>
                                 <td><?=$val['source_id']?></td>
+                                <td><?=$val['title']?></td>
                                 <td><?=$val['uri']?></td>
-                                <td><?=$val['output']?></td>
+                                <td title="<?=htmlentities($val['input'])?>"><?=$val['input']?></td>
+                                <td title="<?=$val['result']?>"><?=$val['result']?></td>
                                 <td><?=$val['nickname']?></td>
                                 <td><?=$val['optime']?></td>
                             </tr>
