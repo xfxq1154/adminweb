@@ -22,6 +22,10 @@ class RedisMonitorController extends Base {
 
     public function indexAction() {
 
+        $c = Application::app()->getConfig()->redis->master;
+        $redis_host = $c->host;
+        $redis_port = $c->port;
+
         $redis_info = $this->masterRedis->info('all');
 
         $used_memory_human = $redis_info['used_memory_human'];//占用内存总量
@@ -41,6 +45,8 @@ class RedisMonitorController extends Base {
 
         $keyspace_hits_percentage = round(($keyspace_hits/($keyspace_hits+$keyspace_misses)) * 100, 2); //命中率
 
+        $this->assign('redis_host', $redis_host);
+        $this->assign('redis_port', $redis_port);
         $this->assign('redis_info', $redis_info);
         $this->assign('used_memory_human', $used_memory_human);
         $this->assign('used_memory_peak', $used_memory_peak);
