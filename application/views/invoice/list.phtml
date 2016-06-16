@@ -39,13 +39,14 @@
                         <input type="text" class="input" name="order_id" size="20" value="<?=$invoice_info['order_id']?>" placeholder="请填写订单号">
                     </div>&nbsp;&nbsp;
                     <div class="field">
-                        <input type="text" class="input datebtn" style="width:100px;" name="time" value="<?=$invoice_info['time'];?>" onfocus="WdatePicker({startDate:'Y-M',dateFmt:'yyyy-MM'})" style="cursor:pointer;" size="60" placeholder="选择日期" >
+                        <input type="text" class="input datebtn" style="width:100px;" name="time" value="<?=$invoice_info['time'];?>" onfocus="WdatePicker({startDate:'Y-M',dateFmt:'yyyy-MM'})" style="cursor:pointer;" size="60" placeholder="选择日期(月)" >
+                        <input type="text" class="input datebtn" style="width:100px;" name="time" value="<?=$invoice_info['time'];?>" onfocus="WdatePicker({startDate:'Y-m-d',dateFmt:'yyyy-MM-dd'})" style="cursor:pointer;" size="60" placeholder="选择日期(天)" >
                     </div>
                     <label style="margin-left: 5px;"><b>选择状态:</b></label>
                     <div class="field">&nbsp;
                         <select class="input js-assign" style="text-align: center" name="status">
                             <option value=""><?php echo isset($status) ? $status : '全部状态'; ?></option>
-                            <option value="3">开票中</option>
+                            <option value="5">开票中</option>
                             <option value="1">未开发票</option>
                             <option value="2">开票成功</option>
                             <option value="3">开票失败</option>
@@ -56,7 +57,7 @@
                             <option value=""><?php echo isset($group_val) ? $group_val : '选择批次'; ?></option>
                             <?php if ($group) : ?>
                                 <?php foreach ($group as $value) : ?>
-                                    <option value="<?php echo $value['batch']; ?>"><?php echo $value['batch']; ?></option>
+                                    <option value="<?php echo $value['batch']; ?>"><?php echo date('Y-m-d', $value['batch']); ?></option>
                                 <?php endforeach; ?>
                             <?php endif; ?>
                         </select>
