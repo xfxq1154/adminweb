@@ -94,6 +94,14 @@ class SoapController extends Base{
             'original_invoice_number' => $invoice_info['invoice_code'],
             'invoice_number' => $invoice_info['invoice_number'],
             'invoice_code' => $invoice_info['invoice_code'],
+            'project_name' => $invoice_info['project_name'],
+            'seller_name' => $invoice_info['seller_name'],
+            'seller_address' => $invoice_info['seller_address'],
+            'invoice_title' => $invoice_info['invoice_title'],
+            'payee' => $invoice_info['payee'],
+            'review' => $invoice_info['review'],
+            'sku_type' => $invoice_info['sku_type'],
+            'buyer_tax_id' => $invoice_info['buyer_tax_id'],
             'original_check_code' => $invoice_info['check_code'],
             'order_id' => $invoice_info['order_id'].'RED',
             'total_fee' => $invoice_info['total_fee'],
@@ -104,11 +112,7 @@ class SoapController extends Base{
             'three_tax' => $invoice_info['three_tax'],
             'invoice_type' => 1,
             'state' => self::INVOICE_STATUS_LODING,
-            'seller_address' => $xsf_dzdh,
-            'seller_name' => $xsf_mc,
             'drawer' => $kpr,
-            'payee' => $payee,
-            'review' => $review
         );
         $this->invoice_model->insert($params);
         Tools::output(array('msg' => '开票申请已经提交,请稍后查看', 'status' => 2));
