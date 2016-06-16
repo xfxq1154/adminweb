@@ -92,6 +92,14 @@ class SoapController extends Base{
         $params = array(
             'original_invoice_code' => $invoice_info['invoice_number'],
             'original_invoice_number' => $invoice_info['invoice_code'],
+            'original_check_code' => $invoice_info['check_code'],
+            'order_id' => $invoice_info['order_id'].'RED',
+            'total_fee' => $invoice_info['total_fee'],
+            'total_tax' => $invoice_info['total_tax'],
+            'blue_invoice_id' => $invoice_info['id'],
+            'one_tax' => $invoice_info['one_tax'],
+            'two_tax' => $invoice_info['two_tax'],
+            'three_tax' => $invoice_info['three_tax'],
             'invoice_type' => 1,
             'state' => self::INVOICE_STATUS_LODING,
             'seller_address' => $xsf_dzdh,
@@ -99,8 +107,8 @@ class SoapController extends Base{
             'drawer' => $kpr,
             'payee' => $payee,
             'review' => $review
-            );
-        $this->invoice_model->update($invoice_info['id'], $params);
+        );
+        $this->invoice_model->insert($params);
         Tools::output(array('msg' => '开票申请已经提交,请稍后查看', 'status' => 2));
     }
 

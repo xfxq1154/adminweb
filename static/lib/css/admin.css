@@ -200,11 +200,11 @@ body {
     font-size: 25px;
 }
 .dux-dashboard .dashboard-head {
-    width: 70px;
-    height: 80px;
-    line-height: 80px;
+    width: 75px;
+    height: 85px;
+    line-height: 85px;
     font-size: 36px;
-    border-radius: 0;
+    border-radius:4px 0px 0px 4px;
 }
 .dux-page {
     padding-top: 0px;
