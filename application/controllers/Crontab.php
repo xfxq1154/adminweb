@@ -685,4 +685,15 @@ class CrontabController extends Base{
         exit;
     }
 
+    public function checkYouZanOrderAction()
+    {
+        $payment_fee = 0;
+        $data = $this->invoice_model->getYzO();
+        foreach ($data as $value) {
+            $order = $this->getYouzanOrderByTid($value['order_id']);
+            $payment_fee += $order['payment'];
+        }
+        echo $payment_fee;exit;
+    }
+
 }

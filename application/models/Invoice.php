@@ -374,5 +374,21 @@ class InvoiceModel{
             echo $ex->getMessage();
         }
     }
+
+    /**
+     *
+     */
+    public function getYzO(){
+        try{
+            $sql = " select order_id from invoice where update_time like '%2016-06-14%' and invoice_type = 0 and state = 4";
+            $stmt = $this->dbMaster->prepare($sql);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }catch (PDOException $ex){
+            echo $ex->getMessage();
+            return false;
+        }
+    }
+
 }
 
