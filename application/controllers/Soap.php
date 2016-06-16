@@ -92,6 +92,8 @@ class SoapController extends Base{
         $params = array(
             'original_invoice_code' => $invoice_info['invoice_number'],
             'original_invoice_number' => $invoice_info['invoice_code'],
+            'invoice_number' => $invoice_info['invoice_number'],
+            'invoice_code' => $invoice_info['invoice_code'],
             'original_check_code' => $invoice_info['check_code'],
             'order_id' => $invoice_info['order_id'].'RED',
             'total_fee' => $invoice_info['total_fee'],
