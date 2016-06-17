@@ -9,7 +9,10 @@ class BpShowcaseController extends Base {
 
     use Trait_Layout,
         Trait_Pagger;
-    
+
+    /**
+     * @var BpShowcaseModel
+     */
     public $showcase;
     
     const ADMIN = '0'; //店长
@@ -249,7 +252,7 @@ class BpShowcaseController extends Base {
         if(!$showcase_id){
             Tools::output(['info' => '店铺ID为空', 'status' => 0]);
         }
-        $result = $this->showcase->pass($showcase_id,$type);
+        $result = $this->showcase->pass($showcase_id);
         if($result){
             Tools::output(['info'=>'认证失败', 'status' => 0]);
         } else {
