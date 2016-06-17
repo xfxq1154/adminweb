@@ -213,9 +213,10 @@ class CrontabController extends Base{
      * @desc 检查订单是否存在
      */
     public function checkOrder($id, $order_id, $invoice_type){
-        if (strlen($order_id) > 24 || $invoice_type = 1) {
+        if (strlen($order_id) > 24 && $invoice_type == 1) {
             $order_id = substr($order_id, 0, -3);
         }
+
         $order = $this->getYouzanOrderByTid($order_id);
         if(!$order){
             $this->invoice_model->update($id, array('state_message' => '订单查询失败', 'state' => 3));
