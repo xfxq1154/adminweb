@@ -23,9 +23,9 @@ class BpShowcaseModel {
     
     const SHOWCASE_APPROVE_DETAIL = 'showcase/approve_detail';
     
-    const UCAPI_REGISTER = 'user/register';
-    const UCAPI_UPPW = 'user/update_pwd';
-    const UCAPI_GETINFO = 'user/getinfo';
+    const PASSPORT_REGISTER = 'user/register';
+    const PASSPORT_UPPW = 'user/update_pwd';
+    const PASSPORT_GETINFO = 'user/getinfo';
     
     private $_error = null;
     
@@ -36,11 +36,8 @@ class BpShowcaseModel {
         '3' => '已通过审核',
         '4' => '已过期'
     );
-    
-    public function __construct() {
-    }
-    
-    
+
+
     /**
      * 店铺申请认证
      */
@@ -158,7 +155,7 @@ class BpShowcaseModel {
         if(empty($params)){
             return FALSE;
         }
-        $result = Ucapi::request(self::UCAPI_REGISTER, $params, 'POST');
+        $result = Passport::request(self::PASSPORT_REGISTER, $params, 'POST');
         if($result === FALSE){
             return FALSE;
         }
@@ -172,7 +169,7 @@ class BpShowcaseModel {
         if(empty($params)){
             return FALSE;
         }
-        $result = Ucapi::request(self::UCAPI_GETINFO,  $params);
+        $result = Passport::request(self::PASSPORT_GETINFO,  $params);
         if($result === FALSE){
             return FALSE;
         }
@@ -186,7 +183,7 @@ class BpShowcaseModel {
         if(empty($params)){
             return FALSE;
         }
-        $result = Ucapi::request(self::UCAPI_UPPW, $params, 'POST');
+        $result = Passport::request(self::PASSPORT_UPPW, $params, 'POST');
         if($result === FALSE){
             return FALSE;
         }
