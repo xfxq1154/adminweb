@@ -41,8 +41,8 @@ class InvoiceModel{
             $pdo_params[':mobile'] = $mobile;
         }
         if($order_id){
-            $where .= ' AND `order_id` = :order_id ';
-            $pdo_params[':order_id'] = $order_id;
+            $where .= ' AND `order_id` LIKE :order_id';
+            $pdo_params[':order_id'] = "%$order_id%";
         }
         if($status){
             if($status == 2){
@@ -336,6 +336,22 @@ class InvoiceModel{
     public function dirtyData(){
         try{
             $sql = " SELECT * FROM `dirty_data` WHERE `state` != 4 ";
+            $stmt = $this->dbMaster->prepare($sql);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }catch (PDOException $ex){
+            echo $ex->getMessage();
+            return false;
+        }
+    }
+
+    /**
+     * @return array|bool
+     */
+    public function getRedInvoice()
+    {
+        try{
+            $sql = " SELECT * FROM invoice WHERE state = 3 AND `invoice_type` = 1 ORDER BY id DESC LIMIT 4 ";
             $stmt = $this->dbMaster->prepare($sql);
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
