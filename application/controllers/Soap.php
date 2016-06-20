@@ -104,6 +104,8 @@ class SoapController extends Base{
             'buyer_tax_id' => $invoice_info['buyer_tax_id'],
             'original_check_code' => $invoice_info['check_code'],
             'order_id' => $invoice_info['order_id'].'RED',
+            'payment_fee' => $invoice_info['payment_fee'],
+            'jshj'      => $invoice_info['payment_fee'],
             'total_fee' => $invoice_info['total_fee'],
             'total_tax' => $invoice_info['total_tax'],
             'blue_invoice_id' => $invoice_info['id'],
