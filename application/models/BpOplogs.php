@@ -16,10 +16,11 @@ class BpOplogsModel {
     /**
      * 日志列表
      */
-    public function getlist($showcase_id, $sourceid, $title, $nickname, $start_time, $end_time, $page_no, $page_size) {
+    public function getlist($showcase_id, $sourceid, $title, $uri, $nickname, $start_time, $end_time, $page_no, $page_size) {
         $params['showcase_id'] = $showcase_id;
         $params['source_id'] = $sourceid;
         $params['title'] = $title;
+        $params['uri'] = $uri;
         $params['nickname'] = $nickname;
         $params['start_time'] = $start_time;
         $params['end_time'] = $end_time;
