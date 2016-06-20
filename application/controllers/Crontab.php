@@ -450,8 +450,6 @@ class CrontabController extends Base{
         }
         //更新信息到数据库
         $params = array(
-            'original_invoice_code' => $invoice_info['invoice_number'],
-            'original_invoice_number' => $invoice_info['invoice_code'],
             'invoice_type' => 1,
             'state' => self::RED_INVOICE_SUCCESS,
             'state_message' => '红字发票开具成功'
@@ -666,25 +664,45 @@ class CrontabController extends Base{
      */
     public function repairDirtyDataAction()
     {
-        $datas = $this->invoice_model->dirtyData();
+        $datas = $this->invoice_model->getRedInvoice();
         $invoices = array_filter($datas);
         if(!$invoices){
             exit;
         }
         foreach ($invoices as $value){
-            $order = $this->getYouzanOrderByTid($value['order_id']);
-            if(!$order){
+            $order = Fileds::$redOrder[$value['order_id']];
+            $value['new_detail'] = $order;
+            $params['xsf_mc'] = $value['seller_name'];
+            $params['xsf_dzdh'] = $value['seller_address'];
+            $params['kpr'] = $value['drawer'];
+            $params['type'] = 1;
+            $params['count'] = count($value['new_detail']);
+            $params['hjje'] = $value['total_fee'];
+            $params['hjse'] = $value['total_tax'];
+            $params['payment_fee'] = $value['total_fee'] + $value['total_tax'];
+            $params['invoice_title'] = $value['invoice_title'];
+            $params['invoice_no'] = strtotime(date('Y-m-d H:i:s')).mt_rand(1000,9999);;
+            $params['yfp_hm'] = $value['invoice_number'];
+            $params['yfp_dm'] = $value['invoice_code'];
+            $params['receiver_mobile'] = $value['buyer_phone'];
+            $params['new_detail'] = $order;
+
+            $result = $this->dzfp->fpkj($params, $params['new_detail']);
+            if(!$result) {
+                $rs_data = [
+                    'state_message' => $this->dzfp->getError(),
+                    'state' => self::INVOICE_FAIL,
+                ];
+                $this->invoice_model->update($value['id'], $rs_data);
                 continue;
             }
-            $order = $this->batchOrderDetail($order);
-            $sku_id = implode(',', $order['skus']);
-            $skus = $this->sku_model->getInfoBySkuId($sku_id);
-            $skuarr = array();
-            foreach ($skus as $sk_val){
-                $skuarr[$sk_val['sku_id']] = $sk_val['tax_tare'];
-            }
-            $orders = $this->treatingSku($order, $skuarr);
-            $this->redInvoice($orders, $value, 2);
+            //更新信息到数据库
+            $param = array(
+                'invoice_type' => 1,
+                'state' => self::RED_INVOICE_SUCCESS,
+                'state_message' => '红字发票开具成功'
+            );
+            $this->invoice_model->update($value['id'], $param);
             continue;
         }
         exit;
