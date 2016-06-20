@@ -91,25 +91,23 @@
                 <tbody>
                     <tr>
                         <th width="100" style="text-align: center;">商品ID</th>
-                        <th width="*">商品货号</th>
-                        <th width="*">商品的SKU_ID</th>
-                        <th width="*">商家编码</th>
-                        <th width="*">SKU详情</th>
                         <th width="*">商品标题</th>
-                        <th width="*">商品主图片地址</th>
+                        <th width="*">商品主图</th>
+                        <th width="*">SKU_ID</th>
+                        <th width="*">SKU外部编码</th>
+                        <th width="*">SKU详情</th>
                         <th width="*">购买数量</th>
                         <th width="*">商品售价</th>
                     </tr>
                     <?php if ($oinfo[order_detail]) : ?>
                         <?php foreach ($oinfo[order_detail] as $val) : ?>
                             <tr>
-                                <td align="center"><?php echo $val['pid']; ?></td>
-                                <td><?php echo $val['outer_pid']; ?></td>
+                                <td align="center"><a href="/bpproduct/info?id=<?php echo $val['pid']; ?>"><?php echo $val['pid']; ?></a></td>
+                                <td><a href="/bpproduct/info?id=<?php echo $val['pid']; ?>"><?php echo $val['title'] ? : '--'; ?></a></td>
+                                <td><img src="<?php echo $val['pic_path']; ?>" width="90px" height="90px" /></td>
                                 <td><?php echo $val['sku_id']; ?></td>
                                 <td><?php echo $val['outer_sku_id'] ? : '--'; ?></td>
                                 <td><?php echo $val['sku_value'] ? :'--'; ?></td>
-                                <td><?php echo $val['title'] ? : '--'; ?></td>
-                                <td><?php echo $val['pic_path']; ?></td>
                                 <td><?php echo $val['num']; ?></td>
                                 <td><?php echo $val['price']; ?></td>
                             </tr>
