@@ -78,11 +78,11 @@
                                 <div class="clearfix">
                                     <div class="media media-x ">
                                         <div class="float-left">
-                                            <div class="txt dashboard-head radius-small bg-green icon-user"></div>
+                                            <div class="txt dashboard-head radius-small bg-blue  icon-bar-chart"></div>
                                         </div>
                                         <div class="media-body text-center">
-                                            <h2><strong><?=$redis_info['instantaneous_ops_per_sec']?></strong></h2>
-                                            每秒钟执行的命令数量
+                                            <h3><strong><?=$keyspace_hits_percentage?>%</strong></h3>
+                                            命中率
                                         </div>
                                     </div>
                                 </div>
@@ -109,55 +109,6 @@
                                 <div class="clearfix">
                                     <div class="media media-x ">
                                         <div class="float-left">
-                                            <div class="txt dashboard-head radius-small bg-green icon-reorder"></div>
-                                        </div>
-                                        <div class="media-body text-center">
-                                            <h3><strong><?=$redis_info['used_cpu_user']?></strong></h3>
-                                            服务器耗费的用户CPU
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <br>
-                        </div>
-                        <div class="xm3">
-                            <div class="panel dux-box dux-dashboard">
-                                <div class="clearfix">
-                                    <div class="media media-x ">
-                                        <div class="float-left">
-                                            <div class="txt dashboard-head radius-small bg-green icon-money"></div>
-                                        </div>
-                                        <div class="media-body text-center">
-                                            <h3><?=$redis_info['rejected_connections']?></h3>
-                                            因为最大客户端数量限制拒绝连接数
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <br>
-                        </div>
-                    </div>
-                    <div class="line-big">
-                        <div class="xm3">
-                            <div class="panel dux-box dux-dashboard">
-                                <div class="clearfix">
-                                    <div class="media media-x ">
-                                        <div class="float-left">
-                                            <div class="txt dashboard-head radius-small bg-blue  icon-bar-chart"></div>
-                                        </div>
-                                        <div class="media-body text-center">
-                                            <h2><strong><?=$redis_info['expired_keys']?></strong></h2>
-                                            过期而被自动删除KEY
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="xm3">
-                            <div class="panel dux-box dux-dashboard">
-                                <div class="clearfix">
-                                    <div class="media media-x ">
-                                        <div class="float-left">
                                             <div class="txt dashboard-head radius-small bg-blue  icon-bar-chart"></div>
                                         </div>
                                         <div class="media-body text-center">
@@ -174,27 +125,11 @@
                                 <div class="clearfix">
                                     <div class="media media-x ">
                                         <div class="float-left">
-                                            <div class="txt dashboard-head radius-small bg-blue  icon-bar-chart"></div>
+                                            <div class="txt dashboard-head radius-small bg-green icon-money"></div>
                                         </div>
                                         <div class="media-body text-center">
-                                            <h3><strong><?=$keyspace_hits_percentage?>%</strong></h3>
-                                            命中率
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <br>
-                        </div>
-                        <div class="xm3">
-                            <div class="panel dux-box dux-dashboard">
-                                <div class="clearfix">
-                                    <div class="media media-x ">
-                                        <div class="float-left">
-                                            <div class="txt dashboard-head radius-small bg-blue  icon-bar-chart"></div>
-                                        </div>
-                                        <div class="media-body text-center">
-                                            <h2><strong><?=$redis_info['keyspace_misses']?></strong></h2>
-                                            查找键失败的次数
+                                            <h3><?=$redis_info['rejected_connections']?></h3>
+                                            因为最大客户端数量限制拒绝连接数
                                         </div>
                                     </div>
                                 </div>
