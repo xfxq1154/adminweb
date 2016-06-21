@@ -42,6 +42,7 @@ class RedisMonitorController extends Base {
         $list_store_main = (int)$this->masterRedis->llen('store:task:main');
         $list_store_logs = (int)$this->masterRedis->llen('store:task:logs');
         $list_store_sh5logs = (int)$this->masterRedis->llen('store:task:sh5logs');
+        $list_store_ready_main = (int)$this->masterRedis->llen('store:task:ready:main');
 
         $keyspace_hits_percentage = round(($keyspace_hits/($keyspace_hits+$keyspace_misses)) * 100, 2); //命中率
 
@@ -61,6 +62,7 @@ class RedisMonitorController extends Base {
         $this->assign('list_store_main', $list_store_main);
         $this->assign('list_store_logs', $list_store_logs);
         $this->assign('list_store_sh5logs', $list_store_sh5logs);
+        $this->assign('list_store_ready_main', $list_store_ready_main);
 
         $this->layout('platform/redismonitor.phtml');
     }
