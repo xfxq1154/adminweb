@@ -1,0 +1,83 @@
+
+<div class="dux-tools">
+    <div class="bread-head">商品兑换码<span class="small">批次列表</span></div><br>
+</div>
+
+<div class="table-tools clearfix ">
+    <div class="float-left">
+        <form method="GET" action="/bporder/index" >
+            <div class="form-inline">
+                <div class="form-group">
+                    <div class="field">
+                        <input type="text" class="input" id="keyword" name="number" size="20" value="<?=$sku_outer_id?>" placeholder="SKU自编码">
+                    </div>&nbsp;
+                </div>
+                <div class="form-button">
+                    <button class="button" type="submit">搜索</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="button-group float-right">
+        <a class="button button-small bg-dot icon-plus dropdown-toggle"> 生成 <span class="downward"></span></a>
+        <ul class="drop-menu pull-right">
+            <li><a href="/cdkey/add">生成商品兑换码</a></li>
+        </ul>
+    </div>
+</div>
+<div class="admin-main">
+    <div class="panel dux-box">
+        <div class="table-responsive">
+            <table id="table" class="table table-hover ">
+                <tbody>
+                <tr>
+                    <th width="*">批次ID</th>
+                    <th width="*">SKU自编码</th>
+                    <th width="*">批次编号</th>
+                    <th width="*">合同数量</th>
+                    <th width="*">价格</th>
+                    <th width="*">有效期</th>
+                    <th width="*">创建时间</th>
+                    <th width="*">状态</th>
+                    <th width="*">操作</th>
+                </tr>
+                <?php if ($list) : ?>
+                    <?php foreach ($list as $val) : ?>
+                        <tr>
+                            <td><?php echo $val['id']; ?></td>
+                            <td><?php echo $val['sku_outer_id']; ?></td>
+                            <td><?php echo $val['batch_number'];?></td>
+                            <td><?php echo $val['total'] ? :'--'; ?></td>
+                            <td><?php echo $val['price'] ? : '--'; ?></td>
+                            <td><?php echo $val['validity_time'] ? : '--'; ?></td>
+                            <td><?php echo $val['create_time'] ? : '--'; ?></td>
+                            <td><?php echo $val['status'] ? : '--'; ?></td>
+                            <td><a class="button button-small bg-green" href="/cdkey/export?cid=<?php echo $val['id']; ?>" >导出</a></td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <?php if($pagger):?>
+        <div class="panel dux-box panel-foot clearfix" style="margin-top:20px;border-radius: 4px;">
+            <?=$pagger?>
+        </div>
+    <?php endif;?>
+    <script>
+        Do.ready('base', function () {
+            $('#table').duxTable();
+            /*$('#export').click(function(){
+                var cid = $(this).attr('cid');
+                $.ajax({
+                    url:'/cdkey/export?cid ='+cid,
+                    success:function(e) {
+                        alert(e);
+                    }
+                });
+            });*/
+        });
+
+    </script>
+</div>

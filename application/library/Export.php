@@ -7,6 +7,9 @@
  */
 class Export {
 
+    protected $separator = ',';           // 设置分隔符
+    protected $delimiter = '"';           // 设置定界符
+
     private $fp;
     
     public function __construct() {
@@ -24,11 +27,11 @@ class Export {
     public function setTitle($data, $translate = []) {
         $head_row = $data ? array_keys($data[0]) : $translate;
         //如果有中文翻译，将英文字段转换成中文
-        foreach ($head_row as &$filed){
-            $filed = isset($translate[$filed]) ? $translate[$filed] : $filed;
+        foreach ($head_row as &$field){
+            $field = isset($translate[$field]) ? $translate[$field] : $field;
         }
         $row_out = $this->_setCharset($head_row);
-        fputcsv($this->fp, $row_out);
+        echo $this->formatCSV($head_row);
     }
     
     /**
@@ -38,18 +41,37 @@ class Export {
     public function outPut($data) {
         foreach ($data as $row_in) {
             $row_out = $this->_setCharset($row_in);
-            fputcsv($this->fp, $row_out);
+            echo $this->formatCSV($row_out);
         }
     }
     
     /**
-     * 设置数据编码，将utf-8转换为gb18030
+     * 设置数据编码，将utf-8转换为gbk
      * @param array $row
      * @return array
      */
     private function _setCharset($row) {
-        $val_in = implode('|shzf|', $row);
-        $val_out = iconv('UTF-8', 'GB18030//TRANSLIT', $val_in);
-        return explode('|shzf|', $val_out);
+        foreach ($row as &$item){
+            $item = iconv('UTF-8', 'UTF-8//GBK//TRANSLIT//IGNORE', $item);
+        }
+        return $row;
+    }
+
+    /** 格式化为csv格式数据
+     * @param array $data 要转换为csv格式的数组
+     */
+    private function formatCSV($data=array()){
+        // 对数组每个元素进行转义
+        $data = array_map(array($this,'escape'), $data);
+        return $this->delimiter.implode("\t".$this->delimiter.$this->separator.$this->delimiter, $data)."\t$this->delimiter\r\n";
+    }
+
+
+    /** 转义字符串
+     * @param  String $str
+     * @return String
+     */
+    private function escape($str){
+        return str_replace($this->delimiter, $this->delimiter.$this->delimiter, $str);
     }
 }

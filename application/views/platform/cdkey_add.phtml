@@ -1,0 +1,97 @@
+<script language="JavaScript" type="text/javascript" src="<?=ASSET_URL?>/static/js/calendar/WdatePicker.js"></script>
+
+<div class="dux-tools">
+    <div class="bread-head">生成商品兑换码</div>
+</div>
+<div class="admin-main">
+    <form method="post" action="/cdkey/exec">
+
+        <div class="tab dux-tab">
+            <div class="panel dux-box  active">
+
+                <!-- tab head start-->
+                <div class="panel-head">
+                    <div class="tab-head">
+                        <strong>商品兑换码配置</strong>
+                        <ul class="tab-nav">
+                            <li class="active"><a href="#tab-1">添加商品兑换码</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- tab head end -->
+
+                <!-- table body start-->
+                <div class="tab-body">
+
+                    <!-- tab 1 start -->
+                    <div class="tab-panel active" id="tab-1">
+                        <div class="form-group">
+                            <div class="label">
+                                <label>sku自编码</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="sku_outer_id" name="sku_outer_id" size="60" datatype="*" placeholder="sku自编码">
+                                <div class="input-note">请填写sku自编码</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="label">
+                                <label>合同数量</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="total" name="total" size="60" datatype="*" placeholder="生成数量">
+                                <div class="input-note">请填写生成数量</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="label">
+                                <label>兑换码有效期</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" id="d4321" class="input datebtn" style="width:220px;" id="datetime" name="validity_time" value="<?=date('Y-m-d')?>" onfocus="WdatePicker({startDate:'<?=date('Y-m-d')?>',minDate:'<?=date('Y-m-d')?>'})" style="cursor:pointer;" size="60" datatype="*" placeholder="" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="label">
+                                <label>价格</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="price" name="price" size="2" datatype="*" placeholder="价格">
+                                <div class="input-note">请填写价格</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="label">
+                                <label>批次编号</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="batch_number" name="batch_number" size="60" datatype="*" placeholder="批次编号">
+                                <div class="input-note">请填写批次编号</div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- tab 1 end -->
+
+                </div>
+                <!-- table body end-->
+
+                <div class="panel-foot">
+                    <div class="form-button">
+                        <div id="tips"></div>
+                        <input class="button bg-main" type="submit" value="提交">
+                        <button class="button bg" type="reset">重置</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript" charset="utf-8">
+
+    Do.ready('base', function () {
+        //表单综合处理
+        $('#form').duxFormPage();
+    });
+</script>
