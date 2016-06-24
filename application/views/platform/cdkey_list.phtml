@@ -32,8 +32,8 @@
                 <tbody>
                 <tr>
                     <th width="*">批次ID</th>
-                    <th width="*">SKU自编码</th>
-                    <th width="*">批次编号</th>
+                    <th width="*">得到商品商城SKU自编码</th>
+                    <th width="*">兑换码商城上架自编码</th>
                     <th width="*">合同数量</th>
                     <th width="*">价格</th>
                     <th width="*">有效期</th>
@@ -66,15 +66,6 @@
     <script>
         Do.ready('base', function () {
             $('#table').duxTable();
-            /*$('#export').click(function(){
-                var cid = $(this).attr('cid');
-                $.ajax({
-                    url:'/cdkey/export?cid ='+cid,
-                    success:function(e) {
-                        alert(e);
-                    }
-                });
-            });*/
         });
 
     </script>
