@@ -88,22 +88,19 @@ class BpShowcaseController extends Base {
      */
     public function createAction(){
         if($_POST){
+            $data['name'] = $_POST['showcase_name'];
             $data['phone'] = $_POST['phone'];
-            $data['password'] = $_POST['pw'];
-            $data['realname'] = $_POST['resname'];
+            $data['password'] = $_POST['password'];
             $data['nickname'] = $_POST['nickname'];
-            $data['signature'] = $_POST['signature'];
-            $data['wechat'] = $_POST['wechat'];
-            $data['phone_message'] = $_POST['message'];
-            $data['intro'] = $_POST['summary'];
-            $data['name'] = $_POST['sname'];
+
+            //passport 用户注册
             $params['mobile'] = $_POST['phone'];
-            $params['passwd'] = $_POST['pw'];
-            //ucapi 用户注册
+            $params['passwd'] = $_POST['password'];
             $rs = $this->showcase->register($params);
             if(empty($rs)){
-                Tools::output(array('info'=>'手机号错误','status'=>1));
+                Tools::output(array('info'=>'用户注册失败','status'=>1));
             }
+
             $data['user_id'] = $rs['user_id'];
             $resule = $this->showcase->create($data);
             if($resule === FALSE){
@@ -125,7 +122,7 @@ class BpShowcaseController extends Base {
                 Tools::output(array('info'=>$msg,'status'=>1));
             }
             //通知支付平台
-            $auccount_status = $this->showcase->createPaymentSellerAccount($resule, $data['name']);
+            $this->showcase->createPaymentSellerAccount($resule, $data['name']);
             //添加到管理员表
             $clerk_date['user_id'] = $data['user_id'];
             $clerk_date['group_id'] = self::ADMIN;
