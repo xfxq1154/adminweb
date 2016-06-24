@@ -11,7 +11,6 @@ class Fields{
         'uuid'          => '兑换人标识UID',
         'sku_outer_id'  => '得到商品商城SKU自编码',
         'cdkey'         => '兑换码',
-        'type'          => '兑换码类型',
         'price'         => '价格',
         'exchange_time' => '兑换时间',
         'validity_time' => '有效期',
