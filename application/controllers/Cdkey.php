@@ -89,7 +89,6 @@ class CdkeyController extends Base {
         $result = $this->cdkey_model->export($params);
 
         $export = new Export();
-        $export->setTitle($result, Fields::$cdkey);
         $export->outPut($result);
         exit;
     }
