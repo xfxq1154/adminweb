@@ -79,7 +79,7 @@ abstract class Base extends Yaf_Controller_Abstract {
                 );
                 Tools::output($data);
             }
-           die('无权访问！');
+            die('无权访问！');
         }
     }
     /*
