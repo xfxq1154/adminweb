@@ -38,7 +38,6 @@
                     <th width="*">价格</th>
                     <th width="*">有效期</th>
                     <th width="*">创建时间</th>
-                    <th width="*">状态</th>
                     <th width="*">操作</th>
                 </tr>
                 <?php if ($list) : ?>
@@ -51,7 +50,6 @@
                             <td><?php echo $val['price'] ? : '--'; ?></td>
                             <td><?php echo $val['validity_time'] ? : '--'; ?></td>
                             <td><?php echo $val['create_time'] ? : '--'; ?></td>
-                            <td><?php echo $val['status'] ? : '--'; ?></td>
                             <td><a class="button button-small bg-green" href="/cdkey/export?cid=<?php echo $val['id']; ?>" >导出</a></td>
                         </tr>
                     <?php endforeach; ?>

@@ -25,12 +25,10 @@ class CdkeyController extends Base {
      */
     public function indexAction() {
         $sku_outer_id = $this->getRequest()->get('sku_outer_id');
-        $status = $this->getRequest()->get('status');
         $batch_number = $this->getRequest()->get('batch_number');
 
         $params = [
             'sku_outer_id' => $sku_outer_id,
-            'status'       => $status,
             'batch_number' => $batch_number
         ];
 
@@ -74,12 +72,7 @@ class CdkeyController extends Base {
             'batch_number'  => $batch_number,
             'type'          => $type
         ];
-
-        $result = $this->cdkey_model->addCdkey($params);
-
-        /*if( !$result ) {
-            Tools::success('error', '未知错误');
-        }*/
+        $this->cdkey_model->addCdkey($params);
 
         if ($this->isLogin()) {
             $this->location('/cdkey/index');
