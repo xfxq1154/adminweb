@@ -86,7 +86,7 @@ class InvoiceController extends Base{
         $invoice_info['stype'] = $sku_type;
         $invoice_info['time'] = $time;
 
-        $this->renderPagger($page_no, $result['total_nums'], '/invoice/showlist/page_no/{p}?status='.$status.'&group='.$group_id.'&stype='.$sku_type.'&time='.$time, 20);
+        $this->renderPagger($page_no, $result['total_nums'], '/invoice/showlist/page_no/{p}?status='.$status.'&group='.$group_id.'&stype='.$sku_type.'&time='.$time.'&order_id='.$order_id, 20);
         $this->assign('data', $result);
         $this->assign('invoice_info', $invoice_info);
         $this->assign('status', $this->status[$status]);
