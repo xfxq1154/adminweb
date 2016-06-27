@@ -29,7 +29,6 @@ class CdkeyController extends Base {
         $sku_outer_id = $this->getRequest()->get('sku_outer_id');
         $batch_number = $this->getRequest()->get('batch_number');
         $page_no      = (int)$this->getRequest()->get('p', 1);
-        //还需要一个已兑换数量
 
         $params = [
             'sku_outer_id' => $sku_outer_id,
@@ -80,18 +79,26 @@ class CdkeyController extends Base {
         ];
         $this->cdkey_model->addCdkey($params);
 
+        $this->cdkey_model->cdkeyLog('生成商品兑换码', $params);
+
         if ($this->isLogin()) {
             $this->location('/cdkey/index');
         }
         exit;
     }
 
+    /**
+     * 生成CSV文件
+     */
     public function exportAction() {
         $cid = $this->getRequest()->get('cid');
 
         $params = [
             'cid' => $cid
         ];
+
+        $this->cdkey_model->cdkeyLog('导出商品兑换码', $params);
+
         $result = $this->cdkey_model->export($params);
 
         $export = new Export();
