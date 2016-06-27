@@ -95,6 +95,44 @@ class InvoiceController extends Base{
         $this->assign('group_val', $group_id);
         $this->layout('invoice/list.phtml');
     }
+
+    /**
+     * @explian 验证订单状态
+     */
+    public function checkInvoiceAction()
+    {
+        $page_no = (int)$this->getRequest()->get('page_no', 1);
+        $type = $this->getRequest()->get('type');
+        $id_in = $this->getRequest()->get('orderlist');
+        $order_id = $this->getRequest()->get('order_id');
+        $id = json_decode($this->getRequest()->get('data'), true)['id'];
+        $state = $this->getRequest()->get('status');
+
+        if ($id) {
+            $result = $this->invoice_mode->delCheckOrder($id);
+            if (!$result) {
+                echo json_encode(['info' => '删除失败', 'status' => 0]);exit;
+            }
+            echo json_encode(['info' => '删除成功', 'status' => 1]);exit;
+        }
+
+        if ($type == 'delete') {
+            $result = $this->invoice_mode->delCheckOrder(substr($id_in, 0, -1));
+            if (!$result) {
+                echo json_encode(['msg' => '删除失败', 'status' => 0]);exit;
+            }
+            echo json_encode(['msg' => '删除成功', 'status' => 1]);exit;
+        }
+        $status = [
+            3 => '无维权',
+            2 => '有维权'
+        ];
+        $data = $this->invoice_mode->getCheckOrderList($page_no, 20, 1, $order_id, $state);
+        $this->assign('data', $data);
+        $this->assign('status', $status[$state]);
+        $this->assign('order_id', $order_id);
+        $this->layout('invoice/check_order.phtml');
+    }
     
     /**
      * sku列表
@@ -540,6 +578,47 @@ class InvoiceController extends Base{
             }
         }
         echo json_encode(array('info' => '上传成功', 'code' => 1));exit;
+    }
+
+    public function uploadInvoiceAction()
+    {
+//        $this->checkRole();
+        $files = $this->getRequest()->getFiles('file');
+
+        if(!$files){
+            Tools::output(array('info'=> '请先选择上传文件','status' => 0));
+        }
+        if($files['error']){
+            Tools::output(array('info'=> '上传失败','status' => 0));
+        }
+        if($files['size'] / 1024 > 1024){
+            Tools::output(array('info'=>'上传文件不得大于1MB','status' => 0));
+        }
+        $xls = new Spreadsheet_Excel_Reader();
+        $xls->setOutputEncoding('utf-8');
+        $xls->read($files['tmp_name']);
+
+        //将文件内容遍历循环存储到数据库
+        $data = array();
+        if(!$xls->sheets[0]['cells'][1]){
+            Tools::output(array('info'=> '系统错误','status' => 0));
+        }
+        unset($xls->sheets[0]['cells'][1]);
+
+        foreach ($xls->sheets[0]['cells'] as $values){
+            foreach (Fileds::$invoice as $k => $v){
+                $data[$v] = trim($values[$k]);
+            }
+            $faliOrder = $this->invoice_mode->insertCheckOrder($data);
+            if(!$faliOrder){
+                continue;
+            }
+        }
+        if($this->invoice_mode->getError()){
+            echo json_encode(array('info' => '上传成功,个别失败', 'status' => 1, 'data' => $this->invoice_mode->getError()));exit;
+        }
+        echo json_encode(array('info' => '上传成功', 'code' => 1));exit;
+
     }
 
     /**

@@ -719,4 +719,32 @@ class CrontabController extends Base{
         echo $payment_fee;exit;
     }
 
+    /**
+     * @explain 验证订单状态
+     */
+    public function checkInvoiceStateAction()
+    {
+        $data = $this->invoice_model->getCheckOrderList(1, 20, 1);
+        if (empty($data['data']) || !$data) {
+            exit;
+        }
+        $url = 'kdt.trade.get';
+        $n = 0;
+        do{
+            $n++;
+            $result = $this->invoice_model->getCheckOrderList($n, 20, 1, null, 1);
+            foreach ($result['data'] as $value) {
+                $y_order = $this->youzan_api->get($url, array('tid' => $value['order_id']));
+                if ($y_order['response']['trade']['feedback_num'] != 0) {
+                    $this->invoice_model->updateCheckOrder($value['id'], ['state_message' => '有维权', 'state' => 2]);
+                } else {
+                    $this->invoice_model->updateCheckOrder($value['id'], ['state_message' => '无维权' ,'state' => 3]);
+                }
+            }
+            if($result['has_next'] == 0){
+                exit;
+            }
+        }
+        while(1);
+    }
 }

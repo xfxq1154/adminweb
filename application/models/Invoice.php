@@ -392,6 +392,119 @@ class InvoiceModel{
     }
 
     /**
+     *@desc 添加开票信息
+     */
+    public function insertCheckOrder($params){
+        try {
+            $sql = ' INSERT INTO '. '`check_order`' . ' SET ' . $this->makeSet($params);
+            $stmt = $this->dbMaster->prepare($sql);
+            $stmt->execute();
+            return $this->dbMaster->lastInsertId();
+        } catch (Exception $exc) {
+            return false;
+        }
+    }
+
+    /**
+     * @param $page_no
+     * @param $page_size
+     * @param $use_hax_next
+     * @param $kw
+     * @param $status
+     * @return array
+     */
+    public function getCheckOrderList($page_no, $page_size, $use_hax_next, $kw = '', $status = '')
+    {
+        $where = '1';
+        $pdo_array = [];
+
+        if ($kw) {
+            $where .= ' AND `order_id` = :order_id ';
+            $pdo_array[':order_id'] = $kw;
+        }
+
+        if ($status) {
+            $where .= ' AND `state` = :state ';
+            $pdo_array[':state'] = $status;
+        }
+
+        $start = ($page_no - 1) * $page_size;
+
+        try {
+            $sql = 'SELECT * FROM `' . 'check_order' . '` WHERE ' . $where . ' ORDER BY id ASC LIMIT ' . $start . ',' . $page_size;
+            $stmt = $this->dbSlave->prepare($sql);
+            $stmt->execute($pdo_array);
+            $data['data'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $data['total_nums'] = $this->getCheckCount($where, $pdo_array);
+        } catch (Exception $ex) {
+            echo $ex->getMessage();
+        }
+        if ($use_hax_next) {
+            $data['has_next'] = count($data['data']) < $page_size ? 0 : 1;
+        }
+        return $data;
+    }
+
+    /**
+     * @param $where
+     * @param $pdo_array
+     * @return int
+     */
+    public function getCheckCount($where, $pdo_array)
+    {
+        try {
+            $sql = "SELECT count(*) as num FROM " . '`check_order`' . ' WHERE '. $where ;
+            $stmt = $this->dbSlave->prepare($sql);
+            $stmt->execute($pdo_array);
+            $data = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $data['num'] ? : 0;
+        } catch (Exception $ex) {
+            Output::jsonStr(Error::ERROR_DB_EXCEPTION, $ex->getMessage());
+        }
+    }
+
+    public function updateCheckOrder($id, $params)
+    {
+        if(!$id || !$params){
+            return FALSE;
+        }
+        $f = '';
+        $array = array(':id' => $id);
+        foreach ($params as $key => $value) {
+            //不传递则跳过
+            if ($value === null) {
+                continue;
+            }
+            $f .= ",`" . $key . "` = :$key";
+            $array[':' . $key] = $value;
+        }
+        $sql = "UPDATE `check_order` SET " . substr($f, 1) . " WHERE `id` = :id LIMIT 1";
+        try {
+            $stmt = $this->dbMaster->prepare($sql);
+            return $stmt->execute($array);
+        } catch (Exception $ex) {
+            echo $ex->getMessage();
+        }
+    }
+
+
+
+    /**
+     * @return bool
+     * @explain 删除校验订单
+     */
+    public function delCheckOrder($id)
+    {
+        try{
+            $sql = ' DELETE FROM '.'`check_order`'.' WHERE `id` IN (:id)';
+            $stmt = $this->dbMaster->prepare($sql);
+            return $stmt->execute([':id' => $id]);
+        }catch (PDOException $ex){
+            echo $ex->getMessage();
+            return false;
+        }
+    }
+    /**
      *
      */
     public function getYzO(){
