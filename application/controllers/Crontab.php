@@ -719,4 +719,44 @@ class CrontabController extends Base{
         echo $payment_fee;exit;
     }
 
+    /**
+     * @explain 验证订单状态
+     */
+    public function checkInvoiceStateAction()
+    {
+        $data = $this->invoice_model->getCheckOrderList(1, 20, 1);
+        if (empty($data['data']) || !$data) {
+            exit;
+        }
+        $url = 'kdt.trade.get';
+        $n = 0;
+        $orderState = [
+            'TRADE_NO_CREATE_PAY' => '没有创建支付交易',
+            'WAIT_BUYER_PAY' => '等待买家付款',
+            'WAIT_PAY_RETURN' => '等待支付确认',
+            'TRADE_CLOSED' => '交易自动关闭',
+            'TRADE_CLOSED_BY_USER' => '买家主动关闭交易'
+        ];
+        do{
+            $n++;
+            $result = $this->invoice_model->getCheckOrderList($n, 20, 1, null, 1);
+            foreach ($result['data'] as $value) {
+                $y_order = $this->youzan_api->get($url, array('tid' => $value['order_id']));
+                $status = $y_order['response']['trade']['status'];
+                if (in_array($status, array_flip($orderState))) {
+                    $this->invoice_model->updateCheckOrder($value['id'], ['state_message' => $orderState[$status], 'state' => 2]);
+                    continue;
+                }
+                if ($y_order['response']['trade']['feedback_num'] != 0) {
+                    $this->invoice_model->updateCheckOrder($value['id'], ['state_message' => '有维权', 'state' => 2]);
+                } else {
+                    $this->invoice_model->updateCheckOrder($value['id'], ['state_message' => '无维权' ,'state' => 3]);
+                }
+            }
+            if($result['has_next'] == 0){
+                exit;
+            }
+        }
+        while(1);
+    }
 }

@@ -1,0 +1,124 @@
+<div class="dux-tools clearfix">
+    <div class="bread-head">电子发票<span class="small">订单校验</span></div>
+</div>
+<div class="table-tools clearfix ">
+    <div class="float-left">
+        <div class="form-inline">
+            <label><b>上传订单号:</b></label>
+            <div class="form-button">
+                <input type="text" class="input show_uo_imgs" id="files" name="file" placeholder="校验订单上传" readonly=""/>
+                <a class="button bg-blue button-small " data="files" id="image_upload3" preview="image_preview3" href="javascript:;"><span class="icon-upload">上传</span></a>
+            </div>
+        </div>
+    </div>
+    <div class="float-left">
+        <form action="/invoice/checkinvoice" method="GET" >
+            <div class="form-inline">
+                <div class="form-group" style="margin-left:10px;">
+                    <label><b>请输入搜索条件:</b></label>
+                    <div class="field" style="margin-left: 5px;">
+                        <input type="text" class="input" name="order_id" size="20" value="<?=$order_id?>" placeholder="填写订单号">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <select class="input js-assign" style="text-align: center" name="status">
+                        <option value=""><?php echo isset($status) ? $status : '全部状态'; ?></option>
+                        <option value="3">无维权</option>
+                        <option value="2">有维权</option>
+                    </select>
+                </div>
+                <div class="form-button" style="margin-left:20px;">
+                    <button class="button bg-main" type="submit">搜索</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="float-left" style="margin-left: 10px;">
+        <div class="form-inline">
+            <div class="form-group">
+                <div class="form-button" style="margin-left: 10px;">
+                    <button class="button bg-dot" type="button" id="selectAll">选中全部</button>
+                    <button class="button bg-sub" type="button" id="unselectAll">取消全选</button>
+                </div>
+            </div>
+            <div class="form-button" style="margin-left:20px;">
+                <button class="button bg-gray set">删除</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="admin-main">
+    <div class="panel dux-box">
+        <div class="table-responsive">
+            <table id="table" class="table table-hover ">
+                <tbody>
+                <tr>
+                    <th width="*">选项</th>
+                    <th width="*">订单号</th>
+                    <th width="*">状态</th>
+                </tr>
+                <?php if ($data) : ?>
+                    <?php foreach ($data['data'] as $val) : ?>
+                        <tr>
+                            <td><input type="checkbox" class="checkAll" value="<?=$val['id']?>"></td>
+                            <td><?=$val['order_id']?></td>
+                            <td><?php echo empty($val['state_message']) ? '待校验' : $val['state_message'];?></td>
+                            <td>
+                                <button class="button bg-red button-small icon-trash-o js-del" href="javascript:;" url="/invoice/checkinvoice" data='{"id":<?php echo $val['id']; ?>}' title="删除"></button>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <?php if($pagger):?>
+        <div class="panel dux-box panel-foot clearfix" style="margin-top:20px;border-radius: 4px;">
+            <?=$pagger?>
+        </div>
+    <?php endif;?>
+    <script>
+        Do.ready('base', function () {
+            $('#form').duxForm();
+            $('#image_upload3').duxFileUpload({
+                uploadUrl: '/invoice/uploadinvoice',
+                type: 'xls',
+                complete: function (data) {
+                    alert('上传成功,个别失败');
+                }
+            });
+
+        });
+
+        //全选
+        $('#selectAll').bind('click', function(){
+            $('.checkAll').prop('checked', true);
+
+        });
+
+        //全选
+        $('#unselectAll').bind('click', function(){
+            $('.checkAll').prop('checked', false);
+        });
+
+        $('.set').on('click', function(){
+            var orders = '';
+            $(".checkAll").each(function(){
+                if ($(this).prop("checked")) {
+                    orders += $(this).val() + ",";
+                }
+            });
+
+            $.ajax({
+                type: 'POST',
+                dataType: 'JSON',
+                url: '/invoice/checkInvoice?type=delete',
+                data: {orderlist:orders}
+            }).done(function (data){
+                alert(data.msg);
+                window.location.reload();
+            })
+        })
+    </script>
+</div>
