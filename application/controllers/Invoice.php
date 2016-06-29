@@ -129,6 +129,7 @@ class InvoiceController extends Base{
             2 => '有维权'
         ];
         $data = $this->invoice_mode->getCheckOrderList($page_no, 20, 1, $order_id, $state);
+        $this->renderPagger($page_no, $data['total_nums'], '/invoice/checkinvoice/page_no/{p}?status='.$state.'&order_id='.$order_id, 20);
         $this->assign('data', $data);
         $this->assign('status', $status[$state]);
         $this->assign('order_id', $order_id);
