@@ -14,6 +14,8 @@ class CdkeyController extends Base {
      */
     public $cdkey_model;
 
+    const PAGE_SIZE = 20;
+
     function init() {
         $this->initAdmin();
         $this->checkRole();
@@ -26,14 +28,17 @@ class CdkeyController extends Base {
     public function indexAction() {
         $sku_outer_id = $this->getRequest()->get('sku_outer_id');
         $batch_number = $this->getRequest()->get('batch_number');
+        $page_no      = (int)$this->getRequest()->get('p', 1);
 
         $params = [
             'sku_outer_id' => $sku_outer_id,
-            'batch_number' => $batch_number
+            'batch_number' => $batch_number,
+            'page_no'      => $page_no,
         ];
 
         $result = $this->cdkey_model->getListOfCdkey($params);
 
+        $this->renderPagger($page_no ,$result['total_nums'] , "/cdkey/index/p/{p}?sku_outer_id={$sku_outer_id}&batch_number={$batch_number}", self::PAGE_SIZE);
         $this->assign('list', $result['data']);
         $this->layout("platform/cdkey_list.phtml");
     }
@@ -74,18 +79,26 @@ class CdkeyController extends Base {
         ];
         $this->cdkey_model->addCdkey($params);
 
+        $this->cdkey_model->cdkeyLog('生成商品兑换码', $params);
+
         if ($this->isLogin()) {
             $this->location('/cdkey/index');
         }
         exit;
     }
 
+    /**
+     * 生成CSV文件
+     */
     public function exportAction() {
         $cid = $this->getRequest()->get('cid');
 
         $params = [
             'cid' => $cid
         ];
+
+        $this->cdkey_model->cdkeyLog('导出商品兑换码', $params);
+
         $result = $this->cdkey_model->export($params);
 
         $export = new Export();
