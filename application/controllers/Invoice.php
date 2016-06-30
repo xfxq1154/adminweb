@@ -101,6 +101,7 @@ class InvoiceController extends Base{
      */
     public function checkInvoiceAction()
     {
+        $this->checkRole();
         $page_no = (int)$this->getRequest()->get('page_no', 1);
         $type = $this->getRequest()->get('type');
         $id_in = $this->getRequest()->get('orderlist');
@@ -128,6 +129,7 @@ class InvoiceController extends Base{
             2 => '有维权'
         ];
         $data = $this->invoice_mode->getCheckOrderList($page_no, 20, 1, $order_id, $state);
+        $this->renderPagger($page_no, $data['total_nums'], '/invoice/checkinvoice/page_no/{p}?status='.$state.'&order_id='.$order_id, 20);
         $this->assign('data', $data);
         $this->assign('status', $status[$state]);
         $this->assign('order_id', $order_id);
@@ -582,7 +584,7 @@ class InvoiceController extends Base{
 
     public function uploadInvoiceAction()
     {
-//        $this->checkRole();
+        $this->checkRole();
         $files = $this->getRequest()->getFiles('file');
 
         if(!$files){
@@ -604,9 +606,8 @@ class InvoiceController extends Base{
             Tools::output(array('info'=> '系统错误','status' => 0));
         }
         unset($xls->sheets[0]['cells'][1]);
-
         foreach ($xls->sheets[0]['cells'] as $values){
-            foreach (Fileds::$invoice as $k => $v){
+            foreach (Fileds::$check as $k => $v){
                 $data[$v] = trim($values[$k]);
             }
             $faliOrder = $this->invoice_mode->insertCheckOrder($data);

@@ -21,6 +21,11 @@ class Fileds{
         '3' => 'tax_tare'
     ];
 
+    //订单校验
+    public static $check = [
+        '1' => 'order_id'
+    ];
+
     public static $order = [
 
         'E20160427120235027566012' => [
