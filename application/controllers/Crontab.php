@@ -356,7 +356,7 @@ class CrontabController extends Base{
         $orders['receiver_mobile'] = $value['buyer_phone'];
         $orders['payee'] = $value['payee'];
         $orders['review'] = $value['review'];
-        
+
         //开发票
         $result = $this->dzfp->fpkj($orders, $orders['new_detail']);
         if(!$result){
@@ -670,7 +670,7 @@ class CrontabController extends Base{
             exit;
         }
         foreach ($invoices as $value){
-            $order = Fileds::$redOrder[$value['order_id']];
+            $order = Fileds::$redOrder['E20160612090835084059803RED'];
             $value['new_detail'] = $order;
             $params['xsf_mc'] = $value['seller_name'];
             $params['xsf_dzdh'] = $value['seller_address'];
