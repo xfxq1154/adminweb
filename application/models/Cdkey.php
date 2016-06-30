@@ -12,6 +12,7 @@ class CdkeyModel {
     const CDKEY_CREATE = 'cdkey/add';  //创建
     const CDKEY_LIST   = 'cdkeylist/getlistofouter'; //获取批次列表
     const CDKEY_COUNT  = 'cdkeylist/getlistcount';
+    const CDKEY_LOG    = 'log/write';
     
     /**
      * 生成优惠券并提交到数据库
@@ -56,11 +57,11 @@ class CdkeyModel {
             'name'    => $_SESSION['a_user']['name'],  //用户名
             'user_ip' => $_SERVER['REMOTE_ADDR'],   //IP地址
             'action'  => $action,
-            'params'  => $data,
+            'params'  => json_encode($data, 1),
             'time'    => date('Y-m-d H:i:s', time())
         ];
 
-        error_log(var_export(json_encode($params, JSON_UNESCAPED_UNICODE), 1), 3, '/data/logs/cdkey/action.log');
+        Cdkey::request(self::CDKEY_LOG, $params, "POST");
     }
 
 }
