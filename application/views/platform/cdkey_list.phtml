@@ -55,7 +55,13 @@
                             <td><?php echo $val['price'] ? : '--'; ?></td>
                             <td><?php echo $val['validity_time'] ? : '--'; ?></td>
                             <td><?php echo $val['create_time'] ? : '--'; ?></td>
-                            <td><a class="button button-small bg-green" href="/cdkey/export?cid=<?php echo $val['id']; ?>" >导出</a></td>
+                            <?php if($val['status'] == 3) {?>
+                                <td><a class="button button-small bg-green" href="javascript:void(0)" >待生成</a></td>
+                            <?php } elseif($val['status'] == 2) { ?>
+                                <td><a class="button button-small bg-green" href="javascript:void(0)" >生成中..</a></td>
+                            <?php } else {?>
+                                <td><a class="button button-small bg-green" href="/cdkey/export?cid=<?php echo $val['id']; ?>" >导出</a></td>
+                            <?php } ?>
                         </tr>
                     <?php endforeach; ?>
                 <?php endif; ?>

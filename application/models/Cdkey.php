@@ -11,7 +11,7 @@ class CdkeyModel {
 
     const CDKEY_CREATE = 'cdkey/add';  //创建
     const CDKEY_LIST   = 'cdkeylist/getlistofouter'; //获取批次列表
-    const CDKEY_COUNT = 'cdkeylist/getlistcount';
+    const CDKEY_COUNT  = 'cdkeylist/getlistcount';
     
     /**
      * 生成优惠券并提交到数据库
@@ -31,9 +31,6 @@ class CdkeyModel {
      * 获取兑换码批次列表
      */
     public function getListOfCdkey($params) {
-        if(empty($params)){
-            return FALSE;
-        }
         $result = Cdkey::request(self::CDKEY_LIST, $params, "GET");
         if($result === FALSE){
             return FALSE;
@@ -45,13 +42,8 @@ class CdkeyModel {
      * 导出兑换码
      */
     public function export($params) {
-        if(empty($params)){
-            return FALSE;
-        }
         $result = Cdkey::request(self::CDKEY_COUNT, $params, "POST");
-        if($result === FALSE){
-            return FALSE;
-        }
+
         return $result;
     }
 
