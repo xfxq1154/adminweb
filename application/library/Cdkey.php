@@ -17,7 +17,6 @@ class Cdkey {
 
     public static function request($uri, $params = array(), $requestMethod = 'GET', $jsonDecode = true, $headers = array()) {
         $url = self::$_host . $uri;
-
         $params['sourceid'] = self::$_sourceid;
         $params['timestamp'] = time();
         $result = Curl::request($url, $params, $requestMethod, $jsonDecode, $headers, self::$_timeout);
