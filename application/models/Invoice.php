@@ -487,8 +487,6 @@ class InvoiceModel{
         }
     }
 
-
-
     /**
      * @return bool
      * @explain 删除校验订单
@@ -496,17 +494,15 @@ class InvoiceModel{
     public function delCheckOrder($id)
     {
         try{
-            $sql = ' DELETE FROM '.'`check_order`'.' WHERE `id` IN (:id)';
+            $sql = ' DELETE FROM '.'`check_order`'." WHERE `id` IN ($id)";
             $stmt = $this->dbMaster->prepare($sql);
-            return $stmt->execute([':id' => $id]);
+            return $stmt->execute();
         }catch (PDOException $ex){
             echo $ex->getMessage();
             return false;
         }
     }
-    /**
-     *
-     */
+
     public function getYzO(){
         try{
             $sql = " select order_id from invoice where update_time like '%2016-06-14%' and invoice_type = 0 and state = 4";
