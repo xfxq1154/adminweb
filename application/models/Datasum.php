@@ -6,10 +6,10 @@
  */
 class DatasumModel {
 
-    const ORDER_SKULIST   = 'order/skulist';
-    const ORDER_TODAY   = 'order/today';
+    const ORDER_SKULIST   = 'api/order/skulist';
+    const ORDER_TODAY   = 'api/order/today';
 
-    const VIEW_GETLIST = 'view/getlist';
+    const VIEW_GETLIST = 'api/view/getlist';
 
     const PAGE_TYPE_FEATURE = 1;
     const PAGE_TYPE_PRODUCT = 2;

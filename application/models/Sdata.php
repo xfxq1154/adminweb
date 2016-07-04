@@ -6,17 +6,15 @@
  */
 class SdataModel {
 
-    use Trait_Api;
-
-    const ORDER_DETAIL = 'result/order_detail';
-    const ORDER_SKULIST = 'order/skulist';
-    const PAGEDATA_OVERVIEW = 'pagedata/overview';
-    const PAGEDATA_VIEWS = 'pagedata/views';
-    const PAGEDATA_RANKLIST = 'pagedata/ranklist';
+    const ORDER_GETLIST = 'api/order/getlist';
+    const ORDER_SKULIST = 'api/order/skulist';
+    const PAGEDATA_OVERVIEW = 'api/pagedata/overview';
+    const PAGEDATA_VIEWS = 'api/pagedata/getlist_by_date';
+    const PAGEDATA_RANKLIST = 'api/pagedata/getlist_by_pageid';
 
 
     public function getList($params) {
-        $result = Sdata::request(self::ORDER_DETAIL, $params);
+        $result = Sdata::request(self::ORDER_GETLIST, $params);
         return $this->format_order_datas_batch($result);
     }
 
