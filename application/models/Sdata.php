@@ -22,7 +22,7 @@ class SdataModel {
         return Sdata::request(self::ORDER_SKULIST, $params);
     }
 
-    public function PageOverview($params) {
+    public function pageOverview($params) {
         return Sdata::request(self::PAGEDATA_OVERVIEW, $params);
     }
 

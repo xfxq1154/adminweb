@@ -169,10 +169,10 @@ class SdataController extends Base{
         $params['start_created'] = $this->start_created;
         $params['end_created'] = Tools::format_date($this->end_created);
 
-        $res = $this->sdata->overview($params);
+        $res = $this->sdata->pageOverview($params);
         $total_uv = ($res['total_uv']) ? : 0;
 
-        $result = $this->sdata->getList($params);
+        $result = $this->sdata->orderOverview($params);
         foreach ($result as $val){
             $key = '"'.date('m-d',strtotime($val['date'])).'"';
             $chart_data[$key] = $val;
