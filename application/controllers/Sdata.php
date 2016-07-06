@@ -94,7 +94,7 @@ class SdataController extends Base{
         $params['end_created'] = Tools::format_date($this->end_created);
         $params['page_size'] = 10;
 
-        $overview_data = $this->sdata->overview($params);
+        $overview_data = $this->sdata->pageOverview($params);
 
         $productTop10 = $this->sdata->ranklist($params);
         if ($productTop10){
