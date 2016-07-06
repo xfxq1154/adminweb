@@ -6,15 +6,15 @@
  */
 class SdataModel {
 
-    const ORDER_GETLIST = 'api/order/getlist';
+    const ORDER_OVERVIEW = 'api/order/overview';
     const ORDER_SKULIST = 'api/order/skulist';
     const PAGEDATA_OVERVIEW = 'api/pagedata/overview';
     const PAGEDATA_VIEWS = 'api/pagedata/getlist_by_date';
     const PAGEDATA_RANKLIST = 'api/pagedata/getlist_by_pageid';
 
 
-    public function getList($params) {
-        $result = Sdata::request(self::ORDER_GETLIST, $params);
+    public function orderOverview($params) {
+        $result = Sdata::request(self::ORDER_OVERVIEW, $params);
         return $this->format_order_datas_batch($result);
     }
 
@@ -22,7 +22,7 @@ class SdataModel {
         return Sdata::request(self::ORDER_SKULIST, $params);
     }
 
-    public function overview($params) {
+    public function PageOverview($params) {
         return Sdata::request(self::PAGEDATA_OVERVIEW, $params);
     }
 
