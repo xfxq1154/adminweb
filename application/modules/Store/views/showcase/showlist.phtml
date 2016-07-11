@@ -12,14 +12,14 @@
         <div class="button-group float-right">
             <a class="button button-small bg-dot icon-plus dropdown-toggle"> 添加 <span class="downward"></span></a>
             <ul class="drop-menu pull-right">
-                <li><a href="/bpshowcase/create">添加店铺</a></li>
+                <li><a href="/store/showcase/create">添加店铺</a></li>
             </ul>
         </div>
     </div> 
 </div>
 <div class="table-tools clearfix ">
     <div class="float-left">
-        <form method="GET" action="/bpshowcase/" >
+        <form method="GET" action="/store/showcase/" >
             <div class="form-inline">
                 <div class="form-group">
                     <div class="field">
@@ -28,9 +28,6 @@
                     <div class="field">
                         <input type="text" class="input" id="keyword" name="nickname" size="20" value="<?=$nickname?>" placeholder="店主昵称">
                     </div>&nbsp;
-                    <div class="field">
-                        <input type="text" class="input" id="keyword" name="showcase_id" size="20" value="<?=$id?>" placeholder="店铺ID">
-                    </div>
                 </div>
                 <div class="form-button">
                     <button class="button" type="submit">搜索</button>
@@ -57,12 +54,12 @@
                         <?php foreach ($list as $val) : ?>
                             <tr>
                                 <td><?php echo $val['showcase_id']; ?></td>
-                                <td><a href="/bpshowcase/info?id=<?=$val['showcase_id']?>"><?php echo $val['name']; ?></a></td>
+                                <td><a href="/store/showcase/info?id=<?=$val['showcase_id']?>"><?php echo $val['name']; ?></a></td>
                                 <td><?php echo $val['nickname'] ? : '--'; ?></td>
-                                <td><a href="/bpshowcase/auditing?showcase_id=<?=$val['showcase_id']?>"><?php echo $val['status_com_name'] ?></a></td>
+                                <td><a href="/store/showcase/auditing?showcase_id=<?=$val['showcase_id']?>"><?php echo $val['status_com_name'] ?></a></td>
                                 <td><?php echo $val['block'] == 1 ? "<span class=\"tag bg-red\">是</span>" : "<span class=\"tag bg-green\">否</span>";?></td>
                                 <td><?php echo $val['ctime']; ?></td>
-                                <td><a href="/bpproduct/index?showcase_id=<?=$val['showcase_id']?>">商品</a> | <a href="/bporder/index/?showcase=<?=$val['showcase_id']?>">订单</a> | <a href="/sdata/order?showcase_id=<?=$val['showcase_id']?>">订单统计</a></td>
+                                <td><a href="/store/product/index?showcase_id=<?=$val['showcase_id']?>">商品</a> | <a href="/store/order/index/?showcase=<?=$val['showcase_id']?>">订单</a> | <a href="/store/statcenter/order?showcase_id=<?=$val['showcase_id']?>">订单统计</a></td>
                             </tr>
                         <?php endforeach; ?>
                     <?php endif; ?>

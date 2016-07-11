@@ -1,0 +1,219 @@
+<script language="JavaScript" type="text/javascript" src="<?=ASSET_URL?>/static/js/calendar/WdatePicker.js"></script>
+<!-- ECharts单文件引入 -->
+<script src="<?=ASSET_URL?>/static/lib/js/chart/echarts-all.js"></script>
+<div class="dux-tools">
+    <div class="bread-head">数据统计<span class="small">订单数据统计</span></div><br>
+</div>
+<div class="table-tools clearfix ">
+    <div class="float-left">
+        <form method="GET">
+            <div class="form-inline">
+                <div class="form-group">
+                    <div class="field">
+                        开始时间：<input type="text" id="d4321" class="input datebtn" style="width:220px;" id="datetime" name="start_time" value="<?=$start_time?>" onfocus="WdatePicker({startDate:'<?=date('Y-m-d',strtotime('-7 day'))?>',maxDate:'#F{$dp.$D(\'d4322\',{d:+0})}'})" style="cursor:pointer;" size="60" datatype="*" placeholder="" autocomplete="off">
+                    </div>&nbsp;
+                    <div class="field">
+                        结束时间：<input type="text" id="d4322" class="input datebtn" style="width:220px;" id="datetime" name="end_time"  value="<?=$end_time?>" onfocus="WdatePicker({maxDate:'<?=date('Y-m-d',strtotime('-1 day'))?>',minDate:'#F{$dp.$D(\'d4321\',{d:+0})}'})" style="cursor:pointer;" size="60" datatype="*" placeholder="" autocomplete="off">
+                    </div>&nbsp;
+                    <div class="field">
+                        <select class="input js-assign" target="#tpl" name="showcase_id" datatype="*" id="parent">
+                            <option value="">请选择店铺</option>
+                            <?php foreach ($showcase_list as $showcase) : ?>
+                                <option value="<?=$showcase['showcase_id']?>" <?=($showcase_id == $showcase['showcase_id']) ? 'selected': ''?>><?php echo $showcase['name']; ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-button">
+                    <button class="button" type="submit">搜索</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div class="admin-main">
+    <div class="panel dux-box">
+        <div class="panel-head">商品页面浏览排行TOP10</div>
+        <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+        <br>
+        <div class="line-big">
+            <div class="xm5">
+                <div id="main" style="height:400px"></div>
+            </div>
+            <div  class="xm7">
+                <table id="table" class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <th width="100">排名</th>
+                            <th width="*">商品名</th>
+                            <th width="100">PV占比</th>
+                        </tr>
+                        <?php foreach ($top10 as $key => $item) : ?>
+                        <tr>
+                            <td><?=$key+1?></td>
+                            <td><a><?=$item['page_title']?></a></td>
+                            <td><?=number_format(($item['total_pv'] / $total_pv) * 100, 2) ?>%</td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="panel dux-box">
+        <div class="panel-head">商品销量排行TOP10</div>
+        <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+        <br>
+        <div class="line-big">
+            <div class="xm5">
+                <div id="sellrank" style="height:400px"></div>
+            </div>
+            <div  class="xm7">
+                <table id="table" class="table table-bordered">
+                    <tbody>
+                    <tr>
+                        <th width="100">排名</th>
+                        <th width="*">商品名</th>
+                        <th width="*">销售额</th>
+                        <th width="*">销量</th>
+                    </tr>
+                    <?php foreach ($sell_top10 as $key => $item) : ?>
+                        <tr>
+                            <td><?=$key+1?></td>
+                            <td><a><?=$item['title']?><?=($item['sku_value']? '-'.$item['sku_value'] : '')?></a></td>
+                            <td><?=$item['total_pay']?></td>
+                            <td><?=$item['total_order']?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" charset="utf-8">
+        Do.ready('base',function() {
+            $('.js-time').duxTime();
+        });
+    </script>
+    <script>
+        // srcipt标签式引入
+        var myChart = echarts.init(document.getElementById('main'));
+        option = {
+            tooltip : {
+                trigger: 'axis'
+            },
+            legend: {
+                data:['浏览PV','浏览UV']
+            },
+            calculable : true,
+            xAxis : [
+                {
+                    type : 'category',
+                    data : ['NO.1','NO.2','NO.3','NO.4','NO.5','NO.6','NO.7','NO.8','NO.9','NO.10']
+                }
+            ],
+            yAxis : [
+                {
+                    type : 'value'
+                }
+            ],
+            series : [
+                {
+                    name:'浏览PV',
+                    type:'bar',
+                    data:[<?=($toppv)?implode(',', $toppv):''?>],
+                    markPoint : {
+                        data : [
+                            {type : 'max', name: '最大值'},
+                            {type : 'min', name: '最小值'}
+                        ]
+                    },
+                    markLine : {
+                        data : [
+                            {type : 'average', name: '平均值'}
+                        ]
+                    }
+                },
+                {
+                    name:'浏览UV',
+                    type:'bar',
+                    data:[<?=($topuv)?implode(',', $topuv):''?>],
+                    markPoint : {
+                        data : [
+                            {type : 'max', name: '最大值'},
+                            {type : 'min', name: '最小值'}
+                        ]
+                    },
+                    markLine : {
+                        data : [
+                            {type : 'average', name : '平均值'}
+                        ]
+                    }
+                }
+            ]
+        };
+        myChart.setOption(option);
+    </script>
+    <script>
+        // srcipt标签式引入
+        var myChart = echarts.init(document.getElementById('sellrank'));
+        option = {
+            tooltip : {
+                trigger: 'axis'
+            },
+            legend: {
+                data:['销量','销售额']
+            },
+            calculable : true,
+            xAxis : [
+                {
+                    type : 'category',
+                    data : ['NO.1','NO.2','NO.3','NO.4','NO.5','NO.6','NO.7','NO.8','NO.9','NO.10']
+                }
+            ],
+            yAxis : [
+                {
+                    type : 'value'
+                }
+            ],
+            series : [
+                {
+                    name:'销量',
+                    type:'bar',
+                    data:[<?=($toppv)?implode(',', $ordertop):''?>],
+                    markPoint : {
+                        data : [
+                            {type : 'max', name: '最大值'},
+                            {type : 'min', name: '最小值'}
+                        ]
+                    },
+                    markLine : {
+                        data : [
+                            {type : 'average', name: '平均值'}
+                        ]
+                    }
+                },
+                {
+                    name:'销售额',
+                    type:'bar',
+                    data:[<?=($topuv)?implode(',', $paytop):''?>],
+                    markPoint : {
+                        data : [
+                            {type : 'max', name: '最大值'},
+                            {type : 'min', name: '最小值'}
+                        ]
+                    },
+                    markLine : {
+                        data : [
+                            {type : 'average', name : '平均值'}
+                        ]
+                    }
+                }
+            ]
+        };
+        myChart.setOption(option);
+    </script>
+</div>

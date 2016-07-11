@@ -5,22 +5,13 @@
  *
  * @author yanbo
  */
-class BpShowcaseController extends Base {
+class ShowcaseController extends Storebase {
 
-    use Trait_Layout,
-        Trait_Pagger;
-
-    /**
-     * @var BpShowcaseModel
-     */
-    public $showcase;
     
     const ADMIN = '0'; //店长
     
     public function init() {
-        $this->initAdmin();
-        $this->checkRole();
-        $this->showcase = new BpShowcaseModel();
+        parent::init();
     }
     
     /**
@@ -58,19 +49,13 @@ class BpShowcaseController extends Base {
         $params['nickname'] = $nickname;
         $params['showcase_id'] = $showcase_id;
         
-        $showcasesList = $this->showcase->getList($params);
-        $showlist = $this->showcase->getList(array('page_no'=>$p,'page_size'=>$size));
-        $idlist = array();
-        foreach ($showlist['showcases'] as $val){
-            $idlist[] = $val['showcase_id'];
-        }
+        $showcasesList = $this->showcase_model->getlist($params);
         $this->assign("list", $showcasesList['showcases']);
         $this->assign('kw', $kw);
         $this->assign('nickname', $nickname);
         $this->assign('id', $showcase_id);
-        $this->assign('idlist', $idlist);
-        $this->renderPagger($p, $showcasesList['total_nums'], '/bpshowcase/index/p/{p}/t/'.$t, $size);
-        $this->layout("platform/showcase.phtml");
+        $this->renderPagger($p, $showcasesList['total_nums'], '/store/showcase/index/p/{p}/t/'.$t, $size);
+        $this->layout("showcase/showlist.phtml");
     }
     
     /**
@@ -185,42 +170,6 @@ class BpShowcaseController extends Base {
         $this->assign("refuse", json_encode($this->getView()->render('platform/showcase_refuse.phtml')));
         $this->layout("platform/showcase_auditing_com.phtml");
         
-    }
-
-    /**
-     * API:冻结
-     */
-    public function blockAction() {
-//        $showcase_id = json_decode($this->getRequest()->getPost('data'), true)['id'];
-        if(!$showcase_id){
-            return FALSE;
-        }
-        $params['showcase_id'] = $showcase_id;
-        $result = $this->showcase->block($params);
-        if($result){
-            Tools::output(['info' => '冻结失败', 'status' => 0]);
-        }  else {
-            Tools::output(['info' => '冻结成功', 'status' => 1, 'url' => '/bpshowcase/index']);
-        }
-        exit;
-    }
-    
-    /**
-     * API:解冻
-     */
-    public function unblockAction() {
-        $showcase_id = json_decode($this->getRequest()->getPost('data'), true)['id'];
-        if(!$showcase_id){
-            return FALSE;
-        }
-        $params['showcase_id'] = $showcase_id;
-        $result = $this->showcase->unblock($params);
-        if($result){
-            Tools::output(['info' => '解冻失败', 'status' => 0]);
-        }  else {
-            Tools::output(['info' => '解冻成功', 'status' => 1, 'url' => '/bpshowcase/index']);
-        }
-        exit;
     }
     
     /**

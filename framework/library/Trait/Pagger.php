@@ -23,6 +23,7 @@ trait Trait_Pagger {
 
         $paggerObj->setUrlTemplate($urlTemplate);
 
+        $this->getView()->setScriptPath(ROOT_PATH.'/application/views');
         $pagger = $this->getView()->render($template, array('paggerObj' => $paggerObj));
 
         $this->pagger = $pagger;
