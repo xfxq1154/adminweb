@@ -175,7 +175,7 @@ class Curl {
      * 获取错误
      * @return type
      */
-    public function get_request_error(){
+    public static function get_request_error(){
         return self::$request_error;
     }
  

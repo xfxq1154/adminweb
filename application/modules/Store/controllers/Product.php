@@ -80,7 +80,7 @@ class ProductController extends Storebase {
         $p['pic_path'] = $product['pic_path'];
         $p['item_imgs'] = $product['item_imgs'];
         $p['buy_quota'] = $product['buy_quota'];
-        $p['buy_quota_name'] = ($product[buy_quota] == 0) ? "无限制" : $product['buy_quota'];
+        $p['buy_quota_name'] = ($product['buy_quota'] == 0) ? "无限制" : $product['buy_quota'];
         $p['onsell_name'] = $this->product_onsell[$product['onsell']];
         $p['onsell'] = $product['onsell'];
         $p['presell'] = $product['presell']; //预售状态

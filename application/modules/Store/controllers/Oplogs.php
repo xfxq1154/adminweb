@@ -1,8 +1,7 @@
 <?php
 
 /**
- * 店铺操作记录
- *
+ * OplogsController
  * @author yanbo
  */
 class OplogsController extends Storebase {

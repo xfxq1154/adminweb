@@ -11,6 +11,9 @@ class StoreShowcaseModel {
     const SHOWCASE_PASS = 'showcase/pass';
     const SHOWCASE_UNPASS = 'showcase/unpass';
     const SHOWCASE_CREATE = 'showcase/create';
+    const SHOWCASE_APPROVE_DETAIL = 'showcase/approve_detail';
+
+    const PASSPORT_USER_CREATE = 'user/register';
     const PAYMENT_SELLER_ACCOUNT = 'api/shared_merchant/';
 
     private $showcase_status = array(
@@ -36,15 +39,19 @@ class StoreShowcaseModel {
     /**
      * 创建店铺
      */
-    public function create($params){
+    public function createShowcase($params){
         return Sapi::request(self::SHOWCASE_CREATE, $params, 'POST');
     }
 
     /**
-     * @param $showcase_id
-     * @param $showcase_name
-     * @return array
-     * @desc 通知支付平台
+     * 注册用户
+     */
+    public function createUserAccount($params) {
+        return Passport::request(self::PASSPORT_USER_CREATE, $params, 'POST');
+    }
+
+    /**
+     * 创建支付账户
      */
     public function createPaymentSellerAccount($showcase_id, $showcase_name){
         $url = PAYMENT_HOST.self::PAYMENT_SELLER_ACCOUNT;
@@ -52,10 +59,19 @@ class StoreShowcaseModel {
         $params['channels'] = 'WECHAT,JDPAY';
         $params['system_en'] = 'PLATFORM';
         $params['merchant_name'] = $showcase_name;
-        $result = Curl::request($url, $params, 'post');
+        $result = Curl::request($url, $params, 'POST');
         return $result;
     }
-    
+
+    /**
+     * 商户认证资料
+     */
+    public function approve_detail($showcase_id){
+        $params['showcase_id'] = $showcase_id;
+        $result = Sapi::request(self::SHOWCASE_APPROVE_DETAIL, $params);
+        return $this->tidy_approve($result);
+    }
+
     /**
      * 通过认证
      */
@@ -174,6 +190,10 @@ class StoreShowcaseModel {
             $data = $this->tidy($data);
         }
         return $datas;
+    }
+
+    public function getError(){
+        return Sapi::getErrorMessage();
     }
 
 }
