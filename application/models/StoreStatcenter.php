@@ -94,7 +94,7 @@ class StoreStatcenterModel {
 
         return $format_data;
     }
-    
+
     public function format_order_datas_batch($datas) {
         if (empty($datas)) {
             return array();
