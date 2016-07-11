@@ -23,4 +23,9 @@ class Storebase extends Base {
         $this->store_model = new StoreModel();
         $this->showcase_model = new StoreShowcaseModel();
     }
+
+    public function setShowcaseList() {
+        $showcase_list = $this->showcase_model->getlist(['page_no' => 1, 'page_size' => 100, 'block' => 0]);
+        $this->assign('showcase_list', $showcase_list['showcases']);
+    }
 }

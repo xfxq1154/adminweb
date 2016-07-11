@@ -20,6 +20,7 @@ class OrderController extends Storebase {
     }
 
     function indexAction() {
+        $this->setShowcaseList();
         $order_no = $this->input_get_param('order_no');
         $number = $this->input_get_param('number');
         $showcase_id = $this->input_get_param('showcase');
@@ -48,14 +49,6 @@ class OrderController extends Storebase {
 
         $result = $this->store_model->orderList($order_list);
         $orderList = $this->format_order_batch($result);
-        $showlist = $this->showcase_model->getlist(array('page_no'=>1,'page_size'=>100, 'block'=>0));
-        $idlist = [];
-        $showcase = [];
-        foreach ($showlist['showcases'] as $key=>$val){
-            $idlist[$key]['id'] = $val['showcase_id'];
-            $idlist[$key]['name'] = $val['name'];
-            $showcase[$val['showcase_id']] = $val['name'];
-        }
         
         $this->renderPagger($page_no ,$orderList['total_nums'] , "/store/order/index?page_no={p}&number={$mobile}&order_no={$order_id}&order_status={$state}&showcase={$showcase_id}&outer_tid={$outer_tid}&spm={$spm}", $page_size);
         $this->assign('mobile', $mobile);
@@ -64,8 +57,6 @@ class OrderController extends Storebase {
         $this->assign('outer_tid', $outer_tid);
         $this->assign('showcase', $showcase_id);
         $this->assign("list", $orderList['orders']);
-        $this->assign('idlist', $idlist);
-        $this->assign('name', $showcase);
         $this->layout("order/showlist.phtml");
     }
 

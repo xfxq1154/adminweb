@@ -30,7 +30,7 @@ class StatcenterController extends Storebase{
         $this->end_created = $this->input_get_param('end_time', $default_end);
         $this->showcase_id = $this->input_get_param('showcase_id');
 
-        $this->showcase_list = $this->showcase_model->getlist(array('page_no'=>1,'page_size'=>100, 'block'=>0));
+        $this->setShowcaseList();
     }
 
     public function productAction(){
@@ -238,7 +238,6 @@ class StatcenterController extends Storebase{
     }
 
     private function _display($layout){
-        $this->assign('showcase_list', $this->showcase_list['showcases']);
         $this->assign('showcase_id', $this->showcase_id);
         $this->assign('start_time', $this->start_created);
         $this->assign('end_time', $this->end_created);

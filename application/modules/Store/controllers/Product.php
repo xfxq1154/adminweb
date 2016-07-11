@@ -22,11 +22,11 @@ class ProductController extends Storebase {
     }
 
     function indexAction() {
+        $this->setShowcaseList();
         $showcase_id = $this->input_get_param('showcase_id');
         $type = $this->input_get_param('type');
         $name = $this->input_get_param('pname');
         $page_no = $this->input_get_param('page_no');
-
 
         $pname = $name ? $name : '';
         $t = $type ? $type : '';
@@ -41,26 +41,13 @@ class ProductController extends Storebase {
         ];
 
         $result = $this->store_model->productList($product_list);
-        $productsList = $this->format_data_batch($result);
+        $data = $this->format_data_batch($result);
 
-
-        $list = $productsList['products'];
-        $count = $productsList['total_nums'];
-
-        $showlist = $this->showcase_model->getlist(array('page_no'=>1,'page_size'=>100, 'block'=>0));
-        foreach ($showlist['showcases'] as $key=>$val){
-            $idlist[$key]['id'] = $val['showcase_id'];
-            $idlist[$key]['name'] = $val['name'];
-            $showcase[$val['showcase_id']] = $val['name'];
-        }
-
-        $this->renderPagger($page_no, $count, "/store/product/index?page_no={p}&pname={$pname}&type={$t}&showcase_id={$showcase_id}", $page_size);
+        $this->renderPagger($page_no, $data['total_nums'], "/store/product/index?page_no={p}&pname={$pname}&type={$t}&showcase_id={$showcase_id}", $page_size);
 
         $this->assign('pname', $pname);
-        $this->assign("list", $list);
+        $this->assign("list", $data['products']);
         $this->assign('showcase_id', $showcase_id);
-        $this->assign('idlist', $idlist);
-        $this->assign('name', $showcase);
         $this->layout("product/showlist.phtml");
     }
 

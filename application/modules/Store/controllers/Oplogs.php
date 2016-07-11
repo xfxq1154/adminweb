@@ -10,16 +10,13 @@ class OplogsController extends Storebase {
 
     public function init() {
         parent::init();
-
     }
 
     /**
      * 操作记录列表
      */
     public function showlistAction() {
-        $showcase_list = $this->showcase_model->getlist(array('page_no'=>1,'page_size'=>100, 'block'=>0));
-        $this->assign('showcase_list', $showcase_list['showcases']);
-
+        $this->setShowcaseList();
         $showcase_id = $this->input_get_param('showcase_id', 10008);
         $sourceid = $this->input_get_param('sourceid');
         $title = $this->input_get_param('title');
