@@ -115,7 +115,6 @@ class ShowcaseController extends Storebase {
         }
 
         $info = $this->showcase_model->approve_detail($showcase_id);
-        var_dump($info);
         $this->assign("info", $info);
         $this->assign("showcase_id", $showcase_id);
         $this->assign("refuse", json_encode($this->getView()->render('showcase/model.phtml')));
