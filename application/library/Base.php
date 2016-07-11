@@ -43,9 +43,10 @@ abstract class Base extends Yaf_Controller_Abstract {
      */
     public function checkRole($action=''){
         $request = $this->getRequest();
-        
+
         //控制器
-        $controller = strtolower($request->controller);
+        $module = $request->module;
+        $controller = $module != 'Index' ? strtolower($module.'/'.$request->controller) : strtolower($request->controller);
         //动作
         if(empty($action)){
            $action = $request->action; 

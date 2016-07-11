@@ -11,11 +11,7 @@ class Sapi {
     static private $_last_error = NULL;
     static private $_timeout = 5; //接口超时时间 单位s秒 建议不超过5s
 
-    public function __construct() {
-        
-    }
-
-    public static function request($uri, $params = array(), $requestMethod = 'GET', $jsonDecode = true, $headers = array()) {
+    public static function request($uri, $params = array(), $requestMethod = 'GET', $headers = array(), $jsonDecode = true) {
         $url = self::$_host . $uri;
         $params['sourceid'] = self::$_sourceid;
         $params['timestamp'] = time();
@@ -43,5 +39,8 @@ class Sapi {
         return self::$_last_error;
     }
 
+    public static function getErrorMessage(){
+        return Error_Sapi::getMessage(self::$_last_error['code']);
+    }
 }
  

@@ -14,10 +14,15 @@ trait Trait_Layout {
      * @param type $layout
      */
     
-    private function layout($viewName='', $layout = 'layout', $exit = true) {
+    public function layout($viewName='', $layout = 'layout', $exit = true) {
+        $module = $this->getRequest()->module;
+        $view_path = ($module != 'Index') ? "modules/$module/views" : "views";
+        $this->getView()->setScriptPath(ROOT_PATH."/application/$view_path");
         $this->getView()->assign("js", $this->formatStatic('js'));
         $this->getView()->assign("css", $this->formatStatic('css'));
         $this->getView()->assign('page', $this->getView()->render($viewName));
+
+        $this->getView()->setScriptPath(ROOT_PATH."/application/views");
         $this->getView()->display('layout/' . $layout . '.phtml');
         if($exit === true) exit;
     }

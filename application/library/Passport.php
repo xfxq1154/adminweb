@@ -10,7 +10,7 @@ class Passport {
     static private $_last_error = NULL;
     static private $_timeout = 3; //接口超时时间 单位s秒 建议不超过3s
 
-    public static function request($uri, $params = array(), $requestMethod = 'POST', $jsonDecode = true, $headers = array()) {
+    public static function request($uri, $params = array(), $requestMethod = 'GET', $jsonDecode = true, $headers = array()) {
         $url = self::$_host . $uri;
         $params['sys_code'] = self::$_syscode;
         $result = Curl::request($url, $params, $requestMethod, $jsonDecode, $headers, self::$_timeout);
@@ -35,6 +35,10 @@ class Passport {
 
     public static function getError() {
         return self::$_last_error;
+    }
+
+    public static function getErrorMessage(){
+        return Error_Passport::getMessage(self::$_last_error['code']);
     }
     
 }

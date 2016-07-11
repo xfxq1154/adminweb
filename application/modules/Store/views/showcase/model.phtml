@@ -1,0 +1,63 @@
+<div>
+    <form id="form1">
+        <label class="left-content">关闭理由:</label>
+        <ul class="right-content">
+            <li><input type="radio" name="reason" value="虚假认证资料" checked="checked" /> 虚假认证资料</li>
+            <li><input type="radio" name="reason" value="请提供真实、清晰的资料"  /> 请提供真实、清晰的资料</li>
+            <li><input type="radio" name="reason" value="暂停审核"/> 暂停审核</li>
+            <li><input type="radio" name="reason" value="其他"/>其他</li>
+            <li id="text-frame"><textarea id="text-con"></textarea></li>
+            <li><a id="save-data" href="javascript:;" url="/store/showcase/unpass" data='' title="驳回" class="button bg js-action" success="location.reload()">驳回申请，并发送理由</a></li>
+        </ul>
+    </form>
+</div>
+<style>
+    .left-content{
+        width:90px;
+        display: block;
+        float: left;
+        padding: 5px;
+        text-align: right;
+    }
+    .right-content{
+        overflow: hidden;
+        list-style: none;
+    }
+    .right-content li{
+        padding:5px 0;
+    }
+    .right-content li input[type="radio"]{
+        margin-right:5px
+    }
+    #text-frame{display: none}
+</style>
+<script  type="text/javascript">
+    Do.ready("base", function () {
+        var id = "<?=$showcase_id?>";
+        var showcase_type = "<?=$type?>";
+        $("#save-data").attr("data",' {"id":"'+id+'","type":"'+showcase_type+'","refuse_reason":"虚假认证资料"}')
+        //表单综合处理
+        $("#form1").duxTable();
+        $("[name = reason]").each(function(i){
+            $(this).click(function(){
+                if(i !== 3){
+                    $("#save-data").show()
+                    $("#text-frame").hide()
+                    $("#save-data").attr("data",' {"id":"'+id+'","type":"'+showcase_type+'","refuse_reason":"'+$(this).val()+'"}') 
+                }else{
+                    $("#text-frame").show()
+                    $("#save-data").hide()
+                }
+            })
+        })
+        $("#text-con").blur(function(){
+            if($(this).val()){
+                $("#save-data").show()
+                $("#save-data").attr("data",'{"id":"'+id+'","type":"'+showcase_type+'","refuse_reason":"'+$(this).val()+'"}') 
+            }else{
+                $("#save-data").hide()
+                alert("请写你的理由")
+            }
+        })
+    });
+</script>

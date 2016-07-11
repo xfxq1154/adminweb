@@ -1,0 +1,364 @@
+<script language="JavaScript" type="text/javascript" src="<?=ASSET_URL?>/static/js/calendar/WdatePicker.js"></script>
+<!-- ECharts单文件引入 -->
+<script src="<?=ASSET_URL?>/static/lib/js/chart/echarts-all.js"></script>
+<div class="dux-tools">
+    <div class="bread-head">数据统计<span class="small">订单数据统计</span></div><br>
+</div>
+<div class="table-tools clearfix ">
+    <div class="float-left">
+        <form method="GET">
+            <div class="form-inline">
+                <div class="form-group">
+                    <div class="field">
+                        <select class="input js-assign" target="#tpl" name="showcase_id" datatype="*" id="parent">
+                            <option value="">请选择店铺</option>
+                            <?php foreach ($showcase_list as $showcase) : ?>
+                                <option value="<?=$showcase['showcase_id']?>" <?=($showcase_id == $showcase['showcase_id']) ? 'selected': ''?>><?php echo $showcase['name']; ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>&nbsp;
+                    <div class="field">
+                        开始时间：<input type="text" id="d4321" class="input datebtn" style="width:220px;" id="datetime" name="start_time" value="<?=$start_time?>" onfocus="WdatePicker({startDate:'<?=date('Y-m-d',strtotime('-7 day'))?>',maxDate:'#F{$dp.$D(\'d4322\',{d:+0})}'})" style="cursor:pointer;" size="60" datatype="*" placeholder="" autocomplete="off">
+                    </div>&nbsp;
+                    <div class="field">
+                        结束时间：<input type="text" id="d4322" class="input datebtn" style="width:220px;" id="datetime" name="end_time"  value="<?=$end_time?>" onfocus="WdatePicker({maxDate:'<?=date('Y-m-d',strtotime('-1 day'))?>',minDate:'#F{$dp.$D(\'d4321\',{d:+0})}'})" style="cursor:pointer;" size="60" datatype="*" placeholder="" autocomplete="off">
+                    </div>
+                </div>
+                <div class="form-button">
+                    <button class="button" type="submit">搜索</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div class="admin-main">
+    <div class="panel dux-box">
+        <div class="panel-head">订单概况</div>
+        <div class="panel-body">
+            <div class="line-big">
+                <div class="xm10">
+                    <div class="line-big">
+                        <div class="xm3">
+                            <div class="panel dux-box dux-dashboard">
+                                <div class="clearfix">
+                                    <div class="media media-x ">
+                                        <div class="float-left">
+                                            <div class="txt dashboard-head radius-small bg-yellow icon-user"></div>
+                                        </div>
+                                        <div class="media-body text-center">
+                                            <h2><strong><?=$order_peo?></strong></h2>
+                                            下单人数
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                        </div>
+                        <div class="xm3">
+                            <div class="panel dux-box dux-dashboard">
+                                <div class="clearfix">
+                                    <div class="media media-x ">
+                                        <div class="float-left">
+                                            <div class="txt dashboard-head radius-small bg-yellow icon-reorder"></div>
+                                        </div>
+                                        <div class="media-body text-center">
+                                            <h2><strong><?=$order_num?></strong></h2>
+                                            下单笔数
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="xm3">
+                            <div class="panel dux-box dux-dashboard">
+                                <div class="clearfix">
+                                    <div class="media media-x ">
+                                        <div class="float-left">
+                                            <div class="txt dashboard-head radius-small bg-yellow icon-money"></div>
+                                        </div>
+                                        <div class="media-body text-center">
+                                            <h2><strong><?=$order_sum?></strong></h2>
+                                            下单金额
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                        </div>
+                            <div class="xm3">
+                                <div class="panel dux-box dux-dashboard">
+                                    <div class="clearfix">
+                                        <div class="media media-x ">
+                                            <div class="float-left">
+                                                <div class="txt dashboard-head radius-small bg-yellow  icon-group"></div>
+                                            </div>
+                                            <div class="media-body text-center">
+                                                <h2><strong><?=$total_uv?></strong></h2>
+                                                访客数
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                            </div>
+                    </div>
+                    <div class="line-big">
+                        <div class="xm3">
+                            <div class="panel dux-box dux-dashboard">
+                                <div class="clearfix">
+                                    <div class="media media-x ">
+                                        <div class="float-left">
+                                            <div class="txt dashboard-head radius-small bg-green icon-user"></div>
+                                        </div>
+                                        <div class="media-body text-center">
+                                            <h2><strong><?=$paied_peo?></strong></h2>
+                                            付款人数
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                        </div>
+                        <div class="xm3">
+                            <div class="panel dux-box dux-dashboard">
+                                <div class="clearfix">
+                                    <div class="media media-x ">
+                                        <div class="float-left">
+                                            <div class="txt dashboard-head radius-small bg-green icon-reorder"></div>
+                                        </div>
+                                        <div class="media-body text-center">
+                                            <h2><strong><?=$paied_num?></strong></h2>
+                                            付款笔数
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="xm3">
+                            <div class="panel dux-box dux-dashboard">
+                                <div class="clearfix">
+                                    <div class="media media-x ">
+                                        <div class="float-left">
+                                            <div class="txt dashboard-head radius-small bg-green icon-money"></div>
+                                        </div>
+                                        <div class="media-body text-center">
+                                            <h2><strong><?=$paied_sum?></strong></h2>
+                                            付款金额
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                        </div>
+                        <div class="xm3">
+                            <div class="panel dux-box dux-dashboard">
+                                <div class="clearfix">
+                                    <div class="media media-x ">
+                                        <div class="float-left">
+                                            <div class="txt dashboard-head radius-small bg-green icon-shopping-cart"></div>
+                                        </div>
+                                        <div class="media-body text-center">
+                                            <h2><strong><?=$paied_people_avg?></strong></h2>
+                                            客单价
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                        </div>
+                    </div>
+                    <div class="line-big">
+                        <div class="xm3">
+                            <div class="panel dux-box dux-dashboard">
+                                <div class="clearfix">
+                                    <div class="media media-x ">
+                                        <div class="float-left">
+                                            <div class="txt dashboard-head radius-small bg-blue  icon-bar-chart"></div>
+                                        </div>
+                                        <div class="media-body text-center">
+                                            <h2><strong><?=($total_uv)?round($paied_peo/$total_uv, 2):'0.00' ?>%</strong></h2>
+                                            全店转化率
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="xm3">
+                            <div class="panel dux-box dux-dashboard">
+                                <div class="clearfix">
+                                    <div class="media media-x ">
+                                        <div class="float-left">
+                                            <div class="txt dashboard-head radius-small bg-blue  icon-bar-chart"></div>
+                                        </div>
+                                        <div class="media-body text-center">
+                                            <h2><strong><?=($total_uv)?round($order_peo/$total_uv, 2):'0.00' ?>%</strong></h2>
+                                            下单转化率
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                        </div>
+                        <div class="xm3">
+                            <div class="panel dux-box dux-dashboard">
+                                <div class="clearfix">
+                                    <div class="media media-x ">
+                                        <div class="float-left">
+                                            <div class="txt dashboard-head radius-small bg-blue  icon-bar-chart"></div>
+                                        </div>
+                                        <div class="media-body text-center">
+                                            <h2><strong><?=($order_peo)?round($paied_peo/$order_peo, 2):'0.00' ?>%</strong></h2>
+                                            付款转化率
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="panel dux-box">
+        <div class="panel-head">交易趋势</div>
+        <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+        <div id="main" style="height:400px"></div>
+    </div>
+    <br>
+    <div class="line-big">
+        <div class="xm6">
+            <div class="panel dux-box">
+                <div id="pie1" style="height:400px"></div>
+            </div>
+        </div>
+        <div  class="xm6">
+            <div class="panel dux-box">
+                <div id="pie2" style="height:400px"></div>
+            </div>
+        </div>
+    </div>
+<script type="text/javascript" charset="utf-8">
+    Do.ready('base',function() {
+        $('.js-time').duxTime();
+    });
+</script>
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts图表
+    var myChart = echarts.init(document.getElementById('main'), 'macarons'); 
+    var option = {
+        tooltip : {
+            trigger: 'axis'
+        },
+        legend: {
+            data:['下单笔数','付款笔数','付款金额'],
+             selected: {
+                '付款金额' : false
+            },
+        },
+        toolbox: {
+            show : true,
+            feature : {
+                mark : {show: true},
+                dataView : {show: true, readOnly: false},
+                magicType : {show: true, type: ['line', 'bar']},
+                restore : {show: true},
+                saveAsImage : {show: true}
+            }
+        },
+        calculable : true,
+        xAxis : [
+            {
+                type : 'category',
+                boundaryGap : false,
+                data : [<?=$dates?>]
+            }
+        ],
+        yAxis : [
+            {
+                type : 'value',
+                axisLabel : {
+                    formatter: '{value}'
+                }
+            }
+        ],
+        series : [
+            {
+                name:'下单笔数',
+                type:'line',
+                data:[<?=$order_num_string?>],
+            },
+            {
+                name:'付款笔数',
+                type:'line',
+                data:[<?=$paied_num_string?>],
+            },
+            {
+                name:'付款金额',
+                type:'line',
+                data:[<?=$paied_sum_string?>],
+            }
+        ]
+    };
+
+    // 为echarts对象加载数据 
+    myChart.setOption(option); 
+</script>
+<script type="text/javascript">
+    // 图表实例化------------------
+// srcipt标签式引入
+var myChart = echarts.init(document.getElementById('pie1'));
+
+// 过渡---------------------
+myChart.showLoading({
+    text: '正在努力的读取数据中...',    //loading话术
+});
+
+// ajax getting data...............
+
+// ajax callback
+myChart.hideLoading();
+
+// 图表使用-------------------
+option = {
+    title : {
+        text:'支付方式统计',
+        x: 'center'
+    },
+    tooltip : {
+        trigger: 'item',
+        formatter: "{a} <br/>{b} : {c} ({d}%)"
+    },
+    legend: {
+        orient : 'vertical',
+        x : 'left',
+        data:[]
+    },
+    calculable : false,
+    series : [
+        
+        {
+            name:'支付单数',
+            type:'pie',
+            radius : [10, 140],
+            
+            // for funnel
+            x: '60%',
+            width: '35%',
+            funnelAlign: 'left',
+            max: 1048,
+            
+            data:[
+                {value:<?=$paied_num_wx?>, name:'微信支付'},
+                {value:<?=$paied_num_jd?>, name:'京东支付'}
+            ]
+        }
+    ]
+};
+                     
+myChart.setOption(option);
+</script>
+</div>
