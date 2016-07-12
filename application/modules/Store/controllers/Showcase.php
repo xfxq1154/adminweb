@@ -74,21 +74,15 @@ class ShowcaseController extends Storebase {
         $phone =$this->input_post_param('phone');
         $password =$this->input_post_param('password');
 
-        //查询此手机号是否注册
+        //使用手机号注册用户
         $user_model = new StoreUserModel();
-        $user_info = $user_model->search(array('phone'=> $phone));
-        if($user_info){
-            $user_id = $user_info[0]['id'];
-        } else {
-            $result = $user_model->register(array('mobile'=>$phone,'passwd'=>$password));
-            if($result === FALSE){
-                Tools::output(array('info'=> $user_model->getError() ,'status'=>1));
-            }
-            $user_id = $result['user_id'];
+        $result = $user_model->register(array('mobile'=>$phone,'passwd'=>$password));
+        if($result === FALSE){
+            Tools::output(array('info'=> $user_model->getError() ,'status'=>1));
         }
 
         //创建店铺
-        $data['user_id'] = $user_id;
+        $data['user_id'] = $result['user_id'];
         $data['name'] = $showcase_name;
         $data['nickname'] = $nickname;
         $result = $this->showcase_model->createShowcase($data);
