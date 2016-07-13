@@ -23,7 +23,7 @@ class OrderController extends Storebase {
         $this->setShowcaseList();
         $order_no = $this->input_get_param('order_no');
         $number = $this->input_get_param('number');
-        $showcase_id = $this->input_get_param('showcase');
+        $showcase_id = $this->input_get_param('showcase_id');
         $status = $this->input_get_param('order_status');
         $outer_tid = $this->input_get_param('outer_tid');
         $spm = $this->input_get_param('spm');
