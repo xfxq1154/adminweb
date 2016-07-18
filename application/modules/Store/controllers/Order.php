@@ -27,7 +27,7 @@ class OrderController extends Storebase {
         $status = $this->input_get_param('order_status');
         $outer_tid = $this->input_get_param('outer_tid');
         $spm = $this->input_get_param('spm');
-        $page_no = $this->input_get_param('p');
+        $page_no = $this->input_get_param('page_no');
 
         $state     = $status ? $status : '';
         $mobile    = $number ? $number : '';
@@ -55,7 +55,7 @@ class OrderController extends Storebase {
         $this->assign('order_no', $order_id);
         $this->assign('spm', $spm);
         $this->assign('outer_tid', $outer_tid);
-        $this->assign('showcase', $showcase_id);
+        $this->assign('showcase_id', $showcase_id);
         $this->assign("list", $orderList['orders']);
         $this->layout("order/showlist.phtml");
     }
