@@ -10,7 +10,7 @@
         <div class="button-group float-right">
             <a class="button button-small bg-dot icon-plus dropdown-toggle"> 添加 <span class="downward"></span></a> 
             <ul class="drop-menu pull-right">
-                <li><a href="/group/add">添加角色</a></li>
+                <li><a href="/kfadmin/adduser">添加用户</a></li>
             </ul>
         </div>
     </div>
@@ -39,13 +39,18 @@
                         </td>
                         <td style="word-wrap: break-word;word-break: break-word; "><?=$v['auth']?>
                         </td>
-                        <td><?=$v['status']?>
-                        </td>
-                        <td><?=$v['update_time']?>
+
+                        <?php if($v['status'] == 1) {?>
+                        <td><span class="bg-green"><?=$v['status_cn']?></span></td>
+                        <?php }else{ ?>
+                        <td><span class="bg-red"><?=$v['status_cn']?></span></td>
+                        <?php }?>
+
+                        <td><?=$v['create_time']?>
                         </td>
                         <td>
-                            <a class="button bg-blue button-small icon-pencil" href="/group/edit/id/<?=$v['id']?>" title="修改"></a>
-                            <a class="button bg-red button-small icon-trash-o js-del" href="javascript:;" url="/group/delete" data="<?=$v['id']?>" title="删除"></a>
+                            <a class="button bg-blue button-small icon-pencil" href="/group/edit/id/<?=$v['user_id']?>" title="修改"></a>
+                            <a class="button bg-red button-small icon-trash-o js-del" href="javascript:;" url="/group/delete" data="<?=$v['user_id']?>" title="删除"></a>
                         </td>
                     </tr>
                    <?php endforeach;?>

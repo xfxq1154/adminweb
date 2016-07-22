@@ -10,17 +10,20 @@
 
 class KfadminModel {
 
-    const KF_USER_LIST  = 'register/getList';  //获取用户列表
-    const KF_AUTH_LIST  = 'auth/getinfo';
-    const KF_GROUP_LIST = 'group/getinfo';
+    const KF_USER_LIST  = 'register/getlist';  //获取用户列表
+    const KF_ADD_USER = 'register/add';
+    const KF_AUTH_LIST  = 'auth/getlist';
+    const KF_GROUP_LIST = 'group/getlist';
     const KF_ONE_AUTH   = 'auth/getauthbyid';
     const KF_AUTH_PARENT= 'auth/getauthparent';
     const KF_ADD_AUTH   = 'auth/add';
     const KF_UPDATE_AUTH = 'auth/update';
 
+    private $user_status;
+
     public function __construct()
     {
-
+        $this->user_status = [ 1 => '正常', 2 => '冻结'];
     }
 
     /**
@@ -33,7 +36,7 @@ class KfadminModel {
         if($result === FALSE){
             return FALSE;
         }
-        return $result;
+        return $this->_format_user_list($result);
     }
 
     /**
@@ -43,6 +46,14 @@ class KfadminModel {
      */
     public function getAuthList($params = array()) {
         $result = Kfapi::request(self::KF_AUTH_LIST, $params, "GET");
+        if($result === FALSE){
+            return FALSE;
+        }
+        return $result;
+    }
+
+    public function addUser($params = array()) {
+        $result = Kfapi::request(self::KF_ADD_USER, $params, "GET");
         if($result === FALSE){
             return FALSE;
         }
@@ -114,5 +125,22 @@ class KfadminModel {
         return $result;
     }
 
+    /**
+     * 格式化获取用户列表数据
+     * @param $data
+     * @return mixed
+     */
+    private function _format_user_list($data) {
+        $group_list = $this->getGroupList();
+        foreach ($data as $k => $v) {
+            foreach ($group_list as &$value) {
+                if ($v['auth'] == $value['id']) {
+                    $data[$k]['auth'] = $value['group'];
+                }
+            }
+            $data[$k]['status_cn'] = $this->user_status[$data[$k]['status']];
+        }
+        return $data;
+    }
 
 }

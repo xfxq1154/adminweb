@@ -13,7 +13,7 @@ class KfadminController extends Base {
      * @var KfadminModel
      */
     public $kfadmin_model;
-
+    
     const PAGE_SIZE = 20;
 
     function init() {
@@ -40,10 +40,32 @@ class KfadminController extends Base {
     }
 
     /**
+     * 添加用户
+     */
+    public function addUser() {
+        $username = $this->getRequest()->post('username', 1); //账号
+        $password = $this->getRequest()->post('password', 1); //密码
+        $group    = $this->getRequest()->post('group', 1); //身份
+
+        if( !$username || !$password || !$group ) {
+            Tools::success('error', '缺少必要参数');
+        }
+
+        $params = [
+            'username' => $username,
+            'password' => $username,
+            'auth' => $username,
+        ];
+
+        $this->kfadmin_model->addUser();
+    }
+
+    /**
      * 获取权限列表
      */
     public function getAuthListAction() {
         $result = $this->kfadmin_model->getAuthList();
+
 
         $this->assign('list', $result);
         $this->layout('kfadmin/auth.phtml');
