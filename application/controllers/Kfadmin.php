@@ -15,6 +15,10 @@ class KfadminController extends Base {
     public $kfadmin_model;
     
     const PAGE_SIZE = 20;
+    const SUCCESS = 1; //执行成功
+    const DISABLE_USER = 2;
+
+    private $reback_msg = ['info' => '操作失败', 'status' => 0];
 
     function init() {
         $this->initAdmin();
@@ -40,24 +44,70 @@ class KfadminController extends Base {
     }
 
     /**
-     * 添加用户
+     * 添加用户页面
      */
-    public function addUser() {
-        $username = $this->getRequest()->post('username', 1); //账号
-        $password = $this->getRequest()->post('password', 1); //密码
-        $group    = $this->getRequest()->post('group', 1); //身份
+    public function addUserTplAction() {
+        //获取身份列表
+        $group_list = $this->kfadmin_model->getGroupList();
 
-        if( !$username || !$password || !$group ) {
+        $this->assign('group_list', $group_list);
+        $this->layout('kfadmin/adduser.phtml');
+    }
+
+    /**
+     * 添加账号
+     */
+    public function addUserAction()
+    {
+        $username = $this->getRequest()->getpost('username'); //账号
+        $password = $this->getRequest()->getpost('password'); //密码
+        $group = $this->getRequest()->getpost('group'); //身份
+
+        if (!$username || !$password || !$group) {
             Tools::success('error', '缺少必要参数');
         }
 
         $params = [
             'username' => $username,
             'password' => $username,
-            'auth' => $username,
+            'auth'     => $username,
         ];
 
-        $this->kfadmin_model->addUser();
+        $result = $this->kfadmin_model->addUser($params);
+        if ($result) {
+            $this->reback_msg = [
+                'info'   => '添加成功',
+                'status' => self::SUCCESS,
+                'url'    => '/kfadmin/getuserlist'
+            ];
+        }
+        $this->reback_msg();
+    }
+
+    /**
+     * 账号禁用
+     */
+    public function disableUserAction()
+    {
+        $user_id = $_POST['user_id']; //账号
+
+        if (!$user_id) {
+            Tools::success('error', '缺少必要参数');
+        }
+
+        $params = [
+            'user_id' => $user_id,
+            'status'  => self::DISABLE_USER,
+        ];
+
+        $result = $this->kfadmin_model->disableUser($params);
+        if ($result) {
+            $this->reback_msg = [
+                'info'   => '禁用成功',
+                'status' => self::SUCCESS,
+            ];
+        }
+        $this->reback_msg();
     }
 
     /**
@@ -85,9 +135,8 @@ class KfadminController extends Base {
     /**
      * 添加权限
      */
-    public function addAuthAction() {
+    public function addAuthtplAction() {
         $id = $this->getRequest()->get('id');
-
         //获取父级
         $list = $this->kfadmin_model->getAuthParent();
 
@@ -99,7 +148,7 @@ class KfadminController extends Base {
     /**
      * 修改权限
      */
-    public function updateAuthAction() {
+    public function updateAuthTplAction() {
         $id = $this->getRequest()->get('id');
 
         $params['id'] = $id;
@@ -114,40 +163,67 @@ class KfadminController extends Base {
     }
 
     /**
-     * 执行
+     * 添加权限
      */
-    public function execAuthAction() {
+    public function addAuthAction() {
         $id       = $this->getRequest()->getPost('id');
-        $pid      = $this->getRequest()->getPost('pid');
         $title_en = $this->getRequest()->getPost('title_en');
         $title_cn = $this->getRequest()->getPost('title_cn');
-        $type     = $this->getRequest()->getPost('type');
+
+        if (!$title_en || !$title_cn) {
+            Tools::success('error', '缺少必要参数');
+        }
 
         $params = [
-            'id'       => ($id) ? $id : 0,
+            'pid'      => ($id) ? $id : 0,
             'title_en' => $title_en,
             'title_cn' => $title_cn
         ];
 
-        if( $type == 'add' ) {
-            $result = $this->kfadmin_model->addAuth($params);
-        } else {
-            $result = $this->kfadmin_model->updateAuth($params);
-        }
+        $result = $this->kfadmin_model->addAuth($params);
+
 
         if($result) {
-            $data = array(
+            $this->reback_msg = [
                 "info" => "添加成功",
-                "status" => 1,
+                "status" => self::SUCCESS,
                 "url" => "/kfadmin/getauthlist",
-            );
-        } else {
-            $data = array(
-                "info" => "添加失败",
-                "status" => 0,
-            );
+            ];
         }
-        Tools::output($data);
+        $this->reback_msg();
+    }
+
+    /**
+     * 修改权限
+     */
+    public function updateAuthAction() {
+        $id       = $this->getRequest()->getPost('id');
+        $title_en = $this->getRequest()->getPost('title_en');
+        $title_cn = $this->getRequest()->getPost('title_cn');
+
+        if (!$id || !$title_en || !$title_cn) {
+            Tools::success('error', '缺少必要参数');
+        }
+
+        $params = [
+            'id'       => $id,
+            'title_en' => $title_en,
+            'title_cn' => $title_cn
+        ];
+
+        $result = $this->kfadmin_model->addAuth($params);
+
+        /*else {
+            $result = $this->kfadmin_model->updateAuth($params);
+        }*/
+        if($result) {
+            $this->reback_msg = [
+                "info" => "添加成功",
+                "status" => self::SUCCESS,
+                "url" => "/kfadmin/getauthlist",
+            ];
+        }
+        $this->reback_msg();
     }
 
     /**
@@ -177,5 +253,12 @@ class KfadminController extends Base {
      */
     public function deleteGroupAction() {
 
+    }
+
+    /**
+     * 返回信息
+     */
+    private function reback_msg() {
+        Tools::output($this->reback_msg);
     }
 }

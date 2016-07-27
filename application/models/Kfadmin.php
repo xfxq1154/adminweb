@@ -18,6 +18,7 @@ class KfadminModel {
     const KF_AUTH_PARENT= 'auth/getauthparent';
     const KF_ADD_AUTH   = 'auth/add';
     const KF_UPDATE_AUTH = 'auth/update';
+    const KF_MODIFY_STATUS = 'register/modifystatus';
 
     private $user_status;
 
@@ -52,8 +53,21 @@ class KfadminModel {
         return $result;
     }
 
+    /**
+     * 添加用户
+     * @param array $params
+     * @return array|bool
+     */
     public function addUser($params = array()) {
-        $result = Kfapi::request(self::KF_ADD_USER, $params, "GET");
+        $result = Kfapi::request(self::KF_ADD_USER, $params, "POST");
+        if($result === FALSE){
+            return FALSE;
+        }
+        return $result;
+    }
+
+    public function disableUser($params) {
+        $result = Kfapi::request(self::KF_MODIFY_STATUS, $params, "POST");
         if($result === FALSE){
             return FALSE;
         }
@@ -134,8 +148,8 @@ class KfadminModel {
         $group_list = $this->getGroupList();
         foreach ($data as $k => $v) {
             foreach ($group_list as &$value) {
-                if ($v['auth'] == $value['id']) {
-                    $data[$k]['auth'] = $value['group'];
+                if ($v['group'] == $value['id']) {
+                    $data[$k]['group'] = $value['group'];
                 }
             }
             $data[$k]['status_cn'] = $this->user_status[$data[$k]['status']];
