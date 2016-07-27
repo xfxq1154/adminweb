@@ -72,8 +72,8 @@ class RedisMonitorController extends Base {
 
     public function zsetAction(){
         $name = $this->input_get_param('name');
-        $started = $this->input_get_param('started', strtotime('-1 days'));
-        $ended = $this->input_get_param('ended', time());
+        $started = $this->input_get_param('started', time());
+        $ended = $this->input_get_param('ended', strtotime('+1 days'));
 
         $store_dealy_async_jobs = $this->masterRedis->zRangeByScore('store:task:delay:async', $started, $ended);
 
@@ -81,13 +81,11 @@ class RedisMonitorController extends Base {
         foreach ($store_dealy_async_jobs as $jobid){
             $time = $this->masterRedis->zScore('store:task:delay:async', $jobid);
             $jobs[] = [
-                'id'    => $jobid,
-                'time'  => date('Y-m-d H:i:s', $time),
-                'body'  => $this->masterRedis->get("store:job:$jobid"),
-
+                'time'    => date('Y-m-d H:i:s', $time),
+                'body'    => $this->masterRedis->get("store:job:$jobid"),
+                'remain'  => $time - time()
             ];
         }
-
 
         $this->assign('jobs', $jobs);
         $this->layout('platform/zsetmonitor.phtml');
