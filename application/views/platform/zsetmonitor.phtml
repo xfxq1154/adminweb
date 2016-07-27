@@ -1,0 +1,64 @@
+<div class="dux-tools">
+    <div class="bread-head">系统<span class="small">redis监控</span></div>
+</div>
+<div class="admin-main">
+
+    <div class="admin-main">
+        <div class="panel dux-box">
+            <div class="table-responsive">
+                <table id="table" class="table table-hover ">
+                    <tbody>
+                    <tr>
+                        <th width="200px">队列</th>
+                        <th width="*">内容</th>
+                    </tr>
+                    <tr>
+                        <td>store:task:main</td>
+                        <td><?=$list_store_main?></td>
+                    </tr>
+                    <tr>
+                        <td>store:task:logs</td>
+                        <td><?=$list_store_logs?></td>
+                    </tr>
+                    <tr>
+                        <td>store:task:sh5logs</td>
+                        <td><?=$list_store_sh5logs?></td>
+                    </tr>
+                    <tr>
+                        <td>store:task:ready:main</td>
+                        <td><?=$list_store_ready_main?></td>
+                    </tr>
+                    <tr>
+                        <td>store:task:delay:async</td>
+                        <td><?=$list_store_dealy_async?></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="admin-main">
+        <div class="panel dux-box">
+            <div class="table-responsive">
+                <table id="table" class="table table-hover ">
+                    <tbody>
+                    <tr>
+                        <th width="200px">Jobid</th>
+                        <th width="*">Time</th>
+                        <th width="*">Contents</th>
+                    </tr>
+                    <?php foreach($jobs as $job): ?>
+                    <tr>
+                        <td><?=$job['id']?></td>
+                        <td><?=$job['time']?></td>
+                        <td><?=$job['body']?></td>
+                    </tr>
+                    <?php endforeach;?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
