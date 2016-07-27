@@ -5,7 +5,8 @@
  */
 class RedisMonitorController extends Base {
 
-    use Trait_Layout,
+    use Input,
+        Trait_Layout,
         Trait_Pagger,
         Trait_Redis;
 
@@ -43,7 +44,7 @@ class RedisMonitorController extends Base {
         $list_store_logs = (int)$this->masterRedis->llen('store:task:logs');
         $list_store_sh5logs = (int)$this->masterRedis->llen('store:task:sh5logs');
         $list_store_ready_main = (int)$this->masterRedis->llen('store:task:ready:main');
-        $list_store_dealy_async = (int)$this->masterRedis->zCount('store:task:delay:async', '-', '+');
+        $list_store_dealy_async = (int)$this->masterRedis->zCard('store:task:delay:async');
 
         $keyspace_hits_percentage = round(($keyspace_hits/($keyspace_hits+$keyspace_misses)) * 100, 2); //命中率
 
@@ -67,5 +68,28 @@ class RedisMonitorController extends Base {
         $this->assign('list_store_dealy_async', $list_store_dealy_async);
 
         $this->layout('platform/redismonitor.phtml');
+    }
+
+    public function zsetAction(){
+        $name = $this->input_get_param('name');
+        $started = $this->input_get_param('started', strtotime('-1 days'));
+        $ended = $this->input_get_param('ended', time());
+
+        $store_dealy_async_jobs = $this->masterRedis->zRangeByScore('store:task:delay:async', $started, $ended);
+
+        $jobs = [];
+        foreach ($store_dealy_async_jobs as $jobid){
+            $time = $this->masterRedis->zScore('store:task:delay:async', $jobid);
+            $jobs[] = [
+                'id'    => $jobid,
+                'time'  => date('Y-m-d H:i:s', $time),
+                'body'  => $this->masterRedis->get("store:job:$jobid"),
+
+            ];
+        }
+
+
+        $this->assign('jobs', $jobs);
+        $this->layout('platform/zsetmonitor.phtml');
     }
 }
