@@ -153,6 +153,57 @@ class StatcenterController extends Storebase{
         $this->_display('statcenter/pvperday.phtml');
     }
 
+    public function spmAction() {
+        $params['spm'] = 1;
+        $params['start_created'] = $this->start_created;
+        $params['end_created'] = Tools::format_date($this->end_created);
+
+        $visited_list = $this->statcenter_model->views($params);
+        $uv = [];
+        $total_uv = [];
+        $total_pv = [];
+        foreach ($visited_list as $visited){
+            $uv[$visited['spm']] = $visited['total_uv'];
+            $total_uv[] = $visited['total_uv'];
+            $total_pv[] = $visited['total_pv'];
+        }
+
+        $spms = [];
+        $spm_order = [];
+        $paied_num = [];
+        $paied_fee = [];
+        $result = $this->statcenter_model->orderOverview($params);
+        if ($result){
+            foreach ($result as &$val){
+                $spms[] = $val['spm'];
+                $paied_num[] = $val['paied_num'];
+                $paied_fee[] = $val['paied_sum'];
+
+                $spm_order[$val['spm']] = $val;
+            }
+        }
+
+        $channel_model = new StoreChannelModel();
+        $spm_list = $channel_model->detail_mulit($spms);
+        if ($spm_list){
+            foreach ($spm_list as &$spm){
+                $spm_uv = $uv[$spm['spm']];
+                $order_people = $spm_order[$spm['spm']]['order_people'];
+
+                $spm['order_num'] = $spm_order[$spm['spm']]['order_num'];
+                $spm['order_sum'] = $spm_order[$spm['spm']]['order_sum'];
+                $spm['rate'] = ($spm_uv) ? round($order_people / $spm_uv, 2) * 100 : '0.00';
+            }
+        }
+
+        $this->assign('total_uv', array_sum($total_uv)); //访客数
+        $this->assign('total_pv', array_sum($total_pv)); //访客数
+        $this->assign('paied_num', array_sum($paied_num)); //访客数
+        $this->assign('paied_fee', array_sum($paied_fee)); //访客数
+        $this->assign('spmlist', $spm_list); //访客数
+        $this->_display('statcenter/spm.phtml');
+    }
+
     public function orderAction(){
 
         $params['showcase_id'] = $this->showcase_id;

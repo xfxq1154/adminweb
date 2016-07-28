@@ -6,17 +6,23 @@
  */
 class StoreChannelModel {
 
-    const CHANNEL_LIST    = 'channel/getlist';
-    const CHANNEL_DETAIL  = 'channel/detail';
-    const CHANNEL_CREATE  = 'channel/add';
-    const CHANNEL_UPDATE  = 'channel/update';
-    const CHANNEL_ENABLE  = 'channel/enable';
-    const CHANNEL_DISABLE = 'channel/disable';
-    const CHANNEL_DELETE  = 'channel/delete';
+    const CHANNEL_LIST         = 'channel/getlist';
+    const CHANNEL_DETAIL       = 'channel/detail';
+    const CHANNEL_DETAILMULIT  = 'channel/detail_multi';
+    const CHANNEL_CREATE       = 'channel/add';
+    const CHANNEL_UPDATE       = 'channel/update';
+    const CHANNEL_ENABLE       = 'channel/enable';
+    const CHANNEL_DISABLE      = 'channel/disable';
+    const CHANNEL_DELETE       = 'channel/delete';
 
 
     public function getlist($params) {
         return Sapi::request(self::CHANNEL_LIST, $params);
+    }
+
+    public function detail_mulit($spms) {
+        $params['spms'] = implode(",", $spms);
+        return Sapi::request(self::CHANNEL_DETAILMULIT, $params);
     }
 
     public function detail($channel_id) {
