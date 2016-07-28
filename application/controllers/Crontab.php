@@ -358,6 +358,7 @@ class CrontabController extends Base{
         $orders['review'] = $value['review'];
         //开发票
         $result = $this->dzfp->fpkj($orders, $orders['new_detail']);
+        var_dump($result);exit;
         if(!$result){
             $file_data = [
                 'state' => self::INVOICE_FAIL,
