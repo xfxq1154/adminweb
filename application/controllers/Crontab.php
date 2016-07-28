@@ -356,10 +356,8 @@ class CrontabController extends Base{
         $orders['receiver_mobile'] = $value['buyer_phone'];
         $orders['payee'] = $value['payee'];
         $orders['review'] = $value['review'];
-        $this->print_d($orders);
         //开发票
         $result = $this->dzfp->fpkj($orders, $orders['new_detail']);
-        var_dump($result);exit;
         if(!$result){
             $file_data = [
                 'state' => self::INVOICE_FAIL,
@@ -671,7 +669,7 @@ class CrontabController extends Base{
             exit;
         }
         foreach ($invoices as $value){
-            $order = Fileds::$redOrder[$value['order_id']];
+            $order = Fileds::$redOrder['E20160612090835084059803RED'];
             $value['new_detail'] = $order;
             $params['xsf_mc'] = $value['seller_name'];
             $params['xsf_dzdh'] = $value['seller_address'];
