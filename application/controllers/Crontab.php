@@ -356,11 +356,6 @@ class CrontabController extends Base{
         $orders['receiver_mobile'] = $value['buyer_phone'];
         $orders['payee'] = $value['payee'];
         $orders['review'] = $value['review'];
-<<<<<<< HEAD
-
-=======
-        $this->print_d($orders);
->>>>>>> develop
         //开发票
         $result = $this->dzfp->fpkj($orders, $orders['new_detail']);
         if(!$result){
