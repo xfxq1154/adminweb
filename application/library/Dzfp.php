@@ -17,7 +17,6 @@ class Dzfp {
     
     public function fpkj($order, $detail) {
         if(!$order || !$detail){
-            var_dump($order,$detail);exit;
             $this->err_msg = '必传参数缺失';
             return FALSE;
         }
