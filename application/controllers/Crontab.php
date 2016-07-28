@@ -138,7 +138,6 @@ class CrontabController extends Base{
             }
             $orders['new_detail'] = array_filter($detail);
             $wasOver = $this->regroupSku($orders);
-            $this->print_d($wasOver);exit;
             //判断发票类型 1 红票
             if ($value['invoice_type'] == 1){
                 $this->redInvoice($wasOver, $value);
@@ -357,7 +356,11 @@ class CrontabController extends Base{
         $orders['receiver_mobile'] = $value['buyer_phone'];
         $orders['payee'] = $value['payee'];
         $orders['review'] = $value['review'];
+<<<<<<< HEAD
 
+=======
+        $this->print_d($orders);
+>>>>>>> develop
         //开发票
         $result = $this->dzfp->fpkj($orders, $orders['new_detail']);
         if(!$result){
