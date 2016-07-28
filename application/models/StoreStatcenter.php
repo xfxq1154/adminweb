@@ -77,7 +77,7 @@ class StoreStatcenterModel {
             return array();
         }
         $format_data = array(
-            'showcase_id' => $data['showcase_id'],
+            'spm' => $data['spm'],
             'order_num' => $data['order_num'],
             'order_sum' => $data['order_sum'],
             'order_people' => $data['order_people'],
