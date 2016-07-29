@@ -103,7 +103,8 @@ class CrontabController extends Base{
      * @frequency 每10分钟运行一次
      */
     public function createInvoiceAction(){
-        $result = $this->invoice_model->getPendingInvoice();
+//        $result = $this->invoice_model->getPendingInvoice();
+        $result = $this->invoice_model->getInfo('7363');
         $datas = array_filter($result);
         if (!$datas) {
             exit;
@@ -356,10 +357,8 @@ class CrontabController extends Base{
         $orders['receiver_mobile'] = $value['buyer_phone'];
         $orders['payee'] = $value['payee'];
         $orders['review'] = $value['review'];
-        Tools::log('invoice' ,$orders);
         //开发票
         $result = $this->dzfp->fpkj($orders, $orders['new_detail']);
-        Tools::log('invoice', $result);
         if(!$result){
             $file_data = [
                 'state' => self::INVOICE_FAIL,
