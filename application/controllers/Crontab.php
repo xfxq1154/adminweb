@@ -104,8 +104,7 @@ class CrontabController extends Base{
      */
     public function createInvoiceAction(){
 //        $result = $this->invoice_model->getPendingInvoice();
-        $result = $this->invoice_model->getInfo('7363');
-        $this->print_d($result);
+        $result = $this->invoice_model->getInfoById('7363');
         $datas = array_filter($result);
         if (!$datas) {
             exit;

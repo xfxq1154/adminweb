@@ -132,6 +132,19 @@ class InvoiceModel{
             echo $ex->getMessage();
         }
     }
+
+    public function getInfoById($id){
+        $where = ' `id` =  :id';
+        $pdo_params[':id'] = $id;
+        try {
+            $sql = ' SELECT * FROM ' . $this->tableName. ' WHERE ' .$where;
+            $stmt = $this->dbSlave->prepare($sql);
+            $stmt->execute($pdo_params);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $ex) {
+            echo $ex->getMessage();
+        }
+    }
     
     /**
      * @desc 更新开票信息
