@@ -356,8 +356,10 @@ class CrontabController extends Base{
         $orders['receiver_mobile'] = $value['buyer_phone'];
         $orders['payee'] = $value['payee'];
         $orders['review'] = $value['review'];
+        Tools::log($orders);
         //开发票
         $result = $this->dzfp->fpkj($orders, $orders['new_detail']);
+        Tools::log($result);
         if(!$result){
             $file_data = [
                 'state' => self::INVOICE_FAIL,

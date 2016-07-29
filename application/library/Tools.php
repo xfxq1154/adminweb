@@ -19,6 +19,11 @@ class Tools
         exit;
     }
 
+    static public function log($topic, $data){
+        $time = date('Y-m-d H:i:s');
+        error_log($time.' - '.var_export($data, 1).".\r\n", 3, "/data/logs/storecp-$topic.log");
+    }
+
     static function formatImg($data)
     {
         if (strpos($data, 'http://') === false) {
