@@ -118,6 +118,7 @@ class CrontabController extends Base{
             if(!$result_state){
                 continue;
             }
+            $this->print_d($order);
             $order = $this->batchOrderDetail($order);
             $sku_id = implode(',', $order['skus']);
             $skus = $this->sku_model->getInfoBySkuId($sku_id);
@@ -144,6 +145,7 @@ class CrontabController extends Base{
                 $this->redInvoice($wasOver, $value);
                 continue;
             }
+            $this->print_d($wasOver);exit;
             $this->invoice($wasOver, $value);
             continue;
         }
