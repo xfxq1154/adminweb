@@ -172,8 +172,9 @@ class Dzfp {
         ini_set('default_socket_timeout', 10);
         $client = new SoapClient(self::WSDL);
         $result = $client->doService(['xml' => $xmlstring]);
+        print_r($result);exit;
+
         $xmlobj = simplexml_load_string($result->return);
-        
         if((int)$xmlobj->returnStateInfo->returnCode == 1){
             $this->err_msg = (string)$xmlobj->returnStateInfo->returnMessage;
             return FALSE;
