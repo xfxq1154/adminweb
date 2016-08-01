@@ -154,7 +154,7 @@ class StatcenterController extends Storebase{
     }
 
     public function spmAction() {
-        $params['spm'] = 1;
+        $params['spm'] = $this->input_get_param('spm', 1);
         $params['start_created'] = $this->start_created;
         $params['end_created'] = Tools::format_date($this->end_created);
 
@@ -201,6 +201,7 @@ class StatcenterController extends Storebase{
         $this->assign('paied_num', array_sum($paied_num)); //访客数
         $this->assign('paied_fee', array_sum($paied_fee)); //访客数
         $this->assign('spmlist', $spm_list); //访客数
+        $this->assign('spm', ($params['spm'] != 1) ? $params['spm'] : '');
         $this->_display('statcenter/spm.phtml');
     }
 
