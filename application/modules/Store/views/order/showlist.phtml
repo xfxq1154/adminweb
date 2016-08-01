@@ -68,7 +68,7 @@
                                 <td><a href="/store/order/info?id=<?=$val['order_id']?>&showcase_id=<?=$val['showcase_id']?>"><?php echo $val['order_id']; ?></a></td>
                                 <td><?php echo $val['total_fee']; ?></td>
                                 <td><?php echo $val['payment_fee']; ?></td>
-                                <td><?php echo $name[$val['showcase_id']];?></td>
+                                <td><?php echo $val['showcase_id'];?></td>
                                 <td><?php echo $val['receiver_name'] ? :'--'; ?></td>
                                 <td><?php echo $val['receiver_province'] ? : '--'; ?></td>
                                 <?php
