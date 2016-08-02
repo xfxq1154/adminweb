@@ -154,12 +154,7 @@ class StatcenterController extends Storebase{
     }
 
     public function spmAction() {
-        $spm = $this->input_get_param('spm');
-        if (!$spm){
-            $spm = 1;
-        }
-
-        $params['spm'] = $spm;
+        $params['spm'] = $this->input_get_param('spm');
         $params['start_created'] = $this->start_created;
         $params['end_created'] = Tools::format_date($this->end_created);
 
@@ -168,6 +163,9 @@ class StatcenterController extends Storebase{
         $total_uv = [];
         $total_pv = [];
         foreach ($visited_list as $visited){
+            if (!$visited['spm']){
+                continue;
+            }
             $uv[$visited['spm']] = $visited['total_uv'];
             $total_uv[] = $visited['total_uv'];
             $total_pv[] = $visited['total_pv'];
@@ -180,6 +178,9 @@ class StatcenterController extends Storebase{
         $result = $this->statcenter_model->orderOverview($params);
         if ($result){
             foreach ($result as &$val){
+                if (!$val['spm']){
+                    continue;
+                }
                 $spms[] = $val['spm'];
                 $paied_num[] = $val['paied_num'];
                 $paied_fee[] = $val['paied_sum'];
