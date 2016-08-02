@@ -209,7 +209,7 @@ class StatcenterController extends Storebase{
             $spm['name'] = isset($data['name']) ? $data['name'] : '未知渠道';
             $spm['paied_num'] = $data['order']['paied_num'];
             $spm['paied_sum'] = $data['order']['paied_sum'];
-            $spm['rate'] = ($spm_uv) ? round($paied_people / $spm_uv, 2) : '0.00';
+            $spm['rate'] = ($spm_uv) ? round($paied_people / $spm_uv * 100, 2) : '0.00';
 
             $format_list[] = $spm;
         }
