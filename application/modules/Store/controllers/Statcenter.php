@@ -154,7 +154,12 @@ class StatcenterController extends Storebase{
     }
 
     public function spmAction() {
-        $params['spm'] = $this->input_get_param('spm', 1);
+        $spm = $this->input_get_param('spm');
+        if (!$spm){
+            $spm = 1;
+        }
+
+        $params['spm'] = $spm;
         $params['start_created'] = $this->start_created;
         $params['end_created'] = Tools::format_date($this->end_created);
 
@@ -190,8 +195,8 @@ class StatcenterController extends Storebase{
                 $spm_uv = $uv[$spm['spm']];
                 $order_people = $spm_order[$spm['spm']]['order_people'];
 
-                $spm['order_num'] = $spm_order[$spm['spm']]['order_num'];
-                $spm['order_sum'] = $spm_order[$spm['spm']]['order_sum'];
+                $spm['paied_num'] = $spm_order[$spm['spm']]['paied_num'];
+                $spm['paied_num'] = $spm_order[$spm['spm']]['paied_num'];
                 $spm['rate'] = ($spm_uv) ? round($order_people / $spm_uv, 2) * 100 : '0.00';
             }
         }
