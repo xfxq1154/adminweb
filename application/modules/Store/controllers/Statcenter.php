@@ -159,20 +159,22 @@ class StatcenterController extends Storebase{
         $params['end_created'] = Tools::format_date($this->end_created);
 
         $visited_list = $this->statcenter_model->views($params);
-        $uv = [];
+        $spms = [];
+        $spm_list = [];
         $total_uv = [];
         $total_pv = [];
         foreach ($visited_list as $visited){
             if (!$visited['spm']){
                 continue;
             }
-            $uv[$visited['spm']] = $visited['total_uv'];
+            $spms[] = $visited['spm'];
+
             $total_uv[] = $visited['total_uv'];
             $total_pv[] = $visited['total_pv'];
+
+            $spm_list[$visited['spm']]['uv'] = $visited['total_uv'];
         }
 
-        $spms = [];
-        $spm_order = [];
         $paied_num = [];
         $paied_fee = [];
         $result = $this->statcenter_model->orderOverview($params);
@@ -182,31 +184,41 @@ class StatcenterController extends Storebase{
                     continue;
                 }
                 $spms[] = $val['spm'];
+
                 $paied_num[] = $val['paied_num'];
                 $paied_fee[] = $val['paied_sum'];
 
-                $spm_order[$val['spm']] = $val;
+                $spm_list[$val['spm']]['order'] = $val;
             }
         }
 
         $channel_model = new StoreChannelModel();
-        $spm_list = $channel_model->detail_mulit($spms);
-        if ($spm_list){
-            foreach ($spm_list as &$spm){
-                $spm_uv = $uv[$spm['spm']];
-                $order_people = $spm_order[$spm['spm']]['order_people'];
-
-                $spm['paied_num'] = $spm_order[$spm['spm']]['paied_num'];
-                $spm['paied_sum'] = $spm_order[$spm['spm']]['paied_sum'];
-                $spm['rate'] = ($spm_uv) ? round($order_people / $spm_uv, 2) * 100 : '0.00';
+        $channel_list = $channel_model->detail_mulit($spms);
+        if ($channel_list){
+            foreach ($channel_list as $channel){
+                $spm_list[$channel['spm']]['name'] = $channel['name'];
             }
+        }
+
+        $format_list = [];
+        foreach ($spm_list as $key => &$data){
+            $spm_uv = $data['uv'];
+            $order_people = $data['order']['order_people'];
+
+            $spm['spm'] = $key;
+            $spm['name'] = isset($data['name']) ? $data['name'] : '未知渠道';
+            $spm['paied_num'] = $data['order']['paied_num'];
+            $spm['paied_sum'] = $data['order']['paied_sum'];
+            $spm['rate'] = ($spm_uv) ? round($order_people / $spm_uv, 2) * 100 : '0.00';
+
+            $format_list[] = $spm;
         }
 
         $this->assign('total_uv', array_sum($total_uv)); //访客数
         $this->assign('total_pv', array_sum($total_pv)); //访客数
         $this->assign('paied_num', array_sum($paied_num)); //访客数
         $this->assign('paied_fee', array_sum($paied_fee)); //访客数
-        $this->assign('spmlist', $spm_list); //访客数
+        $this->assign('spmlist', $format_list); //访客数
         $this->assign('spm', ($params['spm'] != 1) ? $params['spm'] : '');
         $this->_display('statcenter/spm.phtml');
     }
