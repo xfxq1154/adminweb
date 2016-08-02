@@ -203,21 +203,21 @@ class StatcenterController extends Storebase{
         $format_list = [];
         foreach ($spm_list as $key => &$data){
             $spm_uv = $data['uv'];
-            $order_people = $data['order']['order_people'];
+            $paied_people = $data['order']['paied_people']; //付款人数
 
             $spm['spm'] = $key;
             $spm['name'] = isset($data['name']) ? $data['name'] : '未知渠道';
             $spm['paied_num'] = $data['order']['paied_num'];
             $spm['paied_sum'] = $data['order']['paied_sum'];
-            $spm['rate'] = ($spm_uv) ? round($order_people / $spm_uv, 2) * 100 : '0.00';
+            $spm['rate'] = ($spm_uv) ? round($paied_people / $spm_uv, 2) * 100 : '0.00';
 
             $format_list[] = $spm;
         }
 
-        $this->assign('total_uv', array_sum($total_uv)); //访客数
-        $this->assign('total_pv', array_sum($total_pv)); //访客数
-        $this->assign('paied_num', array_sum($paied_num)); //访客数
-        $this->assign('paied_fee', array_sum($paied_fee)); //访客数
+        $this->assign('total_uv', array_sum($total_uv)); //访问人数
+        $this->assign('total_pv', array_sum($total_pv)); //访问次数
+        $this->assign('paied_num', array_sum($paied_num)); //付款订单
+        $this->assign('paied_fee', array_sum($paied_fee)); //付款金额
         $this->assign('spmlist', $format_list); //访客数
         $this->assign('spm', ($params['spm'] != 1) ? $params['spm'] : '');
         $this->_display('statcenter/spm.phtml');
