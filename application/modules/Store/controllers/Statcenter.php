@@ -234,6 +234,9 @@ class StatcenterController extends Storebase{
 
         $result = $this->statcenter_model->orderOverview($params);
         foreach ($result as $val){
+            if ($val['spm']){
+                continue;
+            }
             $key = '"'.date('m-d',strtotime($val['date'])).'"';
             $chart_data[$key] = $val;
         }
