@@ -21,7 +21,7 @@ class StoreChannelModel {
     }
 
     public function detail_mulit($spms) {
-        $params['spms'] = implode(",", $spms);
+        $params['spms'] = implode(",", array_unique($spms));
         return Sapi::request(self::CHANNEL_DETAILMULIT, $params);
     }
 
