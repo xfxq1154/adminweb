@@ -196,7 +196,7 @@ class StatcenterController extends Storebase{
                 $order_people = $spm_order[$spm['spm']]['order_people'];
 
                 $spm['paied_num'] = $spm_order[$spm['spm']]['paied_num'];
-                $spm['paied_num'] = $spm_order[$spm['spm']]['paied_num'];
+                $spm['paied_sum'] = $spm_order[$spm['spm']]['paied_sum'];
                 $spm['rate'] = ($spm_uv) ? round($order_people / $spm_uv, 2) * 100 : '0.00';
             }
         }
