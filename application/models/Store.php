@@ -13,6 +13,7 @@ class StoreModel {
     const PRODUCT_LIST = 'product/getlist';
     const PRODUCT_DETAIL = 'product/detail';
     const TASK_LIST = 'task/getlist';
+    const TASK_ADD = 'task/create';
 
     
     public function expressList($params) {
@@ -51,6 +52,12 @@ class StoreModel {
 
     public function taskList($params){
         return Sapi::request(self::TASK_LIST, $params);
+    }
+
+    public function taskCreate($topic, $body){
+        $params['topic'] = $topic;
+        $params['body'] = $body;
+        return Sapi::request(self::TASK_ADD, $params, 'POST');
     }
 
 }
