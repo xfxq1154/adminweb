@@ -15,6 +15,7 @@ class Storebase extends Base {
      * @var StoreShowcaseModel
      */
     public $showcase_model;
+    public $showcase_list;
 
     public function init(){
         parent::initAdmin();
@@ -26,6 +27,9 @@ class Storebase extends Base {
 
     public function setShowcaseList() {
         $showcase_list = $this->showcase_model->getlist(['page_no' => 1, 'page_size' => 100, 'block' => 0]);
+        foreach ($showcase_list['showcases'] as $showcase){
+            $this->showcase_list[$showcase['showcase_id']] = $showcase['name'];
+        }
         $this->assign('showcase_list', $showcase_list['showcases']);
     }
 }

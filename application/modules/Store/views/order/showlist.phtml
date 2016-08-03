@@ -1,16 +1,5 @@
 <div class="dux-tools">
     <div class="bread-head">订单管理<span class="small">订单列表</span></div><br>
-    <div class="tools-function clearfix">
-        <div class="float-left">
-            <a class="button button-small bg-main" href="/store/order/index?order_status=">全部</a>
-            <a class="button button-small bg-green" href="/store/order/index?order_status=WAIT_BUYER_PAY&showcase=<?=$showcase;?>&number=<?=$mobile;?>">待付款</a>
-            <a class="button button-small bg-blue" href="/store/order/index?order_status=WAIT_SELLER_SEND_GOODS&showcase=<?=$showcase;?>&number=<?=$mobile;?>">待发货</a>
-            <a class="button button-small bg-red" href="/store/order/index?order_status=TRADE_BUYER_SIGNED&showcase=<?=$showcase;?>&number=<?=$mobile;?>">已签收</a>
-            <a class="button button-small bg-dot" href="/store/order/index?order_status=TRADE_CLOSED&showcase=<?=$showcase;?>&number=<?=$mobile;?>">退款完成</a>
-            <a class="button button-small bg-dot" href="/store/order/index?order_status=TRADE_CLOSED_BY_USER&showcase=<?=$showcase;?>&number=<?=$mobile;?>">已关闭</a>
-            <a class="button button-small bg-gray" href="/store/order/index?order_status=WAIT_BUYER_CONFIRM_GOODS&showcase=<?=$showcase;?>&number=<?=$mobile;?>">待确认收货</a>
-        </div>
-    </div>
 </div>
 <div class="table-tools clearfix ">
     <div class="float-left">
@@ -23,6 +12,17 @@
                             <?php foreach ($showcase_list as $showcase) : ?>
                                 <option value="<?=$showcase['showcase_id']?>" <?=($showcase_id == $showcase['showcase_id']) ? 'selected': ''?>><?php echo $showcase['name']; ?></option>
                             <?php endforeach; ?>
+                        </select>
+                    </div>&nbsp;
+                    <div class="field">
+                        <select class="input js-assign" target="#tpl" name="status" datatype="*" id="parent">
+                            <option value="">全部</option>
+                            <option value="WAIT_BUYER_PAY" <?=($status == 'WAIT_BUYER_PAY') ? 'selected': ''?>>待付款</option>
+                            <option value="WAIT_SELLER_SEND_GOODS" <?=($status == 'WAIT_SELLER_SEND_GOODS') ? 'selected': ''?>>待发货</option>
+                            <option value="WAIT_BUYER_CONFIRM_GOODS" <?=($status == 'WAIT_BUYER_CONFIRM_GOODS') ? 'selected': ''?>>待确认收货</option>
+                            <option value="TRADE_BUYER_SIGNED" <?=($status == 'TRADE_BUYER_SIGNED') ? 'selected': ''?>>已签收</option>
+                            <option value="TRADE_CLOSED" <?=($status == 'TRADE_CLOSED') ? 'selected': ''?>>退款完成</option>
+                            <option value="TRADE_CLOSED_BY_USER" <?=($status == 'TRADE_CLOSED_BY_USER') ? 'selected': ''?>>已关闭</option>
                         </select>
                     </div>&nbsp;
                     <div class="field">
@@ -54,7 +54,7 @@
                         <th width="*">订单号</th>
                         <th width="*">商品总价</th>
                         <th width="*">实付</th>
-                        <th width="*">店铺名</th>
+                        <th width="*">店铺ID</th>
                         <th width="*">收货人姓名</th>
                         <th width="*">收货人地区</th>
                         <th width="*">订单状态</th>
@@ -68,7 +68,7 @@
                                 <td><a href="/store/order/info?id=<?=$val['order_id']?>&showcase_id=<?=$val['showcase_id']?>"><?php echo $val['order_id']; ?></a></td>
                                 <td><?php echo $val['total_fee']; ?></td>
                                 <td><?php echo $val['payment_fee']; ?></td>
-                                <td><?php echo $name[$val['showcase_id']];?></td>
+                                <td><?php echo $val['showcase_name'];?></td>
                                 <td><?php echo $val['receiver_name'] ? :'--'; ?></td>
                                 <td><?php echo $val['receiver_province'] ? : '--'; ?></td>
                                 <?php

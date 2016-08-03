@@ -1,12 +1,5 @@
 <div class="dux-tools">
     <div class="bread-head">商品管理<span class="small">商品列表</span></div><br>
-    <div class="tools-function clearfix">
-        <div class="float-left">
-            <a class="button button-small bg-main" href="/store/product/index?type=">全部</a>
-            <a class="button button-small bg-green" href="/store/product/index?type=0">实物商品</a>
-            <a class="button button-small bg-green" href="/store/product/index?type=1">虚拟商品</a>
-        </div>
-    </div>
 </div>
 <div class="table-tools clearfix ">
     <div class="float-left">
@@ -19,6 +12,13 @@
                             <?php foreach ($showcase_list as $showcase) : ?>
                                 <option value="<?=$showcase['showcase_id']?>" <?=($showcase_id == $showcase['showcase_id']) ? 'selected': ''?>><?php echo $showcase['name']; ?></option>
                             <?php endforeach; ?>
+                        </select>
+                    </div>&nbsp;
+                    <div class="field">
+                        <select class="input js-assign" target="#tpl" name="type" datatype="*" id="parent">
+                            <option value="">全部</option>
+                            <option value="0" <?=($type == '0') ? 'selected': ''?>>实物商品</option>
+                            <option value="1" <?=($type == '1') ? 'selected': ''?>>虚拟商品</option>
                         </select>
                     </div>&nbsp;
                     <div class="field">
@@ -55,7 +55,7 @@
                             <tr>
                                 <td><?php echo $val['product_id']; ?></td>
                                 <td><?php echo $val['showcase_id']; ?></td>
-                                <td><?php echo $name[$val['showcase_id']]; ?></td>
+                                <td><?php echo $val['showcase_name']; ?></td>
                                 <td><a href="/store/product/info?id=<?php echo $val['product_id']; ?>"><?php echo $val['title']; ?><a><?=$val['presell'] ? '<span class="tag bg-red">预售<span>':''; ?></td>
                                 <td><?php echo $val['price']; ?></td>
                                 <td><?php echo $val['sold_num']; ?></td>
