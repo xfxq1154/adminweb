@@ -16,8 +16,7 @@ class StatcenterController extends Storebase{
     private $showcase_id;
     private $start_created;
     private $end_created;
-    private $showcase_list;
-    
+
     public function init(){
         parent::init();
 
