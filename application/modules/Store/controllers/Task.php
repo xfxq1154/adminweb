@@ -9,6 +9,22 @@ class TaskController extends Storebase{
     public function init(){
         parent::init();
     }
+
+    public function createAction(){
+        if(!$_POST){
+            $this->layout('task/create.phtml');
+        }
+
+        $topic = $this->input_post_param('topic');
+        $body = $this->input_post_param('body');
+
+        $result = $this->store_model->taskCreate($topic, $body);
+        if($result === FALSE){
+            Tools::output(array('info' => Sapi::getErrorMessage(), 'status' => 1));
+        }
+
+        Tools::output(array('info' => '添加成功', 'status' => 1, 'url'=>'/store/task/getlist'));
+    }
     
     public function getlistAction(){
         $page_no = $this->input_get_param('page_no');

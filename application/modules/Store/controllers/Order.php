@@ -24,7 +24,7 @@ class OrderController extends Storebase {
         $order_no = $this->input_get_param('order_no');
         $number = $this->input_get_param('number');
         $showcase_id = $this->input_get_param('showcase_id');
-        $status = $this->input_get_param('order_status');
+        $status = $this->input_get_param('status');
         $outer_tid = $this->input_get_param('outer_tid');
         $spm = $this->input_get_param('spm');
         $page_no = $this->input_get_param('page_no');
@@ -50,8 +50,9 @@ class OrderController extends Storebase {
         $result = $this->store_model->orderList($order_list);
         $orderList = $this->format_order_batch($result);
         
-        $this->renderPagger($page_no ,$orderList['total_nums'] , "/store/order/index?page_no={p}&number={$mobile}&order_no={$order_id}&order_status={$state}&showcase={$showcase_id}&outer_tid={$outer_tid}&spm={$spm}", $page_size);
+        $this->renderPagger($page_no ,$orderList['total_nums'] , "/store/order/index?page_no={p}&number={$mobile}&order_no={$order_id}&status={$state}&showcase_id={$showcase_id}&outer_tid={$outer_tid}&spm={$spm}", $page_size);
         $this->assign('mobile', $mobile);
+        $this->assign('status', $status);
         $this->assign('order_no', $order_id);
         $this->assign('spm', $spm);
         $this->assign('outer_tid', $outer_tid);
@@ -82,6 +83,7 @@ class OrderController extends Storebase {
         $o['payment_fee'] = $order['payment_fee'];
         $o['post_fee'] = $order['post_fee'];
         $o['showcase_id'] = $order['showcase_id'];
+        $o['showcase_name'] = $this->showcase_list[$order['showcase_id']];
         $o['seller_id'] = $order['seller_id'];
         $o['showcase_id'] = $order['showcase_id'];
         $o['buyer_id'] = $order['buyer_id'];

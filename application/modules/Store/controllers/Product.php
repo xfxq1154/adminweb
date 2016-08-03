@@ -29,22 +29,21 @@ class ProductController extends Storebase {
         $page_no = $this->input_get_param('page_no');
 
         $pname = $name ? $name : '';
-        $t = $type ? $type : '';
         
         $page_size = 20;
-        $product_list = [
-            'page_size' => $page_size,
-            'page_no' => $page_no,
+        $params = [
             'kw' => $pname,
-            'type' => $t,
-            'showcase_id' => $showcase_id
+            'type' => $type,
+            'showcase_id' => $showcase_id,
+            'page_no' => $page_no,
+            'page_size' => $page_size
         ];
-
-        $result = $this->store_model->productList($product_list);
+        $result = $this->store_model->productList($params);
         $data = $this->format_data_batch($result);
 
-        $this->renderPagger($page_no, $data['total_nums'], "/store/product/index?page_no={p}&pname={$pname}&type={$t}&showcase_id={$showcase_id}", $page_size);
+        $this->renderPagger($page_no, $data['total_nums'], "/store/product/index?page_no={p}&pname={$pname}&type={$type}&showcase_id={$showcase_id}", $page_size);
 
+        $this->assign('type', $type);
         $this->assign('pname', $pname);
         $this->assign("list", $data['products']);
         $this->assign('showcase_id', $showcase_id);
@@ -68,6 +67,7 @@ class ProductController extends Storebase {
         $alias = $product['product_alias'];
         $p['product_id'] = $product['product_id'];
         $p['showcase_id'] = $product['showcase_id'];
+        $p['showcase_name'] = $this->showcase_list[$product['showcase_id']];
         $p['outer_id'] = $product['outer_id'];
         $p['title'] = $product['title'];
         $p['intro'] = $product['intro'];
