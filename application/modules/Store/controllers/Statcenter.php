@@ -165,7 +165,7 @@ class StatcenterController extends Storebase{
         $total_uv = [];
         $total_pv = [];
         foreach ($visited_list as $visited){
-            if (!$visited['spm']){
+            if (!$visited['spm'] || strlen($visited['spm']) != 8){
                 continue;
             }
             $spms[] = $visited['spm'];
@@ -181,7 +181,7 @@ class StatcenterController extends Storebase{
         $result = $this->statcenter_model->orderOverview($params);
         if ($result){
             foreach ($result as &$val){
-                if (!$val['spm']){
+                if (!$val['spm'] || strlen($val['spm']) != 8){
                     continue;
                 }
                 $spms[] = $val['spm'];
