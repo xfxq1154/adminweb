@@ -37,6 +37,7 @@
                     <th width="*">批次ID</th>
                     <th width="*">得到商品商城SKU自编码</th>
                     <th width="*">兑换码商城上架自编码</th>
+                    <th width="*">合同编号</th>
                     <th width="*">合同数量</th>
                     <th width="*">已兑换数量</th>
                     <th width="*">价格</th>
@@ -49,6 +50,7 @@
                         <tr>
                             <td><?php echo $val['id']; ?></td>
                             <td><?php echo $val['sku_outer_id']; ?></td>
+                            <td><?php echo $val['batch_number'];?></td>
                             <td><?php echo $val['batch_number'];?></td>
                             <td><?php echo $val['total'] ? :'--'; ?></td>
                             <td><?php echo $val['exchange_count'] ? :0; ?></td>
