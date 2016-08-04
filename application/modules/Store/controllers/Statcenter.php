@@ -153,7 +153,9 @@ class StatcenterController extends Storebase{
     }
 
     public function spmAction() {
-        $params['spm'] = $this->input_get_param('spm');
+        $spm = $this->input_get_param('spm');
+
+        $params['spm'] = $spm ? : 1;
         $params['start_created'] = $this->start_created;
         $params['end_created'] = Tools::format_date($this->end_created);
 
