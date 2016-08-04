@@ -55,27 +55,29 @@ class CdkeyController extends Base {
      * @desc ajax请求,
      */
     public function execAction() {
-        $total = $_POST['total']; //合同数量
-        $type =  $_POST['type'];  //类型
-        $price = $_POST['price']; //价格
-        $sku_outer_id = $_POST['sku_outer_id'];   //sku自编码
-        $batch_number = $_POST['batch_number'];   //批次编号
-        $validity_time = $_POST['validity_time']; //有效期
+        $sku_outer_id = $this->getRequest()->getPost('sku_outer_id');
+        $count = $this->getRequest()->getPost('total');
+        $type = $this->getRequest()->getPost('type');
+        $contract_price = $this->getRequest()->getPost('price');
+        $batch_number = $this->getRequest()->getPost('batch_number');
+        $validity_time = $this->getRequest()->getPost('validity_time');
+        $contract_id = $this->getRequest()->getPost('contract_id');
 
 
-        if( !$sku_outer_id || !$validity_time || !$price || !$batch_number) {
+        if( !$sku_outer_id || !$validity_time || !$contract_price || !$contract_id) {
             Tools::success('error', '缺少参数');
         }
 
-        $total = abs($total) ? $total : 1000;
+        $count = abs($count) ? $count : 1000;
 
         $params = [
-            'sku_outer_id'  => $sku_outer_id,
-            'total'         => $total,
-            'validity_time' => $validity_time,
-            'price'         => $price,
-            'batch_number'  => $batch_number,
-            'type'          => $type
+            'sku_outer_id'   => $sku_outer_id,
+            'count'          => $count,
+            'expire_at'      => $validity_time,
+            'contract_price' => $contract_price,
+            'batch_number'   => $batch_number,
+            'type'           => $type,
+            'contract_id'    => $contract_id,
         ];
         $this->cdkey_model->addCdkey($params);
 
