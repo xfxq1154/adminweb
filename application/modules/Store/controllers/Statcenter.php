@@ -208,12 +208,18 @@ class StatcenterController extends Storebase{
 
             $spm['spm'] = $key;
             $spm['name'] = isset($data['name']) ? $data['name'] : '未知渠道';
-            $spm['paied_num'] = $data['order']['paied_num'];
-            $spm['paied_sum'] = $data['order']['paied_sum'];
+            $spm['paied_num'] = isset($data['order']['paied_num']) ? $data['order']['paied_num'] : 0;
+            $spm['paied_sum'] = isset($data['order']['paied_sum']) ? $data['order']['paied_sum'] : 0;
             $spm['rate'] = ($spm_uv) ? round($paied_people / $spm_uv * 100, 2) : '0.00';
 
             $format_list[] = $spm;
         }
+
+        foreach ($format_list as $key => $item){
+            $num[$key] = $item['paied_num'];
+            $sum[$key] = $item['paied_sum'];
+        }
+        array_multisort($num, SORT_DESC, $sum, SORT_DESC, $format_list);
 
         $this->assign('total_uv', array_sum($total_uv)); //访问人数
         $this->assign('total_pv', array_sum($total_pv)); //访问次数
