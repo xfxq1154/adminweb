@@ -36,7 +36,7 @@
                             <div class="txt dashboard-head radius-small bg-red  icon-user"></div>
                         </div>
                         <div class="media-body text-center">
-                            <h2><strong><?=($total_uv)?:0?></strong></h2>
+                            <h2><strong><?=($overview['total_uv'])?:0?></strong></h2>
                             浏览UV
                         </div>
                     </div>
@@ -52,7 +52,7 @@
                             <div class="txt dashboard-head radius-small bg-blue icon-key"></div>
                         </div>
                         <div class="media-body text-center">
-                            <h2><strong><?=($total_pv)?:0?></strong></h2>
+                            <h2><strong><?=($overview['total_pv'])?:0?></strong></h2>
                             浏览PV
                         </div>
                     </div>
@@ -68,7 +68,7 @@
                             <div class="txt dashboard-head radius-small bg-green icon-share"></div>
                         </div>
                         <div class="media-body text-center">
-                            <h2><strong><?=($paied_num)?:0?></strong></h2>
+                            <h2><strong><?=($overview['total_order'])?:0?></strong></h2>
                             订单数量
                         </div>
                     </div>
@@ -84,7 +84,7 @@
                             <div class="txt dashboard-head radius-small bg-yellow icon-link"></div>
                         </div>
                         <div class="media-body text-center">
-                            <h2><strong><?=($paied_fee)?:0?></strong></h2>
+                            <h2><strong><?=($overview['total_amount'])?:0?></strong></h2>
                             订单金额
                         </div>
                     </div>
@@ -108,10 +108,9 @@
                     <tr>
                         <td><?=$item['name']?></td>
                         <td><?=$item['spm']?></td>
-                        <td><?=$item['paied_num']?></td>
-                        <td><?=$item['paied_sum']?></td>
-                        <td>暂无</td>
-<!--                        <td>--><?//=$item['rate'] ?><!--%</td>-->
+                        <td><?=$item['trans_num']?></td>
+                        <td><?=$item['trans_amount']?></td>
+                        <td><?=$item['rate'] ?>%</td>
                     </tr>
                 <?php endforeach; endif;?>
             </tbody>

@@ -152,82 +152,46 @@ class StatcenterController extends Storebase{
         $this->_display('statcenter/pvperday.phtml');
     }
 
-    public function spmAction() {
-        $spm = $this->input_get_param('spm');
-
-        $params['spm'] = $spm ? : 1;
+    public function channelAction() {
+        $params['spm'] = $this->input_get_param('spm');
         $params['start_created'] = $this->start_created;
         $params['end_created'] = Tools::format_date($this->end_created);
 
-        $visited_list = $this->statcenter_model->views($params);
-        $spms = [];
-        $spm_list = [];
-        $total_uv = [];
-        $total_pv = [];
-        foreach ($visited_list as $visited){
-            if (!$visited['spm'] || strlen($visited['spm']) != 8){
-                continue;
-            }
-            $spms[] = $visited['spm'];
+        $data = $this->statcenter_model->channelList($params);
 
-            $total_uv[] = $visited['total_uv'];
-            $total_pv[] = $visited['total_pv'];
-
-            $spm_list[$visited['spm']]['uv'] = $visited['total_uv'];
-        }
-
-        $paied_num = [];
-        $paied_fee = [];
-        $result = $this->statcenter_model->orderOverview($params);
-        if ($result){
-            foreach ($result as &$val){
-                if (!$val['spm'] || strlen($val['spm']) != 8){
-                    continue;
-                }
-                $spms[] = $val['spm'];
-
-                $paied_num[] = $val['paied_num'];
-                $paied_fee[] = $val['paied_sum'];
-
-                $spm_list[$val['spm']]['order'] = $val;
-            }
-        }
-
-        $channel_model = new StoreChannelModel();
-        $channel_list = $channel_model->detail_mulit($spms);
-        if ($channel_list){
-            foreach ($channel_list as $channel){
-                $spm_list[$channel['spm']]['name'] = $channel['name'];
-            }
-        }
-
-        $format_list = [];
-        foreach ($spm_list as $key => &$data){
-            $spm_uv = $data['uv'];
-            $paied_people = $data['order']['paied_people']; //付款人数
-
-            $spm['spm'] = $key;
-            $spm['name'] = isset($data['name']) ? $data['name'] : '未知渠道';
-            $spm['paied_num'] = isset($data['order']['paied_num']) ? $data['order']['paied_num'] : 0;
-            $spm['paied_sum'] = isset($data['order']['paied_sum']) ? $data['order']['paied_sum'] : 0;
-            $spm['rate'] = ($spm_uv) ? round($paied_people / $spm_uv * 100, 2) : '0.00';
-
-            $format_list[] = $spm;
-        }
-
-        foreach ($format_list as $key => $item){
-            $num[$key] = $item['paied_num'];
-            $sum[$key] = $item['paied_sum'];
-        }
-        array_multisort($num, SORT_DESC, $sum, SORT_DESC, $format_list);
-
-        $this->assign('total_uv', array_sum($total_uv)); //访问人数
-        $this->assign('total_pv', array_sum($total_pv)); //访问次数
-        $this->assign('paied_num', array_sum($paied_num)); //付款订单
-        $this->assign('paied_fee', array_sum($paied_fee)); //付款金额
-        $this->assign('spmlist', $format_list); //访客数
-        $this->assign('spm', ($params['spm'] != 1) ? $params['spm'] : '');
+        $this->assign('overview', $data['overview']); //付款金额
+        $this->assign('spmlist', $data['format_list']); //访客数
+        $this->assign('spm', $params['spm']);
         $this->_display('statcenter/spm.phtml');
+    }
+
+    public function channel_by_dateAction(){
+        $params['spm'] = $this->input_get_param('spm');
+        $params['start_created'] = $this->start_created;
+        $params['end_created'] = Tools::format_date($this->end_created);
+
+        $data = $this->statcenter_model->channelList($params);
+
+        if ($data['format_list']){
+            foreach ($data['format_list'] as $val){
+                $key = '"'.date('m-d',strtotime($val['date'])).'"';
+                $chart_data[$key] = $val;
+            }
+        }
+
+        //生成图表所需数据
+        $dates = $this->_get_time_string();
+        foreach ($dates as $val){
+            $trans_num[] = (isset($chart_data[$val])) ? $chart_data[$val]['trans_num'] : 0;
+            $trans_amount[] = (isset($chart_data[$val])) ? $chart_data[$val]['trans_amount'] : 0;
+        }
+        $this->assign('dates', $dates);
+        $this->assign('trans_num', $trans_num);
+        $this->assign('trans_amount', $trans_amount);
+
+        $this->assign('spmlist', $data['format_list']);
+        $this->assign('spm', $params['spm']);
+        $this->_display('statcenter/channel.phtml');
     }
 
     public function orderAction(){
