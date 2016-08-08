@@ -12,7 +12,7 @@ class StoreStatcenterModel {
     const PAGEDATA_VIEWS = 'api/pagedata/getlist_by_date';
     const PAGEDATA_RANKLIST = 'api/pagedata/getlist_by_pageid';
     const CHANNEL_LIST = 'api/channel/getlist';
-    const CHANNEL_LIST_SPM = 'api/channel/getlist_by_spm';
+    const CHANNEL_LIST_DATE = 'api/channel/getlist_group_by_date';
 
     private $channel_names;
 
@@ -21,8 +21,8 @@ class StoreStatcenterModel {
         return $this->format_channel_batch($result);
     }
 
-    public function channelListBySpm($params) {
-        $result = Sdata::request(self::CHANNEL_LIST_SPM, $params);
+    public function channelListGroupByDate($params) {
+        $result = Sdata::request(self::CHANNEL_LIST_DATE, $params);
         return $this->format_channel_batch($result);
     }
 

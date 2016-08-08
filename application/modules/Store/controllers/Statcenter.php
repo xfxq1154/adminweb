@@ -170,7 +170,7 @@ class StatcenterController extends Storebase{
         $params['start_created'] = $this->start_created;
         $params['end_created'] = Tools::format_date($this->end_created);
 
-        $data = $this->statcenter_model->channelList($params);
+        $data = $this->statcenter_model->channelListGroupByDate($params);
 
         if ($data['format_list']){
             foreach ($data['format_list'] as $val){
