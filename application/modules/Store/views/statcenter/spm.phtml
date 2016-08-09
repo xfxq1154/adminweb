@@ -36,7 +36,7 @@
                             <div class="txt dashboard-head radius-small bg-red  icon-user"></div>
                         </div>
                         <div class="media-body text-center">
-                            <h2><strong><?=($total_uv)?:0?></strong></h2>
+                            <h2><strong><?=($overview['total_uv'])?:0?></strong></h2>
                             浏览UV
                         </div>
                     </div>
@@ -52,7 +52,7 @@
                             <div class="txt dashboard-head radius-small bg-blue icon-key"></div>
                         </div>
                         <div class="media-body text-center">
-                            <h2><strong><?=($total_pv)?:0?></strong></h2>
+                            <h2><strong><?=($overview['total_pv'])?:0?></strong></h2>
                             浏览PV
                         </div>
                     </div>
@@ -68,7 +68,7 @@
                             <div class="txt dashboard-head radius-small bg-green icon-share"></div>
                         </div>
                         <div class="media-body text-center">
-                            <h2><strong><?=($paied_num)?:0?></strong></h2>
+                            <h2><strong><?=($overview['total_order'])?:0?></strong></h2>
                             订单数量
                         </div>
                     </div>
@@ -84,7 +84,7 @@
                             <div class="txt dashboard-head radius-small bg-yellow icon-link"></div>
                         </div>
                         <div class="media-body text-center">
-                            <h2><strong><?=($paied_fee)?:0?></strong></h2>
+                            <h2><strong><?=($overview['total_amount'])?:0?></strong></h2>
                             订单金额
                         </div>
                     </div>
@@ -102,20 +102,25 @@
                     <th width="*">渠道号</th>
                     <th width="*">订单数</th>
                     <th width="*">订单金额</th>
-                    <th width="*">全店转化率</th>
+                    <th width="*">付款转化率</th>
                 </tr>
                 <?php if ($spmlist): foreach ($spmlist as $item) : ?>
                     <tr>
                         <td><?=$item['name']?></td>
                         <td><?=$item['spm']?></td>
-                        <td><?=$item['paied_num']?></td>
-                        <td><?=$item['paied_sum']?></td>
+                        <td><?=$item['trans_num']?></td>
+                        <td><?=$item['trans_amount']?></td>
                         <td><?=$item['rate'] ?>%</td>
                     </tr>
                 <?php endforeach; endif;?>
             </tbody>
         </table>
     </div>
+    <?php if($pagger):?>
+        <div class="panel dux-box panel-foot clearfix" style="margin-top:20px;border-radius: 4px;">
+            <?=$pagger?>
+        </div>
+    <?php endif;?>
 </div>
 
 <script type="text/javascript" charset="utf-8">
