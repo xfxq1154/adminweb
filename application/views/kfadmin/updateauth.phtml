@@ -46,13 +46,13 @@
                                 <label>所属分类</label>
                             </div>
                             <div class="field">
-                                <select class="input" name="id" id="id" >
-                                    <option value="0" <?php if($id == 0):?>selected="selected"<?php endif;?>>作为顶级分类</option>
-                                    <?php foreach ($list as $p_auth) : ?>
-                                    <option value="<?=$p_auth['id']?>" <?php if($info['pid'] == $p_auth['id']):?>selected="selected"<?php endif;?> ><?=$p_auth['title_cn']?></option>
-                                    <?php endforeach;?>
+   <!--                             <select class="input" name="id" id="id" >
+                                    <option value="0" <?php /*if($id == 0):*/?>selected="selected"<?php /*endif;*/?>>作为顶级分类</option>
+                                    <?php /*foreach ($list as $p_auth) : */?>
+                                    <option value="<?/*=$p_auth['id']*/?>" <?php /*if($info['pid'] == $p_auth['id']):*/?>selected="selected"<?php /*endif;*/?> ><?/*=$p_auth['title_cn']*/?></option>
+                                    <?php /*endforeach;*/?>
                                 </select>
-                                <div class="input-note">请选择所属分类</div>
+                                <div class="input-note">请选择所属分类</div>-->
                             </div>
                             <input type="hidden" name="type" value="update">
                         </div>
