@@ -9,7 +9,6 @@
 class Kfapi {
 
     static private $_host = KFAPI_HOST;
-    static private $_appkey = FKAPI_APPKEY;
     static private $_last_error = NULL;
     static private $_timeout = 5; //接口超时时间 单位s秒 建议不超过5s
 
@@ -19,7 +18,6 @@ class Kfapi {
 
     public static function request($uri, $params = array(), $requestMethod = 'GET', $jsonDecode = true, $headers = array()) {
         $url = self::$_host . $uri;
-        $params['appkey'] = self::$_appkey;
 
         $result = Curl::request($url, $params, $requestMethod, $jsonDecode, $headers, self::$_timeout);
         return self::tidyResult($result, $jsonDecode);

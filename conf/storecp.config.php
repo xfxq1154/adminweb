@@ -54,6 +54,5 @@ define('KDT_APP_SECERT', '9ed217880ab4b394243cef42ec9b7c92');
 define('CDKEY_HOST','http://cdkey.lxf.dev.com/');
 define('CDKEY_SOURCE_ID','IGET0001');
 
-//商品兑换码
-define('KFAPI_HOST','http://kf.lxf.dev.com/');
-define('FKAPI_APPKEY','shawanyi');
+//客服host
+define('KFAPI_HOST','http://kfapi.dev.didatrip.com/');

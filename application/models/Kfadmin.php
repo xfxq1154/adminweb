@@ -11,7 +11,7 @@
 class KfadminModel {
 
     const KF_USER_LIST  = 'register/getlist';  //获取用户列表
-    const KF_ADD_USER = 'register/add';
+    const KF_ADD_USER   = 'register/add';
     const KF_AUTH_LIST  = 'auth/getlist';
     const KF_GROUP_LIST = 'group/getlist';
     const KF_ONE_AUTH   = 'auth/getauthbyid';

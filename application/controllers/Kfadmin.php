@@ -63,14 +63,14 @@ class KfadminController extends Base {
         $password = $this->getRequest()->getpost('password'); //密码
         $group = $this->getRequest()->getpost('group'); //身份
 
-        if (!$username || !$password || !$group) {
+        if (!$username || !$password) {
             Tools::success('error', '缺少必要参数');
         }
 
         $params = [
             'username' => $username,
-            'password' => $username,
-            'auth'     => $username,
+            'password' => $password,
+            'auth'     => 1,
         ];
 
         $result = $this->kfadmin_model->addUser($params);
