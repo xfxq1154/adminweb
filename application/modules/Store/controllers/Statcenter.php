@@ -153,7 +153,11 @@ class StatcenterController extends Storebase{
     }
 
     public function channelAction() {
-        $params['spm'] = $this->input_get_param('spm');
+        $spm = $this->input_get_param('spm');
+        $page_no = $this->input_get_param('page_no', 1);
+
+        $params['spm'] = $spm;
+        $params['page_no'] = $page_no;
         $params['start_created'] = $this->start_created;
         $params['end_created'] = Tools::format_date($this->end_created);
 
@@ -162,11 +166,19 @@ class StatcenterController extends Storebase{
         $this->assign('overview', $data['overview']); //付款金额
         $this->assign('spmlist', $data['format_list']); //访客数
         $this->assign('spm', $params['spm']);
+
+        $this->renderPagger($page_no, $data['total_nums'], "/store/statcenter/channel?spm={$spm}&page_no={p}&start_time={$this->start_created}&end_created={$this->end_created}", 20);
         $this->_display('statcenter/spm.phtml');
     }
 
     public function channel_by_dateAction(){
-        $params['spm'] = $this->input_get_param('spm');
+        $spm = $this->input_get_param('spm');
+        $page_no = $this->input_get_param('page_no', 1);
+        $page_size = 100;
+
+        $params['spm'] = $spm;
+        $params['page_no'] = $page_no;
+        $params['page_size'] = $page_size;
         $params['start_created'] = $this->start_created;
         $params['end_created'] = Tools::format_date($this->end_created);
 
@@ -190,7 +202,8 @@ class StatcenterController extends Storebase{
         $this->assign('trans_amount', $trans_amount);
 
         $this->assign('spmlist', $data['format_list']);
-        $this->assign('spm', $params['spm']);
+        $this->assign('spm', $spm);
+        $this->renderPagger($page_no, $data['total_nums'], "/store/statcenter/channel_by_date?spm={$spm}&page_no={p}&start_time={$this->start_created}&end_created={$this->end_created}", $page_size);
         $this->_display('statcenter/channel.phtml');
     }
 

@@ -8,6 +8,7 @@
 <div class="table-tools clearfix ">
     <div class="float-left">
         <form method="GET">
+<!--            <input type="hidden" name="spm" value="--><?//=$spm?><!--">-->
             <div class="form-inline">
                 <div class="form-group">
                     <div class="field">
@@ -56,6 +57,11 @@
             </tbody>
         </table>
     </div>
+    <?php if($pagger):?>
+        <div class="panel dux-box panel-foot clearfix" style="margin-top:20px;border-radius: 4px;">
+            <?=$pagger?>
+        </div>
+    <?php endif;?>
 </div>
     <script type="text/javascript" charset="utf-8">
         Do.ready('base',function() {

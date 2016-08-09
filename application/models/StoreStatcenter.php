@@ -69,7 +69,8 @@ class StoreStatcenterModel {
                 'total_uv'     => array_sum($total_uv),
                 'total_order'  => array_sum($paied_num),
                 'total_amount' => array_sum($paied_fee),
-            ]
+            ],
+            'total_nums'   => $datas['total_nums']
         ];
     }
 
@@ -80,7 +81,7 @@ class StoreStatcenterModel {
             'name'          => isset($this->channel_names[$data['spm']]) ? $this->channel_names[$data['spm']] : '未知渠道',
             'pv'            => $data['pv'],
             'uv'            => $data['uv'],
-            'rate'          => round($data['trans_num'] / $data['uv'] * 100, 2),
+            'rate'          => $data['uv'] ? round($data['trans_num'] / $data['uv'] * 100, 2) : '0.00',
             'trans_num'     => $data['trans_num'],
             'trans_amount'  => $data['trans_amount'],
         ];
