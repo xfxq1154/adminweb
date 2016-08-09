@@ -29,6 +29,7 @@
                         <th width="150">时间</th>
                         <th width="100">操作</th>
                     </tr>
+                    <?php if($list) {?>
                     <?php foreach($list as $v):?>
                     <tr>
                         <td><?=$v['id']?></td>
@@ -46,6 +47,7 @@
                         </td>
                     </tr>
                    <?php endforeach;?>
+                    <?php }?>
                 </tbody>
             </table>
         </div>

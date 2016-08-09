@@ -30,6 +30,7 @@
                         <th width="150">更新时间</th>
                         <th width="100">操作</th>
                     </tr>
+                    <?php if($list) {?>
                     <?php foreach($list as $v):?>
                     <tr>
                         <td><?=$v['user_id']?></td>
@@ -53,7 +54,8 @@
                             <a class="button bg-red button-small icon-trash-o js-del" href="javascript:;" url="/kfadmin/disableuser" data="<?=$v['user_id']?>" title="删除"></a>
                         </td>
                     </tr>
-                   <?php endforeach;?>
+                    <?php endforeach;?>
+                    <?php }?>
                 </tbody>
             </table>
         </div>

@@ -37,7 +37,7 @@ class KfadminController extends Base {
      */
     public function getUserListAction() {
         $result = $this->kfadmin_model->getUserList();
-
+        
         $this->assign('list', $result);
         $this->layout('kfadmin/user.phtml');
 
