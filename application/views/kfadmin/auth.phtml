@@ -1,0 +1,79 @@
+<div class="dux-tools">
+    <div class="bread-head">后台菜单管理                <span class="small">管理后台菜单</span>
+    </div>
+    <br>
+    <div class="tools-function clearfix">
+        <div class="float-left">
+            <!--a class="button button-small bg-main icon-list" href="/admin.php?r=duxcms/AdminFormData/index&fieldset_id=1">
+                内容列表</a-->
+        </div>
+        <div class="button-group float-right">
+            <a class="button button-small bg-dot icon-plus dropdown-toggle"> 添加 <span class="downward"></span></a>
+            <ul class="drop-menu pull-right">
+                <li><a href="/kfadmin/addauth">添加菜单</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="admin-main">
+    <div class="panel dux-box">
+        <div class="table-responsive">
+            <table id="table" class="table table-hover ">
+                <tbody>
+                    <tr>
+                        <th width="100">编号</th>
+                        <th width="*">菜单名字</th>
+                        <th width="*">uri</th>
+                        <th width="100">操作</th>
+                    </tr>
+                    <?php foreach($list as $v) {?>
+                    <tr>
+                        <td><?=$v['id']?></td>
+                        <td><?=$v['title_cn']?><a href="/kfadmin/addauth/id/<?=$v['id']?>" title="添加子分类" class=" icon-plus text-green"></a></td>
+                        <td><?=$v['title_en']?></td>
+                        <td>
+                            <a class="button bg-blue button-small icon-edit" href="/kfadmin/updateauth/id/<?=$v['id']?>" title="修改"></a>
+                            <a class="button bg-red button-small icon-trash-o js-del" href="javascript:;" url="/kfadmin/deleteauth/id/<?=$v['id']?>" title="删除"></a>
+                        </td>
+                    </tr>
+                    <?php foreach($v['c_auth'] as $c_v) {?>
+                    <tr>
+                        <td><?=$c_v['id']?></td>
+                        <td><?='｜　　├ '.$c_v['title_cn']?></td>
+                        <td><?=$c_v['title_en']?></td>
+                        <td>
+                            <a class="button bg-blue button-small icon-edit" href="/kfadmin/updateauth/id/<?=$c_v['id']?>" title="修改"></a>
+                            <a class="button bg-red button-small icon-trash-o js-del" href="javascript:;" url="/kfadmin/deleteauth/id/<?=$c_v['id']?>" title="删除"></a>
+                        </td>
+                    </tr>
+                    <?php };?>
+                    <?php };?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+<script type="text/javascript">
+    $( function () {
+
+        $("select[navid!='']").on('change', function () {
+
+            var request = $.ajax({
+                url: '/nav/ajaxchangetag',
+                type: 'POST',
+                dataType: 'json',
+                data: {id: $(this).attr('navid'), tid: $(this).val()}
+            });
+
+            request.done(function (data) {
+                console.log('ok');
+            });
+
+            request.fail(function (jqXHR, textStatus) {
+                console.log('fail: ' + textStatus);
+            });
+        });
+    });
+</script>
