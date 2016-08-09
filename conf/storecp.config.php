@@ -53,3 +53,6 @@ define('KDT_APP_SECERT', '9ed217880ab4b394243cef42ec9b7c92');
 //商品兑换码
 define('CDKEY_HOST','http://cdkey.lxf.dev.com/');
 define('CDKEY_SOURCE_ID','IGET0001');
+
+//客服host
+define('KFAPI_HOST','http://kfapi.dev.didatrip.com/');
