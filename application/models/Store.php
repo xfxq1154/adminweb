@@ -13,6 +13,7 @@ class StoreModel {
     const PRODUCT_LIST = 'product/getlist';
     const PRODUCT_DETAIL = 'product/detail';
     const TASK_LIST = 'task/getlist';
+    const TASK_JOBLIST = 'task/joblist';
     const TASK_ADD = 'task/create';
 
     
@@ -52,6 +53,10 @@ class StoreModel {
 
     public function taskList($params){
         return Sapi::request(self::TASK_LIST, $params);
+    }
+
+    public function jobList($params){
+        return Sapi::request(self::TASK_JOBLIST, $params);
     }
 
     public function taskCreate($topic, $body){
