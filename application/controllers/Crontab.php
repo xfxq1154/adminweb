@@ -109,6 +109,10 @@ class CrontabController extends Base{
             exit;
         }
         foreach ($datas as $value){
+            if ($value['invoice_type'] == 1){
+                $this->redInvoice($value);
+                continue;
+            }
             $order = $this->checkOrder($value['id'], $value['order_id'], $value['invoice_type']);
             if(!$order){
                 continue;
@@ -138,11 +142,6 @@ class CrontabController extends Base{
             }
             $orders['new_detail'] = array_filter($detail);
             $wasOver = $this->regroupSku($orders);
-            //判断发票类型 1 红票
-            if ($value['invoice_type'] == 1){
-                $this->redInvoice($wasOver, $value);
-                continue;
-            }
             $this->invoice($wasOver, $value);
             continue;
         }
@@ -164,9 +163,9 @@ class CrontabController extends Base{
             $hjse += $d_val['se'];
             $payment_fee += $d_val['payment'];
 
-            if ($d_val['sl'] == 0.00) {
+            if ($d_val['sl'] == '0.00') {
                 $one_tax += $d_val['payment'];
-            } elseif ($d_val['sl'] == 0.06) {
+            } elseif ($d_val['sl'] == '0.06') {
                 $two_tax += $d_val['payment'];
             } else {
                 $three_tax += $d_val['payment'];
@@ -408,16 +407,13 @@ class CrontabController extends Base{
 
     /**
      * @desc 开具红票
-     * @param array $order
      * @param array $invoice_info
      * @param int $type 1 正常红票 2脏数据红票冲印
      * @return bool
      */
-    public function redInvoice(array $order, array $invoice_info, $type = 1)
+    public function redInvoice(array $invoice_info, $type = 1)
     {
-        $orders = array_filter($order);
-        $invoice_info = array_filter($invoice_info);
-        if (!$orders || !$invoice_info) {
+        if (!array_filter($invoice_info)) {
             return false;
         }
         
@@ -425,17 +421,19 @@ class CrontabController extends Base{
         $orders['xsf_dzdh'] = $invoice_info['seller_address'];
         $orders['kpr'] = $invoice_info['drawer'];
         $orders['type'] = 1;
-        $orders['count'] = count($order['new_detail']);
-        $orders['hjje'] = $order['payment_fee'];
-        $orders['hjse'] = $order['hjse'];
-        $orders['payment_fee'] = $order['hjse'] + $order['payment_fee'];
+        $orders['count'] = 1;
+        $orders['hjje'] = $invoice_info['payment_fee'];
+        $orders['hjse'] = $invoice_info['hjse'];
+        $orders['payment_fee'] = $invoice_info['hjse'] + $invoice_info['payment_fee'];
         $orders['invoice_title'] = $invoice_info['invoice_title'];
         $orders['invoice_no'] = strtotime(date('Y-m-d H:i:s')).mt_rand(1000,9999);
         $orders['yfp_hm'] = $invoice_info['invoice_number'];
         $orders['yfp_dm'] = $invoice_info['invoice_code'];
         $orders['receiver_mobile'] = $invoice_info['buyer_phone'];
+        //设置不同税率开票金额
+        $detail = $this->judgeInvTax($invoice_info);
 
-        $result = $this->dzfp->fpkj($orders, $orders['new_detail']);
+        $result = $this->dzfp->fpkj($orders, $detail);
         if(!$result) {
             $rs_data = [
                 'state_message' => $this->dzfp->getError(),
@@ -478,6 +476,47 @@ class CrontabController extends Base{
         }
         $order = $this->youzan_order_model->struct_order_data($result['response']);
         return $order;
+    }
+
+    /**
+     * @param $info
+     * @return array
+     * @explain 设置红票税率
+     */
+    private function judgeInvTax($info)
+    {
+        $data = [];
+        if ($info['one_tax']) {
+            $data[] = [
+                'title' => '红字发票',
+                'num'   => 1,
+                'price' => $info['one_tax'],
+                'xmje'  => $info['one_tax'],
+                'sl'    => '0.00',
+                'se'    => rand($info['one_tax'] * (1 + 0.00),2)
+            ];
+        }
+        if ($info['two_tax']) {
+            $data[] = [
+                'title' => '红字发票',
+                'num'   => 1,
+                'price' => $info['two_tax'],
+                'xmje'  => $info['two_tax'],
+                'sl'    => '0.06',
+                'se'    => rand($info['two_tax'] * (1 + 0.06),2)
+            ];
+        }
+        if ($info['three_tax']) {
+            $data[] = [
+                'title' => '红字发票',
+                'num'   => 1,
+                'price' => $info['three_tax'],
+                'xmje'  => $info['three_tax'],
+                'sl'    => '0.17',
+                'se'    => rand($info['three_tax'] * (1 + 0.17),2)
+            ];
+        }
+        return $data;
     }
 
     /**

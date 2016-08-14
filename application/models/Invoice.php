@@ -132,6 +132,24 @@ class InvoiceModel{
             echo $ex->getMessage();
         }
     }
+
+    /**
+     * @param $order_id
+     * @return mixed
+     */
+    public function getInfoByOid($order_id)
+    {
+        $where = ' `order_id` =  :order_id';
+        $pdo_params[':order_id'] = $order_id;
+        try {
+            $sql = ' SELECT * FROM ' . $this->tableName. ' WHERE ' .$where;
+            $stmt = $this->dbSlave->prepare($sql);
+            $stmt->execute($pdo_params);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (Exception $ex) {
+            return false;
+        }
+    }
     
     /**
      * @desc 更新开票信息
