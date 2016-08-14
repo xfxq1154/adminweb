@@ -416,7 +416,7 @@ class CrontabController extends Base{
         if (!array_filter($invoice_info)) {
             return false;
         }
-        
+
         $orders['xsf_mc'] = $invoice_info['seller_name'];
         $orders['xsf_dzdh'] = $invoice_info['seller_address'];
         $orders['kpr'] = $invoice_info['drawer'];
@@ -432,7 +432,7 @@ class CrontabController extends Base{
         $orders['receiver_mobile'] = $invoice_info['buyer_phone'];
         //设置不同税率开票金额
         $detail = $this->judgeInvTax($invoice_info);
-
+        
         $result = $this->dzfp->fpkj($orders, $detail);
         if(!$result) {
             $rs_data = [
@@ -486,34 +486,35 @@ class CrontabController extends Base{
     private function judgeInvTax($info)
     {
         $data = [];
-        if ($info['one_tax']) {
+        if ($info['one_tax'] != '0.00') {
             $data[] = [
                 'title' => '红字发票',
                 'num'   => 1,
                 'price' => $info['one_tax'],
                 'xmje'  => $info['one_tax'],
                 'sl'    => '0.00',
-                'se'    => rand($info['one_tax'] * (1 + 0.00),2)
+                'se'    => round($info['one_tax'] * (1 + 0.00),2)
             ];
         }
-        if ($info['two_tax']) {
+
+        if ($info['two_tax'] != '0.00') {
             $data[] = [
                 'title' => '红字发票',
                 'num'   => 1,
                 'price' => $info['two_tax'],
                 'xmje'  => $info['two_tax'],
                 'sl'    => '0.06',
-                'se'    => rand($info['two_tax'] * (1 + 0.06),2)
+                'se'    => round($info['two_tax'] * (1 + 0.06),2)
             ];
         }
-        if ($info['three_tax']) {
+        if ($info['three_tax'] != '0.00') {
             $data[] = [
                 'title' => '红字发票',
                 'num'   => 1,
                 'price' => $info['three_tax'],
                 'xmje'  => $info['three_tax'],
                 'sl'    => '0.17',
-                'se'    => rand($info['three_tax'] * (1 + 0.17),2)
+                'se'    => round($info['three_tax'] * (1 + 0.17),2)
             ];
         }
         return $data;
