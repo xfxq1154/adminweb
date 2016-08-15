@@ -133,18 +133,18 @@ class InvoiceModel{
         }
     }
 
-<<<<<<< HEAD
-    public function getInfoById($id){
+    public function getInfoById($id) {
         $where = ' `id` =  :id';
         $pdo_params[':id'] = $id;
         try {
-            $sql = ' SELECT * FROM ' . $this->tableName. ' WHERE ' .$where;
+            $sql = ' SELECT * FROM ' . $this->tableName . ' WHERE ' . $where;
             $stmt = $this->dbSlave->prepare($sql);
             $stmt->execute($pdo_params);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (Exception $ex) {
             echo $ex->getMessage();
-=======
+        }
+    }
     /**
      * @param $order_id
      * @return mixed
@@ -160,7 +160,6 @@ class InvoiceModel{
             return $stmt->fetch(PDO::FETCH_ASSOC);
         } catch (Exception $ex) {
             return false;
->>>>>>> develop
         }
     }
     
