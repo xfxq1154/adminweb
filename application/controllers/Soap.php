@@ -68,8 +68,8 @@ class SoapController extends Base{
             echo json_encode(array('info' => '已经开具的红票,无法重新开具'));exit;
         }
         $params = array(
-            'original_invoice_code'     => $invoice_info['invoice_number'],
-            'original_invoice_number'   => $invoice_info['invoice_code'],
+            'original_invoice_code'     => $invoice_info['invoice_code'],
+            'original_invoice_number'   => $invoice_info['invoice_number'],
             'original_check_code'       => $invoice_info['check_code'],
             'project_name'              => $invoice_info['project_name'],
             'seller_name'               => $invoice_info['seller_name'],

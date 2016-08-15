@@ -355,10 +355,8 @@ class CrontabController extends Base{
         $orders['receiver_mobile'] = $value['buyer_phone'];
         $orders['payee'] = $value['payee'];
         $orders['review'] = $value['review'];
-        Tools::log('invoice' ,$orders);
         //开发票
         $result = $this->dzfp->fpkj($orders, $orders['new_detail']);
-        Tools::log('invoice', $result);
         if(!$result){
             $file_data = [
                 'state' => self::INVOICE_FAIL,
@@ -422,17 +420,19 @@ class CrontabController extends Base{
         $orders['kpr'] = $invoice_info['drawer'];
         $orders['type'] = 1;
         $orders['count'] = 1;
-        $orders['hjje'] = $invoice_info['payment_fee'];
-        $orders['hjse'] = $invoice_info['hjse'];
+        $orders['hjje'] = $invoice_info['total_fee'];
+        $orders['hjse'] = $invoice_info['total_tax'];
         $orders['payment_fee'] = $invoice_info['hjse'] + $invoice_info['payment_fee'];
         $orders['invoice_title'] = $invoice_info['invoice_title'];
         $orders['invoice_no'] = strtotime(date('Y-m-d H:i:s')).mt_rand(1000,9999);
-        $orders['yfp_hm'] = $invoice_info['invoice_number'];
-        $orders['yfp_dm'] = $invoice_info['invoice_code'];
+        $orders['yfp_hm'] = $invoice_info['original_invoice_number'];
+        $orders['yfp_dm'] = $invoice_info['original_invoice_code'];
         $orders['receiver_mobile'] = $invoice_info['buyer_phone'];
+        $orders['tid'] = $invoice_info['order_id'];
+        $orders['created'] = $invoice_info['create_time'];
         //设置不同税率开票金额
         $detail = $this->judgeInvTax($invoice_info);
-        
+
         $result = $this->dzfp->fpkj($orders, $detail);
         if(!$result) {
             $rs_data = [
@@ -493,28 +493,30 @@ class CrontabController extends Base{
                 'price' => $info['one_tax'],
                 'xmje'  => $info['one_tax'],
                 'sl'    => '0.00',
-                'se'    => round($info['one_tax'] * (1 + 0.00),2)
+                'se'    => '0'
             ];
         }
 
         if ($info['two_tax'] != '0.00') {
+            $price = round($info['two_tax'] / (1 + 0.06),2);
             $data[] = [
                 'title' => '红字发票',
                 'num'   => 1,
-                'price' => $info['two_tax'],
-                'xmje'  => $info['two_tax'],
+                'price' => $price,
+                'xmje'  => $price,
                 'sl'    => '0.06',
-                'se'    => round($info['two_tax'] * (1 + 0.06),2)
+                'se'    => $info['two_tax'] - $price
             ];
         }
         if ($info['three_tax'] != '0.00') {
+            $t_price = round($info['three_tax'] / (1 + 0.17),2);
             $data[] = [
                 'title' => '红字发票',
                 'num'   => 1,
-                'price' => $info['three_tax'],
-                'xmje'  => $info['three_tax'],
+                'price' => $t_price,
+                'xmje'  => $t_price,
                 'sl'    => '0.17',
-                'se'    => round($info['three_tax'] * (1 + 0.17),2)
+                'se'    => $info['three_tax'] - $t_price
             ];
         }
         return $data;
@@ -530,6 +532,11 @@ class CrontabController extends Base{
             exit;
         }
         foreach ($datas as $value){
+            //红字组合商品开票
+            if ($value['invoice_type'] == 1){
+                $this->redInvoice($value);
+                continue;
+            }
             $order = $this->checkOrder($value['id'], $value['order_id'], $value['invoice_type']);
             if(!$order){
                 continue;
@@ -639,10 +646,7 @@ class CrontabController extends Base{
         }
 
         $wasOver = $this->regroupSku($kind_order);
-        if ($invoice['invoice_type'] == 1){
-            $this->redInvoice($wasOver, $invoice);
-            return false;
-        }
+
         $this->invoice($wasOver, $invoice);
     }
 

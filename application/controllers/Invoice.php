@@ -488,46 +488,46 @@ class InvoiceController extends Base{
         if(count($xls->sheets[0]['cells'][2]) > 1){
             Tools::output(array('info'=>'上传文件的内容不匹配','status' => 0));
         }
+        $upErrOrder = '';
         foreach ($xls->sheets[0]['cells'] as $values){
             $info = $this->invoice_mode->getInfoByOid($values[1]);
-            if ($info) {
-                //蓝字发票
-                if ($info['invoice_type'] == 0) {
-                    $red_order = $values[1].'RED';
-                    $red_inv = $this->invoice_mode->getInvoice($red_order);
-                    if ($red_inv) {
-                        $data['order_id']   = trim($values[1]).'PAP';
-                        $data['cronta_sta'] = 2;
-                        $data['state']      = 7;
-                        $faliOrder = $this->invoice_mode->insert($data);
-                        if(!$faliOrder){
-                            continue;
-                        }
-                    }
-                    continue;
-                } else {
-                    if ($info['state'] == 4) {
-                        $data['order_id']   = trim($values[1]);
-                        $data['cronta_sta'] = 2;
-                        $data['state']      = 7;
-                        $faliOrder = $this->invoice_mode->insert($data);
-                        if(!$faliOrder){
-                            continue;
-                        }
-                    }
-                }
-            } else {
-                $data['order_id']   = trim($values[1]);
+            if (!$info) {
+                $data['order_id']   = trim($values[1]).'PAP';
                 $data['cronta_sta'] = 2;
                 $data['state']      = 7;
-                $faliOrder = $this->invoice_mode->insert($data);
-                if(!$faliOrder){
+                $this->invoice_mode->insert($data);
+                continue;
+            }
+            //蓝字发票
+            if ($info['invoice_type'] == 0) {
+                $red_order = $values[1].'RED';
+                $red_inv = $this->invoice_mode->getInfoByOid($red_order);
+                if ($red_inv) {
+                    $data['order_id']   = trim($values[1]).'PAP';
+                    $data['cronta_sta'] = 2;
+                    $data['state']      = 7;
+                    $this->invoice_mode->insert($data);
                     continue;
                 }
+                if ($info['state'] == 4) {
+                    $upErrOrder .= '<tr><td>'.$values[1].'</td><td>订单重复</td></tr>';
+                    continue;
+                }
+                $data['order_id']   = trim($values[1]).'PAP';
+                $data['cronta_sta'] = 2;
+                $data['state']      = 7;
+                $this->invoice_mode->insert($data);
+                continue;
+            } else {
+                $data['order_id']   = trim($values[1]).'PAP';
+                $data['cronta_sta'] = 2;
+                $data['state']      = 7;
+                $this->invoice_mode->insert($data);
+                continue;
             }
         }
-        if($this->invoice_mode->getError()){
-            echo json_encode(array('info' => '上传成功,个别失败', 'status' => 1, 'data' => $this->invoice_mode->getError()));exit;
+        if($upErrOrder){
+            echo json_encode(array('info' => '上传成功,个别失败', 'status' => 1, 'data' => $upErrOrder));exit;
         }
         echo json_encode(array('info' => '上传成功', 'code' => 1));exit;
     }
