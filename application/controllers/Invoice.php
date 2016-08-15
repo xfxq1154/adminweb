@@ -471,7 +471,7 @@ class InvoiceController extends Base{
      */
     public function paperInvoiceUploadAction()
     {
-//        $this->checkRole();
+        $this->checkRole();
         $files = $this->getRequest()->getFiles('file');
         $this->checkFile($files);
         $xls = new Spreadsheet_Excel_Reader();
