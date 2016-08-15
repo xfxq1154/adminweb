@@ -142,7 +142,7 @@ class InvoiceModel{
         $where = ' `order_id` =  :order_id';
         $pdo_params[':order_id'] = $order_id;
         try {
-            $sql = ' SELECT `invoice_type` FROM ' . $this->tableName. ' WHERE ' .$where;
+            $sql = ' SELECT `invoice_type`, `state` FROM ' . $this->tableName. ' WHERE ' .$where;
             $stmt = $this->dbSlave->prepare($sql);
             $stmt->execute($pdo_params);
             return $stmt->fetch(PDO::FETCH_ASSOC);

@@ -510,7 +510,7 @@ class InvoiceController extends Base{
                     continue;
                 }
                 if ($info['state'] == 4) {
-                    $upErrOrder .= '<tr><td>'.$values[1].'</td><td>订单重复</td></tr>';
+                    $upErrOrder .= '<tr class="bg-red"><td>'.$values[1].'</td><td>订单重复</td></tr>';
                     continue;
                 }
                 $data['order_id']   = trim($values[1]).'PAP';

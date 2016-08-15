@@ -218,8 +218,13 @@
             uploadUrl: '/invoice/paperinvoiceupload',
             type: 'xls',
             complete: function (data) {
-                $('.orderdiv').css('display','block');
-                $('.orderval').append(data);
+                if (data) {
+                    alert('上传成功,个别失败');
+                    $('.orderdiv').css('display','block');
+                    $('.orderval').append(data);
+                } else {
+                    alert('上传成功');
+                }
             }
         });
     });
