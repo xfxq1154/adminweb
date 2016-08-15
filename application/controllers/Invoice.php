@@ -10,19 +10,14 @@ class InvoiceController extends Base{
 
     /** @var  InvoiceModel*/
     public $invoice_mode;
-
     /** @var SkuModel */
     public $sku_model;
-
     /** @var  InvoicedataModel */
     public $invoice_data_model;
-
     /** @var  KdtApiClient */
     public $youzan_api;
-
     /** @var  CkdModel */
     public $ckd;
-
     /** @var Dzfp */
     public $dzfp;
 
@@ -43,7 +38,8 @@ class InvoiceController extends Base{
         3 => '<span class="tag bg-blue">开票失败</span>',
         4 => '<span class="tag bg-bg-mix">已发短信</span>',
         5 => '<span class="tag bg-bg-blue">开票中</span>',
-        6 => '<span class="tag bg-yellow">开票成功</span>'
+        6 => '<span class="tag bg-yellow">开票成功</span>',
+        7 => '<span class="tag bg-main">纸质发票</span>'
     ];
     
     public $host = ASSET_URL;
@@ -393,23 +389,19 @@ class InvoiceController extends Base{
         if(!$invoice_path){
             echo json_encode(array('msg' => '发票获取失败' ,'status' => 3));exit;
         }
-
         //生成短网址
         $dwz_url = $this->invoice_mode->dwz($invoice_path);
         if($dwz_url['errNum']){
             echo json_encode(array('msg' => '系统错误' ,'status' => 3));exit;
         }
-
         //将发票地址发送给用户
         $sms = new Sms();
         $message = '您好，您在罗辑思维所购产品的电子发票地址为:'.$dwz_url['urls'][0]['url_short'].'。地址有效期为30天，请尽快在电脑端查看';
         $result = $sms->sendmsg($message, $value['buyer_phone']);
         if($result['status'] == 'ok'){
             //更新发票信息
-//            $this->invoice_mode->update($value['id'], array('invoice_url' => $dwz_url['urls'][0]['url_short'],'state' => 4));
             echo json_encode(array('msg' => '短信发送成功', 'status' => 2));exit;
         }
-//        $this->invoice_mode->update($value['id'], array('invoice_url' => $dwz_url['urls'][0]['url_short'],'state' => 6));
         echo json_encode(array('msg' => '短信发送失败', 'status' => 3));exit;
     }
     
@@ -440,16 +432,8 @@ class InvoiceController extends Base{
     public function uploadAction(){
         $this->checkRole();
         $files = $this->getRequest()->getFiles('file');
-        
-        if(!$files){
-            Tools::output(array('info'=> '请先选择上传文件','status' => 0));
-        }
-        if($files['error']){
-            Tools::output(array('info'=> '上传失败','status' => 0));
-        }
-        if($files['size'] / 1024 > 1024){
-            Tools::output(array('info'=>'上传文件不得大于1MB','status' => 0));
-        }
+        $this->checkFile($files);
+
         $xls = new Spreadsheet_Excel_Reader();
         $xls->setOutputEncoding('utf-8');
         $xls->read($files['tmp_name']);
@@ -483,21 +467,79 @@ class InvoiceController extends Base{
     }
 
     /**
+     * @explain 纸质发票上传
+     */
+    public function paperInvoiceUploadAction()
+    {
+//        $this->checkRole();
+        $files = $this->getRequest()->getFiles('file');
+        $this->checkFile($files);
+        $xls = new Spreadsheet_Excel_Reader();
+        $xls->setOutputEncoding('utf-8');
+        $xls->read($files['tmp_name']);
+
+        //将文件内容遍历循环存储到数据库
+        $data = array();
+        if(!$xls->sheets[0]['cells'][1]){
+            Tools::output(array('info'=> '系统错误','status' => 0));
+        }
+        unset($xls->sheets[0]['cells'][1]);
+        //判断是否是sku文件
+        if(count($xls->sheets[0]['cells'][2]) > 1){
+            Tools::output(array('info'=>'上传文件的内容不匹配','status' => 0));
+        }
+        $upErrOrder = '';
+        foreach ($xls->sheets[0]['cells'] as $values){
+            $info = $this->invoice_mode->getInfoByOid($values[1]);
+            if (!$info) {
+                $data['order_id']   = trim($values[1]).'PAP';
+                $data['cronta_sta'] = 2;
+                $data['state']      = 7;
+                $this->invoice_mode->insert($data);
+                continue;
+            }
+            //蓝字发票
+            if ($info['invoice_type'] == 0) {
+                $red_order = $values[1].'RED';
+                $red_inv = $this->invoice_mode->getInfoByOid($red_order);
+                if ($red_inv) {
+                    $data['order_id']   = trim($values[1]).'PAP';
+                    $data['cronta_sta'] = 2;
+                    $data['state']      = 7;
+                    $this->invoice_mode->insert($data);
+                    continue;
+                }
+                if ($info['state'] == 4) {
+                    $upErrOrder .= '<tr class="bg-red"><td>'.$values[1].'</td><td>订单重复</td></tr>';
+                    continue;
+                }
+                $data['order_id']   = trim($values[1]).'PAP';
+                $data['cronta_sta'] = 2;
+                $data['state']      = 7;
+                $this->invoice_mode->insert($data);
+                continue;
+            } else {
+                $data['order_id']   = trim($values[1]).'PAP';
+                $data['cronta_sta'] = 2;
+                $data['state']      = 7;
+                $this->invoice_mode->insert($data);
+                continue;
+            }
+        }
+        if($upErrOrder){
+            echo json_encode(array('info' => '上传成功,个别失败', 'status' => 1, 'data' => $upErrOrder));exit;
+        }
+        echo json_encode(array('info' => '上传成功', 'code' => 1));exit;
+    }
+
+    /**
      *sku 编码上传
      */
     public function skuUploadAction(){
         $this->checkRole();
         $files = $this->getRequest()->getFiles('file');
+        $this->checkFile($files);
 
-        if(!$files){
-            Tools::output(array('info'=> '请先选择上传文件','status' => 0));
-        }
-        if($files['error']){
-            Tools::output(array('info'=> '上传失败','status' => 0));
-        }
-        if($files['size'] / 1024 > 1024){
-            Tools::output(array('info'=>'上传文件不得大于1MB','status' => 0));
-        }
         $xls = new Spreadsheet_Excel_Reader();
         $xls->setOutputEncoding('utf-8');
         $xls->read($files['tmp_name']);
@@ -534,16 +576,8 @@ class InvoiceController extends Base{
     public function ckdUploadAction(){
         $this->checkRole();
         $files = $this->getRequest()->getFiles('file');
+        $this->checkFile($files);
 
-        if(!$files){
-            Tools::output(array('info'=> '请先选择上传文件','status' => 0));
-        }
-        if($files['error']){
-            Tools::output(array('info'=> '上传失败','status' => 0));
-        }
-        if($files['size'] / 1024 > 1024){
-            Tools::output(array('info'=>'上传文件不得大于1MB','status' => 0));
-        }
         $xls = new Spreadsheet_Excel_Reader();
         $xls->setOutputEncoding('utf-8');
         $xls->read($files['tmp_name']);
@@ -586,16 +620,8 @@ class InvoiceController extends Base{
     {
         $this->checkRole();
         $files = $this->getRequest()->getFiles('file');
+        $this->checkFile($files);
 
-        if(!$files){
-            Tools::output(array('info'=> '请先选择上传文件','status' => 0));
-        }
-        if($files['error']){
-            Tools::output(array('info'=> '上传失败','status' => 0));
-        }
-        if($files['size'] / 1024 > 1024){
-            Tools::output(array('info'=>'上传文件不得大于1MB','status' => 0));
-        }
         $xls = new Spreadsheet_Excel_Reader();
         $xls->setOutputEncoding('utf-8');
         $xls->read($files['tmp_name']);
@@ -620,6 +646,23 @@ class InvoiceController extends Base{
         }
         echo json_encode(array('info' => '上传成功', 'code' => 1));exit;
 
+    }
+
+    /**
+     * @param $files
+     * @explain 验证文件
+     */
+    private function checkFile($files)
+    {
+        if(!$files){
+            Tools::output(array('info'=> '请先选择上传文件','status' => 0));
+        }
+        if($files['error']){
+            Tools::output(array('info'=> '上传失败','status' => 0));
+        }
+        if($files['size'] / 1024 > 1024){
+            Tools::output(array('info'=>'上传文件不得大于1MB','status' => 0));
+        }
     }
 
     /**

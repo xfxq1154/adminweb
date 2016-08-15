@@ -16,6 +16,10 @@
                 <input type="text" class="input show_uo_imgs" id="files" name="file" placeholder="有赞订单" readonly=""/>
                 <a class="button bg-blue button-small " data="files" id="image_upload3" preview="image_preview3" href="javascript:;"><span class="icon-upload">上传</span></a>
             </div>
+            <div class="form-button">
+                <input type="text" class="input show_uo_imgs" id="files" name="file" placeholder="纸质发票订单" readonly=""/>
+                <a class="button bg-blue button-small " data="files" id="image_upload4" preview="image_preview4" href="javascript:;"><span class="icon-upload">上传</span></a>
+            </div>
         </div>
     </div>
     <div class="float-left" style="margin-left: 10px;">
@@ -50,6 +54,7 @@
                             <option value="1">未开发票</option>
                             <option value="2">开票成功</option>
                             <option value="3">开票失败</option>
+                            <option value="7">纸质发票</option>
                         </select>
                     </div>
                     <div class="field">&nbsp;
@@ -119,19 +124,6 @@
       })
   })
 </script>
-<!-- 隐藏输入框 -->
-<div style="position: absolute; left: 400px; top: 300px; background: #2c7; display: none; width: 200px; height: 200px;" id="id_box">
-    <h4 style="text-align: center;"><b>开具红字发票此项为必填项</b></h4>
-    <br>
-    <input type="text" class="input" size="20"  placeholder="请填写原发票号码" name="v1">
-    <br>
-    <input type="text" class="input" size="20"  placeholder="请填写原发票代码" name="v2">
-    <br>
-    <div class="form-button">
-        <input class="button bg-main" type="submit" value="提交" id="submit" style="float: left"/>
-        <button class="icon-close button bg-gray" style="float:right">关闭</button>
-    </div>
-</div>
 <div oncancel="" class="orderdiv" style="display: none">
     <table class="table">
         <caption>上传失败的订单号</caption>
@@ -182,14 +174,14 @@
                                     <span class="state">
                                     <?php if($val['state'] == 2 || $val['state'] == 4):?>
                                         <span class="bg-green"><a class="button bg-green button-small icon-eye-open" href="<?php echo $val['invoice_url'];?>" target="_blank" title="查看发票"></a></span>
-                                        <a class="button bg-red button-small icon-pencil" href="javascript:;" style="margin-left: 5px;" title="补开红字发票"></a>
+                                        <button class="button bg-red button-small icon-pencil js-del" href="javascript:;" url="/soap/redInvoice" data='{"id":<?=$val['id']; ?>}' title="补开红字发票"></button>
                                         <a class="button bg-yellow button-small icon-envelope sendmessage" href="javascript:;" style="margin-left: 5px;" title="重新发送短信"></a>
                                     <?php elseif ($val['state'] == 1):?>
                                         <button class="button bg-blue button-small kaifapiao" value=2 style="">开具发票</button>
                                     <?php elseif ($val['state'] == 3):?>
-                                        <button class="button bg-red button-small icon-trash-o js-del" href="javascript:;" url="/invoice/delete" data='{"id":<?php echo $val['id']; ?>}' title="删除"></button>
+                                        <button class="button bg-red button-small icon-trash-o js-del" href="javascript:;" url="/invoice/delete" data='{"id":<?=$val['id']; ?>}' title="删除"></button>
                                         <span><?=$val['state_message']?></span>
-                                    <?php endif;?>
+                                    <?php endif?>
                                     <?php if($val['state'] == 6):?>
                                         <a class="button bg-blue button-small " href="/invoice/updatephone/id/<?php echo $val['id']; ?>&edi=1" title="修改">修改</a>
                                         <span>短信发送失败</span>
@@ -221,7 +213,20 @@
                 $('.orderval').append(data);
             }
         });
-        
+
+        $('#image_upload4').duxFileUpload({
+            uploadUrl: '/invoice/paperinvoiceupload',
+            type: 'xls',
+            complete: function (data) {
+                if (data) {
+                    alert('上传成功,个别失败');
+                    $('.orderdiv').css('display','block');
+                    $('.orderval').append(data);
+                } else {
+                    alert('上传成功');
+                }
+            }
+        });
     });
     
     //批量开票
@@ -305,38 +310,6 @@
             
             postData(oData);
        });
-       
-       // 重新开票弹出层
-       $(".icon-pencil").on('click', function () {
-            var oBox = $('#id_box');
-            var oTr = $(this).parents('td').parents('tr');
-            oData.order_id = oTr.find('td').eq(2).text();
-            oData.type = 1;
-            oData.address = $('input[name="address"]').val();
-            oData.id = oTr.find('td').eq(1).text();
-            oData.kpr = $(':input[name="kpr"]').val();
-            oData.xsf_mc = $(':input[name="xsf_mc"]').val();
-                $(oBox).show('fast');
-                // 禁止 href
-                return false;
-       });
-       
-       // 关闭
-       $(".icon-close").on('click', function () {
-           $('#id_box').hide();
-       });
-       
-       //弹出层提交
-       $("#submit").on('click', function () {
-            oData.yfp_hm = $.trim($("input[name='v1']").val());
-            oData.yfp_dm = $.trim($("input[name='v2']").val());
-           
-           if (oData.yfp_hm && oData.yfp_dm) {
-               postData(oData);
-           } else {
-               alert('原发票号码、代码不能为空');
-           }
-       }); 
        
        //全选
        $('#selectAll').bind('click', function(){

@@ -9,14 +9,11 @@ class SoapController extends Base{
 
     /** @var  Dzfp */
     public $dzfp;
-
     /** @var InvoiceModel  */
     public $invoice_model;
-
     /** @var SkuModel */
     public $sku_model;
-
-    /** @var 发票状态 */
+    /** @var  */
     const INVOICE_STATUS_LODING = 5; //待开发票
 
     public function init() {
@@ -40,20 +37,13 @@ class SoapController extends Base{
         $payee = $this->getRequest()->getPost('payee');
         $review = $this->getRequest()->getPost('review');
         $id = $this->getRequest()->getPost('id');
-
         if(!$order_id){
             Tools::output(array('msg' => '请先选择订单', 'status' => 2));
         }
-        
         //判断用户是不是批量开发票
         if(is_array($order_id)){
             $this->batch($order_id,$xsf_mc,$xsf_dzdh,$kpr,$type, $payee, $review);
         }
-
-        if($type == 1){
-            $this->redInvoice($id,$xsf_mc, $xsf_dzdh, $kpr, $payee, $review);
-        }
-
         //单个发票开具
         $params = [
             'seller_address' => $xsf_dzdh,
@@ -69,55 +59,41 @@ class SoapController extends Base{
     }
 
     /**
-     * @desc 补开红字发票
-     * @param $id
-     * @param $xsf_mc
-     * @param $xsf_dzdh
-     * @param $kpr
-     * @param $payee
-     * @param $review
+     * @explain 补开红字发票
      */
-    public function redInvoice($id, $xsf_mc, $xsf_dzdh, $kpr, $payee = '', $review = ''){
-        if(!$id){
-            echo json_encode(array('msg' => '参数缺失'));exit;
-        }
+    public function redInvoiceAction(){
+        $id = json_decode($this->getRequest()->get('data'), true)['id'];
         $invoice_info = $this->invoice_model->getInfo($id);
-        if(!$invoice_info){
-            echo json_encode(array('msg' => '系统错误'));exit;
-        }
         if($invoice_info['state'] == 2){
-            echo json_encode(array('msg' => '已经开具的红票,无法重新开具'));exit;
+            echo json_encode(array('info' => '已经开具的红票,无法重新开具'));exit;
         }
-
         $params = array(
-            'original_invoice_code' => $invoice_info['invoice_number'],
-            'original_invoice_number' => $invoice_info['invoice_code'],
-            'invoice_number' => $invoice_info['invoice_number'],
-            'invoice_code' => $invoice_info['invoice_code'],
-            'project_name' => $invoice_info['project_name'],
-            'seller_name' => $invoice_info['seller_name'],
-            'seller_address' => $invoice_info['seller_address'],
-            'invoice_title' => $invoice_info['invoice_title'],
-            'payee' => $invoice_info['payee'],
-            'review' => $invoice_info['review'],
-            'sku_type' => $invoice_info['sku_type'],
-            'buyer_tax_id' => $invoice_info['buyer_tax_id'],
-            'original_check_code' => $invoice_info['check_code'],
-            'order_id' => $invoice_info['order_id'].'RED',
-            'payment_fee' => $invoice_info['payment_fee'],
-            'jshj'      => $invoice_info['payment_fee'],
-            'total_fee' => $invoice_info['total_fee'],
-            'total_tax' => $invoice_info['total_tax'],
-            'blue_invoice_id' => $invoice_info['id'],
-            'one_tax' => $invoice_info['one_tax'],
-            'two_tax' => $invoice_info['two_tax'],
-            'three_tax' => $invoice_info['three_tax'],
-            'invoice_type' => 1,
-            'state' => self::INVOICE_STATUS_LODING,
-            'drawer' => $kpr,
+            'original_invoice_code'     => $invoice_info['invoice_code'],
+            'original_invoice_number'   => $invoice_info['invoice_number'],
+            'original_check_code'       => $invoice_info['check_code'],
+            'project_name'              => $invoice_info['project_name'],
+            'seller_name'               => $invoice_info['seller_name'],
+            'seller_address'            => $invoice_info['seller_address'],
+            'invoice_title'             => $invoice_info['invoice_title'],
+            'drawer'                    => $invoice_info['drawer'],
+            'payee'                     => $invoice_info['payee'],
+            'review'                    => $invoice_info['review'],
+            'sku_type'                  => $invoice_info['sku_type'],
+            'buyer_tax_id'              => $invoice_info['buyer_tax_id'],
+            'order_id'                  => $invoice_info['order_id'].'RED',
+            'payment_fee'               => $invoice_info['payment_fee'],
+            'jshj'                      => $invoice_info['jshj'],
+            'total_fee'                 => $invoice_info['total_fee'],
+            'total_tax'                 => $invoice_info['total_tax'],
+            'blue_invoice_id'           => $invoice_info['id'],
+            'one_tax'                   => $invoice_info['one_tax'],
+            'two_tax'                   => $invoice_info['two_tax'],
+            'three_tax'                 => $invoice_info['three_tax'],
+            'invoice_type'              => 1,
+            'state'                     => self::INVOICE_STATUS_LODING
         );
         $this->invoice_model->insert($params);
-        Tools::output(array('msg' => '开票申请已经提交,请稍后查看', 'status' => 2));
+        Tools::output(array('info' => '开票申请已经提交,请稍后查看', 'status' => 2));
     }
 
     /**

@@ -12,7 +12,7 @@ class Dzfp {
     
     const FPHXZ = 0; //发票行性质 0正常行 1折扣行 2被折扣行
 
-    private $err_msg;
+    private $err_msg = '';
     private $content;
     
     public function fpkj($order, $detail) {
