@@ -102,8 +102,8 @@
                     <?php if ($oinfo[order_detail]) : ?>
                         <?php foreach ($oinfo[order_detail] as $val) : ?>
                             <tr>
-                                <td align="center"><a href="/bpproduct/info?id=<?php echo $val['pid']; ?>"><?php echo $val['pid']; ?></a></td>
-                                <td><a href="/bpproduct/info?id=<?php echo $val['pid']; ?>"><?php echo $val['title'] ? : '--'; ?></a></td>
+                                <td align="center"><a href="/store/product/info?id=<?php echo $val['pid']; ?>"><?php echo $val['pid']; ?></a></td>
+                                <td><a href="/store/product/info?id=<?php echo $val['pid']; ?>"><?php echo $val['title'] ? : '--'; ?></a></td>
                                 <td><img src="<?php echo $val['pic_path']; ?>" width="90px" height="90px" /></td>
                                 <td><?php echo $val['sku_id']; ?></td>
                                 <td><?php echo $val['outer_sku_id'] ? : '--'; ?></td>
