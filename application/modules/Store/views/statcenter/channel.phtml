@@ -2,7 +2,7 @@
 <!-- ECharts单文件引入 -->
 <script src="<?=ASSET_URL?>/static/lib/js/chart/echarts-all.js"></script>
 <div class="dux-tools">
-    <div class="bread-head">渠道数据统计</div>
+    <div class="bread-head">渠道数据统计 - <?=$channel_name?></div>
 </div>
 
 <div class="table-tools clearfix ">
@@ -28,6 +28,72 @@
 
 
 <div class="admin-main">
+    <div class="line-big">
+        <div class="xm3">
+            <div class="panel dux-box dux-dashboard">
+                <div class="clearfix">
+                    <div class="media media-x ">
+                        <div class="float-left">
+                            <div class="txt dashboard-head radius-small bg-red  icon-user"></div>
+                        </div>
+                        <div class="media-body text-center">
+                            <h2><strong><?=($overview['total_uv'])?:0?></strong></h2>
+                            浏览UV
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+        </div>
+        <div class="xm3">
+            <div class="panel dux-box dux-dashboard">
+                <div class="clearfix">
+                    <div class="media media-x ">
+                        <div class="float-left">
+                            <div class="txt dashboard-head radius-small bg-blue icon-key"></div>
+                        </div>
+                        <div class="media-body text-center">
+                            <h2><strong><?=($overview['total_pv'])?:0?></strong></h2>
+                            浏览PV
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+        </div>
+        <div class="xm3">
+            <div class="panel dux-box dux-dashboard">
+                <div class="clearfix">
+                    <div class="media media-x ">
+                        <div class="float-left">
+                            <div class="txt dashboard-head radius-small bg-green icon-share"></div>
+                        </div>
+                        <div class="media-body text-center">
+                            <h2><strong><?=($overview['total_order'])?:0?></strong></h2>
+                            订单数量
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+        </div>
+        <div class="xm3">
+            <div class="panel dux-box dux-dashboard">
+                <div class="clearfix">
+                    <div class="media media-x ">
+                        <div class="float-left">
+                            <div class="txt dashboard-head radius-small bg-yellow icon-link"></div>
+                        </div>
+                        <div class="media-body text-center">
+                            <h2><strong><?=($overview['total_amount'])?:0?></strong></h2>
+                            订单金额
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+        </div>
+    </div>
     <div class="panel dux-box">
         <div class="panel-head">按天流量查看</div>
         <!-- 为ECharts准备一个具备大小（宽高）的Dom -->

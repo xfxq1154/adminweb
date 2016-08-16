@@ -153,6 +153,7 @@ class StatcenterController extends Storebase{
     }
 
     public function channelAction() {
+        $this->start_created = $this->input_get_param('start_time', date('Y-m-d', strtotime('-1 day')));
         $spm = $this->input_get_param('spm');
         $page_no = $this->input_get_param('page_no', 1);
 
@@ -201,6 +202,11 @@ class StatcenterController extends Storebase{
         $this->assign('trans_num', $trans_num);
         $this->assign('trans_amount', $trans_amount);
 
+        $channel_model = new StoreChannelModel();
+        $channel_info = current($channel_model->detail_mulit([$spm]));
+
+        $this->assign('channel_name', $channel_info['name'] ? : '未知渠道'); //渠道名称
+        $this->assign('overview', $data['overview']); //付款金额
         $this->assign('spmlist', $data['format_list']);
         $this->assign('spm', $spm);
         $this->renderPagger($page_no, $data['total_nums'], "/store/statcenter/channel_by_date?spm={$spm}&page_no={p}&start_time={$this->start_created}&end_created={$this->end_created}", $page_size);
