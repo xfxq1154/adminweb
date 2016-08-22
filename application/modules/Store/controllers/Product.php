@@ -66,6 +66,7 @@ class ProductController extends Storebase {
     public function tidy($product) {
         $alias = $product['product_alias'];
         $p['product_id'] = $product['product_id'];
+        $p['product_alias'] = $product['product_alias'];
         $p['showcase_id'] = $product['showcase_id'];
         $p['showcase_name'] = $this->showcase_list[$product['showcase_id']];
         $p['outer_id'] = $product['outer_id'];
