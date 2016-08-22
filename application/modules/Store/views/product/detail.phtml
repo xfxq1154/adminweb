@@ -14,6 +14,14 @@
                         <td><?=$pinfo[product_id]?></td>
                     </tr>
                     <tr>
+                        <td width="250" align="right">商品别名：</td>
+                        <td><?=$pinfo[product_alias]?></td>
+                    </tr>
+                    <tr>
+                        <td width="250" align="right">商品外部编号：</td>
+                        <td><?=$pinfo[outer_id]?></td>
+                    </tr>
+                    <tr>
                         <td align="right">店铺ID：</td>
                         <td><?=$pinfo[showcase_id]?></td>
                     </tr>
@@ -81,6 +89,7 @@
                         <th width="*">价格</th>
                         <th width="*">售出数量</th>
                         <th width="*">库存数量</th>
+                        <th width="*">锁定库存数量</th>
                         <th width="*">商品外部货号</th>
                         <?php if ($pinfo[skus][0][sku_pro]) : ?>
                         <?php foreach ($pinfo[skus][0][sku_pro] as $val) : ?>
@@ -95,6 +104,7 @@
                                 <td><?php echo $val['price']; ?></td>
                                 <td><?php echo $val['sold_num'] ? : '--'; ?></td>
                                 <td><?php echo $val['quantity'] ? :'--'; ?></td>
+                                <td><?php echo $val['lock_stock'] ? :'--'; ?></td>
                                 <td><?php echo $val['outer_id'] ? : '--'; ?></td>
                                 <?php foreach ($val['sku_pro'] as $sku_pro) : ?>
                                 <td><?=$sku_pro['v']; ?></td>
