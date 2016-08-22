@@ -84,6 +84,7 @@ class ProductController extends Storebase {
         $p['buy_quota_name'] = ($product['buy_quota'] == 0) ? "无限制" : $product['buy_quota'];
         $p['onsell_name'] = $this->product_onsell[$product['onsell']];
         $p['onsell'] = $product['onsell'];
+        $p['sellout'] = $product['sellout'];
         $p['presell'] = $product['presell']; //预售状态
         $p['type'] = $product['type'];
         $p['type_name'] = $this->product_type[$product['type']];
