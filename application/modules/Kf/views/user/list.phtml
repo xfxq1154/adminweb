@@ -1,16 +1,15 @@
 <div class="dux-tools">
-    <div class="bread-head">客服列表<span class="small">管理后台客服</span>
+    <div class="bread-head">
+        客服列表
+        <span class="small">
+            管理后台客服
+        </span>
     </div>
-    <br>
     <div class="tools-function clearfix">
-        <div class="float-left">
-            <!--a class="button button-small bg-main icon-list" href="/admin.php?r=duxcms/AdminFormData/index&fieldset_id=1">
-                内容列表</a-->
-        </div>
         <div class="button-group float-right">
             <a class="button button-small bg-dot icon-plus dropdown-toggle"> 添加 <span class="downward"></span></a> 
             <ul class="drop-menu pull-right">
-                <li><a href="/kfadmin/addusertpl">添加用户</a></li>
+                <li><a href="/kf/user/addtpl">添加用户</a></li>
             </ul>
         </div>
     </div>
@@ -50,8 +49,8 @@
                         <td><?=$v['create_time']?>
                         </td>
                         <td>
-                            <!--<a class="button bg-blue button-small icon-pencil" href="" title="修改"></a>-->
-                            <a class="button bg-red button-small icon-trash-o js-del" href="javascript:;" url="/kfadmin/disableuser" data="<?=$v['user_id']?>" title="删除"></a>
+                            <a class="button bg-blue button-small icon-pencil" href="/kf/user/edittpl/user_id/<?php echo $v['user_id'] ?>" title="修改"></a>
+                            <a class="button bg-red button-small icon-trash-o js-del" href="javascript:;" url="/kf/user/disable" data='{"user_id":<?php echo $v['user_id'] ?>}' title="删除"></a>
                         </td>
                     </tr>
                     <?php endforeach;?>
@@ -60,5 +59,4 @@
             </table>
         </div>
     </div>
-
 </div>
