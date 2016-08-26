@@ -11,10 +11,15 @@ class StoreStatcenterModel {
     const PAGEDATA_OVERVIEW = 'api/pagedata/overview';
     const PAGEDATA_VIEWS = 'api/pagedata/getlist_by_date';
     const PAGEDATA_RANKLIST = 'api/pagedata/getlist_by_pageid';
+    const PRODUCT_LIST = 'api/product/getlist_by_pageid';
     const CHANNEL_LIST = 'api/channel/getlist';
     const CHANNEL_LIST_DATE = 'api/channel/getlist_group_by_date';
 
     private $channel_names;
+
+    public function productList($params) {
+        return Sdata::request(self::PRODUCT_LIST, $params);
+    }
 
     public function channelList($params) {
         $result = Sdata::request(self::CHANNEL_LIST, $params);
@@ -125,7 +130,6 @@ class StoreStatcenterModel {
             'total_uv'     =>   intval($data['total_uv']),
             'share_pv'     =>   intval($data['share_pv']),
             'share_uv'     =>   intval($data['share_uv']),
-            'avg_stay'     =>   doubleval($data['avg_stay']),
         );
 
         return $format_data;
@@ -135,7 +139,7 @@ class StoreStatcenterModel {
         if (empty($datas)) {
             return array();
         }
-        foreach ($datas as &$data){
+        foreach ($datas['list'] as &$data){
             $data = $this->format_pages_struct($data);
         }
 
@@ -151,19 +155,13 @@ class StoreStatcenterModel {
             return array();
         }
         $format_data = array(
-            'spm' => $data['spm'],
-            'order_num' => $data['order_num'],
-            'order_sum' => $data['order_sum'],
-            'order_people' => $data['order_people'],
-            'paied_num' => $data['paied_num'],
-            'paied_num_wx' => $data['paied_num_wx'],
-            'paied_num_jd' => $data['paied_num_jd'],
-            'paied_sum' => $data['paied_sum'],
-            'paied_people' => $data['paied_people'],
-            'paied_people_repeat' => $data['paied_people_repeat'],
-            'paied_people_sum' => $data['paied_people_sum'],
-            'paied_people_num' => $data['paied_people_num'],
-            'date' => $data['date'],
+            'total_nop' => $data['total_nop'],
+            'total_num' => $data['total_num'],
+            'total_amount' => $data['total_amount'],
+            'trans_nop' => $data['trans_nop'],
+            'trans_num' => $data['trans_num'],
+            'trans_amount' => $data['trans_amount'],
+            'odate' => $data['odate'],
         );
 
         return $format_data;
