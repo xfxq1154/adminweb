@@ -1,0 +1,75 @@
+<script language="JavaScript" type="text/javascript" src="<?=ASSET_URL?>/static/js/calendar/WdatePicker.js"></script>
+<!-- ECharts单文件引入 -->
+<script src="<?=ASSET_URL?>/static/lib/js/chart/echarts-all.js"></script>
+<div class="dux-tools">
+    <div class="bread-head">数据统计</div>
+    <br>
+    <div class="tools-function clearfix">
+        <div class="float-left">
+            <a class="button button-small bg-back icon-list" href="product"> 商品分析</a>
+            <a class="button button-small bg-main icon-list" href="productdetail"> 详细数据</a>
+        </div>
+    </div>
+</div>
+<div class="table-tools clearfix ">
+    <div class="float-left">
+        <form method="GET">
+            <div class="form-inline">
+                <div class="form-group">
+                    <div class="field">
+                        <select class="input js-assign" target="#tpl" name="showcase_id" datatype="*" id="parent">
+                            <option value="">请选择店铺</option>
+                            <?php foreach ($showcase_list as $showcase) : ?>
+                                <option value="<?=$showcase['showcase_id']?>" <?=($showcase_id == $showcase['showcase_id']) ? 'selected': ''?>><?php echo $showcase['name']; ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>&nbsp;
+                    <div class="field">
+                        开始时间：<input type="text" id="d4321" class="input datebtn" style="width:220px;" id="datetime" name="start_time" value="<?=$start_time?>" onfocus="WdatePicker({startDate:'<?=date('Y-m-d',strtotime('-7 day'))?>',maxDate:'#F{$dp.$D(\'d4322\',{d:+0})}'})" style="cursor:pointer;" size="60" datatype="*" placeholder="" autocomplete="off">
+                    </div>&nbsp;
+                    <div class="field">
+                        结束时间：<input type="text" id="d4322" class="input datebtn" style="width:220px;" id="datetime" name="end_time"  value="<?=$end_time?>" onfocus="WdatePicker({maxDate:'<?=date('Y-m-d',strtotime('-1 day'))?>',minDate:'#F{$dp.$D(\'d4321\',{d:+0})}'})" style="cursor:pointer;" size="60" datatype="*" placeholder="" autocomplete="off">
+                    </div>
+                </div>
+                <div class="form-button">
+                    <button class="button" type="submit">搜索</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="admin-main">
+    <div class="panel dux-box">
+        <table id="table" class="table table-bordered">
+            <tbody>
+                <tr>
+                    <th width="500">页面名称</th>
+                    <th width="*">销量</th>
+                    <th width="*">销售额</th>
+                    <th width="*">浏览UV/PV</th>
+                    <th width="*">外部分享UV/PV</th>
+                </tr>
+                <?php foreach ($list as $key => $item) : ?>
+                    <tr>
+                        <td><a><?=$item['title']?></a></td>
+                        <td><a><?=$item['trans_num']?></a></td>
+                        <td><a><?=$item['trans_amount']?></a></td>
+                        <td><?=$item['total_uv']?> / <?=$item['total_pv']?></td>
+                        <td><?=$item['share_uv']?> / <?=$item['share_pv']?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+        <?php if($pagger):?>
+            <div class="panel dux-box panel-foot clearfix" style="margin-top:20px;border-radius: 4px;">
+                <?=$pagger?>
+            </div>
+        <?php endif;?>
+    </div>
+    <script type="text/javascript" charset="utf-8">
+        Do.ready('base',function() {
+            $('.js-time').duxTime();
+        });
+    </script>
+</div>

@@ -2,7 +2,14 @@
 <!-- ECharts单文件引入 -->
 <script src="<?=ASSET_URL?>/static/lib/js/chart/echarts-all.js"></script>
 <div class="dux-tools">
-    <div class="bread-head">数据统计<span class="small">订单数据统计</span></div><br>
+    <div class="bread-head">数据统计</div>
+    <br>
+    <div class="tools-function clearfix">
+        <div class="float-left">
+            <a class="button button-small bg-main icon-list" href="product"> 商品分析</a>
+            <a class="button button-small bg-back icon-list" href="productdetail"> 详细数据</a>
+        </div>
+    </div>
 </div>
 <div class="table-tools clearfix ">
     <div class="float-left">
@@ -83,9 +90,9 @@
                     <?php foreach ($sell_top10 as $key => $item) : ?>
                         <tr>
                             <td><?=$key+1?></td>
-                            <td><a><?=$item['title']?><?=($item['sku_value']? '-'.$item['sku_value'] : '')?></a></td>
-                            <td><?=$item['total_pay']?></td>
-                            <td><?=$item['total_order']?></td>
+                            <td><a><?=$item['title']?></a></td>
+                            <td><?=$item['trans_num']?></td>
+                            <td><?=$item['trans_amount']?></td>
                         </tr>
                     <?php endforeach; ?>
                     </tbody>

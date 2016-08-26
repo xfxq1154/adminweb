@@ -8,6 +8,7 @@
         <div class="float-left">
             <a class="button button-small bg-back icon-list" href="pagedata"> 页面转化数据</a>
             <a class="button button-small bg-main icon-list" href="pvperday"> 按每天流量分析</a>
+            <a class="button button-small bg-back icon-list" href="pagedetail"> 详细数据</a>
         </div>
     </div>
 </div>
@@ -61,7 +62,7 @@
             </tr>
             <?php foreach ($view_list as $key => $item) : ?>
                 <tr>
-                    <td><a><?=date('Y-m-d', strtotime($item['date']))?></a></td>
+                    <td><a><?=date('Y-m-d', strtotime($item['odate']))?></a></td>
                     <td><?=$item['total_uv']?> / <?=$item['total_pv']?></td>
                     <td><?=$item['total_uv'] - $item['share_uv']?> / <?=$item['total_pv'] - $item['share_pv']?></td>
                     <td><?=$item['share_uv']?> / <?=$item['share_pv']?></td>
