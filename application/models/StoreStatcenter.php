@@ -81,7 +81,7 @@ class StoreStatcenterModel {
 
     public function format_channel_struct($data){
         return [
-            'date'          => $data['date'],
+            'date'          => $data['odate'],
             'spm'           => $data['spm'],
             'name'          => isset($this->channel_names[$data['spm']]) ? $this->channel_names[$data['spm']] : '未知渠道',
             'pv'            => $data['pv'],
