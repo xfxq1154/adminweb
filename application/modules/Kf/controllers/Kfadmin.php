@@ -21,8 +21,7 @@ class KfadminController extends Base {
     private $reback_msg = ['info' => '操作失败', 'status' => 0];
 
     function init() {
-        $this->initAdmin();
-        $this->checkRole();
+        parent::
         $this->kfadmin_model = new KfadminModel();
     }
 
@@ -32,90 +31,13 @@ class KfadminController extends Base {
     public function indexAction() {
     }
 
-    /**
-     * 获取用户列表
-     */
-    public function getUserListAction() {
-        $result = $this->kfadmin_model->getUserList();
-        
-        $this->assign('list', $result);
-        $this->layout('kfadmin/user.phtml');
-
-    }
-
-    /**
-     * 添加用户页面
-     */
-    public function addUserTplAction() {
-        //获取身份列表
-        $group_list = $this->kfadmin_model->getGroupList();
-
-        $this->assign('group_list', $group_list);
-        $this->layout('kfadmin/adduser.phtml');
-    }
-
-    /**
-     * 添加账号
-     */
-    public function addUserAction()
-    {
-        $username = $this->getRequest()->getpost('username'); //账号
-        $password = $this->getRequest()->getpost('password'); //密码
-        $group = $this->getRequest()->getpost('group'); //身份
-
-        if (!$username || !$password) {
-            Tools::success('error', '缺少必要参数');
-        }
-
-        $params = [
-            'username' => $username,
-            'password' => $password,
-            'auth'     => 1,
-        ];
-
-        $result = $this->kfadmin_model->addUser($params);
-        if ($result) {
-            $this->reback_msg = [
-                'info'   => '添加成功',
-                'status' => self::SUCCESS,
-                'url'    => '/kfadmin/getuserlist'
-            ];
-        }
-        $this->reback_msg();
-    }
-
-    /**
-     * 账号禁用
-     */
-    public function disableUserAction()
-    {
-        $user_id = $_POST['user_id']; //账号
-
-        if (!$user_id) {
-            Tools::success('error', '缺少必要参数');
-        }
-
-        $params = [
-            'user_id' => $user_id,
-            'status'  => self::DISABLE_USER,
-        ];
-
-        $result = $this->kfadmin_model->disableUser($params);
-        if ($result) {
-            $this->reback_msg = [
-                'info'   => '禁用成功',
-                'status' => self::SUCCESS,
-            ];
-        }
-        $this->reback_msg();
-    }
+    
 
     /**
      * 获取权限列表
      */
     public function getAuthListAction() {
         $result = $this->kfadmin_model->getAuthList();
-
 
         $this->assign('list', $result);
         $this->layout('kfadmin/auth.phtml');

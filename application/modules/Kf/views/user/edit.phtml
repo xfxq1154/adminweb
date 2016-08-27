@@ -1,0 +1,61 @@
+<div class="dux-tools">
+    <div class="bread-head">后台角色管理<span class="small">角色列表</span>
+        <div class="float-right">
+            <a class="button button-small bg-main icon-list" href="/kf/user/list">
+                用户角色列表</a>
+        </div>
+    </div>
+</div>
+
+<div class="admin-main">
+    <form method="post" class="form-x dux-form form-auto" id="form" action="/kf/user/edit">
+        <div class="tab dux-tab">
+            <div class="panel dux-box  active">
+                <div class="panel-head">
+                    <div class="tab-head">
+                        <ul class="tab-nav">
+                            <li class="active"><a href="#tab-1">修改密码</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <!--账号-->
+                <div class="form-group">
+                    <div class="label">
+                        <label>账号</label>
+                    </div>
+                    <div class="field">
+                        <input type="text" class="input" style="width:220px;" id="username" size="60"
+                               datatype="*" placeholder="" value="<?=$userinfo['username']?>" disabled>
+                        <input type="hidden" class="input"  id="username" name="username" value="<?=$userinfo['username']?>">
+                        <div class="input-note">6-16位字符为字符</div>
+                    </div>
+                </div>
+                <!--密码-->
+                <div class="form-group">
+                    <div class="label">
+                        <label>新密码</label>
+                    </div>
+                    <div class="field">
+                        <input type="password" class="input" style="width:220px;" id="password" name="password" size="60"
+                               datatype="*" placeholder="新密码">
+                        <input type="hidden"  class="input" id="user_id" name="user_id" value="<?=$userinfo['user_id']?>">
+                    </div>
+                </div>
+                <div class="panel-foot">
+                    <div class="form-button">
+                        <div id="tips"></div>
+                        <button class="button bg-main" type="submit">保存</button>
+                        <button class="button bg" type="reset">重置</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript">
+    Do.ready('base', function () {
+        //表单综合处理
+        $('#form').duxFormPage();
+    });
+</script>

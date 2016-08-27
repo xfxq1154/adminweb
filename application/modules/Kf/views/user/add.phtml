@@ -1,14 +1,14 @@
 <div class="dux-tools">
     <div class="bread-head">后台角色管理<span class="small">角色列表</span>
         <div class="float-right">
-            <a class="button button-small bg-main icon-list" href="/kfadmin/getuserlist">
+            <a class="button button-small bg-main icon-list" href="/kf/user/list">
                 用户角色列表</a>
         </div>
     </div>
 </div>
 
 <div class="admin-main">
-    <form method="post" class="form-x dux-form form-auto" id="form" action="/kfadmin/adduser">
+    <form method="post" class="form-x dux-form form-auto" id="form" action="/kf/user/adduser">
         <div class="tab dux-tab">
             <div class="panel dux-box  active">
                 <div class="panel-head">
@@ -18,7 +18,7 @@
                         </ul>
                     </div>
                 </div>
-
+                <!--账号-->
                 <div class="form-group">
                     <div class="label">
                         <label>账号</label>
@@ -29,7 +29,7 @@
                         <div class="input-note">6-16位字符为字符</div>
                     </div>
                 </div>
-
+                <!--密码-->
                 <div class="form-group">
                     <div class="label">
                         <label>密码</label>
@@ -40,24 +40,7 @@
                         <div class="input-note">密码</div>
                     </div>
                 </div>
-
-                <div class="form-group">
-                    <div class="label">
-                        <label>权限</label>
-                    </div>
-                    <div class="field">
-                        <!--<select class="input js-assign" target="#tpl" name="group" datatype="*" id="parent">
-                            <option value="">请选择权限</option>
-                            <?php /*if ($group_list) : */?>
-                                <?php /*foreach ($group_list as $key => $value) : */?>
-                                    <option value="<?php /*echo $value['id']; */?>"><?php /*echo $value['group']; */?></option>
-                                <?php /*endforeach; */?>
-                            <?php /*endif; */?>
-                        </select>
-                        <div class="input-note">请选择一个账号权限</div>-->
-                    </div>
-                </div>
-
+                <!--权限 暂无-->
 
                 <div class="panel-foot">
                     <div class="form-button">

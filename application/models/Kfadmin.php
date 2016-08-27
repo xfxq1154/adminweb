@@ -10,22 +10,19 @@
 
 class KfadminModel {
 
-    const KF_USER_LIST  = 'register/getlist';  //获取用户列表
-    const KF_ADD_USER   = 'register/add';
-    const KF_AUTH_LIST  = 'auth/getlist';
-    const KF_GROUP_LIST = 'group/getlist';
-    const KF_ONE_AUTH   = 'auth/getauthbyid';
-    const KF_AUTH_PARENT= 'auth/getauthparent';
-    const KF_ADD_AUTH   = 'auth/add';
-    const KF_UPDATE_AUTH = 'auth/update';
-    const KF_MODIFY_STATUS = 'register/modifystatus';
+    const USER_LIST  = 'register/getlist';  //获取用户列表
+    const USER_ADD   = 'register/add';      //添加用户
+    const USER_EDIT  = 'register/edit';     //编辑用户
+    const USER_INFO  = 'register/userinfo';     //获取用户信息
+    const USER_RESET_PASS = 'register/resetpass'; //重置密码
+    const AUTH_LIST  = 'auth/getlist';      //获取权限列表
+    const AUTH_ONE   = 'auth/getauthbyid';  //获取一个权限
+    const AUTH_PARENT= 'auth/getauthparent';    //获取所有父权限
+    const AUTH_ADD   = 'auth/add';          //添加一个权限
+    const AUTH_EDIT  = 'auth/edit';         //编辑权限
+    const GROUP_LIST = 'group/getlist';     //获取身份列表
 
-    private $user_status;
-
-    public function __construct()
-    {
-        $this->user_status = [ 1 => '正常', 2 => '冻结'];
-    }
+    private $user_status = [ 1 => '正常', 2 => '冻结'];
 
     /**
      * 获取客服列表
@@ -33,7 +30,7 @@ class KfadminModel {
      * @return array|bool
      */
     public function getUserList($params = array()) {
-        $result = Kfapi::request(self::KF_USER_LIST, $params, "GET");
+        $result = Kfapi::request(self::USER_LIST, $params, "GET");
         if($result === FALSE){
             return FALSE;
         }
@@ -46,7 +43,7 @@ class KfadminModel {
      * @return array|bool
      */
     public function getAuthList($params = array()) {
-        $result = Kfapi::request(self::KF_AUTH_LIST, $params, "GET");
+        $result = Kfapi::request(self::AUTH_LIST, $params, "GET");
         if($result === FALSE){
             return FALSE;
         }
@@ -59,15 +56,40 @@ class KfadminModel {
      * @return array|bool
      */
     public function addUser($params = array()) {
-        $result = Kfapi::request(self::KF_ADD_USER, $params, "POST");
+        $result = Kfapi::request(self::USER_ADD, $params, "POST");
         if($result === FALSE){
             return FALSE;
         }
         return $result;
     }
 
+    /**
+     * 获取用户信息
+     * @param $params
+     * @return array|bool
+     */
+    public function getUserInfo($params) {
+        $result = Kfapi::request(self::USER_INFO, $params, "POST");
+        if($result === FALSE){
+            return FALSE;
+        }
+        return $result;
+    }
+
+    public function repass($params) {
+        $result = Kfapi::request(self::USER_RESET_PASS, $params, "POST");
+        if($result === FALSE){
+            return FALSE;
+        }
+        return $result;
+    }
+    /**
+     * 冻结一个账户
+     * @param $params
+     * @return array|bool
+     */
     public function disableUser($params) {
-        $result = Kfapi::request(self::KF_MODIFY_STATUS, $params, "POST");
+        $result = Kfapi::request(self::USER_EDIT, $params, "POST");
         if($result === FALSE){
             return FALSE;
         }
@@ -80,7 +102,7 @@ class KfadminModel {
      * @return array|bool
      */
     public function getGroupList($params = array()) {
-        $result = Kfapi::request(self::KF_GROUP_LIST, $params, "GET");
+        $result = Kfapi::request(self::GROUP_LIST, $params, "GET");
         if($result === FALSE){
             return FALSE;
         }
@@ -93,7 +115,7 @@ class KfadminModel {
      * @return array|bool
      */
     public function getAuthById($params) {
-        $result = Kfapi::request(self::KF_ONE_AUTH, $params, "GET");
+        $result = Kfapi::request(self::AUTH_ONE, $params, "GET");
         if($result === FALSE){
             return FALSE;
         }
@@ -106,7 +128,7 @@ class KfadminModel {
      * @return array|bool
      */
     public function getAuthParent($params = array()) {
-        $result = Kfapi::request(self::KF_AUTH_PARENT, $params, "GET");
+        $result = Kfapi::request(self::AUTH_PARENT, $params, "GET");
         if($result === FALSE){
             return FALSE;
         }
@@ -119,7 +141,7 @@ class KfadminModel {
      * @return array|bool
      */
     public function addAuth($params) {
-        $result = Kfapi::request(self::KF_ADD_AUTH, $params, "POST");
+        $result = Kfapi::request(self::AUTH_ADD, $params, "POST");
         if($result === FALSE){
             return FALSE;
         }
@@ -132,7 +154,7 @@ class KfadminModel {
      * @return array|bool
      */
     public function updateAuth($params) {
-        $result = Kfapi::request(self::KF_UPDATE_AUTH, $params, "POST");
+        $result = Kfapi::request(self::AUTH_EDIT, $params, "POST");
         if($result === FALSE){
             return FALSE;
         }
