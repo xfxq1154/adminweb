@@ -48,6 +48,7 @@ class RedisMonitorController extends Base {
         $list_store_ready_notify = (int)$this->masterRedis->llen('store:task:ready:notify');
         $list_store_ready_logs = (int)$this->masterRedis->llen('store:task:ready:logs');
         $list_store_dealy_async = (int)$this->masterRedis->zCard('store:task:delay:async');
+        $list_store_ready_others = (int)$this->masterRedis->llen('store:task:ready:others');
 
         $keyspace_hits_percentage = round(($keyspace_hits/($keyspace_hits+$keyspace_misses)) * 100, 2); //命中率
 
@@ -72,6 +73,7 @@ class RedisMonitorController extends Base {
         $this->assign('list_store_ready_notify', $list_store_ready_notify);
         $this->assign('list_store_ready_logs', $list_store_ready_logs);
         $this->assign('list_store_dealy_async', $list_store_dealy_async);
+        $this->assign('list_store_ready_others', $list_store_ready_others);
 
         $this->layout('platform/redismonitor.phtml');
     }
@@ -88,7 +90,7 @@ class RedisMonitorController extends Base {
             $time = $this->masterRedis->zScore('store:task:delay:async', $jobid);
             $jobs[] = [
                 'time'    => date('Y-m-d H:i:s', $time),
-                'body'    => $this->masterRedis->get("store:job:$jobid"),
+                'body'    => $this->masterRedis->hGet("store:job:$jobid", 'params'),
                 'remain'  => $time - time()
             ];
         }
