@@ -6,8 +6,8 @@
     <br>
     <div class="tools-function clearfix">
         <div class="float-left">
-            <a class="button button-small bg-main icon-list" href="product"> 商品分析</a>
-            <a class="button button-small bg-back icon-list" href="productdetail"> 详细数据</a>
+            <a class="button button-small bg-main icon-list" href="dashboard"> 商品分析</a>
+            <a class="button button-small bg-back icon-list" href="detail"> 详细数据</a>
         </div>
     </div>
 </div>
@@ -60,7 +60,7 @@
                         <?php foreach ($top10 as $key => $item) : ?>
                         <tr>
                             <td><?=$key+1?></td>
-                            <td><a><?=$item['page_title']?></a></td>
+                            <td><a href="<?=$item['page_url']?>" target="_blank"><?=$item['page_title']?></a></td>
                             <td><?=number_format(($item['total_pv'] / $total_pv) * 100, 2) ?>%</td>
                         </tr>
                         <?php endforeach; ?>
@@ -90,7 +90,7 @@
                     <?php foreach ($sell_top10 as $key => $item) : ?>
                         <tr>
                             <td><?=$key+1?></td>
-                            <td><a><?=$item['title']?></a></td>
+                            <td><a href="<?=$item['page_url']?>" target="_blank"><?=$item['page_title']?></a></td>
                             <td><?=$item['trans_num']?></td>
                             <td><?=$item['trans_amount']?></td>
                         </tr>
