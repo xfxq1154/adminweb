@@ -6,8 +6,13 @@
  */
 class PageController extends Statbase {
 
+    /** @var  StatPageModel */
+    private $page_model;
+
     public function init() {
         parent::init();
+
+        $this->page_model = new StatPageModel();
     }
 
     public function pagedataAction(){
@@ -17,9 +22,9 @@ class PageController extends Statbase {
         $params['end_created'] = Tools::format_date($this->end_created);
         $params['page_size'] = 10;
 
-        $overview_data = $this->statcenter_model->pageOverview($params);
+        $overview_data = $this->page_model->overview($params);
 
-        $productTop10 = $this->statcenter_model->ranklist($params);
+        $productTop10 = $this->page_model->ranklist($params);
         if ($productTop10){
             $total_pv = 0;
             foreach ($productTop10['list'] as $product){
@@ -42,9 +47,9 @@ class PageController extends Statbase {
         $params['showcase_id'] = $this->showcase_id;
         $params['start_created'] = $this->start_created;
         $params['end_created'] = Tools::format_date($this->end_created);
-        $total_list = $this->statcenter_model->views($params);
+        $total_list = $this->page_model->views($params);
         $params['type'] = 'product';
-        $foods_list = $this->statcenter_model->views($params);
+        $foods_list = $this->page_model->views($params);
         foreach ($foods_list as $item){
             $key = $item['odate'];
             $format_foods_list[$key]['goods_pv'] = $item['total_pv'];
@@ -96,7 +101,7 @@ class PageController extends Statbase {
         $params['page_no'] = $page_no;
         $params['page_size'] = 20;
 
-        $result = $this->statcenter_model->ranklist($params);
+        $result = $this->page_model->ranklist($params);
 
         $this->assign("list", $result['list']);
         $this->assign("search", $this->input_get());

@@ -6,13 +6,13 @@
  */
 class ChannelController extends Statbase {
 
-    /** @var StoreChannelModel */
+    /** @var StatChannelModel */
     private $channel_model;
 
     public function init() {
         parent::init();
 
-        $this->channel_model = new StoreChannelModel();
+        $this->channel_model = new StatChannelModel();
     }
 
     public function allAction() {
@@ -25,7 +25,7 @@ class ChannelController extends Statbase {
         $params['start_created'] = $this->start_created;
         $params['end_created'] = Tools::format_date($this->end_created);
 
-        $data = $this->statcenter_model->channelList($params);
+        $data = $this->channel_model->channelList($params);
 
         $this->assign('overview', $data['overview']); //付款金额
         $this->assign('spmlist', $data['format_list']); //访客数
@@ -46,7 +46,7 @@ class ChannelController extends Statbase {
         $params['start_created'] = $this->start_created;
         $params['end_created'] = Tools::format_date($this->end_created);
 
-        $data = $this->statcenter_model->channelListGroupByDate($params);
+        $data = $this->channel_model->channelListGroupByDate($params);
 
         if ($data['format_list']){
             foreach ($data['format_list'] as $val){

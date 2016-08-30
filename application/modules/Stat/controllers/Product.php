@@ -6,8 +6,16 @@
  */
 class ProductController extends Statbase {
 
+    /** @var  StatProductModel */
+    private $product_model;
+    /** @var  StatPageModel */
+    private $page_model;
+
     public function init() {
         parent::init();
+
+        $this->product_model = new StatProductModel();
+        $this->page_model = new StatPageModel();
     }
 
     public function dashboardAction(){
@@ -17,7 +25,7 @@ class ProductController extends Statbase {
         $params['start_created'] = $this->start_created;
         $params['end_created'] = Tools::format_date($this->end_created);
         $params['page_size'] = 10;
-        $sell_top10 = $this->statcenter_model->productList($params);
+        $sell_top10 = $this->product_model->productList($params);
         if ($sell_top10){
             foreach ($sell_top10['list'] as $item){
                 $ordertop[] = $item['trans_num'];
@@ -31,7 +39,7 @@ class ProductController extends Statbase {
         $params['start_created'] = $this->start_created;
         $params['end_created'] = Tools::format_date($this->end_created);
         $params['page_size'] = 10;
-        $productTop10 = $this->statcenter_model->ranklist($params);
+        $productTop10 = $this->page_model->ranklist($params);
         if ($productTop10){
             $total_pv = 0;
             foreach ($productTop10['list'] as $product){
@@ -64,7 +72,7 @@ class ProductController extends Statbase {
         $params['page_no'] = $page_no;
         $params['page_size'] = 20;
 
-        $result = $this->statcenter_model->productList($params);
+        $result = $this->product_model->productList($params);
 
         $this->assign("list", $result['list']);
         $this->assign("search", $this->input_get());

@@ -6,8 +6,16 @@
  */
 class OrderController extends Statbase {
 
+    /** @var  StatOrderModel */
+    private $order_model;
+    /** @var  StatPageModel */
+    private $page_model;
+
     public function init() {
         parent::init();
+
+        $this->order_model = new StatOrderModel();
+        $this->page_model = new StatPageModel();
     }
 
     function dashboardAction() {
@@ -15,10 +23,10 @@ class OrderController extends Statbase {
         $params['start_created'] = $this->start_created;
         $params['end_created'] = Tools::format_date($this->end_created);
 
-        $res = $this->statcenter_model->pageOverview($params);
+        $res = $this->page_model->overview($params);
         $total_uv = ($res['total_uv']) ? : 0;
 
-        $result = $this->statcenter_model->orderOverview($params);
+        $result = $this->order_model->overview($params);
         foreach ($result as $val){
             $key = '"'.date('m-d',strtotime($val['odate'])).'"';
             $chart_data[$key] = $val;

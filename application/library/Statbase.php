@@ -8,10 +8,6 @@ class Statbase extends Base {
         Trait_Layout;
 
     /**
-     * @var StoreStatcenterModel
-     */
-    public $statcenter_model;
-    /**
      * @var StoreShowcaseModel
      */
     public $showcase_model;
@@ -25,7 +21,6 @@ class Statbase extends Base {
         parent::initAdmin();
         $this->checkRole();
 
-        $this->statcenter_model = new StoreStatcenterModel();
         $this->showcase_model = new StoreShowcaseModel();
 
         $default_start = date('Y-m-d', strtotime('-7 day'));
@@ -34,6 +29,7 @@ class Statbase extends Base {
         $this->start_created = $this->input_get_param('start_time', $default_start);
         $this->end_created = $this->input_get_param('end_time', $default_end);
         $this->showcase_id = $this->input_get_param('showcase_id');
+        $this->setShowcaseList();
     }
 
     public function setShowcaseList() {
