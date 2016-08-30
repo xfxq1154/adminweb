@@ -28,7 +28,7 @@ class JobpoolController extends Storebase {
         $this->assign("list", $this->format_data_batch($datas['list']));
         $this->assign("topic", $topic);
 
-        $this->renderPagger($page_no, $datas['total_nums'], '/store/jobpool/showlist?page_no={p}', $page_size);
+        $this->renderPagger($page_no, $datas['total_nums'], '/store/jobpool/showlist?page_no={p}&topic='.$topic, $page_size);
         $this->layout("pool/showlist.phtml");
     }
 
