@@ -62,7 +62,7 @@
             </tr>
             <?php foreach ($view_list as $key => $item) : ?>
                 <tr>
-                    <td><a><?=date('Y-m-d', strtotime($item['odate']))?></a></td>
+                    <td><?=date('Y-m-d', strtotime($item['odate']))?></td>
                     <td><?=$item['total_uv']?> / <?=$item['total_pv']?></td>
                     <td><?=$item['total_uv'] - $item['share_uv']?> / <?=$item['total_pv'] - $item['share_pv']?></td>
                     <td><?=$item['share_uv']?> / <?=$item['share_pv']?></td>

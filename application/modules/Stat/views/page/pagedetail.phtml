@@ -53,7 +53,7 @@
                 </tr>
                 <?php foreach ($list as $key => $item) : ?>
                     <tr>
-                        <td><a><?=$item['page_title']?></a></td>
+                        <td><a href="<?=$item['page_url']?>" target="_blank"><?=$item['page_title']?></a></td>
                         <td><?=$item['total_uv']?> / <?=$item['total_pv']?></td>
                         <td><?=$item['share_uv']?> / <?=$item['share_pv']?></td>
                         <td>暂无</td>

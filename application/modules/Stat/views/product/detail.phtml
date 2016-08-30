@@ -52,9 +52,9 @@
                 </tr>
                 <?php foreach ($list as $key => $item) : ?>
                     <tr>
-                        <td><a><?=$item['title']?></a></td>
-                        <td><a><?=$item['trans_num']?></a></td>
-                        <td><a><?=$item['trans_amount']?></a></td>
+                        <td><a href="<?=$item['page_url']?>" target="_blank"><?=$item['page_title']?></a></td>
+                        <td><?=$item['trans_num']?></td>
+                        <td><?=$item['trans_amount']?></td>
                         <td><?=$item['total_uv']?> / <?=$item['total_pv']?></td>
                         <td><?=$item['share_uv']?> / <?=$item['share_pv']?></td>
                     </tr>
