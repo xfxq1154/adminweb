@@ -30,6 +30,7 @@
                         <div class="input-note">6-16位字符为字符</div>
                     </div>
                 </div>
+
                 <!--密码-->
                 <div class="form-group">
                     <div class="label">
@@ -38,7 +39,18 @@
                     <div class="field">
                         <input type="password" class="input" style="width:220px;" id="password" name="password" size="60"
                                datatype="*" placeholder="新密码">
-                        <input type="hidden"  class="input" id="user_id" name="user_id" value="<?=$userinfo['user_id']?>">
+                        <input type="hidden"  class="input" id="user_id" name="user_id" value="">
+                    </div>
+                </div>
+                <!--昵称-->
+                <div class="form-group">
+                    <div class="label">
+                        <label>客服昵称</label>
+                    </div>
+                    <div class="field">
+                        <input type="text" class="input" style="width:220px;" id="username" size="60"
+                               datatype="*" placeholder="" value="<?=$userinfo['nickname']?>">
+                        <div class="input-note">小于16位</div>
                     </div>
                 </div>
                 <div class="panel-foot">
