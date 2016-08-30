@@ -21,7 +21,7 @@ class ProductController extends Statbase {
     public function dashboardAction(){
 
         $params['showcase_id'] = $this->showcase_id;
-        $params['orderby'] = 'total_pay';
+        $params['orderby'] = 'trans_num';
         $params['start_created'] = $this->start_created;
         $params['end_created'] = Tools::format_date($this->end_created);
         $params['page_size'] = 10;
