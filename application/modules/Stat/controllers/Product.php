@@ -63,10 +63,14 @@ class ProductController extends Statbase {
     }
 
     public function detailAction(){
+        $product_id  = $this->input_get_param('product_id');
+        $title  = $this->input_get_param('title');
         $page_no  = $this->input_get_param('page_no', 1);
 
         $params['showcase_id'] = $this->showcase_id;
-        $params['orderby'] = 'total_pv';
+        $params['product_id'] = $product_id;
+        $params['title'] = $title;
+        $params['orderby'] = 'trans_amount';
         $params['start_created'] = $this->start_created;
         $params['end_created'] = Tools::format_date($this->end_created);
         $params['page_no'] = $page_no;

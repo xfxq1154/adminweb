@@ -26,6 +26,9 @@
                         </select>
                     </div>&nbsp;
                     <div class="field">
+                        <input type="text" class="input" name="title" size="20" value="<?=$search['title']?>" placeholder="请输入商品标题">
+                    </div>&nbsp;
+                    <div class="field">
                         开始时间：<input type="text" id="d4321" class="input datebtn" style="width:220px;" id="datetime" name="start_time" value="<?=$start_time?>" onfocus="WdatePicker({startDate:'<?=date('Y-m-d',strtotime('-7 day'))?>',maxDate:'#F{$dp.$D(\'d4322\',{d:+0})}'})" style="cursor:pointer;" size="60" datatype="*" placeholder="" autocomplete="off">
                     </div>&nbsp;
                     <div class="field">
