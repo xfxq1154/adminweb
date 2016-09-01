@@ -92,9 +92,11 @@ class PageController extends Statbase {
     }
 
     public function pagedetailAction(){
+        $title  = $this->input_get_param('title');
         $page_no  = $this->input_get_param('page_no', 1);
 
         $params['showcase_id'] = $this->showcase_id;
+        $params['title'] = $title;
         $params['orderby'] = 'total_pv';
         $params['start_created'] = $this->start_created;
         $params['end_created'] = Tools::format_date($this->end_created);
