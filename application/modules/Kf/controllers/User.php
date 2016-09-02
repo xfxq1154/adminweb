@@ -86,17 +86,15 @@ class UserController extends Kfbase {
      */
     public function editAction() {
         $user_id  = $this->getRequest()->getPost('user_id');
-        $username = $this->getRequest()->getPost('username');
         $password = $this->getRequest()->getPost('password');
         $nickname = $this->getRequest()->getPost('nickname');
 
-        if(!$username ) {
+        if(!$user_id ) {
             $this->_outPut('缺少必要参数');
         }
 
         $params = [
             'user_id'  => $user_id,
-            'username' => $username,
             'password' => $password,
             'nickname' => $nickname
         ];

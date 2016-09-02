@@ -37,9 +37,7 @@
                         <label>新密码</label>
                     </div>
                     <div class="field">
-                        <input type="password" class="input" style="width:220px;" id="password" name="password" size="60"
-                               datatype="*" placeholder="新密码">
-                        <input type="hidden"  class="input" id="user_id" name="user_id" value="">
+                        <input type="password" class="input" style="width:220px;" id="password" name="password" size="60" placeholder="新密码">
                     </div>
                 </div>
                 <!--昵称-->
@@ -48,11 +46,11 @@
                         <label>客服昵称</label>
                     </div>
                     <div class="field">
-                        <input type="text" class="input" style="width:220px;" id="username" size="60"
-                               datatype="*" placeholder="" value="<?=$userinfo['nickname']?>">
+                        <input type="text" class="input" style="width:220px;" id="nickname" name="nickname" size="16" placeholder="默认'客服'" value="<?=$userinfo['nickname']?>">
                         <div class="input-note">小于16位</div>
                     </div>
                 </div>
+                <input type="hidden"  class="input" id="user_id" name="user_id" value="<?=$userinfo['user_id']?>">
                 <div class="panel-foot">
                     <div class="form-button">
                         <div id="tips"></div>
@@ -60,7 +58,7 @@
                         <button class="button bg" type="reset">重置</button>
                     </div>
                 </div>
-
+                    
             </div>
         </div>
     </form>
