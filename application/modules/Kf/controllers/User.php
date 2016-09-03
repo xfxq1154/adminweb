@@ -46,6 +46,7 @@ class UserController extends Kfbase {
     public function addUserAction() {
         $username = $this->getRequest()->getpost('username'); //账号
         $password = $this->getRequest()->getpost('password'); //密码
+        $nickname = $this->getRequest()->getpost('nickname'); //密码
 
         if (!$username || !$password) {
             $this->_outPut('缺少必要参数');
@@ -54,6 +55,7 @@ class UserController extends Kfbase {
         $params = [
             'username' => $username,
             'password' => $password,
+            'nickname' => $nickname,
         ];
 
         $this->kfadmin_model->addUser($params);
@@ -84,20 +86,20 @@ class UserController extends Kfbase {
      */
     public function editAction() {
         $user_id  = $this->getRequest()->getPost('user_id');
-        $username = $this->getRequest()->getPost('username');
         $password = $this->getRequest()->getPost('password');
+        $nickname = $this->getRequest()->getPost('nickname');
 
-        if(!$username ) {
+        if(!$user_id ) {
             $this->_outPut('缺少必要参数');
         }
 
         $params = [
             'user_id'  => $user_id,
-            'username' => $username,
-            'password' => $password
+            'password' => $password,
+            'nickname' => $nickname
         ];
 
-        $this->kfadmin_model->repass($params);
+        $this->kfadmin_model->edit($params);
         $this->_outPut(Kfapi::getErrorMessage(), Kfapi::getErrorCode());
     }
 
@@ -115,7 +117,7 @@ class UserController extends Kfbase {
             'user_id' => $data['user_id'],
             'status'  => self::DISABLE_STATUS,
         ];
-        $this->kfadmin_model->disableUser($params);
+        $this->kfadmin_model->edit($params);
         $this->_outPut(Kfapi::getErrorMessage(), Kfapi::getErrorCode());
     }
 }
