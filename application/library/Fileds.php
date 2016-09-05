@@ -14,6 +14,13 @@ class Fileds{
         '6' => 'sku_type'
     ];
 
+    public static $shzf_inv = [
+        '1' => 'order_id',
+        '2' => 'buyer_phone',
+        '3' => 'title',
+        '4' => 'buyer_tax_id',
+    ];
+
     //电子发票sku
     public static $sku = [
         '1' => 'sku_id',

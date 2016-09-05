@@ -1,0 +1,202 @@
+<script language="JavaScript" type="text/javascript" src="<?=ASSET_URL?>/static/js/calendar/WdatePicker.js"></script>
+<div class="dux-tools clearfix">
+    <div class="bread-head">生活作风<span class="small">电子发票</span></div>
+    <div class="button-group float-right">
+        <a href="/invoice/inv/add" class="button button-small bg-blue icon-plus dropdown-toggle"> 添加订单 </a>
+    </div>
+</div>
+<!--upload order file-->
+<div class="tools-function clearfix" style="margin-top: 5px;">
+    <div class="float-left" style="margin-left: 6px">
+        <div class="form-inline">
+            <div class="form-group">
+                <input type="text" class="input show_uo_imgs" id="files" name="file" placeholder="订单号" readonly=""/> &nbsp;
+                <a class="button bg-blue button-small " data="files" id="image_upload3" preview="image_preview3" href="javascript:;"> <span class="icon-upload">订单上传</span></a>
+            </div>
+            <div class="form-group">
+                <input type="text" class="input show_uo_imgs" id="files" name="file" placeholder="sku编码" readonly=""/> &nbsp;
+                <a class="button bg-blue button-small " data="files" id="image_upload4" preview="image_preview4" href="javascript:;"><span class="icon-upload">上传</span></a>
+            </div>
+            <div class="form-button">
+                <button class="button bg-dot" type="button" id="selectAll">选中全部</button>
+                <button class="button bg-sub" type="button" id="unselectAll">取消全选</button>
+                <button class="button bg-main" type="button" id="batch" value=1>批量开票</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--secrech-->
+<div class="tools-function clearfix">
+    <div class="float-left">
+        <form method="GET" action="/invoice/inv/list" >
+            <div class="form-inline">
+                <div class="form-group">
+                    <div class="field" style="margin-left: 5px;">
+                        <input type="text" class="input" name="mobile" size="20" value="<?=$invoice_info['mobile']?>" placeholder="手机号">
+                        <input type="text" class="input" name="order_id" size="20" value="<?=$invoice_info['order_id']?>" placeholder="订单号">
+                    </div>&nbsp;
+                </div>
+                <div class="form-button">
+                    <button class="button bg-mix" type="submit">搜索</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!--set invoice msg-->
+<div class="tools-function clearfix">
+    <div class="float-left">
+        <div class="form-inline">
+            <div class="form-group">
+                <div class="field" style="margin-left: 5px;">
+                    <input type="text" class="input" name="address" style="width: 300px;" value="<?=$invoice_info['seller_address']?>" placeholder="销售方地址电话">
+                    <input type="text" class="input" name="kpr" style="width: 80px;" value="<?=$invoice_info['drawer']?>" placeholder="开票人" >
+                    <input type="text" class="input" name="xsf_mc" style="width: 200px;" value="<?=$invoice_info['seller_name']?>" placeholder="销售方名称">
+                    <input type="text" class="input" name="payee" style="width: 80px;" value="<?=$invoice_info['payee']?>" placeholder="收款人" >
+                    <input type="text" class="input" name="review" style="width: 80px;" value="<?=$invoice_info['review']?>" placeholder="复核" >
+                </div>
+            </div>
+            <div class="form-button">
+                <button class="button bg-red" type="submit" id="set">设置</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div oncancel="" class="orderdiv" style="display: none">
+    <table class="table">
+        <caption>上传失败的订单号</caption>
+        <tbody class="orderval">
+        </tbody>
+    </table>
+</div>
+<!-- list -->
+<div class="admin-main">
+    <div class="panel dux-box">
+        <div class="table-responsive">
+            <table id="table" class="table table-hover ">
+                <thead>
+                    <tr>
+                        <th width="*">选项</th>
+                        <th width="*">编号</th>
+                        <th width="*">订单号</th>
+                        <th width="*">发票台头</th>
+                        <th width="*">手机号</th>
+                        <th style="*">类型</th>
+                        <th style="*">状态</th>
+                        <th width="*">操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if ($data) : ?>
+                        <?php foreach($data['list'] as $val) : ?>
+                            <tr>
+                                <td>
+                                    <?php if ($val['state'] == 1 || $val['state'] == 3):?>
+                                        <input type="checkbox" class="checkAll" value="<?=$val['order_id']?>">
+                                    <?php else:?>
+                                        <input type="checkbox" class="checkAll" value="" disabled readonly >
+                                    <?php endif;?>
+                                </td>
+                                <td><span class="primary_id"><?=$val['id']?></span></td>
+                                <td><?=$val['order_id']?></td>
+                                <td><?=$val['title']?></td>
+                                <td><?=$val['buyer_phone']?></td>
+                                <td class="type"><?=$val['type'] == 1 ? '<span class="tag bg-red">红字发票</span>' : '<span class="tag bg-blue">蓝字发票</span>';?></td>
+                                <td>
+                                    <input type="hidden" value="<?=$val['state']?>" class="status">
+                                    <?php echo $state_name[$val['state']]?>
+                                </td>
+                                <td>
+                                    <?php if ($val['state'] == 4 && $val['type'] == 0):?>
+                                        <button class="button bg-green button-small icon-eye-open" href="<?php echo $val['invoice_url'];?>" target="_blank" title="查看发票"></button> |
+                                        <button class="button bg-yellow button-small icon-envelope sendmessage" href="javascript:;" style="margin-left: 5px;" title="重新发送短信"></button> |
+                                        <button class="button bg-red button-small icon-pencil js-del" href="javascript:;" url="/invoice/inv/redInvoice" data='{"id":<?=$val['id']; ?>}' title="开具红票"></button>
+                                    <?php elseif ($val['state'] == 3): ?>
+                                        <button class="button bg-blue button-small  icon-edit js-del" href="javascript:;" url="/soap/redInvoice" data='{"id":<?=$val['id']; ?>}' title="修改信息"></button> |
+                                        <button class="button bg-red button-small icon-trash-o js-del" href="javascript:;" url="/soap/redInvoice" data='{"id":<?=$val['id']; ?>}' title="删除"></button>
+                                    <?php elseif ($val['state'] == 1):?>
+                                        <button class="button bg-blue button-small  icon-edit js-del" href="javascript:;" url="/soap/redInvoice" data='{"id":<?=$val['id']; ?>}' title="修改信息"></button> |
+                                        <button class="button bg-blue button-small icon-pencil js-del" href="javascript:;" url="/soap/redInvoice" data='{"id":<?=$val['id']; ?>}' title="开具发票"></button>
+                                    <?php elseif ($val['state'] == 4 && $val['type'] == 1):?>
+                                        <button class="button bg-green button-small icon-eye-open" href="<?php echo $val['invoice_url'];?>" target="_blank" title="查看发票"></button>
+                                    <?php endif;?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <?php if($pagger):?>
+        <div class="panel dux-box panel-foot clearfix" style="margin-top:10px;border-radius: 4px;">
+            <?=$pagger?>
+        </div>
+    <?php endif;?>
+</div>
+<script>
+    Do.ready('base', function () {
+        $('#table').duxForm();
+        $('#image_upload3').duxFileUpload({
+            uploadUrl: '/Invoice/Upload/order',
+            type: 'xls',
+            complete: function (data) {
+                if (data) {
+                    alert('上传成功,个别失败');
+                    $('.orderdiv').css('display','block');
+                    $('.orderval').append(data);
+                } else {
+                    alert('上传成功');
+                }
+            }
+        });
+    });
+
+    //全选
+    $('#selectAll').on('click',function(){
+        $(".type > span").each(function(i){
+            //只能选中未开票的
+            var iHidd = $('#table > tbody').find('tr').eq(i).find('.status').val();
+            if ($(this).hasClass('bg-blue') && (iHidd == 1 || iHidd == 3)) {
+                console.log(iHidd + "-" + i);
+                $('.checkAll').eq(i).prop('checked', true);
+            }
+        });
+    });
+
+    //取消全选
+    $('#unselectAll').bind('click', function(){
+        $('.checkAll').prop('checked', false);
+    });
+
+    //批量开票
+    $('#batch').on('click', function(){
+        var orders = []
+        $(".checkAll").each(function(i){
+            var _this = $(this);
+            if (_this.prop("checked")) {
+                var oTmp = {};
+                oTmp.order = $('.checkAll').val();
+                oTmp.id = $('.primary_id').eq(i).text();
+
+                orders.push(oTmp);
+            }
+        });
+        var address = $(':input[name="address"]').val();
+        var marchatName = $(':input[name="xsf_mc"]').val();
+        var drawer = $(':input[name="kpr"]').val();
+        var payee = $(':input[name="payee"]').val();
+        var review = $(':input[name="review"]').val();
+
+        $.ajax({
+            type: 'POST',
+            dataType: 'JSON',
+            url: '/invoice/inv/issued',
+            data: {orders:orders,address:address,marchatName:marchatName,drawer:drawer,payee:payee,review:review}
+        }).done(function (data){
+            console.log(data);
+//            window.location.reload();
+        });
+    });
+
+</script>
