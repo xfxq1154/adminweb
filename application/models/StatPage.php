@@ -10,6 +10,11 @@ class StatPageModel {
     const PAGEDATA_VIEWS = 'api/pagedata/getlist_by_date';
     const PAGEDATA_RANKLIST = 'api/pagedata/getlist_by_pageid';
 
+    private $uris = [
+        'product' => 'product/detail?alias=',
+        'feature' => 'feature/index/alias/',
+        'magazine' => 'magazine/detail?alias=',
+    ];
 
     public function overview($params) {
         return Sdata::request(self::PAGEDATA_OVERVIEW, $params);
@@ -35,7 +40,7 @@ class StatPageModel {
             'showcase_id'  =>   $data['showcase_id'],
             'page_id'      =>   $data['page_id'],
             'page_title'   =>   $data['page_title'],
-            'page_url'     =>   STORE_H5_HOST . 'product/detail?alias='. $data['page_id'],
+            'page_url'     =>   STORE_H5_HOST . $this->uris[$data['page_type']].$data['page_id'],
             'total_pv'     =>   intval($data['total_pv']),
             'total_uv'     =>   intval($data['total_uv']),
             'share_pv'     =>   intval($data['share_pv']),

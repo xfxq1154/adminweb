@@ -175,7 +175,7 @@
                         <?php foreach ($top10 as $key => $item) : ?>
                             <tr>
                                 <td align="center"><?=$key+1?></td>
-                                <td><a><?=$item['page_title']?></a></td>
+                                <td><a href="<?=$item['page_url']?>" target="_blank"><?=$item['page_title']?></a></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>

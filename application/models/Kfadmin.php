@@ -76,19 +76,12 @@ class KfadminModel {
         return $result;
     }
 
-    public function repass($params) {
-        $result = Kfapi::request(self::USER_RESET_PASS, $params, "POST");
-        if($result === FALSE){
-            return FALSE;
-        }
-        return $result;
-    }
     /**
-     * 冻结一个账户
+     * 修改账户信息
      * @param $params
      * @return array|bool
      */
-    public function disableUser($params) {
+    public function edit($params) {
         $result = Kfapi::request(self::USER_EDIT, $params, "POST");
         if($result === FALSE){
             return FALSE;
