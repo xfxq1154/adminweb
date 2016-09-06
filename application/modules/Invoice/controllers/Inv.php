@@ -6,35 +6,56 @@
 class InvController extends Base
 {
     use Trait_Layout;
+    use Trait_Pagger;
 
     /** @var  ShzfInvModel */
     private $shzfInvModel;
+    /** @var  ShzfSkuModel */
     private $shzfSkuModel;
 
     public $state_name = [
         1 => '<span class="tag bg-green">未开发票</span>',
-        2 => '<span class="tag bg-yellow">开票成功</span>',
         3 => '<span class="tag bg-blue">开票失败</span>',
-        4 => '<span class="tag bg-bg-mix">已发短信</span>',
+        4 => '<span class="tag bg-bg-mix">开票成功</span>',
         5 => '<span class="tag bg-bg-blue">开票中</span>',
     ];
 
     public function init() {
         $this->initAdmin();
         $this->shzfInvModel = new ShzfInvModel();
+        $this->shzfSkuModel = new ShzfSkuModel();
     }
 
+    /**
+     * inv list
+     */
     public function listAction()
     {
         $page_no = $this->input_get_param('page_no', 1,'abs');
-        $page_size = $this->input_get_param('page_size', 20,'abs');
+        $page_size = $this->input_get_param('page_size', 20, 'abs');
         $order_id = $this->input_get_param('order_id');
         $mobile = $this->input_get_param('mobile');
 
         $result = $this->shzfInvModel->getList($page_no, $page_size, $mobile, $order_id);
+        $this->renderPagger($page_no, $result['total_nums'], '/invoice/inv/list/page_no/{p}', 20);
         $this->assign('data', $result);
         $this->assign('state_name', $this->state_name);
         $this->layout("inv/list.phtml");
+    }
+
+    /**
+     * sku list
+     */
+    public function skuListAction()
+    {
+        $this->checkRole();
+        $page_no = $this->input_get_param('page_no', 1);
+        $sku_id = $this->input_get_param('sku_id');
+
+        $result = $this->shzfSkuModel->getList($page_no, 20, 1,$sku_id);
+        $this->renderPagger($page_no, $result['total_nums'], '/invoice/skulist/page_no/{p}', 20);
+        $this->assign('data', $result);
+        $this->layout('inv/skulist.phtml');
     }
 
     /**
@@ -43,14 +64,14 @@ class InvController extends Base
     public function issuedAction()
     {
         $orders = $this->getRequest()->getPost('orders');
+        $kj_id = $this->getRequest()->getPost('id');
         $marchatName = $this->input_post_param('marchatName');
         $drawer = $this->input_post_param('drawer');
         $payee = $this->input_post_param('payee');
         $review = $this->input_post_param('review');
         $address = $this->input_post_param('address');
-        $id = json_decode($this->getRequest()->get('data'))['id'];
 
-        if (is_array($orders)) {
+        if (!empty($orders) && is_array($orders)) {
             $this->batchIssueInv($orders, $marchatName, $drawer, $payee, $review, $address);
         }
         //单个发票开具
@@ -62,8 +83,8 @@ class InvController extends Base
             'review' => $review,
             'payee' => $payee
         ];
-        $this->shzfInvModel->update($id, $params);
-        Tools::output(array('info' => '开票申请已经提交,请稍后查看', 'status' => 1));
+        $this->shzfInvModel->update($kj_id, $params);
+        Tools::output(array('info' => '开票申请已经提交,请稍后查看'));
     }
 
     /**
@@ -89,7 +110,7 @@ class InvController extends Base
             ];
             $this->shzfInvModel->update($value['id'],$params);
         }
-        echo json_encode(array('info' => '批量开票申请已经提交,请稍后查看', 'status' => 1));exit;
+        echo json_encode(array('info' => '批量开票申请已经提交,请稍后查看'));exit;
     }
 
     /**
@@ -116,10 +137,13 @@ class InvController extends Base
             'jshj'             => $info['jshj'],
             'total_fee'        => $info['total_fee'],
             'total_tax'        => $info['total_tax'],
-            'blue_invoice_id'  => $info['id'],
+            'blue_inv_id'      => $info['id'],
             'one_tax'          => $info['one_tax'],
             'two_tax'          => $info['two_tax'],
             'three_tax'        => $info['three_tax'],
+            'one_fee'          => $info['one_fee'],
+            'two_fee'          => $info['two_fee'],
+            'three_fee'        => $info['three_fee'],
             'buyer_phone'      => $info['buyer_phone'],
             'invoice_number'   => $info['invoice_number'],
             'invoice_code'     => $info['invoice_code'],

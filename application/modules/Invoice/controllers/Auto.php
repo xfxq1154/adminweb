@@ -32,7 +32,7 @@ class AutoController extends Base
      * @desc 获取发票pdf文件，并且发送短信给用户
      * @frequency 每5分钟运行一次
      */
-    public function getPdfSendMessageAction(){
+    public function SendMessageAction(){
         $datas = $this->shzfInvModel->getAll();
         //过滤空数组
         $invoice_data = array_filter($datas);
@@ -208,18 +208,24 @@ class AutoController extends Base
     private function regroupSku($order){
         $hjse = '';
         $payment_fee = '';
-        $one_tax = 0.00;    //税率为0.00的金额
-        $two_tax = 0.00;    //税率为0.06的金额
-        $three_tax = 0.00;    //税率为0.17的金额
+        $one_tax = 0.00;    //税率为0.00的税额
+        $two_tax = 0.00;    //税率为0.06的税额
+        $three_tax = 0.00;    //税率为0.17的税额
+        $one_fee = 0.00;    //税率为0.17的金额
+        $two_fee = 0.00;    //税率为0.06的金额
+        $three_fee = 0.00;    //税率为0.17的金额
         foreach ($order['order_detail'] as &$d_val){
             $hjse += $d_val['se'];
             $payment_fee += $d_val['pay_price'];
             if ($d_val['sl'] == '0.00') {
-                $one_tax += $d_val['pay_price'];
+                $one_fee += $d_val['pay_price'];
+                $one_tax += $d_val['se'];
             } elseif ($d_val['sl'] == '0.06') {
-                $two_tax += $d_val['pay_price'];
+                $two_tax += $d_val['se'];
+                $two_fee += $d_val['pay_price'];
             } else {
-                $three_tax += $d_val['pay_price'];
+                $three_tax += $d_val['se'];
+                $three_fee += $d_val['pay_price'];
             }
         }
         $order['hjse'] = $hjse;
@@ -228,6 +234,9 @@ class AutoController extends Base
         $order['one_tax'] = $one_tax;
         $order['two_tax'] = $two_tax;
         $order['three_tax'] = $three_tax;
+        $order['one_fee'] = $one_fee;
+        $order['two_fee'] = $two_fee;
+        $order['three_fee'] = $three_fee;
 
         return $order;
     }
