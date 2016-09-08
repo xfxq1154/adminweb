@@ -2,17 +2,17 @@
 <div class="dux-tools">
     <div class="bread-head">商品兑换码<span class="small">批次列表</span></div><br>
 </div>
-
+<!--生成兑换码和搜索信息-->
 <div class="table-tools clearfix ">
     <div class="float-left">
         <form method="GET" action="/cdkey/index" >
             <div class="form-inline">
                 <div class="form-group">
                     <div class="field">
-                        <input type="text" class="input" id="keyword" name="sku_outer_id"  value="<?=$_GET['sku_outer_id']?>" placeholder="得到商品商城SKU自编码">
+                        <input type="text" class="input" id="sku_outer_id" name="sku_outer_id"  value="<?=$_GET['sku_outer_id']?>" placeholder="得到商品商城SKU自编码">
                     </div>&nbsp;
                     <div class="field">
-                        <input type="text" class="input" id="keyword" name="batch_number"  value="<?=$_GET['batch_number']?>" placeholder="兑换码商城上架自编码">
+                        <input type="text" class="input" id="batch_number" name="batch_number"  value="<?=$_GET['batch_number']?>" placeholder="兑换码商城上架自编码">
                     </div>&nbsp;
                 </div>
                 <div class="form-button">
@@ -23,6 +23,29 @@
     </div>
     <div class="button-group float-right">
         <a href="/cdkey/add" class="button button-small bg-blue icon-plus dropdown-toggle">生成兑换码</a>
+    </div>
+</div>
+<!--作废兑换码-->
+<div class="table-tools clearfix ">
+    <div class="float-left">
+        <form method="GET" action="/cdkey/nullify" id="form">
+            <div class="form-inline">
+                <div class="form-group">
+                    <div class="field">
+                        <input type="text" class="input" id="cdkey" name="cdkey"  value="" placeholder="作废兑换码">
+                    </div>&nbsp;
+                    <div class="field">
+                        <input type="text" class="input" id="serial_num" name="serial_num"  value="" placeholder="序列号作废兑换码">
+                    </div>&nbsp;
+                    <div class="field">
+                        <input type="text" class="input" id="cid" name="cid"  value="" placeholder="批次号作废兑换码">
+                    </div>&nbsp;
+                </div>
+                <div class="form-button">
+                    <button class="button tag bg-red" type="submit">确认作废</button>
+                </div>
+            </div>
+        </form>
     </div>
 </div>
 <div class="admin-main">
@@ -76,7 +99,7 @@
     <script>
         Do.ready('base', function () {
             $('#table').duxTable();
+            $('#form').duxFormPage();
         });
-
     </script>
 </div>

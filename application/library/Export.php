@@ -31,7 +31,7 @@ class Export {
             $field = isset($translate[$field]) ? $translate[$field] : $field;
         }
         $row_out = $this->_setCharset($head_row);
-        echo $this->formatCSV($head_row);
+        echo $this->formatCSV($row_out);
     }
     
     /**
@@ -39,10 +39,12 @@ class Export {
      * @param array $data
      */
     public function outPut($data) {
+
         foreach ($data as $row_in) {
             $row_out = $this->_setCharset($row_in);
             echo $this->formatCSV($row_out);
         }
+
     }
     
     /**
@@ -57,13 +59,15 @@ class Export {
         return $row;
     }
 
-    /** 格式化为csv格式数据
-     * @param array $data 要转换为csv格式的数组
+    /**
+     * 格式化为csv格式数据
+     * @param array $data
+     * @return string
      */
     private function formatCSV($data=array()){
         // 对数组每个元素进行转义
         $data = array_map(array($this,'escape'), $data);
-        return implode($data)."\n";
+        return implode("\t",$data)."\r\n";
     }
 
 

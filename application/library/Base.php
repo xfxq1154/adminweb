@@ -192,4 +192,16 @@ abstract class Base extends Yaf_Controller_Abstract {
         print_r($data);
     }
 
+    /**
+     * 返回信息
+     */
+    public function _outPut($info = "", $status = 0, $url = "") {
+        $reback_msg = [
+            'info'   => $info,
+            'status' => $status,
+            'url'    => $url
+        ];
+        Tools::output($reback_msg);
+    }
+
 }
