@@ -6,6 +6,8 @@
  */
 class TaskController extends Storebase{
 
+    use Trait_Redis;
+
     public function init(){
         parent::init();
     }
@@ -42,7 +44,29 @@ class TaskController extends Storebase{
         
         $this->renderPagger($page_no, $count, "/store/task/getlist?page_no={p}", $page_size);
         $this->assign('list', $data);
-        $this->layout('task/showlist.phtml');
+        $this->layout('task/readylist.phtml');
+    }
+
+    public function delayListAction(){
+        $topic = $this->input_get_param('name', 'async');
+        $started = $this->input_get_param('started', time());
+        $ended = $this->input_get_param('ended', strtotime('+1 days'));
+
+        $masterRedis = $this->getMasterRedis();
+        $store_dealy_async_jobs = $masterRedis->zRangeByScore('store:task:delay:async', $started, $ended);
+
+        $jobs = [];
+        foreach ($store_dealy_async_jobs as $jobid){
+            $time = $masterRedis->zScore('store:task:delay:'.$topic, $jobid);
+            $jobs[] = [
+                'time'    => date('Y-m-d H:i:s', $time),
+                'body'    => $masterRedis->hGet("store:job:$jobid", 'params'),
+                'remain'  => $time - time()
+            ];
+        }
+
+        $this->assign('jobs', $jobs);
+        $this->layout('task/delaylist.phtml');
     }
 
     public function format_data_batch($datas) {
@@ -62,9 +86,13 @@ class TaskController extends Storebase{
      * 格式化数据
      */
     public function tidy($data) {
-        $s['id'] = $data['id'];
-        $s['queue_name'] = $data['queue_name'];
-        $s['task_json'] = $data['task_json'];
+        $s['topic'] = $data['topic'];
+        $s['jobid'] = $data['jobid'];
+        $s['worker'] = $data['worker'];
+        $s['params'] = $data['params'];
+        $s['state'] = $data['state'];
+        $s['times'] = $data['times'];
+        $s['timeuse'] = $data['timeuse'];
         $s['memo'] = htmlspecialchars($data['memo']);
         $s['ctime'] = $data['ctime'];
         return $s;

@@ -1,11 +1,15 @@
 <div class="dux-tools">
-    <div class="bread-head">队列管理<span class="small">队列列表</span></div>
+    <div class="bread-head">任务列表</div>
+    <br>
     <div class="tools-function clearfix">
+        <div class="float-left">
+            <a class="button button-small bg-main icon-list" href="getlist"> 实时队列</a>
+            <a class="button button-small bg-back icon-list" href="delaylist"> 延迟队列</a>
+        </div>
         <div class="float-right">
             <a class="button button-small bg-main" href="/store/task/create">添加任务</a>
         </div>
     </div>
-    <br>
 </div>
 <div class="admin-main">
     <div class="panel dux-box">
@@ -15,22 +19,26 @@
                     <tr>
                         <th width="*">编号</th>
                         <th width="*">队列名称</th>
+                        <th width="*">任务ID</th>
+                        <th width="*">Worker</th>
                         <th width="*">任务内容／任务参数</th>
-                        <th width="*">备注</th>
                         <th width="*">状态</th>
+                        <th width="*">备注</th>
+                        <th width="*">耗时</th>
                         <th width="*">创建时间</th>
-                        <th width="*">修改时间</th>
                     </tr>
                     <?php if ($list) : ?>
                         <?php foreach ($list as $val) : ?>
                             <tr>
                                 <td><?php echo $val['id']?></td>
-                                <td><?php echo $val['queue_name']; ?></td>
-                                <td><?php echo json_encode($val['task_json']);?></td>
-                                <td><?php echo $val['memo'] ? : '--'; ?></td>
+                                <td><?php echo $val['topic']; ?></td>
+                                <td><?php echo $val['jobid']; ?></td>
+                                <td><?php echo $val['worker']; ?></td>
+                                <td><?php echo json_encode($val['params']);?></td>
                                 <td><?php echo $val['state'] ? :'--'; ?></td>
+                                <td><?php echo $val['memo'] ? : '--'; ?></td>
+                                <td><?php echo $val['timeuse'] ? :'--'; ?></td>
                                 <td><?php echo $val['ctime']; ?></td>
-                                <td><?php echo $val['update_time']; ?></td>
                             </tr>
                         <?php endforeach; ?>
                     <?php endif; ?>
