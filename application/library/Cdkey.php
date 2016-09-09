@@ -39,8 +39,12 @@ class Cdkey {
         }
     }
 
-    public static function getError() {
-        return self::$_last_error;
+    public static function getErrorMessage(){
+        return Error_Cdkey::getMessage(self::$_last_error['code']);
+    }
+
+    public static function getErrorCode() {
+        return self::$_last_error['code'] == 0 ? 1 : 0;
     }
 
 }

@@ -12,6 +12,8 @@ class CdkeyModel {
     const CDKEY_CREATE = 'cdkey/add';  //创建
     const CDKEY_LIST   = 'cdkeylist/getlistofouter'; //获取批次列表
     const CDKEY_COUNT  = 'cdkeylist/getlistcount';
+    const CDKEY_NULLIFY_EXEC  = 'nullify/exec'; //作废兑换码
+    const CDKEY_NULLIFY_RESTORE  = 'nullify/restore'; //恢复已经作废的兑换码
     const CDKEY_LOG    = 'log/write';
     
     /**
@@ -44,6 +46,24 @@ class CdkeyModel {
      */
     public function export($params) {
         $result = Cdkey::request(self::CDKEY_COUNT, $params, "POST");
+
+        return $result;
+    }
+
+    /**
+     * 作废兑换码
+     */
+    public function nullify($params) {
+        $result = Cdkey::request(self::CDKEY_NULLIFY_EXEC, $params, "POST");
+
+        return $result;
+    }
+
+    /**
+     * 恢复已经作废的兑换码
+     */
+    public function restore($params) {
+        $result = Cdkey::request(self::CDKEY_NULLIFY_RESTORE, $params, "POST");
 
         return $result;
     }
