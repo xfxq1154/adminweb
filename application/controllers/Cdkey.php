@@ -52,6 +52,13 @@ class CdkeyController extends Base {
     }
 
     /**
+     * 废除优惠券页面
+     */
+    public function nullifyTplAction() {
+        $this->layout("platform/cdkey_nullify.phtml");
+    }
+
+    /**
      * 生成优惠券
      * @desc ajax请求,
      */
@@ -123,12 +130,15 @@ class CdkeyController extends Base {
         }
 
         $params = [
-            'cdkey' => $cdkey,
+            'cdkey'      => $cdkey,
             'serial_num' => $serial_num,
-            'cid' => $cid,
+            'cid'        => $cid,
         ];
+
+        $this->cdkey_model->cdkeyLog('作废兑换码', $params);
+
         $this->cdkey_model->nullify($params);
-        $this->_outPut(Cdkey::getErrorMessage(), Cdkey::getErrorCode());
+        $this->_outPut(Cdkey::getErrorMessage(), Cdkey::getErrorCode(), '/cdkey/index');
     }
 
     /**

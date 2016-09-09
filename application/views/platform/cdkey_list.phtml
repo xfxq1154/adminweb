@@ -21,31 +21,9 @@
             </div>
         </form>
     </div>
-    <div class="button-group float-right">
-        <a href="/cdkey/add" class="button button-small bg-blue icon-plus dropdown-toggle">生成兑换码</a>
-    </div>
-</div>
-<!--作废兑换码-->
-<div class="table-tools clearfix ">
-    <div class="float-left">
-        <form method="GET" action="/cdkey/nullify" id="form">
-            <div class="form-inline">
-                <div class="form-group">
-                    <div class="field">
-                        <input type="text" class="input" id="cdkey" name="cdkey"  value="" placeholder="作废兑换码">
-                    </div>&nbsp;
-                    <div class="field">
-                        <input type="text" class="input" id="serial_num" name="serial_num"  value="" placeholder="序列号作废兑换码">
-                    </div>&nbsp;
-                    <div class="field">
-                        <input type="text" class="input" id="cid" name="cid"  value="" placeholder="批次号作废兑换码">
-                    </div>&nbsp;
-                </div>
-                <div class="form-button">
-                    <button class="button tag bg-red" type="submit">确认作废</button>
-                </div>
-            </div>
-        </form>
+    <div class="float-right">
+        <a href="/cdkey/add" class="button button-small bg-blue icon-plus dropdown-toggle">生成兑换码</a>&nbsp;
+        <a href="/cdkey/nullifyTpl" class="button button-small bg-red icon-trash dropdown-toggle">作废兑换码</a>
     </div>
 </div>
 <div class="admin-main">
@@ -81,8 +59,10 @@
                                 <td><a class="button button-small bg-green" href="javascript:void(0)" >待生成</a></td>
                             <?php } elseif($val['status'] == 2) { ?>
                                 <td><a class="button button-small bg-green" href="javascript:void(0)" >生成中..</a></td>
-                            <?php } else {?>
+                            <?php } elseif($val['status'] == 1)  {?>
                                 <td><a class="button button-small bg-green" href="/cdkey/export?cid=<?php echo $val['id']; ?>" >导出</a></td>
+                            <?php } else {?>
+                                <td><a class="button button-small" href="javascript:void(0)" >作废</a></td>
                             <?php } ?>
                         </tr>
                     <?php endforeach; ?>
@@ -99,7 +79,6 @@
     <script>
         Do.ready('base', function () {
             $('#table').duxTable();
-            $('#form').duxFormPage();
         });
     </script>
 </div>
