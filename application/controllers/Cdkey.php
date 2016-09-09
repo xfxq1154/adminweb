@@ -29,11 +29,13 @@ class CdkeyController extends Base {
     public function indexAction() {
         $sku_outer_id = $this->getRequest()->get('sku_outer_id');
         $batch_number = $this->getRequest()->get('batch_number');
+        $cid = $this->getRequest()->get('cid');
         $page_no      = (int)$this->getRequest()->get('p', 1);
 
         $params = [
             'sku_outer_id' => $sku_outer_id,
             'batch_number' => $batch_number,
+            'cid'          => $cid,
             'page_no'      => $page_no,
         ];
 
