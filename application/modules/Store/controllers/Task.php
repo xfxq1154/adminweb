@@ -8,6 +8,13 @@ class TaskController extends Storebase{
 
     use Trait_Redis;
 
+    private $states = [
+        0 => ['name' => 'ready', 'class' => 'bg-green'],
+        1 => ['name' => 'delay', 'class' => 'bg-blue'],
+        2 => ['name' => 'reserved', 'class' => 'bg-yellow'],
+        3 => ['name' => 'deleted', 'class' => 'bg-gray'],
+    ];
+
     public function init(){
         parent::init();
     }
@@ -29,21 +36,30 @@ class TaskController extends Storebase{
     }
     
     public function getlistAction(){
+        $topic = $this->input_get_param('topic');
+        $worker = $this->input_get_param('worker');
+        $params = $this->input_get_param('params');
+        $memo = $this->input_get_param('memo');
+        $state = $this->input_get_param('state');
         $page_no = $this->input_get_param('page_no');
         $page_size = 20;
         
         $params = [
+            'topic'=> $topic,
+            'worker'=> $worker,
+            'params'=> $params,
+            'memo'=> $memo,
+            'state'=> $state,
             'page_no'=> $page_no,
-            'page_size'=> $page_size,
-            'use_has_next'=> 0
+            'page_size'=> $page_size
         ];
         $result = $this->store_model->taskList($params);
         $task_list = $this->format_data_batch($result);
-        $data = $task_list['tasks'];
-        $count = $task_list['total_nums'];
-        
-        $this->renderPagger($page_no, $count, "/store/task/getlist?page_no={p}", $page_size);
-        $this->assign('list', $data);
+
+        $this->assign('list', $task_list['tasks']);
+        $this->assign("search", $this->input_get());
+        $query_string = http_build_query($this->input_get());
+        $this->renderPagger($page_no, $task_list['total_nums'], "/store/task/getlist?$query_string&page_no={p}", $page_size);
         $this->layout('task/readylist.phtml');
     }
 
@@ -90,7 +106,8 @@ class TaskController extends Storebase{
         $s['jobid'] = $data['jobid'];
         $s['worker'] = $data['worker'];
         $s['params'] = $data['params'];
-        $s['state'] = $data['state'];
+        $s['state'] = $this->states[$data['state']]['name'];
+        $s['state_bg'] = $this->states[$data['state']]['class'];
         $s['times'] = $data['times'];
         $s['timeuse'] = $data['timeuse'];
         $s['memo'] = htmlspecialchars($data['memo']);

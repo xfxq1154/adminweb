@@ -10,6 +10,39 @@
             <a class="button button-small bg-main" href="/store/task/create">添加任务</a>
         </div>
     </div>
+</div><div class="table-tools clearfix ">
+    <div class="float-left">
+        <form method="GET" action="/store/task/getlist" >
+            <div class="form-inline">
+                <div class="form-group">
+                    <div class="field">
+                        <input type="text" class="input" id="keyword" name="topic" size="20" value="<?=$search['topic']?>" placeholder="Topic">
+                    </div>&nbsp;
+                    <div class="field">
+                        <input type="text" class="input" id="keyword" name="worker" size="20" value="<?=$search['worker']?>" placeholder="Worker">
+                    </div>&nbsp;
+                    <div class="field">
+                        <input type="text" class="input" id="keyword" name="params" size="20" value="<?=$search['params']?>" placeholder="Params">
+                    </div>&nbsp;
+                    <div class="field">
+                        <input type="text" class="input" id="keyword" name="memo" size="20" value="<?=$search['memo']?>" placeholder="Memo">
+                    </div>&nbsp;
+                    <div class="field">
+                        <select class="input js-assign" target="#tpl" name="state" datatype="*" id="parent">
+                            <option value="">whole</option>
+                            <option value="0" <?=($search['state'] == '0') ? 'selected': ''?>>ready</option>
+                            <option value="1" <?=($search['state'] == '1') ? 'selected': ''?>>delay</option>
+                            <option value="2" <?=($search['state'] == '2') ? 'selected': ''?>>reserved</option>
+                            <option value="3" <?=($search['state'] == '3') ? 'selected': ''?>>deleted</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-button">
+                    <button class="button" type="submit">搜索</button>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
 <div class="admin-main">
     <div class="panel dux-box">
@@ -17,15 +50,15 @@
             <table id="table" class="table table-hover ">
                 <tbody>
                     <tr>
-                        <th width="*">编号</th>
-                        <th width="*">队列名称</th>
-                        <th width="*">任务ID</th>
+                        <th width="*">ID</th>
+                        <th width="*">Topic</th>
+                        <th width="*">JobID</th>
                         <th width="*">Worker</th>
-                        <th width="*">任务内容／任务参数</th>
-                        <th width="*">状态</th>
-                        <th width="*">备注</th>
-                        <th width="*">耗时</th>
-                        <th width="*">创建时间</th>
+                        <th width="*">Params</th>
+                        <th width="*">State</th>
+                        <th width="*">Memo</th>
+                        <th width="*">Timeuse</th>
+                        <th width="*">CreateTime</th>
                     </tr>
                     <?php if ($list) : ?>
                         <?php foreach ($list as $val) : ?>
@@ -35,7 +68,7 @@
                                 <td><?php echo $val['jobid']; ?></td>
                                 <td><?php echo $val['worker']; ?></td>
                                 <td><?php echo json_encode($val['params']);?></td>
-                                <td><?php echo $val['state'] ? :'--'; ?></td>
+                                <td><span class="tag <?=$val['state_bg']?>"> <?php echo $val['state'] ? :'--'; ?></span></td>
                                 <td><?php echo $val['memo'] ? : '--'; ?></td>
                                 <td><?php echo $val['timeuse'] ? :'--'; ?></td>
                                 <td><?php echo $val['ctime']; ?></td>
