@@ -25,9 +25,17 @@ class TaskController extends Storebase{
         }
 
         $topic = $this->input_post_param('topic');
-        $body = $this->input_post_param('body');
+        $class = $this->input_post_param('class');
+        $worker = $this->input_post_param('worker');
+        $params = $this->input_post_param('params');
 
-        $result = $this->store_model->taskCreate($topic, $body);
+        $data = [
+            'topic' => $topic,
+            'class' => $class,
+            'worker' => $worker,
+            'params' => $params
+        ];
+        $result = $this->store_model->taskCreate($data);
         if($result === FALSE){
             Tools::output(array('info' => Sapi::getErrorMessage(), 'status' => 1));
         }
