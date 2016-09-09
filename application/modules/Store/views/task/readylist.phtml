@@ -50,9 +50,8 @@
             <table id="table" class="table table-hover ">
                 <tbody>
                     <tr>
-                        <th width="*">ID</th>
-                        <th width="*">Topic</th>
                         <th width="*">JobID</th>
+                        <th width="*">Topic</th>
                         <th width="*">Worker</th>
                         <th width="*">Params</th>
                         <th width="*">State</th>
@@ -63,9 +62,8 @@
                     <?php if ($list) : ?>
                         <?php foreach ($list as $val) : ?>
                             <tr>
-                                <td><?php echo $val['id']?></td>
-                                <td><?php echo $val['topic']; ?></td>
                                 <td><?php echo $val['jobid']; ?></td>
+                                <td><?php echo $val['topic']; ?></td>
                                 <td><?php echo $val['worker']; ?></td>
                                 <td><?php echo json_encode($val['params']);?></td>
                                 <td><span class="tag <?=$val['state_bg']?>"> <?php echo $val['state'] ? :'--'; ?></span></td>
