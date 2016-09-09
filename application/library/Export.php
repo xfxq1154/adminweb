@@ -54,7 +54,7 @@ class Export {
      */
     private function _setCharset($row) {
         foreach ($row as &$item){
-            $item = iconv('UTF-8', 'UTF-8//GBK//TRANSLIT//IGNORE', $item);
+            $item = iconv('UTF-8', 'GBK//TRANSLIT//IGNORE', $item);
         }
         return $row;
     }
@@ -67,7 +67,7 @@ class Export {
     private function formatCSV($data=array()){
         // 对数组每个元素进行转义
         $data = array_map(array($this,'escape'), $data);
-        return implode("\t",$data)."\r\n";
+        return $this->delimiter.implode("\t".$this->delimiter.$this->separator.$this->delimiter, $data)."\t$this->delimiter\r\n";
     }
 
 
