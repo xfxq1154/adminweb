@@ -62,9 +62,13 @@ class TaskController extends Storebase{
      * 格式化数据
      */
     public function tidy($data) {
-        $s['id'] = $data['id'];
-        $s['queue_name'] = $data['queue_name'];
-        $s['task_json'] = $data['task_json'];
+        $s['topic'] = $data['topic'];
+        $s['jobid'] = $data['jobid'];
+        $s['worker'] = $data['worker'];
+        $s['params'] = $data['params'];
+        $s['state'] = $data['state'];
+        $s['times'] = $data['times'];
+        $s['timeuse'] = $data['timeuse'];
         $s['memo'] = htmlspecialchars($data['memo']);
         $s['ctime'] = $data['ctime'];
         return $s;
