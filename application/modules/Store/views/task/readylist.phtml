@@ -56,20 +56,22 @@
                         <th width="*">Params</th>
                         <th width="*">State</th>
                         <th width="*">Memo</th>
+                        <th width="*">Times</th>
                         <th width="*">Timeuse</th>
                         <th width="*">CreateTime</th>
                     </tr>
                     <?php if ($list) : ?>
                         <?php foreach ($list as $val) : ?>
                             <tr>
-                                <td><?php echo $val['jobid']; ?></td>
-                                <td><?php echo $val['topic']; ?></td>
-                                <td><?php echo $val['worker']; ?></td>
-                                <td><?php echo json_encode($val['params']);?></td>
-                                <td><span class="tag <?=$val['state_bg']?>"> <?php echo $val['state'] ? :'--'; ?></span></td>
-                                <td><?php echo $val['memo'] ? : '--'; ?></td>
-                                <td><?php echo $val['timeuse'] ? :'--'; ?></td>
-                                <td><?php echo $val['ctime']; ?></td>
+                                <td><?=$val['jobid']; ?></td>
+                                <td><?=$val['topic']; ?></td>
+                                <td><?=$val['worker']; ?></td>
+                                <td><?=json_encode($val['params']);?></td>
+                                <td><span class="tag <?=$val['state_bg']?>"> <?=$val['state'] ? :'--'; ?></span></td>
+                                <td><?=$val['memo'] ? : '--'; ?></td>
+                                <td><?=$val['times']; ?></td>
+                                <td><?=$val['timeuse'] ? :'--'; ?></td>
+                                <td><?=$val['ctime']; ?></td>
                             </tr>
                         <?php endforeach; ?>
                     <?php endif; ?>
