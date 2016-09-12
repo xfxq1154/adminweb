@@ -10,12 +10,15 @@ class OrderController extends Statbase {
     private $order_model;
     /** @var  StatPageModel */
     private $page_model;
+    /** @var  StatProductModel */
+    private $product_model;
 
     public function init() {
         parent::init();
 
         $this->order_model = new StatOrderModel();
         $this->page_model = new StatPageModel();
+        $this->product_model = new StatProductModel();
     }
 
     function dashboardAction() {
@@ -25,6 +28,8 @@ class OrderController extends Statbase {
 
         $res = $this->page_model->overview($params);
         $total_uv = ($res['total_uv']) ? : 0;
+
+        $total_sold_num = $this->product_model->soldNum($params);
 
         $result = $this->order_model->overview($params);
         foreach ($result as $val){
@@ -70,6 +75,7 @@ class OrderController extends Statbase {
 
         $this->assign('dates', implode(',', $dates));
         $this->assign('total_uv', $total_uv); //访客数
+        $this->assign('total_sold_num', $total_sold_num); //总销量
         $this->assign('order_peo', $order_peo_total); //下单人数
         $this->assign('order_num', $order_num_total); //下单笔数
         $this->assign('order_sum', $order_sum_total); //下单金额
