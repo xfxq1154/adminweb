@@ -67,7 +67,7 @@
                                 <td><?=$val['source_id']?></td>
                                 <td><?=$val['title']?></td>
                                 <td><?=$val['uri']?></td>
-                                <td title="<?=htmlentities($val['input'])?>"><?=$val['input']?></td>
+                                <td title="<?=htmlentities($val['input'])?>"><?=substr($val['input'], 0, 128)?></td>
                                 <td title="<?=$val['result']?>"><?=$val['result']?></td>
                                 <td><?=$val['nickname']?></td>
                                 <td><?=$val['optime']?></td>
