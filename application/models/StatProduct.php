@@ -7,10 +7,16 @@
 class StatProductModel {
 
     const PRODUCT_LIST = 'api/product/getlist_by_pageid';
+    const PRODUCT_SOLDNUM = 'api/product/soldNum';
 
     public function productList($params) {
         $result = Sdata::request(self::PRODUCT_LIST, $params);
         return $this->format_datas_batch($result);
+    }
+
+    public function soldNum($params) {
+        $result = Sdata::request(self::PRODUCT_SOLDNUM, $params);
+        return $result['trans_num'] ? : 0;
     }
 
     /**

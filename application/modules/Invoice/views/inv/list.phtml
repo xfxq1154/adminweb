@@ -1,0 +1,259 @@
+<script language="JavaScript" type="text/javascript" src="<?=ASSET_URL?>/static/js/calendar/WdatePicker.js"></script>
+<div class="dux-tools clearfix">
+    <div class="bread-head">生活作风<span class="small">电子发票</span></div>
+    <div class="button-group float-right">
+        <a href="/invoice/inv/addInv" class="button button-small bg-blue icon-plus dropdown-toggle"> 添加订单 </a>
+    </div>
+</div>
+<!--upload order file-->
+<div class="tools-function clearfix" style="margin-top: 5px;">
+    <div class="float-left" style="margin-left: 6px">
+        <div class="form-inline">
+            <div class="form-group">
+                <input type="text" class="input show_uo_imgs" id="files" name="file" placeholder="订单号" readonly=""/> &nbsp;
+                <a class="button bg-blue button-small " data="files" id="image_upload3" preview="image_preview3" href="javascript:;"> <span class="icon-upload">订单上传</span></a>
+            </div>
+
+            <div class="form-button">
+                <button class="button bg-dot" type="button" id="selectAll">选中全部</button>
+                <button class="button bg-sub" type="button" id="unselectAll">取消全选</button>
+                <button class="button bg-main" type="button" id="batch" value=1>批量开票</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--secrech-->
+<div class="tools-function clearfix">
+    <div class="float-left">
+        <form method="GET" action="/invoice/inv/list" >
+            <div class="form-inline">
+                <div class="form-group">
+                    <div class="field" style="margin-left: 5px;">
+                        <input type="text" class="input" name="mobile" size="20" value="<?=$search['mobile']?>" placeholder="手机号">
+                        <input type="text" class="input" name="order_id" size="20" value="<?=$search['order_id']?>" placeholder="订单号">
+                    </div>&nbsp;
+                    <div class="field">
+                        <input type="text" class="input datebtn" style="width:100px;" name="time" value="<?=$search['time'];?>" onfocus="WdatePicker({startDate:'Y-M',dateFmt:'yyyy-MM'})" style="cursor:pointer;" size="60" placeholder="选择日期(月)" >
+                        <input type="text" class="input datebtn" style="width:100px;" name="time" value="<?=$search['time'];?>" onfocus="WdatePicker({startDate:'Y-m-d',dateFmt:'yyyy-MM-dd'})" style="cursor:pointer;" size="60" placeholder="选择日期(天)" >
+                    </div>&nbsp;
+                    <div class="field">
+                        <select class="input js-assign" style="text-align: center" name="status">
+                            <option value=""><?php echo isset($status) ? $status : '全部状态'; ?></option>
+                            <option value="5">开票中</option>
+                            <option value="1">未开发票</option>
+                            <option value="2">开票成功</option>
+                            <option value="3">开票失败</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-button">
+                    <button class="button bg-mix" type="submit">搜索</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!--set invoice msg-->
+<div class="tools-function clearfix">
+    <div class="float-left">
+        <div class="form-inline">
+            <div class="field" style="margin-left: 5px;">
+                <select class="input js-assign" name="address">
+                    <option value="北京市朝阳区郎家园（3-3）8幢6层A座601室 85897509">北京市朝阳区郎家园（3-3）8幢6层A座601室 85897509</option>
+                </select>
+                <select class="input js-assign" name="kpr">
+                    <option value="张磊">张磊</option>
+                </select>
+                <select class="input js-assign" name="xsf_mc">
+                    <option value="北京思维造物信息科技有限公司">北京思维造物信息科技有限公司</option>
+                </select>
+                <select class="input js-assign" name="payee">
+                    <option value="王悦">王悦</option>
+                </select>
+                <select class="input js-assign" name="review">
+                    <option value="胡冰岐">胡冰岐</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+<div oncancel="" class="orderdiv" style="display: none">
+    <table class="table">
+        <caption>上传失败的订单号</caption>
+        <tbody class="orderval">
+        </tbody>
+    </table>
+</div>
+<!-- list -->
+<div class="admin-main">
+    <div class="panel dux-box">
+        <div class="table-responsive">
+            <table id="table" class="table table-hover ">
+                <thead>
+                    <tr>
+                        <th width="*">选项</th>
+                        <th width="*">编号</th>
+                        <th width="*">订单号</th>
+                        <th width="*">发票台头</th>
+                        <th width="*">手机号</th>
+                        <th style="*">类型</th>
+                        <th style="*">状态</th>
+                        <th width="*">操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if ($data) : ?>
+                        <?php foreach($data['list'] as $val) : ?>
+                            <tr>
+                                <td>
+                                    <?php if ($val['state'] == 1 || $val['state'] == 3):?>
+                                        <input type="checkbox" class="checkAll" value="<?=$val['order_id']?>">
+                                    <?php else:?>
+                                        <input type="checkbox" class="checkAll" value="" disabled readonly >
+                                    <?php endif;?>
+                                </td>
+                                <td><span class="primary_id"><?=$val['id']?></span></td>
+                                <td><?=$val['order_id']?></td>
+                                <td><?=$val['title']?></td>
+                                <td><?=$val['buyer_phone']?></td>
+                                <td class="type"><?=$val['type'] == 1 ? '<span class="tag bg-red">红字发票</span>' : '<span class="tag bg-blue">蓝字发票</span>';?></td>
+                                <td>
+                                    <input type="hidden" value="<?=$val['state']?>" class="status">
+                                    <?php echo $state_name[$val['state']]?>
+                                </td>
+                                <td><?=date('Y-m-d', strtotime($val['update_time']))?></td>
+                                <td>
+                                    <?php if ($val['state'] == 4 && $val['type'] == 0):?>
+                                        <button class="button bg-green button-small icon-eye-open" href="<?php echo $val['invoice_url'];?>" target="_blank" title="查看发票"></button> |
+                                        <button class="button bg-yellow button-small icon-envelope sendmessage" href="javascript:;" style="margin-left: 5px;" title="重新发送短信"></button> |
+                                        <button class="button bg-red button-small icon-pencil js-del" href="javascript:;" url="/invoice/inv/redInvoice" data='{"id":<?=$val['id']; ?>}' title="开具红票"></button>
+                                    <?php elseif ($val['state'] == 3): ?>
+                                        <button class="button bg-blue button-small  icon-edit js-del" href="javascript:;" url="/invoice/inv/edit"></button> |
+                                        <button class="button bg-red button-small icon-trash-o js-del" href="javascript:;" url="/invoice/inv/del" data='{"id":<?=$val['id']; ?>}' title="删除"></button>
+                                    <?php elseif ($val['state'] == 1):?>
+                                        <a class="button bg-blue button-small icon-edit" href="/invoice/inv/edit/id/<?=$val['id']?>" title="修改"></a> |
+                                        <button class="button bg-blue button-small icon-pencil kaifapiao" title="开具发票"></button> |
+                                        <button class="button bg-red button-small icon-trash-o js-del" href="javascript:;" url="/invoice/inv/del" data='{"id":<?=$val['id']; ?>}' title="删除"></button>
+                                    <?php elseif ($val['state'] == 4 && $val['type'] == 1):?>
+                                        <button class="button bg-green button-small icon-eye-open" href="<?php echo $val['invoice_url'];?>" target="_blank" title="查看发票"></button>
+                                    <?php endif;?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <?php if($pagger):?>
+        <div class="panel dux-box panel-foot clearfix" style="margin-top:10px;border-radius: 4px;">
+            <?=$pagger?>
+        </div>
+    <?php endif;?>
+</div>
+<script>
+    Do.ready('base', function () {
+        $('#form').duxForm();
+        $('#image_upload3').duxFileUpload({
+            uploadUrl: '/Invoice/Upload/order',
+            type: 'xls',
+            complete: function (data) {
+                if (data) {
+                    alert('上传成功,个别失败');
+                    $('.orderdiv').css('display','block');
+                    $('.orderval').append(data);
+                } else {
+                    alert('上传成功');
+                    window.location.reload();
+                }
+            }
+        });
+    });
+
+    //全选
+    $('#selectAll').on('click',function(){
+        $(".type > span").each(function(i){
+            //只能选中未开票的
+            var iHidd = $('#table > tbody').find('tr').eq(i).find('.status').val();
+            if ($(this).hasClass('bg-blue') && (iHidd == 1 || iHidd == 3)) {
+                console.log(iHidd + "-" + i);
+                $('.checkAll').eq(i).prop('checked', true);
+            }
+        });
+    });
+
+    //取消全选
+    $('#unselectAll').bind('click', function(){
+        $('.checkAll').prop('checked', false);
+    });
+
+    // 开票
+    $('.kaifapiao').on('click', function(){
+        var oTr = $(this).parents('td').parents('tr');
+        var address = $(':optional[name="address"]').val();
+        var marchatName = $(':optional[name="xsf_mc"]').val();
+        var drawer = $(':optional[name="kpr"]').val();
+        var id = oTr.find('td').eq(1).text();
+        var payee = $(':optional[name="payee"]').val();
+        var review = $(':optional[name="review"]').val();
+
+        $.ajax({
+            type: 'POST',
+            dataType: 'JSON',
+            url: '/invoice/inv/issued',
+            data: {id:id,address:address,marchatName:marchatName,drawer:drawer,payee:payee,review:review}
+        }).done(function (data){
+            alert(data.info);
+            window.location.reload();
+        });
+
+    });
+
+    //重发短信
+    $('.sendmessage').on('click', function(){
+        var oTr = $(this).parents('td').parents('tr');
+        var phone = oTr.find('td').eq(4).text();
+        var id = oTr.find('td').eq(1).text();
+        var mobile = prompt('如需更改手机号请填写:', phone);
+
+        $.ajax({
+            type: 'POST',
+            dataType: 'JSON',
+            url: '/invoice/inv/resendMsg',
+            data: {phoneNum:mobile, id:id}
+        }).done(function (data){
+            alert(data.info);
+        });
+    });
+
+    //批量开票
+    $('#batch').on('click', function(){
+        var orders = []
+        $(".checkAll").each(function(i){
+            var _this = $(this);
+            if (_this.prop("checked")) {
+                var oTmp = {};
+                oTmp.order = $('.checkAll').val();
+                oTmp.id = $('.primary_id').eq(i).text();
+
+                orders.push(oTmp);
+            }
+        });
+        var address = $(':input[name="address"]').val();
+        var marchatName = $(':input[name="xsf_mc"]').val();
+        var drawer = $(':input[name="kpr"]').val();
+        var payee = $(':input[name="payee"]').val();
+        var review = $(':input[name="review"]').val();
+
+        $.ajax({
+            type: 'POST',
+            dataType: 'JSON',
+            url: '/invoice/inv/issued',
+            data: {orders:orders,address:address,marchatName:marchatName,drawer:drawer,payee:payee,review:review}
+        }).done(function (data){
+            alert(data.info);
+            window.location.reload();
+        });
+    });
+
+</script>

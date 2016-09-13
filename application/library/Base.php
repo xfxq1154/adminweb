@@ -2,6 +2,8 @@
 
 abstract class Base extends Yaf_Controller_Abstract {
 
+    use Input;
+
     public $userInfo;
     public $admin, $adminNav, $adminUser, $adminGroup;
     
