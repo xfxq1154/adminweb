@@ -6,7 +6,7 @@
  */
 class Sapi {
 
-    static private $_host = 'http://sapi.dev.didatrip.com/';
+    static private $_host = SAPI_HOST;
     static private $_sourceid = SAPI_SOURCE_ID;
     static private $_last_error = NULL;
     static private $_timeout = 5; //接口超时时间 单位s秒 建议不超过5s
