@@ -113,7 +113,7 @@ class CdkeyController extends Base {
         $this->cdkey_model->cdkeyLog('导出商品兑换码', $params);
         
         $export = new Export();
-        //$export->setTitle($result, Fields::$cdkey);
+        $export->setTitle($result, Fields::$cdkey);
         $export->outPut($result);
         exit;
     }
