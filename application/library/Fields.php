@@ -8,15 +8,12 @@ class Fields{
 
     //商品兑换码
     public static $cdkey = [
-        'uuid'          => 'User ID',
-        'sku_outer_id'  => 'iget sku id',
-        'cdkey'         => 'cdkey',
-        'price'         => 'price',
-        'exchange_time' => 'Exchange time',
-        'validity_time' => 'deadline',
-        'status'        => 'status',
-        'create_time'   => 'create time',
+        'cdkey'      => '兑换码',
+        'serial_num' => '序列号',
+        'exchange_time' => '兑换时间',
+        'status'     => '兑换状态',
     ];
+
 }
 
     

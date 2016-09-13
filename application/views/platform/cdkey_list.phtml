@@ -2,17 +2,20 @@
 <div class="dux-tools">
     <div class="bread-head">商品兑换码<span class="small">批次列表</span></div><br>
 </div>
-
+<!--生成兑换码和搜索信息-->
 <div class="table-tools clearfix ">
     <div class="float-left">
         <form method="GET" action="/cdkey/index" >
             <div class="form-inline">
                 <div class="form-group">
                     <div class="field">
-                        <input type="text" class="input" id="keyword" name="sku_outer_id"  value="<?=$_GET['sku_outer_id']?>" placeholder="得到商品商城SKU自编码">
+                        <input type="text" class="input" id="cid" name="cid"  value="<?=$_GET['cid']?>" placeholder="批次ID">
                     </div>&nbsp;
                     <div class="field">
-                        <input type="text" class="input" id="keyword" name="batch_number"  value="<?=$_GET['batch_number']?>" placeholder="兑换码商城上架自编码">
+                        <input type="text" class="input" id="sku_outer_id" name="sku_outer_id"  value="<?=$_GET['sku_outer_id']?>" placeholder="得到商品商城SKU自编码">
+                    </div>&nbsp;
+                    <div class="field">
+                        <input type="text" class="input" id="batch_number" name="batch_number"  value="<?=$_GET['batch_number']?>" placeholder="兑换码商城上架自编码">
                     </div>&nbsp;
                 </div>
                 <div class="form-button">
@@ -21,8 +24,9 @@
             </div>
         </form>
     </div>
-    <div class="button-group float-right">
-        <a href="/cdkey/add" class="button button-small bg-blue icon-plus dropdown-toggle">生成兑换码</a>
+    <div class="float-right">
+        <a href="/cdkey/add" class="button button-small bg-blue icon-plus dropdown-toggle">生成兑换码</a>&nbsp;
+        <a href="/cdkey/nullifyTpl" class="button button-small bg-red icon-trash dropdown-toggle">作废兑换码</a>
     </div>
 </div>
 <div class="admin-main">
@@ -58,8 +62,10 @@
                                 <td><a class="button button-small bg-green" href="javascript:void(0)" >待生成</a></td>
                             <?php } elseif($val['status'] == 2) { ?>
                                 <td><a class="button button-small bg-green" href="javascript:void(0)" >生成中..</a></td>
-                            <?php } else {?>
+                            <?php } elseif($val['status'] == 1)  {?>
                                 <td><a class="button button-small bg-green" href="/cdkey/export?cid=<?php echo $val['id']; ?>" >导出</a></td>
+                            <?php } else {?>
+                                <td><a class="button button-small" href="javascript:void(0)" >作废</a></td>
                             <?php } ?>
                         </tr>
                     <?php endforeach; ?>
@@ -77,6 +83,5 @@
         Do.ready('base', function () {
             $('#table').duxTable();
         });
-
     </script>
 </div>

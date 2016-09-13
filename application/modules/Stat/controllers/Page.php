@@ -42,31 +42,12 @@ class PageController extends Statbase {
         $this->_display('page/pagedata.phtml');
     }
 
-    private function pvperday(){
+    public function pvperdayAction(){
         //获取数据
         $params['showcase_id'] = $this->showcase_id;
         $params['start_created'] = $this->start_created;
         $params['end_created'] = Tools::format_date($this->end_created);
-        $total_list = $this->page_model->views($params);
-        $params['type'] = 'product';
-        $foods_list = $this->page_model->views($params);
-        foreach ($foods_list as $item){
-            $key = $item['odate'];
-            $format_foods_list[$key]['goods_pv'] = $item['total_pv'];
-            $format_foods_list[$key]['goods_uv'] = $item['total_uv'];
-        }
-
-        foreach ($total_list as &$item){
-            $key = $item['odate'];
-            $item['goods_pv'] = isset($format_foods_list[$key]) ? $format_foods_list[$key]['goods_pv'] : 0;
-            $item['goods_uv'] = isset($format_foods_list[$key]) ? $format_foods_list[$key]['goods_uv'] : 0;
-        }
-        return $total_list;
-    }
-
-    public function pvperdayAction(){
-
-        $format_data = $this->pvperday();
+        $format_data = $this->page_model->views($params);
         if ($format_data){
             foreach ($format_data as $val){
                 $key = '"'.date('m-d',strtotime($val['odate'])).'"';

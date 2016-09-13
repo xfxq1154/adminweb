@@ -59,9 +59,7 @@ class StoreModel {
         return Sapi::request(self::TASK_JOBLIST, $params);
     }
 
-    public function taskCreate($topic, $body){
-        $params['topic'] = $topic;
-        $params['body'] = $body;
+    public function taskCreate($params){
         return Sapi::request(self::TASK_ADD, $params, 'POST');
     }
 

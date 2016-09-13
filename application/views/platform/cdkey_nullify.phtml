@@ -1,0 +1,60 @@
+<script language="JavaScript" type="text/javascript" src="<?=ASSET_URL?>/static/js/calendar/WdatePicker.js"></script>
+<div class="dux-tools">
+    <div class="bread-head">作废商品兑换码</div>
+</div>
+<div class="admin-main">
+    <form method="post" action="/cdkey/nullify" id="form">
+
+        <div class="tab dux-tab">
+            <div class="panel dux-box  active">
+                <!-- tab head end -->
+                <!-- table body start-->
+                <div class="tab-body">
+                    <!-- tab 1 start -->
+                    <div class="tab-panel active" id="tab-1">
+                        <div class="form-group">
+                            <div class="label">
+                                <label>作废兑换码</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="cdkey" name="cdkey" size="60" placeholder="输入兑换码">
+                            </div>
+                        </div>
+                            <div class="form-group">
+                            <div class="label">
+                                <label>序列号作废兑换码</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="serial_num" name="serial_num" size="60" placeholder="输入序列号">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="label">
+                                <label>批次号作废兑换码</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" id="cid" name="cid" size="60" placeholder="输入批次号">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- tab 1 end -->
+                </div>
+                <!-- table body end-->
+                <div class="panel-foot">
+                    <div class="form-button">
+                        <div id="tips"></div>
+                        <input class="button bg-main" type="submit" value="作废">
+                        <button class="button bg" type="reset">重置</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript" charset="utf-8">
+    Do.ready('base', function () {
+        //表单综合处理
+        $('#form').duxFormPage();
+    });
+</script>

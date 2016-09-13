@@ -100,7 +100,7 @@ class UserController extends Kfbase {
         ];
 
         $this->kfadmin_model->edit($params);
-        $this->_outPut(Kfapi::getErrorMessage(), Kfapi::getErrorCode());
+        $this->_outPut(Cdkey::getErrorMessage(), Cdkey::getErrorCode());
     }
 
     /**
