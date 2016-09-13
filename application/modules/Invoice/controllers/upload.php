@@ -55,7 +55,7 @@ class UploadController extends Base
     /**
      * @explain sku编码上传
      */
-    public function skuAction()
+    public function uSkuAction()
     {
         $files = $this->getRequest()->getFiles('file');
         $xls = new Spreadsheet_Excel_Reader();
@@ -69,7 +69,7 @@ class UploadController extends Base
         }
         unset($xls->sheets[0]['cells'][1]);
         //判断是否是sku文件
-        if(count($xls->sheets[0]['cells'][2]) < 4){
+        if(count($xls->sheets[0]['cells'][2]) > 3){
             Tools::output(array('info'=>'上传文件的内容不匹配','status' => 0));
         }
         foreach ($xls->sheets[0]['cells'] as $values){

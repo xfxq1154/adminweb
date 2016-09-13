@@ -1,11 +1,5 @@
 <div class="dux-tools clearfix">
     <div class="bread-head">电子发票<span class="small">sku列表</span></div>
-    <div class="button-group float-right">
-        <a class="button button-small bg-dot icon-plus dropdown-toggle"> 录入 <span class="downward"></span></a>
-        <ul class="drop-menu pull-right">
-            <li><a href="/invoice/addsku">录入SKU信息</a></li>
-        </ul>
-    </div>
 </div>
 <div class="table-tools clearfix ">
     <div class="float-left">
@@ -18,7 +12,7 @@
         </div>
     </div>
     <div class="float-left">
-        <form action="/invoice/skulist" method="GET" >
+        <form action="/invoice/inv/skulist" method="GET" >
             <div class="form-inline">
                 <div class="form-group" style="margin-left:10px;">
                     <label><b>请输入搜索条件:</b></label>
@@ -74,14 +68,14 @@
                         <th width="*">操作</th>
                     </tr>
                     <?php if ($data) : ?>
-                        <?php foreach ($data['data'] as $val) : ?>
+                        <?php foreach ($data['list'] as $val) : ?>
                             <tr>
                                 <td><input type="checkbox" class="checkAll" value="<?=$val['id']?>"></td>
                                 <td><?=$val['sku_id']?></td>
                                 <td><?=$val['product_name']?></td>
                                 <td><?=$val['tax_tare']?></td>
                                 <td>
-                                    <button class="button bg-red button-small icon-trash-o js-del" href="javascript:;" url="/invoice/deletesku" data='{"id":<?php echo $val['id']; ?>}' title="删除"></button>
+                                    <button class="button bg-red button-small icon-trash-o js-del" href="javascript:;" url="/invoice/inv/delsku" data='{"id":<?php echo $val['id']; ?>}' title="删除"></button>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -95,50 +89,53 @@
             <?=$pagger?>
         </div>
     <?php endif;?>
-    <script>
-        Do.ready('base', function () {
-            $('#form').duxForm();
-            $('#image_upload3').duxFileUpload({
-                uploadUrl: '/invoice/skuUpload',
-                type: 'xls',
-                complete: function (data) {
+</div>
+<script>
+    Do.ready('base', function () {
+        $('#form').duxForm();
+        $('#image_upload3').duxFileUpload({
+            uploadUrl: '/Invoice/Upload/uSku',
+            type: 'xls',
+            complete: function (data) {
+                if (data) {
                     alert('上传成功,个别失败');
                     $('.skvdiv').css('display','block');
                     $('.skuval').append(data);
+                } else {
+                    alert('上传成功');
                 }
-            });
-
+            }
         });
-        
-        //全选
-       $('#selectAll').bind('click', function(){
-           $('.checkAll').prop('checked', true);
-           
-       });
-       
-       //全选
-       $('#unselectAll').bind('click', function(){
-            $('.checkAll').prop('checked', false);
-       });
-       
-       $('.set').on('click', function(){
-           var orders = '';
-           var fpsl = $('#parent option:selected').val();
-            $(".checkAll").each(function(){
-                if ($(this).prop("checked")) {
-                    orders += $(this).val() + ","; 
-                }
-            });
-            
-            $.ajax({
-                type: 'POST',
-                dataType: 'JSON',
-                url: '/invoice/updatesl',
-                data: {orderlist:orders,sl:fpsl}
-            }).done(function (data){
-                alert(data.msg);
-                window.location.reload();
-            })
-       })
-    </script>
-</div>
+    });
+
+    //全选
+   $('#selectAll').bind('click', function(){
+       $('.checkAll').prop('checked', true);
+
+   });
+
+   //全选
+   $('#unselectAll').bind('click', function(){
+        $('.checkAll').prop('checked', false);
+   });
+
+   $('.set').on('click', function(){
+       var orders = '';
+       var fpsl = $('#parent option:selected').val();
+        $(".checkAll").each(function(){
+            if ($(this).prop("checked")) {
+                orders += $(this).val() + ",";
+            }
+        });
+
+        $.ajax({
+            type: 'POST',
+            dataType: 'JSON',
+            url: '/invoice/inv/tax',
+            data: {orderlist:orders,sl:fpsl}
+        }).done(function (data){
+            alert(data.msg);
+            window.location.reload();
+        })
+   })
+</script>

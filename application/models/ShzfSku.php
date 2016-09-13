@@ -54,11 +54,10 @@ class ShzfSkuModel{
     /**
      * @param $page_no
      * @param $page_size
-     * @param $use_hax_next
      * @param $sku_id
      * @return mixed
      */
-    public function getList($page_no, $page_size, $use_hax_next, $sku_id){
+    public function getList($page_no, $page_size, $sku_id = ''){
         $where = '1';
 
         if($sku_id){
@@ -72,14 +71,10 @@ class ShzfSkuModel{
             $sql = 'SELECT * FROM `'.$this->tableName. '` WHERE '. $where .' ORDER BY id DESC LIMIT '. $start .','.$page_size ;
             $stmt = $this->dbSlave->prepare($sql);
             $stmt->execute($pdo_params);
-            $data['data'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $data['list'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
             $data['total_nums'] = $this->getCount($where,$pdo_params);
         } catch (Exception $ex) {
             echo $ex->getMessage();
-        }
-
-        if ($use_hax_next) {
-            $data['has_next'] = count($data['data']) < $page_size ? 0 : 1;
         }
         return $data;
     }

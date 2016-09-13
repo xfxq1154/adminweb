@@ -26,9 +26,10 @@ class ShzfInvModel{
      * @param $page_size
      * @param string $mobile
      * @param string $order_id
+     * @param string $time
      * @return mixed
      */
-    public function getList($page_no, $page_size, $mobile = '', $order_id = ''){
+    public function getList($page_no, $page_size, $mobile = '', $order_id = '', $time = ''){
         $where = '1';
         
         if($mobile){
@@ -39,10 +40,14 @@ class ShzfInvModel{
             $where .= ' AND `order_id` LIKE :order_id';
             $pdo_params[':order_id'] = "%$order_id%";
         }
+        if ($time){
+            $where .= ' AND `update_time` LIKE :time';
+            $pdo_params[':time'] = "%$time%";
+        }
         $start = ($page_no - 1) * $page_size;
         
         try {
-            $sql = 'SELECT * FROM `'.$this->tableName. '` WHERE '. $where .' ORDER BY id ASC LIMIT '. $start .','.$page_size ;
+            $sql = 'SELECT * FROM `'.$this->tableName. '` WHERE '. $where .' ORDER BY id DESC LIMIT '. $start .','.$page_size ;
             $stmt = $this->dbSlave->prepare($sql);
             $stmt->execute($pdo_params);
             $data['list'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -50,7 +55,6 @@ class ShzfInvModel{
         } catch (Exception $ex) {
             echo $ex->getMessage();
         }
-        $data['has_next'] = count($data['data']) < $page_size ? 0 : 1;
         return $data;
     }
 
@@ -182,7 +186,9 @@ class ShzfInvModel{
     }
 
     /**
+     * @param $file
      * @desc 上传发票到oss
+     * @return array
      */
     public function ossUpload($file){
         if(!$file){
@@ -203,7 +209,7 @@ class ShzfInvModel{
             return FALSE;
         }
         $params['object'] = $object;
-        $params['timeout'] = 2592000;  //设置失效时间是30天
+        $params['timeout'] = 5188000;  //设置失效时间是60天
         $result = Imgapi::request(self::GET_URLSIGN, $params, 'POST');
         return $result;
     }
@@ -255,7 +261,7 @@ class ShzfInvModel{
      * @desc 获取组合订单
      */
     public function getCkdInvoice(){
-        $where = ' `sku_type` = :type ';
+        $where = ' `order_type` = :type ';
         $where .= ' AND `state` = :state ';
         $pdo_params[':state'] = 5;
         $pdo_params[':type'] = 1;

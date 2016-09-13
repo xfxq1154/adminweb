@@ -9,11 +9,10 @@ class AutoController extends Base
     private $shzfInvModel;
     /** @var  StoreModel */
     private $orderModel;
+    /** @var SkuModel  */
+    private $shzfSkuModel;
     /** @var ShzfDzfp */
     public $dzfp;
-    /** @var SkuModel  */
-    public $shzfSkuModel;
-
     public $error_msg = '';
 
     const INVOICE_SUCCESS = 2;
@@ -290,6 +289,7 @@ class AutoController extends Base
             'payment_fee'       => $order['payment_fee'],
             'create_time'       => $order['create_time'],
             'state'             => $order['state'],
+            'type'              => $order['type']
         ];
         $params['order_detail'] = $this->format_batch_detail($order['order_detail']);
 

@@ -2,7 +2,7 @@
 <div class="dux-tools clearfix">
     <div class="bread-head">生活作风<span class="small">电子发票</span></div>
     <div class="button-group float-right">
-        <a href="/invoice/inv/add" class="button button-small bg-blue icon-plus dropdown-toggle"> 添加订单 </a>
+        <a href="/invoice/inv/addInv" class="button button-small bg-blue icon-plus dropdown-toggle"> 添加订单 </a>
     </div>
 </div>
 <!--upload order file-->
@@ -13,10 +13,7 @@
                 <input type="text" class="input show_uo_imgs" id="files" name="file" placeholder="订单号" readonly=""/> &nbsp;
                 <a class="button bg-blue button-small " data="files" id="image_upload3" preview="image_preview3" href="javascript:;"> <span class="icon-upload">订单上传</span></a>
             </div>
-            <div class="form-group">
-                <input type="text" class="input show_uo_imgs" id="files" name="file" placeholder="sku编码" readonly=""/> &nbsp;
-                <a class="button bg-blue button-small " data="files" id="image_upload4" preview="image_preview4" href="javascript:;"><span class="icon-upload">上传</span></a>
-            </div>
+
             <div class="form-button">
                 <button class="button bg-dot" type="button" id="selectAll">选中全部</button>
                 <button class="button bg-sub" type="button" id="unselectAll">取消全选</button>
@@ -32,12 +29,12 @@
             <div class="form-inline">
                 <div class="form-group">
                     <div class="field" style="margin-left: 5px;">
-                        <input type="text" class="input" name="mobile" size="20" value="<?=$invoice_info['mobile']?>" placeholder="手机号">
-                        <input type="text" class="input" name="order_id" size="20" value="<?=$invoice_info['order_id']?>" placeholder="订单号">
+                        <input type="text" class="input" name="mobile" size="20" value="<?=$search['mobile']?>" placeholder="手机号">
+                        <input type="text" class="input" name="order_id" size="20" value="<?=$search['order_id']?>" placeholder="订单号">
                     </div>&nbsp;
                     <div class="field">
-                        <input type="text" class="input datebtn" style="width:100px;" name="time" value="<?=$invoice_info['time'];?>" onfocus="WdatePicker({startDate:'Y-M',dateFmt:'yyyy-MM'})" style="cursor:pointer;" size="60" placeholder="选择日期(月)" >
-                        <input type="text" class="input datebtn" style="width:100px;" name="time" value="<?=$invoice_info['time'];?>" onfocus="WdatePicker({startDate:'Y-m-d',dateFmt:'yyyy-MM-dd'})" style="cursor:pointer;" size="60" placeholder="选择日期(天)" >
+                        <input type="text" class="input datebtn" style="width:100px;" name="time" value="<?=$search['time'];?>" onfocus="WdatePicker({startDate:'Y-M',dateFmt:'yyyy-MM'})" style="cursor:pointer;" size="60" placeholder="选择日期(月)" >
+                        <input type="text" class="input datebtn" style="width:100px;" name="time" value="<?=$search['time'];?>" onfocus="WdatePicker({startDate:'Y-m-d',dateFmt:'yyyy-MM-dd'})" style="cursor:pointer;" size="60" placeholder="选择日期(天)" >
                     </div>&nbsp;
                     <div class="field">
                         <select class="input js-assign" style="text-align: center" name="status">
@@ -124,6 +121,7 @@
                                     <input type="hidden" value="<?=$val['state']?>" class="status">
                                     <?php echo $state_name[$val['state']]?>
                                 </td>
+                                <td><?=date('Y-m-d', strtotime($val['update_time']))?></td>
                                 <td>
                                     <?php if ($val['state'] == 4 && $val['type'] == 0):?>
                                         <button class="button bg-green button-small icon-eye-open" href="<?php echo $val['invoice_url'];?>" target="_blank" title="查看发票"></button> |
@@ -133,8 +131,9 @@
                                         <button class="button bg-blue button-small  icon-edit js-del" href="javascript:;" url="/invoice/inv/edit"></button> |
                                         <button class="button bg-red button-small icon-trash-o js-del" href="javascript:;" url="/invoice/inv/del" data='{"id":<?=$val['id']; ?>}' title="删除"></button>
                                     <?php elseif ($val['state'] == 1):?>
-                                        <button class="button bg-blue button-small  icon-edit" href="javascript:;" url="/invoice/inv/edit" data='{"id":<?=$val['id']; ?>}' title="修改信息"></button> |
-                                        <button class="button bg-blue button-small icon-pencil kaifapiao" title="开具发票"></button>
+                                        <a class="button bg-blue button-small icon-edit" href="/invoice/inv/edit/id/<?=$val['id']?>" title="修改"></a> |
+                                        <button class="button bg-blue button-small icon-pencil kaifapiao" title="开具发票"></button> |
+                                        <button class="button bg-red button-small icon-trash-o js-del" href="javascript:;" url="/invoice/inv/del" data='{"id":<?=$val['id']; ?>}' title="删除"></button>
                                     <?php elseif ($val['state'] == 4 && $val['type'] == 1):?>
                                         <button class="button bg-green button-small icon-eye-open" href="<?php echo $val['invoice_url'];?>" target="_blank" title="查看发票"></button>
                                     <?php endif;?>
@@ -154,7 +153,7 @@
 </div>
 <script>
     Do.ready('base', function () {
-        $('#table').duxForm();
+        $('#form').duxForm();
         $('#image_upload3').duxFileUpload({
             uploadUrl: '/Invoice/Upload/order',
             type: 'xls',
@@ -165,6 +164,7 @@
                     $('.orderval').append(data);
                 } else {
                     alert('上传成功');
+                    window.location.reload();
                 }
             }
         });
@@ -207,6 +207,23 @@
             window.location.reload();
         });
 
+    });
+
+    //重发短信
+    $('.sendmessage').on('click', function(){
+        var oTr = $(this).parents('td').parents('tr');
+        var phone = oTr.find('td').eq(4).text();
+        var id = oTr.find('td').eq(1).text();
+        var mobile = prompt('如需更改手机号请填写:', phone);
+
+        $.ajax({
+            type: 'POST',
+            dataType: 'JSON',
+            url: '/invoice/inv/resendMsg',
+            data: {phoneNum:mobile, id:id}
+        }).done(function (data){
+            alert(data.info);
+        });
     });
 
     //批量开票
