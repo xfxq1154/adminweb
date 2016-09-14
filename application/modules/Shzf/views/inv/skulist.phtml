@@ -12,7 +12,7 @@
         </div>
     </div>
     <div class="float-left">
-        <form action="/invoice/inv/skulist" method="GET" >
+        <form action="/Shzf/inv/skulist" method="GET" >
             <div class="form-inline">
                 <div class="form-group" style="margin-left:10px;">
                     <label><b>请输入搜索条件:</b></label>
@@ -75,7 +75,7 @@
                                 <td><?=$val['product_name']?></td>
                                 <td><?=$val['tax_tare']?></td>
                                 <td>
-                                    <button class="button bg-red button-small icon-trash-o js-del" href="javascript:;" url="/invoice/inv/delsku" data='{"id":<?php echo $val['id']; ?>}' title="删除"></button>
+                                    <button class="button bg-red button-small icon-trash-o js-del" href="javascript:;" url="/Shzf/inv/delsku" data='{"id":<?php echo $val['id']; ?>}' title="删除"></button>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -94,7 +94,7 @@
     Do.ready('base', function () {
         $('#form').duxForm();
         $('#image_upload3').duxFileUpload({
-            uploadUrl: '/Invoice/Upload/uSku',
+            uploadUrl: '/Shzf/Upload/uSku',
             type: 'xls',
             complete: function (data) {
                 if (data) {
@@ -131,7 +131,7 @@
         $.ajax({
             type: 'POST',
             dataType: 'JSON',
-            url: '/invoice/inv/tax',
+            url: '/Shzf/inv/tax',
             data: {orderlist:orders,sl:fpsl}
         }).done(function (data){
             alert(data.msg);
