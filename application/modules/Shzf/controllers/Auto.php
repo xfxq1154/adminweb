@@ -411,6 +411,9 @@ class AutoController extends Base
         $params['one_tax']          = $order['one_tax'];
         $params['two_tax']          = $order['two_tax'];
         $params['three_tax']        = $order['three_tax'];
+        $params['one_fee']          = $order['one_fee'];
+        $params['two_fee']          = $order['two_fee'];
+        $params['three_fee']        = $order['three_fee'];
 
         return $params;
     }

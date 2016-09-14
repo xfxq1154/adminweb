@@ -124,7 +124,7 @@
                                 <td><?=date('Y-m-d', strtotime($val['update_time']))?></td>
                                 <td>
                                     <?php if ($val['state'] == 4 && $val['type'] == 0):?>
-                                        <button class="button bg-green button-small icon-eye-open" href="<?php echo $val['invoice_url'];?>" target="_blank" title="查看发票"></button> |
+                                        <a class="button bg-green button-small icon-eye-open" href="<?php echo $val['invoice_url'];?>" target="_blank" title="查看发票"></a> |
                                         <button class="button bg-yellow button-small icon-envelope sendmessage" href="javascript:;" style="margin-left: 5px;" title="重新发送短信"></button> |
                                         <button class="button bg-red button-small icon-pencil js-del" href="javascript:;" url="/Shzf/inv/redInvoice" data='{"id":<?=$val['id']; ?>}' title="开具红票"></button>
                                     <?php elseif ($val['state'] == 3): ?>
@@ -135,7 +135,7 @@
                                         <button class="button bg-blue button-small icon-pencil kaifapiao" title="开具发票"></button> |
                                         <button class="button bg-red button-small icon-trash-o js-del" href="javascript:;" url="/Shzf/inv/del" data='{"id":<?=$val['id']; ?>}' title="删除"></button>
                                     <?php elseif ($val['state'] == 4 && $val['type'] == 1):?>
-                                        <button class="button bg-green button-small icon-eye-open" href="<?php echo $val['invoice_url'];?>" target="_blank" title="查看发票"></button>
+                                        <a class="button bg-green button-small icon-eye-open" href="<?php echo $val['invoice_url'];?>" target="_blank" title="查看发票"></a>
                                     <?php endif;?>
                                 </td>
                             </tr>
@@ -206,7 +206,6 @@
             alert(data.info);
             window.location.reload();
         });
-
     });
 
     //重发短信
@@ -216,6 +215,9 @@
         var id = oTr.find('td').eq(1).text();
         var mobile = prompt('如需更改手机号请填写:', phone);
 
+        if (mobile == null) {
+            return false;
+        }
         $.ajax({
             type: 'POST',
             dataType: 'JSON',
