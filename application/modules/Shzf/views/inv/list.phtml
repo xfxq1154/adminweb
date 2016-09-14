@@ -2,7 +2,7 @@
 <div class="dux-tools clearfix">
     <div class="bread-head">生活作风<span class="small">电子发票</span></div>
     <div class="button-group float-right">
-        <a href="/invoice/inv/addInv" class="button button-small bg-blue icon-plus dropdown-toggle"> 添加订单 </a>
+        <a href="/Shzf/inv/addInv" class="button button-small bg-blue icon-plus dropdown-toggle"> 添加订单 </a>
     </div>
 </div>
 <!--upload order file-->
@@ -25,7 +25,7 @@
 <!--secrech-->
 <div class="tools-function clearfix">
     <div class="float-left">
-        <form method="GET" action="/invoice/inv/list" >
+        <form method="GET" action="/Shzf/inv/list" >
             <div class="form-inline">
                 <div class="form-group">
                     <div class="field" style="margin-left: 5px;">
@@ -126,14 +126,14 @@
                                     <?php if ($val['state'] == 4 && $val['type'] == 0):?>
                                         <button class="button bg-green button-small icon-eye-open" href="<?php echo $val['invoice_url'];?>" target="_blank" title="查看发票"></button> |
                                         <button class="button bg-yellow button-small icon-envelope sendmessage" href="javascript:;" style="margin-left: 5px;" title="重新发送短信"></button> |
-                                        <button class="button bg-red button-small icon-pencil js-del" href="javascript:;" url="/invoice/inv/redInvoice" data='{"id":<?=$val['id']; ?>}' title="开具红票"></button>
+                                        <button class="button bg-red button-small icon-pencil js-del" href="javascript:;" url="/Shzf/inv/redInvoice" data='{"id":<?=$val['id']; ?>}' title="开具红票"></button>
                                     <?php elseif ($val['state'] == 3): ?>
-                                        <button class="button bg-blue button-small  icon-edit js-del" href="javascript:;" url="/invoice/inv/edit"></button> |
-                                        <button class="button bg-red button-small icon-trash-o js-del" href="javascript:;" url="/invoice/inv/del" data='{"id":<?=$val['id']; ?>}' title="删除"></button>
+                                        <button class="button bg-blue button-small  icon-edit js-del" href="javascript:;" url="/Shzf/inv/edit"></button> |
+                                        <button class="button bg-red button-small icon-trash-o js-del" href="javascript:;" url="/Shzf/inv/del" data='{"id":<?=$val['id']; ?>}' title="删除"></button>
                                     <?php elseif ($val['state'] == 1):?>
-                                        <a class="button bg-blue button-small icon-edit" href="/invoice/inv/edit/id/<?=$val['id']?>" title="修改"></a> |
+                                        <a class="button bg-blue button-small icon-edit" href="/Shzf/inv/edit/id/<?=$val['id']?>" title="修改"></a> |
                                         <button class="button bg-blue button-small icon-pencil kaifapiao" title="开具发票"></button> |
-                                        <button class="button bg-red button-small icon-trash-o js-del" href="javascript:;" url="/invoice/inv/del" data='{"id":<?=$val['id']; ?>}' title="删除"></button>
+                                        <button class="button bg-red button-small icon-trash-o js-del" href="javascript:;" url="/Shzf/inv/del" data='{"id":<?=$val['id']; ?>}' title="删除"></button>
                                     <?php elseif ($val['state'] == 4 && $val['type'] == 1):?>
                                         <button class="button bg-green button-small icon-eye-open" href="<?php echo $val['invoice_url'];?>" target="_blank" title="查看发票"></button>
                                     <?php endif;?>
@@ -155,7 +155,7 @@
     Do.ready('base', function () {
         $('#form').duxForm();
         $('#image_upload3').duxFileUpload({
-            uploadUrl: '/Invoice/Upload/order',
+            uploadUrl: '/Shzf/Upload/order',
             type: 'xls',
             complete: function (data) {
                 if (data) {
@@ -200,7 +200,7 @@
         $.ajax({
             type: 'POST',
             dataType: 'JSON',
-            url: '/invoice/inv/issued',
+            url: '/Shzf/inv/issued',
             data: {id:id,address:address,marchatName:marchatName,drawer:drawer,payee:payee,review:review}
         }).done(function (data){
             alert(data.info);
@@ -219,7 +219,7 @@
         $.ajax({
             type: 'POST',
             dataType: 'JSON',
-            url: '/invoice/inv/resendMsg',
+            url: '/Shzf/inv/resendMsg',
             data: {phoneNum:mobile, id:id}
         }).done(function (data){
             alert(data.info);
@@ -248,7 +248,7 @@
         $.ajax({
             type: 'POST',
             dataType: 'JSON',
-            url: '/invoice/inv/issued',
+            url: '/Shzf/inv/issued',
             data: {orders:orders,address:address,marchatName:marchatName,drawer:drawer,payee:payee,review:review}
         }).done(function (data){
             alert(data.info);

@@ -39,7 +39,7 @@ class InvController extends Base
         $month = $this->input_get_param('time');
 
         $result = $this->shzfInvModel->getList($page_no, 20, $mobile, $order_id, $month);
-        $this->renderPagger($page_no, $result['total_nums'], '/invoice/inv/list/page_no/{p}?order_id='.$order_id.'&mobile='.$mobile.'&time='.$month, 20);
+        $this->renderPagger($page_no, $result['total_nums'], '/Shzf/inv/list/page_no/{p}?order_id='.$order_id.'&mobile='.$mobile.'&time='.$month, 20);
         $this->assign('data', $result);
         $this->assign('search', ['time' => $month,'mobile' => $mobile, 'order_id' => $order_id]);
         $this->assign('state_name', $this->state_name);
@@ -56,7 +56,7 @@ class InvController extends Base
         $sku_id = $this->input_get_param('sku_id');
 
         $result = $this->shzfSkuModel->getList($page_no, 20, $sku_id);
-        $this->renderPagger($page_no, $result['total_nums'], '/invoice/inv/skulist/page_no/{p}', 20);
+        $this->renderPagger($page_no, $result['total_nums'], '/Shzf/inv/skulist/page_no/{p}', 20);
         $this->assign('data', $result);
         $this->layout('inv/skulist.phtml');
     }

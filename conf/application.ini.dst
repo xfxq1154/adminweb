@@ -3,7 +3,7 @@
 application.directory=ROOT_PATH "/application/"
 application.dispatcher.catchException = TRUE
 application.library = ROOT_PATH "/framework/library"
-application.modules = "Index,Store,Kf,Invoice"
+application.modules = "Index,Store,Kf,Inv"
 
 redis.master.host = redis.master.host
 redis.master.port = 6379
