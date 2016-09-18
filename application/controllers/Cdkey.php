@@ -24,7 +24,7 @@ class CdkeyController extends Base {
     }
 
     /**
-     * 优惠券页面
+     * 兑换码页面
      */
     public function indexAction() {
         $sku_outer_id = $this->getRequest()->get('sku_outer_id');
@@ -45,7 +45,7 @@ class CdkeyController extends Base {
         $this->assign('list', $result['data']);
         $this->layout("platform/cdkey_list.phtml");
     }
-
+    
     /**
      * 生成优惠券页面
      */
