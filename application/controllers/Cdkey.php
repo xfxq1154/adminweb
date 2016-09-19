@@ -45,7 +45,7 @@ class CdkeyController extends Base {
         $this->assign('list', $result['data']);
         $this->layout("platform/cdkey_list.phtml");
     }
-    
+
     /**
      * 生成优惠券页面
      */
@@ -152,10 +152,7 @@ class CdkeyController extends Base {
             $this->_outPut(self::ERROR_PARAM_MISS);
         }
 
-        $params = [
-            'cid' => $cid
-        ];
+        $params['cid'] = $cid;
         $this->cdkey_model->restore($params);
     }
-
 }

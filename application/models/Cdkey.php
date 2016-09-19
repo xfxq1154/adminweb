@@ -12,6 +12,7 @@ class CdkeyModel {
     const CDKEY_CREATE = 'create/exec';  //创建
     const CDKEY_LIST = 'search/getlist'; //获取批次列表
     const CDKEY_DETAIL_LIST = 'searchdetail/getlist';
+    const CDKEY_DETAIL = 'searchdetail/detail'; //获取兑换码转台
     const CDKEY_NULLIFY_EXEC = 'nullify/exec'; //作废兑换码
     const CDKEY_NULLIFY_RESTORE = 'nullify/restore'; //恢复已经作废的兑换码
     const CDKEY_LOG = 'log/write';
@@ -64,6 +65,15 @@ class CdkeyModel {
      */
     public function restore($params) {
         $result = Cdkey::request(self::CDKEY_NULLIFY_RESTORE, $params, "POST");
+
+        return $result;
+    }
+
+    /**
+     * 查询兑换码状态
+     */
+    public function detail($params) {
+        $result = Cdkey::request(self::CDKEY_DETAIL, $params, "GET");
 
         return $result;
     }
