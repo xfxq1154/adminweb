@@ -55,14 +55,19 @@ class ShzfSkuModel{
      * @param $page_no
      * @param $page_size
      * @param $sku_id
+     * @param $sku_name
      * @return mixed
      */
-    public function getList($page_no, $page_size, $sku_id = ''){
+    public function getList($page_no, $page_size, $sku_id = '', $sku_name = ''){
         $where = '1';
 
         if($sku_id){
             $where .= ' AND `sku_id` = :sku_id';
             $pdo_params[':sku_id'] = $sku_id;
+        }
+        if($sku_name){
+            $where .= ' AND `product_name` LIKE :name';
+            $pdo_params[':name'] = "%$sku_name%";
         }
 
         $start = ($page_no - 1) * $page_size;
