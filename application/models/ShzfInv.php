@@ -27,9 +27,10 @@ class ShzfInvModel{
      * @param string $mobile
      * @param string $order_id
      * @param string $time
+     * @param $state
      * @return mixed
      */
-    public function getList($page_no, $page_size, $mobile = '', $order_id = '', $time = ''){
+    public function getList($page_no, $page_size, $mobile = '', $order_id = '', $time = '', $state = ''){
         $where = '1';
         
         if($mobile){
@@ -40,8 +41,12 @@ class ShzfInvModel{
             $where .= ' AND `order_id` LIKE :order_id';
             $pdo_params[':order_id'] = "%$order_id%";
         }
+        if ($state){
+            $where .= ' AND `state` = :state';
+            $pdo_params[':state'] = $state;
+        }
         if ($time){
-            $where .= ' AND `update_time` LIKE :time';
+            $where .= ' AND `success_time` LIKE :time';
             $pdo_params[':time'] = "%$time%";
         }
         $start = ($page_no - 1) * $page_size;

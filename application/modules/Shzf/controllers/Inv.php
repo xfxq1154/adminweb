@@ -12,6 +12,13 @@ class InvController extends Base
     private $shzfInvModel;
     /** @var  ShzfSkuModel */
     private $shzfSkuModel;
+    public $status = [
+        1 => '未开发票',
+        2 => '开票成功',
+        3 => '开票失败',
+        4 => '已发短信',
+        5 => '开票中'
+    ];
 
     public $state_name = [
         1 => '<span class="tag bg-green">未开发票</span>',
@@ -34,13 +41,15 @@ class InvController extends Base
     {
         $this->checkRole();
         $page_no = $this->getRequest()->getParam('page_no', 1);
+        $state = $this->input_get_param('state');
         $order_id = $this->input_get_param('order_id');
         $mobile = $this->input_get_param('mobile');
         $month = $this->input_get_param('time');
 
-        $result = $this->shzfInvModel->getList($page_no, 20, $mobile, $order_id, $month);
-        $this->renderPagger($page_no, $result['total_nums'], '/Shzf/inv/list/page_no/{p}?order_id='.$order_id.'&mobile='.$mobile.'&time='.$month, 20);
+        $result = $this->shzfInvModel->getList($page_no, 20, $mobile, $order_id, $month, $state);
+        $this->renderPagger($page_no, $result['total_nums'], '/Shzf/inv/list/page_no/{p}?order_id='.$order_id.'&mobile='.$mobile.'&time='.$month.'&state='.$state, 20);
         $this->assign('data', $result);
+        $this->assign('status', $this->status[$state]);
         $this->assign('search', ['time' => $month,'mobile' => $mobile, 'order_id' => $order_id]);
         $this->assign('state_name', $this->state_name);
         $this->layout("inv/list.phtml");
@@ -54,8 +63,9 @@ class InvController extends Base
         $this->checkRole();
         $page_no = $this->getRequest()->getParam('page_no', 1);
         $sku_id = $this->input_get_param('sku_id');
+        $sku_name = $this->input_get_param('sku_name');
 
-        $result = $this->shzfSkuModel->getList($page_no, 20, $sku_id);
+        $result = $this->shzfSkuModel->getList($page_no, 20, $sku_id, $sku_name);
         $this->renderPagger($page_no, $result['total_nums'], '/Shzf/inv/skulist/page_no/{p}', 20);
         $this->assign('data', $result);
         $this->layout('inv/skulist.phtml');
