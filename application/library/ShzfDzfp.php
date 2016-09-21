@@ -20,7 +20,7 @@ class ShzfDzfp {
     public function fpkj($order, $detail) {
         //*必填参数
         $kjxx_data = array(
-            'FPQQLSH'       => strtotime(date('Y-m-d H:i:s')).mt_rand(100000,999999),   //*发票请求流水号
+            'FPQQLSH'       => $order['serial_num'],   //*发票请求流水号
             'KPLX'          => $order['type'],          //*开票类型 0 蓝字发票 1红字发票
             'XSF_NSRSBH'    => self::REQUEST_CODE,      //*销售方纳税人识别号
             'XSF_MC'        => $order['xsf_mc'],        //*销售方名称
