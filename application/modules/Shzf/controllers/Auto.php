@@ -163,39 +163,38 @@ class AutoController extends Base
     private function judgeInvTax($info)
     {
         $data = [];
-        if ($info['one_tax'] != '0.00') {
+        if ($info['one_fee'] != '0.00') {
             $data[] = [
                 'title' => '红字发票',
                 'num'   => 1,
-                'price' => $info['one_tax'],
-                'xmje'  => $info['one_tax'],
+                'price' => $info['one_fee'],
+                'xmje'  => $info['one_fee'],
                 'sl'    => '0.00',
                 'se'    => '0'
             ];
         }
 
-        if ($info['two_tax'] != '0.00') {
-            $price = round($info['two_tax'] / (1 + 0.06),2);
+        if ($info['two_fee'] != '0.00') {
             $data[] = [
                 'title' => '红字发票',
                 'num'   => 1,
-                'price' => $price,
-                'xmje'  => $price,
+                'price' => $info['two_fee'] - $info['two_tax'],
+                'xmje'  => $info['two_fee'] - $info['two_tax'],
                 'sl'    => '0.06',
-                'se'    => $info['two_tax'] - $price
+                'se'    => $info['two_tax']
             ];
         }
-        if ($info['three_tax'] != '0.00') {
-            $t_price = round($info['three_tax'] / (1 + 0.17),2);
+        if ($info['three_fee'] != '0.00') {
             $data[] = [
                 'title' => '红字发票',
                 'num'   => 1,
-                'price' => $t_price,
-                'xmje'  => $t_price,
+                'price' => $info['three_fee'] - $info['three_tax'],
+                'xmje'  => $info['three_fee'] - $info['three_tax'],
                 'sl'    => '0.17',
-                'se'    => $info['three_tax'] - $t_price
+                'se'    => $info['three_tax']
             ];
         }
+
         return $data;
     }
 
@@ -370,6 +369,7 @@ class AutoController extends Base
         $orders['mobile']       = $value['buyer_phone'];
         $orders['payee']        = $value['payee'];
         $orders['review']       = $value['review'];
+        $orders['serial_num']   = strtotime(date('Y-m-d H:i:s')).mt_rand(100000,999999);
         //开发票
         $result = $this->dzfp->fpkj($orders, $orders['order_detail']);
         if(!$result){
@@ -392,7 +392,7 @@ class AutoController extends Base
      */
     public function setParameter(array $order, $result){
         $params = array();
-
+        $params['serial_number']    = $order['serial_num'];
         $params['type']             = $order['type'];
         $params['invoice_code']     = $result['FPDM'];
         $params['invoice_number']   = $result['FPHM'];
