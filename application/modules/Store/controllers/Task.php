@@ -105,10 +105,7 @@ class TaskController extends Storebase{
         }
         return $datas;
     }
-
-    /*
-     * 格式化数据
-     */
+    
     public function tidy($data) {
         $s['topic'] = $data['topic'];
         $s['jobid'] = $data['jobid'];
