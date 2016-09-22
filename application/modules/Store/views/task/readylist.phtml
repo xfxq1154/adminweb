@@ -16,7 +16,13 @@
             <div class="form-inline">
                 <div class="form-group">
                     <div class="field">
-                        <input type="text" class="input" id="keyword" name="topic" size="20" value="<?=$search['topic']?>" placeholder="Topic">
+                        <select class="input js-assign" target="#tpl" name="topic" datatype="*" id="parent">
+                            <option value="">请选择Topic</option>
+                            <option value="main" <?=($search['topic'] == 'main') ? 'selected': ''?>>Main</option>
+                            <option value="order" <?=($search['topic'] == 'order') ? 'selected': ''?>>Order</option>
+                            <option value="notify" <?=($search['topic'] == 'notify') ? 'selected': ''?>>Notify</option>
+                            <option value="others" <?=($search['topic'] == 'others') ? 'selected': ''?>>Others</option>
+                        </select>
                     </div>&nbsp;
                     <div class="field">
                         <input type="text" class="input" id="keyword" name="worker" size="20" value="<?=$search['worker']?>" placeholder="Worker">
