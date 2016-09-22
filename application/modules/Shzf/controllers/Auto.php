@@ -143,6 +143,7 @@ class AutoController extends Base
         $orders['mobile']           = $info['buyer_phone'];
         $orders['order_id']         = $info['order_id'];
         $orders['create_time']      = $info['create_time'];
+        $orders['serial_num']       = strtotime(date('Y-m-d H:i:s')).mt_rand(100000,999999);
 
         //设置不同税率开票金额
         $detail = $this->judgeInvTax($info);
