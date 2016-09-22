@@ -34,9 +34,9 @@
                     <div class="field">
                         <input type="text" class="input" id="keyword" name="outer_tid" size="20" value="<?=$outer_tid?>" placeholder="交易单号">
                     </div>&nbsp;
-                    <div class="field">
-                        <input type="text" class="input" id="keyword" name="spm" size="20" value="<?=$spm?>" placeholder="分销spm编码">
-                    </div>
+<!--                    <div class="field">-->
+<!--                        <input type="text" class="input" id="keyword" name="spm" size="20" value="--><?//=$spm?><!--" placeholder="分销spm编码">-->
+<!--                    </div>-->
                 </div>
                 <div class="form-button">
                     <button class="button" type="submit">搜索</button>
@@ -55,11 +55,9 @@
                         <th width="*">商品总价</th>
                         <th width="*">实付</th>
                         <th width="*">店铺</th>
-                        <th width="*">收货人姓名</th>
                         <th width="*">收货人地区</th>
                         <th width="*">订单状态</th>
                         <th width="*">支付方式</th>
-                        <th width="*">付款时间</th>
                         <th width="*">创建时间</th>
                         <th width="*">更新时间</th>
                     </tr>
@@ -70,7 +68,6 @@
                                 <td><?php echo $val['total_fee']; ?></td>
                                 <td><?php echo $val['payment_fee']; ?></td>
                                 <td><?php echo $val['showcase_name'];?></td>
-                                <td><?php echo $val['receiver_name'] ? :'--'; ?></td>
                                 <td><?php echo $val['receiver_province'] ? : '--'; ?></td>
                                 <?php
                                 switch ($val['state']){
@@ -97,7 +94,6 @@
                                 ?>
                                 <td><span class="tag bg-<?=$bg?>"><?php echo $val['state_name']; ?></span></td>
                                 <td><span class="tag bg-<?=$bg = $val['pay_type'] == 'WECHAT' ? 'blue' : 'green';?>"><?php echo $val['pay_type'] == 'WECHAT' ? '微信支付' : '京东支付'; ?></span></td>
-                                <td><?php echo $val['pay_time']; ?></td>
                                 <td><?php echo $val['create_time'];?></td>
                                 <td><?php echo $val['update_time'];?></td>
                             </tr>

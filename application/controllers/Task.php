@@ -1,10 +1,10 @@
 <?php
-
-/* 
+/**
  * @name：TaskController
- * @author:why
+ * @author:yanbo
  * @desc:大平台队列监控
  */
+
 class TaskController extends Base{
     
     use Trait_Pagger;

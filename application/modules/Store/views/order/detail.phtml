@@ -61,7 +61,7 @@
                     </tr>
                     <tr>
                         <td align="right">订单状态：</td>
-                        <td><?=$oinfo[state_name]?></td>
+                        <td><?=$oinfo[state_name]?> - <?=$oinfo[state]?></td>
                     </tr>
                     <tr>
                         <td align="right">支付类型：</td>
@@ -72,11 +72,19 @@
                         <td><?=$oinfo[pay_time]?></td>
                     </tr>
                     <tr>
-                        <td align="right">订单创建时间：</td>
+                        <td align="right">退款时间：</td>
+                        <td><?=$oinfo[refund_time]?></td>
+                    </tr>
+                    <tr>
+                        <td align="right">发货时间：</td>
+                        <td><?=$oinfo[shipping_time]?></td>
+                    </tr>
+                    <tr>
+                        <td align="right">创建时间：</td>
                         <td><?=$oinfo[create_time]?></td>
                     </tr>
                     <tr>
-                        <td align="right">订单更新时间：</td>
+                        <td align="right">更新时间：</td>
                         <td><?=$oinfo[update_time]?></td>
                     </tr>
                 </tbody>

@@ -7,11 +7,11 @@
 class OrderController extends Storebase {
 
     private $order_status = array(
-        'WAIT_BUYER_PAY' => '等待买家付款',
-        'WAIT_SELLER_SEND_GOODS' => '等待商家发货',
-        'WAIT_BUYER_CONFIRM_GOODS' => '待买家确认收货',
-        'TRADE_BUYER_SIGNED' => '买家已签收',
-        'TRADE_CLOSED' => '退款完成',
+        'WAIT_BUYER_PAY' => '待付款',
+        'WAIT_SELLER_SEND_GOODS' => '待发货',
+        'WAIT_BUYER_CONFIRM_GOODS' => '已发货',
+        'TRADE_BUYER_SIGNED' => '已签收',
+        'TRADE_CLOSED' => '已退款',
         'TRADE_CLOSED_BY_USER' => '已关闭',
     );
     
@@ -72,10 +72,6 @@ class OrderController extends Storebase {
         $this->layout("order/detail.phtml");
     }
 
-    /*
-     * 格式化数据
-     */
-
     public function tidy($order) {
         $o['order_id'] = $order['order_id'];
         $o['total_fee'] = $order['total_fee'];
@@ -101,6 +97,8 @@ class OrderController extends Storebase {
         $o['pay_type'] = $order['pay_type'];
         $o['pay_time'] = $order['pay_time'];
         $o['create_time'] = $order['create_time'];
+        $o['refund_time'] = $order['refund_time'];
+        $o['shipping_time'] = $order['shipping_time'];
         $o['update_time'] = $order['update_time'];
         $o['order_detail'] = $order['order_detail'];
         $o['spm'] = $order['spm'];
