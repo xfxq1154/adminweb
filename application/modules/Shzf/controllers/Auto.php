@@ -152,7 +152,7 @@ class AutoController extends Base
             $this->shzfInvModel->update($info['id'], ['state_message' => $this->dzfp->getError(), 'state' => self::INVOICE_FAIL]);
             return false;
         }
-        $this->shzfInvModel->update($info['id'], ['state' => self::RED_INVOICE_SUCCESS, 'state_message' => '红字发票开具成功']);
+        $this->shzfInvModel->update($info['id'], ['state' => self::RED_INVOICE_SUCCESS, 'serial_number' => $orders['serial_num'], 'state_message' => '红字发票开具成功']);
         return true;
     }
 
