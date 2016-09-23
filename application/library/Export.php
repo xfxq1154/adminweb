@@ -46,7 +46,8 @@ class Export {
         }
 
     }
-    
+
+
     /**
      * 设置数据编码，将utf-8转换为gbk
      * @param array $row
@@ -70,6 +71,35 @@ class Export {
         return $this->delimiter.implode("\t".$this->delimiter.$this->separator.$this->delimiter, $data)."\t$this->delimiter\r\n";
     }
 
+    /**
+     * 设置数据编码，将utf-8转换为gbk
+     * @param array $row
+     * @return array
+     */
+    private function _setCharsetOne($row) {
+        return iconv('UTF-8', 'GBK//TRANSLIT//IGNORE', $row);
+    }
+
+    /**
+     * 输出数据
+     * @param array $data
+     */
+    public function outPutOne($data) {
+        foreach ($data as $row_in) {
+            $row_out = $this->_setCharsetOne($row_in);
+            echo $this->formatCSVOne($row_out);
+        }
+
+    }
+
+    /**
+     * 格式化csv格式数据 只支持一行
+     * @param array $data
+     * @return string
+     */
+    private function formatCSVOne($data=array()) {
+        return $data."\n";
+    }
 
     /** 转义字符串
      * @param  String $str

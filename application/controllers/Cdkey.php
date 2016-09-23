@@ -100,7 +100,26 @@ class CdkeyController extends Base {
     }
 
     /**
-     * 生成CSV文件
+     * 导出兑换码详情
+     */
+    public function exportDetailAction() {
+        $cid = $this->getRequest()->get('cid');
+
+        $params = [
+            'cid' => $cid
+        ];
+
+        $result = $this->cdkey_model->export($params);
+        $this->cdkey_model->cdkeyLog('导出商品兑换码详情', $params);
+        
+        $export = new Export();
+        $export->setTitle($result, Fields::$cdkey);
+        $export->outPut($result);
+        exit;
+    }
+
+    /**
+     * 单独导出兑换码
      */
     public function exportAction() {
         $cid = $this->getRequest()->get('cid');
@@ -110,11 +129,11 @@ class CdkeyController extends Base {
         ];
 
         $result = $this->cdkey_model->export($params);
+        $data = $this->formatCdkeyList($result);
         $this->cdkey_model->cdkeyLog('导出商品兑换码', $params);
         
         $export = new Export();
-        $export->setTitle($result, Fields::$cdkey);
-        $export->outPut($result);
+        $export->outPutOne($data);
         exit;
     }
 
@@ -156,6 +175,20 @@ class CdkeyController extends Base {
             'cid' => $cid
         ];
         $this->cdkey_model->restore($params);
+    }
+
+    /**
+     * 格式化CDKEY列表, 只取CDKEY一列
+     */
+    private function formatCdkeyList($data) {
+        $array = array();
+        if($data) {
+            foreach($data as $key => $value) {
+                $array[$key] = $value['cdkey'];
+            }
+        }
+
+        return $array;
     }
 
 }
