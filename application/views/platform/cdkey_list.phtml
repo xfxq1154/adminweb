@@ -63,7 +63,10 @@
                             <?php } elseif($val['status'] == 2) { ?>
                                 <td><a class="button button-small bg-green" href="javascript:void(0)" >生成中..</a></td>
                             <?php } elseif($val['status'] == 1)  {?>
-                                <td><a class="button button-small bg-green" href="/cdkey/export?cid=<?php echo $val['id']; ?>" >导出</a></td>
+                                <td>
+                                    <a class="button button-small bg-green" href="/cdkey/export?cid=<?php echo $val['id']; ?>" >导出</a>
+                                    <a class="button button-small bg-green" href="/cdkey/exportDetail?cid=<?php echo $val['id']; ?>" >详情</a>
+                                </td>
                             <?php } else {?>
                                 <td><a class="button button-small" href="javascript:void(0)" >作废</a></td>
                             <?php } ?>
