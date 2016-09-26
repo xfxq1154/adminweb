@@ -24,13 +24,13 @@ class CdkeyController extends Base {
     }
 
     /**
-     * 优惠券页面
+     * 兑换码页面
      */
     public function indexAction() {
         $sku_outer_id = $this->getRequest()->get('sku_outer_id');
         $batch_number = $this->getRequest()->get('batch_number');
         $cid = $this->getRequest()->get('cid');
-        $page_no      = (int)$this->getRequest()->get('p', 1);
+        $page_no = (int)$this->getRequest()->get('p', 1);
 
         $params = [
             'sku_outer_id' => $sku_outer_id,
@@ -58,6 +58,25 @@ class CdkeyController extends Base {
      */
     public function nullifyTplAction() {
         $this->layout("platform/cdkey_nullify.phtml");
+    }
+
+    /**
+     * 查询兑换码状态页面
+     */
+    public function infoTplAction() {
+        $cdkey = $this->getRequest()->get('cdkey');;
+
+        if(!$cdkey) {
+            $result = $this->defaultInfo();
+        } else {
+            $params['cdkey'] = $cdkey;
+            $result = $this->cdkey_model->info($params);
+            if(!$result) {
+                $result = $this->defaultInfo();
+            }
+        }
+        $this->assign('list', $result);
+        $this->layout("platform/cdkey_info.phtml");
     }
 
     /**
@@ -171,9 +190,7 @@ class CdkeyController extends Base {
             $this->_outPut(self::ERROR_PARAM_MISS);
         }
 
-        $params = [
-            'cid' => $cid
-        ];
+        $params['cid'] = $cid;
         $this->cdkey_model->restore($params);
     }
 
@@ -191,4 +208,15 @@ class CdkeyController extends Base {
         return $array;
     }
 
+
+    private function defaultInfo() {
+        return [
+            'sku_outer_id'  => NULL,
+            'validity_time' => NULL,
+            'exchange_time' => NULL,
+            'uuid'          => NULL,
+            'serial_num'    => NULL,
+            'status'        => NULL,
+        ];
+    }
 }

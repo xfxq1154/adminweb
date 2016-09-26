@@ -9,12 +9,13 @@
 
 class CdkeyModel {
 
-    const CDKEY_CREATE = 'cdkey/add';  //创建
-    const CDKEY_LIST   = 'cdkeylist/getlistofouter'; //获取批次列表
-    const CDKEY_COUNT  = 'cdkeylist/getlistcount';
-    const CDKEY_NULLIFY_EXEC  = 'nullify/exec'; //作废兑换码
-    const CDKEY_NULLIFY_RESTORE  = 'nullify/restore'; //恢复已经作废的兑换码
-    const CDKEY_LOG    = 'log/write';
+    const CDKEY_CREATE = 'create/exec';  //创建
+    const CDKEY_LIST = 'search/getlist'; //获取批次列表
+    const CDKEY_DETAIL_LIST = 'searchdetail/getlist';
+    const CDKEY_INFO = 'searchdetail/info'; //查询cdkey详情
+    const CDKEY_NULLIFY_EXEC = 'nullify/exec'; //作废兑换码
+    const CDKEY_NULLIFY_RESTORE = 'nullify/restore'; //恢复已经作废的兑换码
+    const CDKEY_LOG = 'log/write'; //写入日志
     
     /**
      * 生成优惠券并提交到数据库
@@ -45,7 +46,7 @@ class CdkeyModel {
      * 导出兑换码
      */
     public function export($params) {
-        $result = Cdkey::request(self::CDKEY_COUNT, $params, "POST");
+        $result = Cdkey::request(self::CDKEY_DETAIL_LIST, $params, "POST");
 
         return $result;
     }
@@ -64,6 +65,15 @@ class CdkeyModel {
      */
     public function restore($params) {
         $result = Cdkey::request(self::CDKEY_NULLIFY_RESTORE, $params, "POST");
+
+        return $result;
+    }
+
+    /**
+     * 查询兑换码状态
+     */
+    public function info($params) {
+        $result = Cdkey::request(self::CDKEY_INFO, $params, "POST");
 
         return $result;
     }
