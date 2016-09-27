@@ -180,7 +180,7 @@ class ShzfInvModel{
         $where = ' `state` = :state ';
         $pdo_params[':state'] = 2;
         try{
-            $sql = "SELECT * FROM `".$this->tableName."` WHERE $where order by `id` desc";
+            $sql = "SELECT * FROM `".$this->tableName."` WHERE $where order by `id` desc LIMIT 30";
             $stmt = $this->dbSlave->prepare($sql);
             $stmt->execute($pdo_params);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
