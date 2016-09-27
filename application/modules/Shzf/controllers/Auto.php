@@ -211,8 +211,6 @@ class AutoController extends Base
      * @desc 重新计算删除个别sku后的合计税额,合计金额
      */
     private function regroupSku($order){
-        $hjse = '';
-        $payment_fee = '';
         $one_tax = 0.00;    //税率为0.00的税额
         $two_tax = 0.00;    //税率为0.06的税额
         $three_tax = 0.00;    //税率为0.17的税额
@@ -220,22 +218,17 @@ class AutoController extends Base
         $two_fee = 0.00;    //税率为0.06的金额
         $three_fee = 0.00;    //税率为0.17的金额
         foreach ($order['order_detail'] as &$d_val){
-            $hjse += $d_val['se'];
-            $payment_fee += $d_val['pay_price'];
             if ($d_val['sl'] == '0.00') {
-                $one_fee += $d_val['pay_price'];
+                $one_fee += $d_val['pay_price'] * $d_val['num'];
                 $one_tax += $d_val['se'];
             } elseif ($d_val['sl'] == '0.06') {
+                $two_fee += $d_val['pay_price'] * $d_val['num'];
                 $two_tax += $d_val['se'];
-                $two_fee += $d_val['pay_price'];
             } else {
+                $three_fee += $d_val['pay_price'] * $d_val['num'];
                 $three_tax += $d_val['se'];
-                $three_fee += $d_val['pay_price'];
             }
         }
-        $order['hjse'] = $hjse;
-        $order['jshj'] = $payment_fee;
-        $order['hjje'] = $payment_fee - $hjse;
         $order['one_tax'] = $one_tax;
         $order['two_tax'] = $two_tax;
         $order['three_tax'] = $three_tax;
@@ -346,13 +339,14 @@ class AutoController extends Base
      */
     public function treatingSku($order, $skuRate){
         foreach ($order['order_detail'] as &$d_val){
-            $price = round($d_val['pay_price'] / $d_val['num'], 2); //价格(含税)
             $d_val['sl'] = $skuRate[$d_val['outer_sku_id']];
-            $d_val['se'] = round($price - ($price / (1 + $d_val['sl'])),2); //税额 等于支付金额 减去支付金额除1+税率
-            $d_val['xmje'] = $price - $d_val['se']; //支付金额 - 税额 = 项目金额
-            $d_val['price'] = $d_val['xmje'];
-            $order['hjse'] += $d_val['se'];
-            $order['jshj'] += $price;
+            $se = round($d_val['pay_price'] - ($d_val['pay_price'] / (1 + $d_val['sl'])),2); //税额 等于支付金额 减去支付金额除1+税率
+            $d_val['se'] = $se * $d_val['num'];
+            $d_val['xmje'] = ($d_val['pay_price'] - $se) * $d_val['num']; //支付金额 - 税额 = 项目金额
+            $d_val['price'] = $d_val['pay_price'] - $se;
+            $order['hjse'] += $d_val['se']; //合计税额 = 当个商品的税额 * 购买数量 如果存在多个sku 则税额累加
+            $order['jshj'] += $d_val['pay_price'] * $d_val['num'];      //同上
+            $order['hjje'] += $d_val['xmje'];
         }
         return $order;
     }

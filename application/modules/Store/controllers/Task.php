@@ -72,12 +72,12 @@ class TaskController extends Storebase{
     }
 
     public function delayListAction(){
-        $topic = $this->input_get_param('name', 'async');
+        $topic = $this->input_get_param('name');
         $started = $this->input_get_param('started', time());
         $ended = $this->input_get_param('ended', strtotime('+1 days'));
 
         $masterRedis = $this->getMasterRedis();
-        $store_dealy_async_jobs = $masterRedis->zRangeByScore('store:task:delay:async', $started, $ended);
+        $store_dealy_async_jobs = $masterRedis->zRangeByScore('store:task:delay:'.$topic, $started, $ended);
 
         $jobs = [];
         foreach ($store_dealy_async_jobs as $jobid){
@@ -89,6 +89,7 @@ class TaskController extends Storebase{
             ];
         }
 
+        $this->assign("search", $this->input_get());
         $this->assign('jobs', $jobs);
         $this->layout('task/delaylist.phtml');
     }
