@@ -11,6 +11,28 @@
         </div>
     </div>
 </div>
+<div class="table-tools clearfix ">
+    <div class="float-left">
+        <form method="GET" action="/store/task/delaylist" >
+            <div class="form-inline">
+                <div class="form-group">
+                    <div class="field">
+                        <select class="input js-assign" target="#tpl" name="topic" datatype="*" id="parent">
+                            <option value="">请选择Topic</option>
+                            <option value="main" <?=($search['topic'] == 'main') ? 'selected': ''?>>Main</option>
+                            <option value="order" <?=($search['topic'] == 'order') ? 'selected': ''?>>Order</option>
+                            <option value="notify" <?=($search['topic'] == 'notify') ? 'selected': ''?>>Notify</option>
+                            <option value="others" <?=($search['topic'] == 'others') ? 'selected': ''?>>Others</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-button">
+                    <button class="button" type="submit">搜索</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 <div class="admin-main">
     <div class="panel dux-box">
         <div class="table-responsive">

@@ -40,15 +40,14 @@ class RedisMonitorController extends Base {
         $db2 = isset($redis_info['db2']) ? $redis_info['db2'] : '' ;//db2
         $db3 = isset($redis_info['db3']) ? $redis_info['db3'] : '' ;//db3
 
-        $list_store_main = (int)$this->masterRedis->llen('store:task:main');
+        $topics = ['main', 'order', 'notify', 'others'];
+        foreach ($topics as $topic){
+            $topic_list[$topic]['ready'] = (int)$this->masterRedis->llen("store:task:ready:$topic");
+            $topic_list[$topic]['delay'] = (int)$this->masterRedis->zCard("store:task:delay:$topic");
+        }
+
         $list_store_logs = (int)$this->masterRedis->llen('store:task:logs');
         $list_store_sh5logs = (int)$this->masterRedis->llen('store:task:sh5logs');
-        $list_store_ready_main = (int)$this->masterRedis->llen('store:task:ready:main');
-        $list_store_ready_async = (int)$this->masterRedis->llen('store:task:ready:async');
-        $list_store_ready_notify = (int)$this->masterRedis->llen('store:task:ready:notify');
-        $list_store_ready_logs = (int)$this->masterRedis->llen('store:task:ready:logs');
-        $list_store_dealy_async = (int)$this->masterRedis->zCard('store:task:delay:async');
-        $list_store_ready_others = (int)$this->masterRedis->llen('store:task:ready:others');
 
         $keyspace_hits_percentage = round(($keyspace_hits/($keyspace_hits+$keyspace_misses)) * 100, 2); //命中率
 
@@ -65,37 +64,10 @@ class RedisMonitorController extends Base {
         $this->assign('db2', $db2);
         $this->assign('db3', $db3);
 
-        $this->assign('list_store_main', $list_store_main);
+        $this->assign('topic_list', $topic_list);
         $this->assign('list_store_logs', $list_store_logs);
         $this->assign('list_store_sh5logs', $list_store_sh5logs);
-        $this->assign('list_store_ready_main', $list_store_ready_main);
-        $this->assign('list_store_ready_async', $list_store_ready_async);
-        $this->assign('list_store_ready_notify', $list_store_ready_notify);
-        $this->assign('list_store_ready_logs', $list_store_ready_logs);
-        $this->assign('list_store_dealy_async', $list_store_dealy_async);
-        $this->assign('list_store_ready_others', $list_store_ready_others);
 
         $this->layout('platform/redismonitor.phtml');
-    }
-
-    public function zsetAction(){
-        $name = $this->input_get_param('name');
-        $started = $this->input_get_param('started', time());
-        $ended = $this->input_get_param('ended', strtotime('+1 days'));
-
-        $store_dealy_async_jobs = $this->masterRedis->zRangeByScore('store:task:delay:async', $started, $ended);
-
-        $jobs = [];
-        foreach ($store_dealy_async_jobs as $jobid){
-            $time = $this->masterRedis->zScore('store:task:delay:async', $jobid);
-            $jobs[] = [
-                'time'    => date('Y-m-d H:i:s', $time),
-                'body'    => $this->masterRedis->hGet("store:job:$jobid", 'params'),
-                'remain'  => $time - time()
-            ];
-        }
-
-        $this->assign('jobs', $jobs);
-        $this->layout('platform/zsetmonitor.phtml');
     }
 }
