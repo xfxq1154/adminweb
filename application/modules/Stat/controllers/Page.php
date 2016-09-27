@@ -90,7 +90,7 @@ class PageController extends Statbase {
         $this->assign("search", $this->input_get());
 
         $query_string = http_build_query($this->input_get());
-        $this->renderPagger($page_no, $result['total_nums'], "/store/statcenter/pagedetail?$query_string&page_no={p}", $params['page_size']);
+        $this->renderPagger($page_no, $result['total_nums'], "/stat/page/pagedetail?$query_string&page_no={p}", $params['page_size']);
 
         $this->_display('page/pagedetail.phtml');
     }
