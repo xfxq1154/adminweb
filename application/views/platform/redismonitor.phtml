@@ -203,7 +203,7 @@
                         <tr>
                             <td><?=$key?></td>
                             <td><?=$item['ready']?></td>
-                            <td><?=$item['delay']?></td>
+                            <td><a href="/store/task/delaylist?topic=<?=$key?>"><?=$item['delay']?></a></td>
                         </tr>
                         <?php endforeach;?>
                     </table>
