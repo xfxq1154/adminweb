@@ -72,7 +72,7 @@ class TaskController extends Storebase{
     }
 
     public function delayListAction(){
-        $topic = $this->input_get_param('name');
+        $topic = $this->input_get_param('topic');
         $started = $this->input_get_param('started', time());
         $ended = $this->input_get_param('ended', strtotime('+1 days'));
 
