@@ -1399,7 +1399,7 @@ a.text-white:hover, .bg-inverse a:hover{color:#ddd;}
 
 
 /*--------自定义链接颜色(可选)--------*/
-a{color:#333;text-decoration:none;} /*链接-颜色*/
+a{color:#249bdf;text-decoration:none;} /*链接-颜色*/
 a:focus,a:hover{color:#09c;} /*链接-悬浮颜色*/
 /*--------自定义文本颜色--------*/
 .text-main, a.text-main:link, a.text-main:visited,.button.border-main,blockquote.border-main strong,.pager.border-main a,.pager-prev.border-main,.pager-next.border-main,.nav a:hover,.nav-menu.nav-pills .active ul a:hover,.bg-inverse .nav-menu ul a:hover,.bg-inverse .nav.nav-menu.nav-tabs ul a:hover,.bg-inverse .nav.nav-menu.nav-tabs .active ul a:hover,.bg-inverse .nav.nav-menu.nav-pills ul a:hover,.bg-inverse .nav.nav-menu.nav-pills .active ul a:hover
