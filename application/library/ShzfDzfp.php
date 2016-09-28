@@ -18,6 +18,9 @@ class ShzfDzfp {
      * @return array|bool
      */
     public function fpkj($order, $detail) {
+        if (empty($detail)) {
+            $this->err_msg = '必传参数缺失';
+        }
         //*必填参数
         $kjxx_data = array(
             'FPQQLSH'       => $order['serial_num'],   //*发票请求流水号

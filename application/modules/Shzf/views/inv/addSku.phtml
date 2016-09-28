@@ -1,0 +1,62 @@
+<div class="dux-tools">
+    <div class="bread-head">生活作风<span class="small">录入sku编码</span>
+        <div class="float-right">
+            <a class="button button-small bg-main icon-list" href="/shzf/inv/skulist">sku列表</a>
+        </div>
+    </div>
+</div>
+<div class="admin-main">
+    <form method="post" class="form-x dux-form form-auto" id="form" action="/shzf/inv/addsku" >
+        <div class="tab dux-tab">
+            <div class="panel dux-box  active">
+                <div class="tab-body">
+                    <div class="tab-panel active" id="tab-1">
+                        <div class="form-group">
+                            <div class="label">
+                                <label>sku编号/条形码:</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" name="sku_id"  datatype="s">
+                                <div class="input-note">请填写sku编号/条形码</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="label">
+                                <label>商品名称:</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" class="input" style="width:220px;" name="product_name"  datatype="*">
+                                <div class="input-note">请填写商品名称</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="label">
+                                <label>请选择税率:</label>
+                            </div>
+                            <div class="field">
+                                <select class="input js-assign" name="tax_tare" datatype="*" id="parent">
+                                    <option value=0.00>0.00</option>
+                                    <option value=0.06>0.06</option>
+                                    <option value=0.17>0.17</option>
+                                </select>
+                                <div class="input-note">请选择税率</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-foot">
+                    <div class="form-button">
+                        <button class="button bg-main" type="submit">保存</button>
+                        <button class="button bg" type="reset">重置</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    Do.ready('base', function () {
+        //表单综合处理
+        $('#form').duxFormPage();
+    });
+</script>

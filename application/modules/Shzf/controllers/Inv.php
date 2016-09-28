@@ -93,6 +93,26 @@ class InvController extends Base
     }
 
     /**
+     * @explain 单独添加sku
+     */
+    public function addSkuAction()
+    {
+        if ($this->getRequest()->isPost()){
+            $skus = array();
+            $skus['sku_id'] = $this->getRequest()->getPost('sku_id');
+            $skus['product_name'] = $this->getRequest()->getPost('product_name');
+            $skus['tax_tare'] = $this->getRequest()->getPost('tax_tare');
+
+            $result = $this->shzfSkuModel->insert($skus);
+            if(!$result){
+                Tools::output(array('info' => '添加失败', 'status' => 0));
+            }
+            Tools::output(array('info' => '添加成功', 'status' => 1));
+        }
+        $this->layout('inv/addSku.phtml');
+    }
+
+    /**
      * @explain 删除订单
      */
     public function delAction()

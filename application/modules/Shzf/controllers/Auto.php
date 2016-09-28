@@ -31,7 +31,8 @@ class AutoController extends Base
      * @desc 获取发票pdf文件，并且发送短信给用户
      * @frequency 每5分钟运行一次
      */
-    public function SendMessageAction(){
+    public function sendMessageAction()
+    {
         $datas = $this->shzfInvModel->getAll();
         //过滤空数组
         $invoice_data = array_filter($datas);
@@ -78,7 +79,8 @@ class AutoController extends Base
      * @desc 开具电子发票
      * @frequency 每10分钟运行一次
      */
-    public function createInvoiceAction(){
+    public function createInvoiceAction()
+    {
         $result = $this->shzfInvModel->getPendingInvoice();
         $datas = array_filter($result);
         if (!$datas) {
@@ -210,7 +212,9 @@ class AutoController extends Base
      * @return mixed
      * @desc 重新计算删除个别sku后的合计税额,合计金额
      */
-    private function regroupSku($order){
+    private function regroupSku($order)
+    {
+        $jshj = $hjse = $hjje = 0.00;
         $one_tax = 0.00;    //税率为0.00的税额
         $two_tax = 0.00;    //税率为0.06的税额
         $three_tax = 0.00;    //税率为0.17的税额
@@ -218,6 +222,9 @@ class AutoController extends Base
         $two_fee = 0.00;    //税率为0.06的金额
         $three_fee = 0.00;    //税率为0.17的金额
         foreach ($order['order_detail'] as &$d_val){
+            $hjse += $d_val['se'];      //合计税额
+            $jshj += $d_val['pay_price'] * $d_val['num'];
+            $hjje += $d_val['xmje'];
             if ($d_val['sl'] == '0.00') {
                 $one_fee += $d_val['pay_price'] * $d_val['num'];
                 $one_tax += $d_val['se'];
@@ -229,6 +236,9 @@ class AutoController extends Base
                 $three_tax += $d_val['se'];
             }
         }
+        $order['hjse'] = $hjse;
+        $order['hjje'] = $hjje;
+        $order['jshj'] = $jshj;
         $order['one_tax'] = $one_tax;
         $order['two_tax'] = $two_tax;
         $order['three_tax'] = $three_tax;
@@ -245,7 +255,8 @@ class AutoController extends Base
      * @return bool
      * @desc 验证状态
      */
-    public function checkState($id,$state){
+    public function checkState($id,$state)
+    {
         $orderState = [
             'WAIT_BUYER_PAY' => '等待买家付款',
             'WAIT_SELLER_SEND_GOODS' => '买家已付款',
@@ -319,7 +330,8 @@ class AutoController extends Base
      * @param $order
      * @return mixed
      */
-    private function batchDetail($order){
+    private function batchDetail($order)
+    {
         $sku_id = [];
         foreach ($order['order_detail']  as &$o_val){
             if ($o_val['outer_sku_id']) {
@@ -337,16 +349,14 @@ class AutoController extends Base
      * @param $skuRate
      * @desc 处理sku数据
      */
-    public function treatingSku($order, $skuRate){
+    public function treatingSku($order, $skuRate)
+    {
         foreach ($order['order_detail'] as &$d_val){
             $d_val['sl'] = $skuRate[$d_val['outer_sku_id']];
             $se = round($d_val['pay_price'] - ($d_val['pay_price'] / (1 + $d_val['sl'])),2); //税额 等于支付金额 减去支付金额除1+税率
             $d_val['se'] = $se * $d_val['num'];
             $d_val['xmje'] = ($d_val['pay_price'] - $se) * $d_val['num']; //支付金额 - 税额 = 项目金额
             $d_val['price'] = $d_val['pay_price'] - $se;
-            $order['hjse'] += $d_val['se']; //合计税额 = 当个商品的税额 * 购买数量 如果存在多个sku 则税额累加
-            $order['jshj'] += $d_val['pay_price'] * $d_val['num'];      //同上
-            $order['hjje'] += $d_val['xmje'];
         }
         return $order;
     }
@@ -357,7 +367,8 @@ class AutoController extends Base
      * @return bool
      * @desc 开具蓝字发票
      */
-    public function invoice(array $orders, array $value){
+    public function invoice(array $orders, array $value)
+    {
         if(!$orders || !$value){
             return false;
         }
@@ -391,7 +402,8 @@ class AutoController extends Base
      * @param $result
      * @return array
      */
-    public function setParameter(array $order, $result){
+    public function setParameter(array $order, $result)
+    {
         $params = array();
         $params['serial_number']    = $order['serial_num'];
         $params['type']             = $order['type'];
