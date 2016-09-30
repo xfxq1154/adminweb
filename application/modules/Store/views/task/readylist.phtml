@@ -56,7 +56,7 @@
         <div class="table-responsive">
             <style>
                 table{width:30em;table-layout:fixed;}
-                td{width:100%; overflow:hidden; word-break: break-all}
+                td{width:100%;word-break:keep-all;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
             </style>
             <table id="table" class="table table-hover ">
                 <tbody>
@@ -74,10 +74,10 @@
                     <?php if ($list) : ?>
                         <?php foreach ($list as $val) : ?>
                             <tr>
-                                <td style="text-overflow:ellipsis;word-break: normal;overflow: hidden"><?=$val['jobid']; ?></td>
+                                <td><?=$val['jobid']; ?></td>
                                 <td><?=$val['topic']; ?></td>
                                 <td><?=$val['worker']; ?></td>
-                                <td><?=json_encode($val['params']);?></td>
+                                <td style="word-break:break-all; white-space: normal;"><?=json_encode($val['params']);?></td>
                                 <td><span class="tag <?=$val['state_bg']?>"> <?=$val['state'] ? :'--'; ?></span></td>
                                 <td><?=$val['memo'] ? : '--'; ?></td>
                                 <td align="center"><?=$val['times']; ?></td>
