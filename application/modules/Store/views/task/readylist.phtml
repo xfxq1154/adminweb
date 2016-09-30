@@ -56,7 +56,7 @@
         <div class="table-responsive">
             <style>
                 table{width:30em;table-layout:fixed;}
-                td{width:100%;overflow:hidden;}
+                td{width:100%; overflow:hidden; word-break: break-all}
             </style>
             <table id="table" class="table table-hover ">
                 <tbody>
@@ -74,7 +74,7 @@
                     <?php if ($list) : ?>
                         <?php foreach ($list as $val) : ?>
                             <tr>
-                                <td><?=$val['jobid']; ?></td>
+                                <td style="text-overflow:ellipsis;word-break: normal;overflow: hidden"><?=$val['jobid']; ?></td>
                                 <td><?=$val['topic']; ?></td>
                                 <td><?=$val['worker']; ?></td>
                                 <td><?=json_encode($val['params']);?></td>
