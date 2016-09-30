@@ -54,18 +54,22 @@
 <div class="admin-main">
     <div class="panel dux-box">
         <div class="table-responsive">
+            <style>
+                table{width:30em;table-layout:fixed;}
+                td{width:100%;overflow:hidden;}
+            </style>
             <table id="table" class="table table-hover ">
                 <tbody>
                     <tr>
-                        <th width="*">JobID</th>
-                        <th width="*">Topic</th>
-                        <th width="*">Worker</th>
+                        <th width="80px">JobID</th>
+                        <th width="60px">Topic</th>
+                        <th width="90px">Worker</th>
                         <th width="*">Params</th>
-                        <th width="*">State</th>
+                        <th width="70px">State</th>
                         <th width="*">Memo</th>
-                        <th width="*">Times</th>
-                        <th width="*">Timeuse</th>
-                        <th width="*">CreateTime</th>
+                        <th width="50px">Times</th>
+                        <th width="70px">Timeuse</th>
+                        <th width="160px">CreateTime</th>
                     </tr>
                     <?php if ($list) : ?>
                         <?php foreach ($list as $val) : ?>
@@ -76,7 +80,7 @@
                                 <td><?=json_encode($val['params']);?></td>
                                 <td><span class="tag <?=$val['state_bg']?>"> <?=$val['state'] ? :'--'; ?></span></td>
                                 <td><?=$val['memo'] ? : '--'; ?></td>
-                                <td><?=$val['times']; ?></td>
+                                <td align="center"><?=$val['times']; ?></td>
                                 <td><?=$val['timeuse'] ? :'--'; ?></td>
                                 <td><?=$val['ctime']; ?></td>
                             </tr>
