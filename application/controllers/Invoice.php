@@ -344,6 +344,7 @@ class InvoiceController extends Base{
      * 设置销售方地址电话
      */
     public function setInvoiceAction(){
+        $this->checkRole();
         $xsf_mc = $this->getRequest()->getPost('xsf_mc');
         $kpr = $this->getRequest()->getPost('kpr');
         $address = $this->getRequest()->getPost('address');
