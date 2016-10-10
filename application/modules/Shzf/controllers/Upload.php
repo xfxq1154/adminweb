@@ -22,6 +22,7 @@ class UploadController extends Base
      */
     public function orderAction()
     {
+        $this->checkRole();
         $files = $this->getRequest()->getFiles('file');
         $xls = new Spreadsheet_Excel_Reader();
         $xls->setOutputEncoding('utf-8');
@@ -57,6 +58,7 @@ class UploadController extends Base
      */
     public function uSkuAction()
     {
+        $this->checkRole();
         $files = $this->getRequest()->getFiles('file');
         $xls = new Spreadsheet_Excel_Reader();
         $xls->setOutputEncoding('utf-8');

@@ -97,6 +97,7 @@ class InvController extends Base
      */
     public function addSkuAction()
     {
+        $this->checkRole();
         if ($this->getRequest()->isPost()){
             $skus = array();
             $skus['sku_id'] = $this->getRequest()->getPost('sku_id');
