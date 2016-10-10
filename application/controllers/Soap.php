@@ -62,6 +62,7 @@ class SoapController extends Base{
      * @explain 补开红字发票
      */
     public function redInvoiceAction(){
+        $this->checkRole();
         $id = json_decode($this->getRequest()->get('data'), true)['id'];
         $invoice_info = $this->invoice_model->getInfo($id);
         if($invoice_info['state'] == 2){
