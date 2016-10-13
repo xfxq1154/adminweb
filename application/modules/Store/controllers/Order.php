@@ -63,12 +63,19 @@ class OrderController extends Storebase {
 
     function infoAction() {
         $order_id = $this->input_get_param('id');
-        $showcase_id = $this->input_get_param('showcase_id');
 
         $result = $this->store_model->orderDetail($order_id);
         $detail = $this->format_order_struct($result);
 
+        //交易流水
+        $transaction_info = $this->_get_order_trades($order_id);
+        $transaction_category = PayModel::getTransctionCategory();
+        $order_status = PayModel::getOrderStatus();
+
         $this->assign("oinfo", $detail);
+        $this->assign("transaction_info", $transaction_info);
+        $this->assign("transaction_category", $transaction_category);
+        $this->assign("order_status", $order_status);
         $this->layout("order/detail.phtml");
     }
 
@@ -127,5 +134,17 @@ class OrderController extends Storebase {
             $data = $this->tidy($data);
         }
         return $datas;
+    }
+
+    /**
+     * 交易流水查询
+     * @param $order_id
+     * @return array|bool
+     */
+    private function _get_order_trades($order_id){
+        $pay_model = new PayModel();
+        $info = $pay_model->getOrderTrades($order_id);
+
+        return $info;
     }
 }
