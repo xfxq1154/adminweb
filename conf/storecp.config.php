@@ -15,7 +15,7 @@ define('ASSET_CSS_PATH','/data/home/lxf/storecp/static/css');
 define('API_SERVER_IMGURL','http://img.internal.com');
 
 define('SAPI_HOST','http://sapi.lxf.dev.com/');
-define('SAPI_SOURCE_ID','WEB0001');
+define('SAPI_SOURCE_ID','STCP0001');
 
 define('SDATA_HOST','http://sdata.lxf.dev.com/');
 define('SDATA_SOURCE_ID','WEB0001');
