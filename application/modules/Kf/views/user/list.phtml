@@ -37,7 +37,7 @@
                         </td>
                         <td><?=$v['nickname']?>
                         </td>
-                        <td style="word-wrap: break-word;word-break: break-word; "><?=$v['group']?>
+                        <td style="word-wrap: break-word;word-break: break-word; "><?=$v['role']?>
                         </td>
 
                         <?php if($v['status'] == 1) {?>
@@ -59,4 +59,9 @@
             </table>
         </div>
     </div>
+    <?php if($pagger):?>
+        <div class="panel dux-box panel-foot clearfix" style="margin-top:20px;border-radius: 4px;">
+            <?=$pagger?>
+        </div>
+    <?php endif;?>
 </div>

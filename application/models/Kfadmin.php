@@ -20,7 +20,7 @@ class KfadminModel {
     const AUTH_PARENT= 'auth/getauthparent';    //获取所有父权限
     const AUTH_ADD   = 'auth/add';          //添加一个权限
     const AUTH_EDIT  = 'auth/edit';         //编辑权限
-    const GROUP_LIST = 'group/getlist';     //获取身份列表
+    const ROLE_LIST  = 'role/getlist';     //获取身份列表
 
     private $user_status = [ 1 => '正常', 2 => '冻结'];
 
@@ -34,7 +34,9 @@ class KfadminModel {
         if($result === FALSE){
             return FALSE;
         }
-        return $this->_format_user_list($result);
+
+        $result['data'] = $this->_format_user_list($result['data']);
+        return $result;
     }
 
     /**
@@ -94,8 +96,8 @@ class KfadminModel {
      * @param array $params
      * @return array|bool
      */
-    public function getGroupList($params = array()) {
-        $result = Kfapi::request(self::GROUP_LIST, $params, "GET");
+    public function getRoleList($params = array()) {
+        $result = Kfapi::request(self::ROLE_LIST, $params, "GET");
         if($result === FALSE){
             return FALSE;
         }
@@ -160,11 +162,11 @@ class KfadminModel {
      * @return mixed
      */
     private function _format_user_list($data) {
-        $group_list = $this->getGroupList();
+        $role_list = $this->getRoleList();
         foreach ($data as $k => $v) {
-            foreach ($group_list as &$value) {
-                if ($v['group'] == $value['id']) {
-                    $data[$k]['group'] = $value['group'];
+            foreach ($role_list as &$value) {
+                if ($v['role'] == $value['id']) {
+                    $data[$k]['role'] = $value['name'];
                 }
             }
             $data[$k]['status_cn'] = $this->user_status[$data[$k]['status']];

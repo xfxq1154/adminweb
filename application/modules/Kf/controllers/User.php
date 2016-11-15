@@ -12,6 +12,7 @@ class UserController extends Kfbase {
     const USER_ADD = '/kf/user/addtpl'; //添加用户页面
     const USER_MODIFY = '/kf/user/updatetpl'; //修改用户信息页面
     const DISABLE_STATUS = 2; //冻结状态
+    const PAGE_SIZE = 20;
 
 
     public function init() {
@@ -22,9 +23,16 @@ class UserController extends Kfbase {
      * 获取用户列表
      */
     public function listAction() {
-        $result = $this->kfadmin_model->getUserList();
+        $page_no = (int)$this->getRequest()->get('p', 1);
 
-        $this->assign('list', $result);
+        $params = [
+            'page_no' => $page_no,
+            'page_size' => self::PAGE_SIZE,
+        ];
+        $result = $this->kfadmin_model->getUserList($params);
+
+        $this->renderPagger($page_no ,$result['total_nums'] , "/kf/user/list/p/{p}", self::PAGE_SIZE);
+        $this->assign('list', $result['data']);
         $this->layout('user/list.phtml');
 
     }
