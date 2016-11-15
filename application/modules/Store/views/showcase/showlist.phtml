@@ -56,7 +56,6 @@
                                 <td><a href="/store/showcase/auditing?showcase_id=<?=$val['showcase_id']?>"><?php echo $val['status_com_name'] ?></a></td>
                                 <td><?php echo $val['block'] == 1 ? "<span class=\"tag bg-red\">是</span>" : "<span class=\"tag bg-green\">否</span>";?></td>
                                 <td><?php echo $val['ctime']; ?></td>
-                                <td><a href="/store/product/index?showcase_id=<?=$val['showcase_id']?>">商品</a> | <a href="/store/order/index/?showcase=<?=$val['showcase_id']?>">订单</a> | <a href="/store/statcenter/order?showcase_id=<?=$val['showcase_id']?>">订单统计</a></td>
                             </tr>
                         <?php endforeach; ?>
                     <?php endif; ?>
