@@ -33,10 +33,7 @@
                     </div>&nbsp;
                     <div class="field">
                         <input type="text" class="input" id="keyword" name="outer_tid" size="20" value="<?=$outer_tid?>" placeholder="交易单号">
-                    </div>&nbsp;
-<!--                    <div class="field">-->
-<!--                        <input type="text" class="input" id="keyword" name="spm" size="20" value="--><?//=$spm?><!--" placeholder="分销spm编码">-->
-<!--                    </div>-->
+                    </div>
                 </div>
                 <div class="form-button">
                     <button class="button" type="submit">搜索</button>
@@ -93,7 +90,19 @@
                                 
                                 ?>
                                 <td><span class="tag bg-<?=$bg?>"><?php echo $val['state_name']; ?></span></td>
-                                <td><span class="tag bg-<?=$bg = $val['pay_type'] == 'WECHAT' ? 'blue' : 'green';?>"><?php echo $val['pay_type'] == 'WECHAT' ? '微信支付' : '京东支付'; ?></span></td>
+                                <td><span class="tag bg-<?=$bg = $val['pay_type'] == 'WECHAT' ? 'green' : 'blue';?>">
+                                        <?php
+                                        switch ($val['pay_type']) {
+                                            case 'WECHAT':
+                                                echo '微信支付';break;
+                                            case 'ALIPAY':
+                                                echo '支付宝';break;
+                                            case 'JDPAY':
+                                                echo '京东支付';break;
+                                        }
+                                        ?>
+                                    </span>
+                                </td>
                                 <td><?php echo $val['create_time'];?></td>
                                 <td><?php echo $val['update_time'];?></td>
                             </tr>
