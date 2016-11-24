@@ -78,7 +78,8 @@ class ShowcaseController extends Storebase {
         $user_model = new StoreUserModel();
         $result = $user_model->register(array('mobile'=>$phone,'passwd'=>$password));
         if($result === FALSE){
-            Tools::output(array('info'=> $user_model->getError() ,'status'=>1));
+            $error_message = $user_model->getError();
+            Tools::output(array('info' => "创建用户失败({$error_message})", 'status' => 1));
         }
 
         //创建店铺
@@ -87,7 +88,8 @@ class ShowcaseController extends Storebase {
         $data['nickname'] = $nickname;
         $result = $this->showcase_model->createShowcase($data);
         if($result === FALSE){
-            Tools::output(array('info' => Sapi::getErrorMessage(), 'status' => 1));
+            $error_message = Sapi::getErrorMessage();
+            Tools::output(array('info' => "创建店铺失败({$error_message})", 'status' => 1));
         }
         
         //创建支付账户
