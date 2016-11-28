@@ -1,12 +1,12 @@
 <?php
 /**
- * @name: User.php
+ * @name: Group.php
  * @time: 2016-08-25 上午11:11
  * @author: liuxuefeng
- * @desc: 用户信息
+ * @desc:
  */
 
-class UserController extends Kfbase {
+class RoleController extends Kfbase {
 
     const USER_LIST = '/kf/user/list'; //用户列表
     const USER_ADD = '/kf/user/addtpl'; //添加用户页面
@@ -97,7 +97,7 @@ class UserController extends Kfbase {
         $password = $this->getRequest()->getPost('password');
         $nickname = $this->getRequest()->getPost('nickname');
 
-        if(!$user_id || !$password) {
+        if(!$user_id ) {
             $this->_outPut('缺少必要参数');
         }
 
@@ -106,8 +106,9 @@ class UserController extends Kfbase {
             'password' => $password,
             'nickname' => $nickname
         ];
+
         $this->kfadmin_model->edit($params);
-        $this->_outPut(Kfapi::getErrorMessage(), Kfapi::getErrorCode());
+        $this->_outPut(Cdkey::getErrorMessage(), Cdkey::getErrorCode());
     }
 
     /**
@@ -126,9 +127,5 @@ class UserController extends Kfbase {
         ];
         $this->kfadmin_model->edit($params);
         $this->_outPut(Kfapi::getErrorMessage(), Kfapi::getErrorCode());
-    }
-
-    private function verPassword() {
-        
     }
 }

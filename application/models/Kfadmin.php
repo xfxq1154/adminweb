@@ -71,7 +71,7 @@ class KfadminModel {
      * @return array|bool
      */
     public function getUserInfo($params) {
-        $result = Kfapi::request(self::USER_INFO, $params, "POST");
+        $result = Kfapi::request(self::USER_INFO, $params, "GET");
         if($result === FALSE){
             return FALSE;
         }

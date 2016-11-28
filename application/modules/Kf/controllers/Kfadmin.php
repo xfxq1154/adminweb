@@ -6,7 +6,7 @@
  * @desc:
  */
 
-class KfadminController extends Base {
+class KfadminController extends Kfbase {
     use Trait_Layout,
         Trait_Pagger;
     /**
@@ -21,7 +21,7 @@ class KfadminController extends Base {
     private $reback_msg = ['info' => '操作失败', 'status' => 0];
 
     function init() {
-        parent::
+        parent::init();
         $this->kfadmin_model = new KfadminModel();
     }
 
