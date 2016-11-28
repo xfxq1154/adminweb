@@ -18,7 +18,7 @@ class Error_Sapi {
 
     static public function getMessage($code){
         if(!isset(self::$error_code[$code])){
-            return '系统错误';
+            return "系统未知错误[$code]";
         }
         return self::$error_code[$code];
     }
