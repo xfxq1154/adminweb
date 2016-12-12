@@ -16,6 +16,12 @@
                     <div class="field">
                         <input type="text" class="input" name="spm" size="20" value="<?=$search['spm']?>" placeholder="渠道号">
                     </div>&nbsp;
+                    <div class="field">
+                        <input type="text" class="input" name="ratio" size="20" value="<?=$search['ratio']?>" placeholder="分成比例">
+                    </div>&nbsp;
+                    <div class="field">
+                        <input type="text" class="input" name="unit" size="20" value="<?=$search['unit']?>" placeholder="结算单位">
+                    </div>&nbsp;
                 </div>
                 <div class="form-button">
                     <button class="button" type="submit">搜索</button>
@@ -37,6 +43,8 @@
                         <th width="100">渠道号</th>
                         <th width="*">名称</th>
                         <th width="*">来源</th>
+                        <th width="*">分成比例</th>
+                        <th width="*">结算单位</th>
                         <th width="*">添加时间</th>
                         <th width="*">操作</th>
                     </tr>
@@ -47,6 +55,8 @@
                                 <td><?php echo $val['spm']; ?></td>
                                 <td><?php echo $val['name']; ?></td>
                                 <td><?php echo $val['desc']; ?></td>
+                                <td><?php echo $val['ratio']; ?></td>
+                                <td><?php echo $val['unit']; ?></td>
                                 <td><?php echo $val['ctime']; ?></td>
                                 <td><a href="/store/channel/edit?id=<?=$val['id']; ?>">编辑</a> | <a href="/stat/channel/single?spm=<?=$val['spm']; ?>">查看销量</a></td>
                                 </tr>

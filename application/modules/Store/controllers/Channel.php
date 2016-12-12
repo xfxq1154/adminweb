@@ -22,12 +22,16 @@ class ChannelController extends Storebase {
         $name = $this->input_get_param('name');
         $spm = $this->input_get_param('spm');
         $desc = $this->input_get_param('desc');
+        $ratio = $this->input_get_param('ratio');
+        $unit = $this->input_get_param('unit');
         $page_no = $this->input_get_param('page_no');
         $page_size = 20;
 
         $params['name'] = $name;
         $params['desc'] = $desc;
         $params['spm'] = $spm;
+        $params['ratio'] = $ratio;
+        $params['unit'] = $unit;
         $params['page_no'] = $page_no;
         $params['page_size'] = $page_size;
         $channels = $this->channel_model->getlist($params);
@@ -49,13 +53,17 @@ class ChannelController extends Storebase {
 
         $spm = $this->input_post_param('spm');
         $name = $this->input_post_param('name');
-        $desc =$this->input_post_param('desc');
-        $email =$this->input_post_param('email');
+        $desc = $this->input_post_param('desc');
+        $ratio = $this->input_post_param('ratio');
+        $unit = $this->input_post_param('unit');
+        $email = $this->input_post_param('email');
 
         $params = [
             'spm' => $spm,
             'name' => $name,
             'desc' => $desc,
+            'ratio' => $ratio,
+            'unit'  => $unit,
             'email' => $email,
         ];
         $result = $this->channel_model->create($params);
@@ -85,13 +93,17 @@ class ChannelController extends Storebase {
         $channel_id = $this->input_post_param('id');
         $name = $this->input_post_param('name');
         $desc =$this->input_post_param('desc');
+        $ratio = $this->input_post_param('ratio');
+        $unit = $this->input_post_param('unit');
         $email =$this->input_post_param('email');
 
         $params = [
             'channel_id' => $channel_id,
             'name'       => $name,
             'desc'       => $desc,
-            'email'      => $email,
+            'ratio'      => $ratio,
+            'unit'       => $unit,
+            'email'      => $email
         ];
         $result = $this->channel_model->update($params);
         if($result === FALSE){
