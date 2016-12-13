@@ -77,7 +77,7 @@ class ChannelController extends Storebase {
         }
         $result = $this->channel_model->create($params);
         if($result === FALSE){
-            Tools::output(array('info' => '添加失败,渠道号可能已存在.', 'status' => 1));
+            Tools::output(array('info' => Sapi::getErrorMessage(), 'status' => 1));
         }
 
         Tools::output(array('info' => '创建成功', 'status' => 1, 'url'=>'/store/channel/showlist'));
