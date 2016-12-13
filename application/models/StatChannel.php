@@ -8,6 +8,7 @@ class StatChannelModel {
 
     const CHANNEL_LIST = 'api/channel/getlist';
     const CHANNEL_LIST_DATE = 'api/channel/getlist_group_by_date';
+    const CHANNEL_DETAIL = 'channel/detail_multi';
 
     private $channel_names;
 
@@ -71,10 +72,16 @@ class StatChannelModel {
     }
 
     public function format_channel_struct($data){
+        if(isset($this->channel_names[$data['spm']])){
+            $params['spms'] = $data['spm'];
+            $result = Sapi::request(self::CHANNEL_DETAIL, $params);
+        }
         return [
             'date'          => $data['odate'],
             'spm'           => $data['spm'],
             'name'          => isset($this->channel_names[$data['spm']]) ? $this->channel_names[$data['spm']] : '未知渠道',
+            'ratio'         => $result[0]['ratio'],
+            'unit'          => $result[0]['unit'],
             'pv'            => $data['pv'],
             'uv'            => $data['uv'],
             'rate'          => $data['uv'] ? round($data['trans_num'] / $data['uv'] * 100, 2) : '0.00',
