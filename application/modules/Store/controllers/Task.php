@@ -9,9 +9,9 @@ class TaskController extends Storebase{
     use Trait_Redis;
 
     private $states = [
-        0 => ['name' => 'ready', 'class' => 'bg-green'],
-        1 => ['name' => 'delay', 'class' => 'bg-blue'],
-        2 => ['name' => 'reserved', 'class' => 'bg-yellow'],
+        0 => ['name' => 'succ', 'class' => 'bg-green'],
+        1 => ['name' => 'fail', 'class' => 'bg-red'],
+        2 => ['name' => 'retry', 'class' => 'bg-yellow'],
         3 => ['name' => 'deleted', 'class' => 'bg-gray'],
     ];
 
