@@ -11,7 +11,8 @@ class StatChannelModel {
     const CHANNEL_DETAIL = 'channel/detail_multi';
 
     private $channel_names;
-
+    private $channel_ratios;
+    private $channel_units;
 
     public function channelList($params) {
         $result = Sdata::request(self::CHANNEL_LIST, $params);
@@ -23,7 +24,7 @@ class StatChannelModel {
         return $this->format_channel_batch($result);
     }
 
-    public function setSpmsName($datas){
+    public function setSpmsInfo($datas){
         $spms = [];
         foreach ($datas as $val){
             $spms[] = $val['spm'];
@@ -36,6 +37,8 @@ class StatChannelModel {
         }
         foreach ($result as $channel){
             $this->channel_names[$channel['spm']] = $channel['name'];
+            $this->channel_ratios[$channel['spm']] = $channel['ratio'];
+            $this->channel_units[$channel['spm']] = $channel['unit'];
         }
     }
 
@@ -43,7 +46,7 @@ class StatChannelModel {
         if (!$datas){
             return false;
         }
-        $this->setSpmsName($datas['list']);
+        $this->setSpmsInfo($datas['list']);
 
         $format_list = [];
         $total_pv = [];
@@ -72,16 +75,12 @@ class StatChannelModel {
     }
 
     public function format_channel_struct($data){
-        if(isset($this->channel_names[$data['spm']])){
-            $params['spms'] = $data['spm'];
-            $result = Sapi::request(self::CHANNEL_DETAIL, $params);
-        }
         return [
             'date'          => $data['odate'],
             'spm'           => $data['spm'],
             'name'          => isset($this->channel_names[$data['spm']]) ? $this->channel_names[$data['spm']] : '未知渠道',
-            'ratio'         => $result[0]['ratio'],
-            'unit'          => $result[0]['unit'],
+            'ratio'         => $this->channel_ratios[$data['spm']],
+            'unit'          => $this->channel_units[$data['spm']],
             'pv'            => $data['pv'],
             'uv'            => $data['uv'],
             'rate'          => $data['uv'] ? round($data['trans_num'] / $data['uv'] * 100, 2) : '0.00',
