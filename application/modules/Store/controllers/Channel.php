@@ -66,6 +66,15 @@ class ChannelController extends Storebase {
             'unit'  => $unit,
             'email' => $email,
         ];
+        if(!$name){
+            Tools::output(array('info' => '请填写渠道名称', 'status' => 1));
+        }
+        if(mb_strlen($ratio,'utf8') > 50){
+            Tools::output(array('info' => '分成比例过长', 'status' => 1));
+        }
+        if(mb_strlen($unit,'utf8') > 50){
+            Tools::output(array('info' => '结算单位过长', 'status' => 1));
+        }
         $result = $this->channel_model->create($params);
         if($result === FALSE){
             Tools::output(array('info' => '添加失败,渠道号可能已存在.', 'status' => 1));
@@ -105,6 +114,15 @@ class ChannelController extends Storebase {
             'unit'       => $unit,
             'email'      => $email
         ];
+        if(!$name){
+            Tools::output(array('info' => '请填写渠道名称', 'status' => 1));
+        }
+        if(mb_strlen($ratio,'utf8') > 50){
+            Tools::output(array('info' => '分成比例过长', 'status' => 1));
+        }
+        if(mb_strlen($unit,'utf8') > 50){
+            Tools::output(array('info' => '结算单位过长', 'status' => 1));
+        }
         $result = $this->channel_model->update($params);
         if($result === FALSE){
             Tools::output(array('info' => Sapi::getErrorMessage(), 'status' => 1));
