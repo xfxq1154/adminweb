@@ -28,6 +28,12 @@ class OrderController extends Storebase {
         $outer_tid = $this->input_get_param('outer_tid');
         $spm = $this->input_get_param('spm');
         $page_no = $this->input_get_param('page_no');
+        if (!isset($showcase_id)){
+            $showcase_id = DEFAULT_SHOWCASE_ID;
+            if(!isset($this->showcase_list[$showcase_id])){
+                $showcase_id = '';
+            }
+        }
 
         $state     = $status ? $status : '';
         $mobile    = $number ? $number : '';

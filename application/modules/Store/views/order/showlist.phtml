@@ -10,7 +10,7 @@
                         <select class="input js-assign" target="#tpl" name="showcase_id" datatype="*" id="parent">
                             <option value="">请选择店铺</option>
                             <?php foreach ($showcase_list as $showcase) : ?>
-                                <option value="<?=$showcase['showcase_id']?>" <?=($showcase_id == $showcase['showcase_id']) ? 'selected': ''?>><?php echo $showcase['name']; ?></option>
+                                <option value="<?=$showcase['showcase_id']?>" <?=($showcase_id == $showcase['showcase_id']) ? 'selected': '' ?>><?php echo $showcase['name'];?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>&nbsp;

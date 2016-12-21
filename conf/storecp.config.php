@@ -47,3 +47,6 @@ define('CDKEY_SOURCE_ID','IGET0001');
 
 //客服host
 define('KFAPI_HOST','http://kfapi.dev.didatrip.com/');
+
+//默认店铺
+define('DEFAULT_SHOWCASE_ID','10008');
