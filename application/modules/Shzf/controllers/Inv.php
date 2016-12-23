@@ -79,13 +79,18 @@ class InvController extends Base
         $this->checkRole();
         $orders = $this->input_getpost_param('orderlist');
         $fpsl = $this->input_getpost_param('sl');
-        if(!$orders){
+        $label = trim($this->input_post_param('label'));
+        if (!$orders){
             Tools::output(array('msg' => '请先勾选编码', 'status' => 2));
         }
+        if ($fpsl == 1 && empty($label)){
+            Tools::output(['msg' => '请选择税率或填写标签', 'status' => 2]);
+        }
+
         //截取最后一个符号
         $ordersing = substr($orders,0, -1);
         //更新多个数据到数据表
-        $rs = $this->shzfSkuModel->updateSl($ordersing, $fpsl);
+        $rs = $this->shzfSkuModel->updateSl($ordersing, $fpsl, $label);
         if(!$rs){
             echo json_encode(array('msg' => '修改失败'));exit;
         }
@@ -100,7 +105,7 @@ class InvController extends Base
         $this->checkRole();
         if ($this->getRequest()->isPost()){
             $skus = array();
-            $skus['sku_id'] = $this->getRequest()->getPost('sku_id');
+            $skus['sku_id'] = trim($this->getRequest()->getPost('sku_id'));
             $skus['product_name'] = $this->getRequest()->getPost('product_name');
             $skus['tax_tare'] = $this->getRequest()->getPost('tax_tare');
 

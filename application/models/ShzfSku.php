@@ -105,17 +105,21 @@ class ShzfSkuModel{
     /**
      * @param $ids
      * @param $fpsl
+     * @param $label
      * @return bool|int
      */
-    public function updateSl($ids, $fpsl){
-        if( !$ids || !$fpsl){
+    public function updateSl($ids, $fpsl, $label){
+        if( !$ids && !$fpsl && !$label){
             return FALSE;
         }
-
+        $val = " `tax_tare` = $fpsl ";
+        if ($label){
+            $val .= ", `label` = '$label' ";
+        }
         try {
-            $sql = ' UPDATE `'. $this->tableName. "` SET `tax_tare` = :fpsl WHERE `id` IN ($ids) " ;
+            $sql = " UPDATE " . $this->tableName . "  SET $val WHERE `id` IN ($ids) ";
             $stmt = $this->dbMaster->prepare($sql);
-            $stmt->execute(array(':fpsl' => $fpsl));
+            $stmt->execute();
             return 1;
         } catch (Exception $ex) {
             echo $ex->getMessage();

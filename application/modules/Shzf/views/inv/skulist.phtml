@@ -46,6 +46,9 @@
                         <option value=0.17>0.17</option>
                     </select>
                 </div>
+                <div class="field" style="margin-left: 5px;">
+                    <input type="text" class="input" name="label_name" size="20" value="<?=$info['label_name']?>" placeholder="设置标签">
+                </div>
                 <div class="form-button" style="margin-left: 10px;">
                     <button class="button bg-dot" type="button" id="selectAll">选中全部</button>
                     <button class="button bg-sub" type="button" id="unselectAll">取消全选</button>
@@ -73,6 +76,7 @@
                         <th width="*">选项</th>
                         <th width="*">sku编号</th>
                         <th width="*">商品类型</th>
+                        <th width="*">标签</th>
                         <th width="*">税率</th>
                         <th width="*">操作</th>
                     </tr>
@@ -82,6 +86,7 @@
                                 <td><input type="checkbox" class="checkAll" value="<?=$val['id']?>"></td>
                                 <td><?=$val['sku_id']?></td>
                                 <td><?=$val['product_name']?></td>
+                                <td><?=$val['label']?></td>
                                 <td><?=$val['tax_tare']?></td>
                                 <td>
                                     <button class="button bg-red button-small icon-trash-o js-del" href="javascript:;" url="/Shzf/inv/delsku" data='{"id":<?php echo $val['id']; ?>}' title="删除"></button>
@@ -131,6 +136,7 @@
    $('.set').on('click', function(){
        var orders = '';
        var fpsl = $('#parent option:selected').val();
+       var labelName = $("input[name='label_name']").val();
         $(".checkAll").each(function(){
             if ($(this).prop("checked")) {
                 orders += $(this).val() + ",";
@@ -141,7 +147,7 @@
             type: 'POST',
             dataType: 'JSON',
             url: '/Shzf/inv/tax',
-            data: {orderlist:orders,sl:fpsl}
+            data: {orderlist:orders,sl:fpsl,label:labelName}
         }).done(function (data){
             alert(data.msg);
             window.location.reload();

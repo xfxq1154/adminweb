@@ -14,6 +14,7 @@ class AutoController extends Base
     /** @var ShzfDzfp */
     public $dzfp;
     public $error_msg = '';
+    private $inv_url = 'http://inv.luojilab.com';
 
     const INVOICE_SUCCESS = 2;
     const INVOICE_FAIL = 3;
@@ -40,24 +41,9 @@ class AutoController extends Base
             exit;
         }
         foreach ($datas as $value){
-            //获取发票pdf文件
-            $rs_pdf = $this->dzfp->getpdf($value['invoice_code'], $value['invoice_number'], $value['check_code']);
-            if(!$rs_pdf){
-                continue;
-            }
-            $pdf = base64_decode($rs_pdf);
-            //将pdf文件上传到oss
-            $rs_oss = $this->shzfInvModel->ossUpload($pdf);
-            if(!$rs_oss){
-                continue;
-            }
-            //查询私密发票地址
-            $invoice_path = $this->shzfInvModel->getInvoice($rs_oss['object']);
-            if(!$invoice_path){
-                continue;
-            }
+            $url = $this->inv_url.'?fpdm='.$value['invoice_code'].'&fphm='.$value['invoice_number'].'&jym='.$value['check_code'];
             //生成短网址
-            $dwz_url = $this->shzfInvModel->dwz($invoice_path);
+            $dwz_url = $this->shzfInvModel->dwz($url);
             if($dwz_url['errNum']){
                 continue;
             }
@@ -105,7 +91,8 @@ class AutoController extends Base
             //将原有数据表的税率,合并到有赞订单中
             $skuarr = array();
             foreach ($skus as $sk_val){
-                $skuarr[$sk_val['sku_id']] = $sk_val['tax_tare'];
+                $skuarr[$sk_val['sku_id']]['label'] = $sk_val['label'];
+                $skuarr[$sk_val['sku_id']]['tax_tare'] = $sk_val['tax_tare'];
             }
             $orders = $this->treatingSku($order, $skuarr);
             //判断是否有空的sl,如果有将该sku删除掉
@@ -352,11 +339,12 @@ class AutoController extends Base
     public function treatingSku($order, $skuRate)
     {
         foreach ($order['order_detail'] as &$d_val){
-            $d_val['sl'] = $skuRate[$d_val['outer_sku_id']];
+            $d_val['sl'] = $skuRate[$d_val['outer_sku_id']]['tax_tare'];
             $se = round($d_val['pay_price'] - ($d_val['pay_price'] / (1 + $d_val['sl'])),2); //税额 等于支付金额 减去支付金额除1+税率
             $d_val['se'] = $se * $d_val['num'];
             $d_val['xmje'] = ($d_val['pay_price'] - $se) * $d_val['num']; //支付金额 - 税额 = 项目金额
             $d_val['price'] = $d_val['pay_price'] - $se;
+            $d_val['title'] =  $skuRate[$d_val['outer_sku_id']]['label'] ?: $d_val['title'];
         }
         return $order;
     }
