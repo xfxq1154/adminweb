@@ -98,7 +98,7 @@ class AutoController extends Base
             //判断是否有空的sl,如果有将该sku删除掉
             $detail = array();
             foreach ($orders['order_detail'] as $val){
-                if($val['sl'] == null){
+                if($val['sl'] == null || $val['pay_price'] == 0.00){
                     unset($val);
                 }
                 $detail[] = $val;
