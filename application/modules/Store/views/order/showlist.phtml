@@ -91,7 +91,7 @@
                                 ?>
 
                                 <td>
-                                    <?php if (($val['type'] != 0 || $val['type'] != 4) && $val['state'] == 'WAIT_SELLER_SEND_GOODS'): ?>
+                                    <?php if ($val['type'] != 0 && $val['type'] != 4 && $val['state'] == 'WAIT_SELLER_SEND_GOODS'): ?>
                                         <a href="javascript:;" url="/store/order/virtual_shipping" data="<?=$val['order_id'];?>" success="location.reload();" title="补发" class="js-action">
                                             <span class="tag bg-<?=$bg?>"><?php echo $val['state_name']; ?></span>
                                         </a>
