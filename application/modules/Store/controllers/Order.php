@@ -103,6 +103,7 @@ class OrderController extends Storebase {
 
     public function tidy($order) {
         $o['order_id'] = $order['order_id'];
+        $o['type'] = $order['type'];
         $o['total_fee'] = $order['total_fee'];
         $o['discount_fee'] = $order['discount_fee'];
         $o['payment_fee'] = $order['payment_fee'];

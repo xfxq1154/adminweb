@@ -49,6 +49,7 @@
                 <tbody>
                     <tr>
                         <th width="*">订单号</th>
+                        <th width="*">类型</th>
                         <th width="*">商品总价</th>
                         <th width="*">实付</th>
                         <th width="*">店铺</th>
@@ -62,6 +63,7 @@
                         <?php foreach ($list as $val) : ?>
                             <tr>
                                 <td><a href="/store/order/info?id=<?=$val['order_id']?>&showcase_id=<?=$val['showcase_id']?>"><?php echo $val['order_id']; ?></a></td>
+                                <td><?php echo $val['type']; ?></td>
                                 <td><?php echo $val['total_fee']; ?></td>
                                 <td><?php echo $val['payment_fee']; ?></td>
                                 <td><?php echo $val['showcase_name'];?></td>
