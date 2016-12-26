@@ -19,6 +19,22 @@ class OrderController extends Storebase {
         parent::init();
     }
 
+    public function virtual_shippingAction(){
+        $order_id = $this->input_post_param('data');
+
+        $data = [
+            'topic' => 'main',
+            'worker' => 'virtualShipping',
+            'params' => json_encode(['order_id' => $order_id])
+        ];
+        $result = $this->store_model->taskCreate($data);
+        if($result === FALSE){
+            Tools::output(array('info' => Sapi::getErrorMessage(), 'status' => 1));
+        }
+
+        Tools::output(array('info' => '补发成功', 'status' => 1));
+    }
+
     function indexAction() {
         $this->setShowcaseList();
         $order_no = $this->input_get_param('order_no');
