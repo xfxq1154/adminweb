@@ -19,6 +19,22 @@ class OrderController extends Storebase {
         parent::init();
     }
 
+    public function virtual_shippingAction(){
+        $order_id = $this->input_post_param('data');
+
+        $data = [
+            'topic' => 'main',
+            'worker' => 'virtualShipping',
+            'params' => json_encode(['order_id' => $order_id])
+        ];
+        $result = $this->store_model->taskCreate($data);
+        if($result === FALSE){
+            Tools::output(array('info' => Sapi::getErrorMessage(), 'status' => 1));
+        }
+
+        Tools::output(array('info' => '补发成功', 'status' => 1));
+    }
+
     function indexAction() {
         $this->setShowcaseList();
         $order_no = $this->input_get_param('order_no');
@@ -87,6 +103,7 @@ class OrderController extends Storebase {
 
     public function tidy($order) {
         $o['order_id'] = $order['order_id'];
+        $o['type'] = $order['type'];
         $o['total_fee'] = $order['total_fee'];
         $o['discount_fee'] = $order['discount_fee'];
         $o['payment_fee'] = $order['payment_fee'];
