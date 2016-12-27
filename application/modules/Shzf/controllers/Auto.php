@@ -14,7 +14,7 @@ class AutoController extends Base
     /** @var ShzfDzfp */
     public $dzfp;
     public $error_msg = '';
-    private $inv_url = 'http://inv.luojilab.com';
+    private $inv_url = 'http://e-inv.cn:8001/yhzx/mentcompany/getFpcyInfo.shtml';
 
     const INVOICE_SUCCESS = 2;
     const INVOICE_FAIL = 3;
@@ -41,7 +41,7 @@ class AutoController extends Base
             exit;
         }
         foreach ($datas as $value){
-            $url = $this->inv_url.'?fpdm='.$value['invoice_code'].'&fphm='.$value['invoice_number'].'&jym='.$value['check_code'];
+            $url = $this->inv_url.'?FpcxFormMap.FPDM='.$value['invoice_code'].'&FpcxFormMap.FPHM='.$value['invoice_number'].'&FpcxFormMap.FWM='.$value['check_code'];
             //生成短网址
             $dwz_url = $this->shzfInvModel->dwz($url);
             if($dwz_url['errNum']){
