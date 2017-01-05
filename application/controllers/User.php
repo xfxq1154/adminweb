@@ -10,6 +10,9 @@ class UserController extends Base {
 
     use Trait_Layout;
 
+    /**
+     * @var AdminModel
+     */
     public $admin;
 
     public function init() {
@@ -21,7 +24,6 @@ class UserController extends Base {
      * 用户登录界面
      */
     public function indexAction() {
-        //$this->checkRole();
         if ($_POST) {
             $user = $_POST['username'];
             $pass = $_POST['password'];
@@ -70,8 +72,6 @@ class UserController extends Base {
 
     /**
      * 用户管理列表
-     *
-     * @return [type] [description]
      */
     public function listAction() {
         $this->initAdmin();
@@ -80,9 +80,7 @@ class UserController extends Base {
         $list = $this->admin->getAdminList();
         $groups = $this->adminUser->getGroups();
         foreach ($list as &$val) {
-            $val['gname'] = isset($groups[$val['id']]['name']) ?
-                    $groups[$val['id']]['name'] : '无用户组';
-
+            $val['gname'] = isset($groups[$val['id']]['name']) ? $groups[$val['id']]['name'] : '无用户组';
             // adminuser没有记录的时候，代表是以前的admin用户，为兼容，应该为可登录状态
             $val['status'] = isset($groups[$val['id']]['status']) ? $groups[$val['id']]['status'] ? '<span class="tag bg-green">正常</span>' : '<span class="tag">禁用</span>' : '<span class="tag bg-green">正常</span>';
         }
@@ -91,18 +89,19 @@ class UserController extends Base {
         $this->layout('user/list.phtml');
     }
 
-    // 添加后台管理员
+    /**
+     * 添加后台管理员
+     */
     public function addAction() {
         $this->initAdmin();
         $this->checkRole();
 
         if ($this->getRequest()->isPost()) {
-
-            $code = $this->getRequest()->getPost('code');
-            $name = $this->getRequest()->getPost('name');
-            $tel = $this->getRequest()->getPost('tel');
-            $wechatName = $this->getRequest()->getPost('wechat_name');
-            $wechatNickname = $this->getRequest()->getPost('wechat_nickname');
+            $code = trim($this->getRequest()->getPost('code'));
+            $name = trim($this->getRequest()->getPost('name'));
+            $tel = trim($this->getRequest()->getPost('tel'));
+            $wechatName = trim($this->getRequest()->getPost('wechat_name'));
+            $wechatNickname = trim($this->getRequest()->getPost('wechat_nickname'));
             $group = $this->getRequest()->getPost('group');
             $password = trim($this->getRequest()->getPost('password'));
             $confirmPassword = trim($this->getRequest()->getPost('confirm_password'));
@@ -160,7 +159,9 @@ class UserController extends Base {
         }
     }
 
-    // 更新admin资料
+    /**
+     * 更新admin资料
+     */
     public function editAction($id = 0) {
         $this->initAdmin();
         $this->checkRole();
@@ -226,7 +227,6 @@ class UserController extends Base {
     /**
      * 删除用户
      */
-
     public function deleteAction() {
 
         $this->initAdmin();

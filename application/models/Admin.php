@@ -24,8 +24,6 @@ class AdminModel {
 
     /**
      * 后台管理人员登录
-     * @param type $user
-     * @param type $passwd
      */
     public function adminLogin($user, $passwd) {
 
@@ -73,25 +71,12 @@ class AdminModel {
         );
         $_SESSION['a_user'] = $data;
 
-
         $this->adminUser->Login($data);
-//        //本次登录信息
-//        $ip = IP::getRealIp();
-//        $date = date('Y-m-d H:i:s', time());
-//        $this->updateAdminUser($userinfo['id'],array('logon_ip' => $ip,'logon_date' => $date));
-//        $log = array(
-//            'operator' => $userinfo['id'],
-//            'remark'  => '后台登录：用户：'.$user.' 登录成功',
-//         );
-//         $this->adminLog->add($log);
-
         return 1;
     }
 
     /**
      * 获取后台管理人员信息
-     * @param type $user
-     * @param type $fields
      */
     public function getAdminUser($user, $fields = '*') {
         $sql = "SELECT {$fields} "
@@ -105,7 +90,6 @@ class AdminModel {
 
     /**
      * 添加后台管理人员
-     * @param Array $data
      */
     public function addAdminUser($data) {
         if (empty($data) || !is_array($data))
@@ -157,11 +141,9 @@ class AdminModel {
 
     /**
      * 查询admin用户
-     * @return array        result
      */
     public function getAdminList() {
         try {
-
             $sql = 'SELECT admin_id, admin_code, admin_name, admin_wechat, admin_tel,
                 admin_wechat_nickname FROM ' . $this->tableName;
             $stmt = $this->dbMaster->prepare($sql);
@@ -175,7 +157,6 @@ class AdminModel {
                     $return[$k] = CustomArray::removeKeyPrefix($v, 'admin_');
                 }
             }
-
             return $return;
         } catch (PDOException $e) {
             echo $e->getMessage();
@@ -187,9 +168,6 @@ class AdminModel {
      * 删除用户
      */
     public function delete($id){
-        if(!$id){
-            return FALSE;
-        }
         try {
             $sql = "DELETE FROM $this->tableName WHERE `admin_id` = :id LIMIT 1 ";
             $stmt = $this->dbMaster->prepare($sql);
@@ -201,22 +179,14 @@ class AdminModel {
 
     /**
      * 获取一条admin用户
-     *
      * @param  int $id 用户的id
-     *
      * @return mixed     array or false
      */
     public function getAdminById($id) {
-        if (!$id) {
-            return false;
-        }
-
         try {
-
             $sql = 'SELECT * FROM ' . $this->tableName . ' WHERE admin_id = :id LIMIT 1';
             $stmt = $this->dbMaster->prepare($sql);
             $stmt->execute([':id' => $id]);
-
             return CustomArray::removeKeyPrefix($stmt->fetch(PDO::FETCH_ASSOC), 'admin_');
         } catch (PDOException $e) {
             die($e->getMessage());
