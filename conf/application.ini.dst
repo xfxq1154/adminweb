@@ -3,16 +3,16 @@
 application.directory=ROOT_PATH "/application/"
 application.dispatcher.catchException = TRUE
 application.library = ROOT_PATH "/framework/library"
-application.modules = "Index,Store,Kf,Inv"
+application.modules = "Index"
 
-redis.master.host = redis.master.host
-redis.master.port = 6379
-redis.slave.host = redis.slave.host
-redis.slave.port = 6379
+;redis.master.host = redis.master.host
+;redis.master.port = 6379
+;redis.slave.host = redis.slave.host
+;redis.slave.port = 6379
 ;redis.slave.passwd = xxxx
 
-redis.audio.host = redis.master.host
-redis.audio.port = 6379
+;redis.audio.host = redis.master.host
+;redis.audio.port = 6379
 ;redis.slave.passwd = xxxx
 
 
@@ -24,119 +24,11 @@ database.storecp_master.port = 3306
 database.storecp_master.username = root
 database.storecp_master.password = 1qaz@WSX
 
-database.storecp_slave.driver = mysql
-database.storecp_slave.dbname = storecp
-database.storecp_slave.host = passportslave01.mysql.rds.aliyuncs.com
-database.storecp_slave.port = 3306
-database.storecp_slave.username = root
-database.storecp_slave.password = 1qaz@WSX
-
-
-;passport数据库
-database.passport_master.driver = mysql
-database.passport_master.dbname = passport
-database.passport_master.host = db.passport.master
-database.passport_master.port = 3306
-database.passport_master.username = root
-database.passport_master.password = 1qaz@WSX
-database.passport_master.charset = utf8mb4
-
-database.passport_slave.driver = mysql
-database.passport_slave.dbname = passport
-database.passport_slave.host = db.passport.slave
-database.passport_slave.port = 3306
-database.passport_slave.username = root
-database.passport_slave.password = 1qaz@WSX
-database.passport_slave.charset = utf8mb4
-
-;business数据库
-database.business_master.driver = mysql
-database.business_master.dbname = business_1223
-database.business_master.host = db.passport.master
-database.business_master.port = 3306
-database.business_master.username = root
-database.business_master.password = 1qaz@WSX
-database.business_master.charset = utf8mb4
-
-database.business_slave.driver = mysql
-database.business_slave.dbname = business_1223
-database.business_slave.host = db.passport.slave
-database.business_slave.port = 3306
-database.business_slave.username = root
-database.business_slave.password = 1qaz@WSX
-database.business_slave.charset = utf8mb4
-
-
-;运营活动
-database.master_operate.driver = mysql
-database.master_operate.dbname = 2046
-database.master_operate.host = 127.0.0.1
-database.master_operate.port = 3306
-database.master_operate.username = root
-database.master_operate.password = 1qaz@WSX
-
-database.slave_operate.driver = mysql
-database.slave_operate.dbname = 2046
-database.slave_operate.host = 127.0.0.1
-database.slave_operate.port = 3306
-database.slave_operate.username = root
-database.slave_operate.password = 1qaz@WSX
-
-;电子发票
-database.storecp_invoice_master.driver = mysql
-database.storecp_invoice_master.dbname = store_invoice
-database.storecp_invoice_master.host = db.passport.master
-database.storecp_invoice_master.port = 3306
-database.storecp_invoice_master.username = root
-database.storecp_invoice_master.password = 1qaz@WSX
-database.storecp_invoice_master.charset = utf8mb4
-
-database.storecp_invoice_slave.driver = mysql
-database.storecp_invoice_slave.dbname = store_invoice
-database.storecp_invoice_slave.host = db.passport.slave
-database.storecp_invoice_slave.port = 3306
-database.storecp_invoice_slave.username = root
-database.storecp_invoice_slave.password = 1qaz@WSX
-database.storecp_invoice_slave.charset = utf8mb4
-
-;有赞订单表
-database.youzan_order_master.driver = mysql
-database.youzan_order_master.dbname = youzan_order
-database.youzan_order_master.host = db.passport.master
-database.youzan_order_master.port = 3306
-database.youzan_order_master.username = root
-database.youzan_order_master.password = 1qaz@WSX
-database.youzan_order_master.charset = utf8mb4
-
-database.youzan_order_slave.driver = mysql
-database.youzan_order_slave.dbname = youzan_order
-database.youzan_order_slave.host = db.passport.slave
-database.youzan_order_slave.port = 3306
-database.youzan_order_slave.username = root
-database.youzan_order_slave.password = 1qaz@WSX
-database.youzan_order_slave.charset = utf8mb4
-
-api.coin.host = API_COIN_HOST
-api.ucapi.host = API_UCAPI_HOST
-api.audio.host = API_AUDIO_HOST
-
-safe.qiniu.accesskey = SAFE_QINIU_ACCESSKEY
-safe.qiniu.secretkey = SAFE_QINIU_SECRETKEY
-
-api.wechat.host = API_WECHAT_URL
-api.youzan.host = API_YOUZAN_HOST
-api.img.host = API_SERVER_IMGURL
-api.message.host = API_SMS_HOST
-api.sapi.host = SAPI_HOST
-api.sapi.source_id = SAPI_SOURCE_ID
-api.push.host = API_PUSH_HOST
-
 asset.img.url = ASSET_IMG_URL
 asset.img.path = ASSET_IMG_PATH
 asset.js.url = ASSET_JS_URL
 asset.js.path = ASSET_JS_PATH
 asset.css.url = ASSET_CSS_URL
 asset.css.path = ASSET_CSS_PATH
-//短信接口
-api.notification.host = NOTIFICATION_API
+
 [common]

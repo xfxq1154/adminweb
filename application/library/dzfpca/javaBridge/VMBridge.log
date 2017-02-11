@@ -1,9 +1,0 @@
-Jan 20 16:34:36 VMBridge INFO : VM                  : 1.6.0_45@http://java.sun.com/
-Jan 20 16:34:36 VMBridge INFO : VMBridge version             : 5.5.2    
-Jan 20 16:34:36 VMBridge INFO : logFile             : VMBridge.log
-Jan 20 16:34:36 VMBridge INFO : default logLevel    : 3
-Jan 20 16:34:36 VMBridge INFO : socket              : SERVLET_LOCAL:8080
-Jan 20 16:34:36 VMBridge INFO : java.ext.dirs       : C:\Program Files\Java\jdk1.6.0_45\jre\lib\ext;C:\Windows\Sun\Java\lib\ext
-Jan 20 16:34:36 VMBridge INFO : php.java.bridge.base: C:\Users\JNW
-Jan 20 16:34:36 VMBridge INFO : thread pool size    : 20
-Jan 20 16:34:36 VMBridge INFO : JavaBridgeRunner started on port INET_LOCAL:8080
